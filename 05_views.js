@@ -228,7 +228,7 @@ const multiple_slider = magpieViews.view_generator(
     // This will use all trials specified in `data`, you can use a smaller value
     // (for testing), but not a larger value
     trials: TEST_TRIALS.length,
-    // trials: 6,
+    // trials: 4,
     // name should be identical to the variable name
     name: "multiple_slider",
     data: TEST_TRIALS
