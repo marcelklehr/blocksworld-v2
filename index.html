@@ -25,7 +25,7 @@
         grunt bundle
         inside bundle you'll find the webppl.js file (and a minimal version of it)
     -->
-    <script src="node_modules/webppl.min.js"></script>
+    <!-- <script src="node_modules/webppl.min.js"></script> -->
 
 
     <!-- load local files -->
@@ -52,7 +52,11 @@
     <script src="03_custom_views_templates.js"></script>
 
     <script src="04_trials.js"></script>
+    <script type="text/javascript" src="trial_type_orders.js"></script>
     <script>
+    let ORDER = _.sample(trial_types());
+    </script>
+    <!-- <script>
       let ORDER;
       // webppl.run arguments: webppl-model, continuation function that runs after
       // the webppl model does (x is return value of webppl model, s final state
@@ -69,11 +73,8 @@
       }}));`, function(s,x) {
         ORDER = x;
       }, {debug: true})
-    </script>
+    </script> -->
     <script src="04_trials_utils.js"></script>
-
-
-
     <script src="05_views.js"></script>
     <script src="06_main.js"></script>
   </head>

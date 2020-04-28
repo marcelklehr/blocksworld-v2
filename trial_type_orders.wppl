@@ -1,0 +1,29 @@
+const TYPE_ORDERS = [
+  ['y', 'z', 'x', 'y', 'z'],
+  ['x', 'y', 'z', 'y', 'x'],
+  ['y', 'x', 'z', 'y', 'x'],
+  ['z', 'y', 'x', 'y', 'x'],
+  ['x', 'y', 'z', 'x', 'y'],
+  ['x', 'z', 'y', 'x', 'y'],
+  ['y', 'x', 'z', 'x', 'y'],
+  ['z', 'x', 'y', 'x', 'y'],
+  ['x', 'y', 'x', 'y', 'z'],
+  ['y', 'x', 'y', 'x', 'z']
+];
+const TYPE_MAP = {x: 'a_implies_c', y: 'independent', z: 'a_iff_c'}
+let Dist = Infer({model: function(){
+        let o1 = uniformDraw(TYPE_ORDERS).join('');
+        let o2 = uniformDraw(TYPE_ORDERS).join('');
+        condition(o1 !== o2 && _.last(o1) !== _.first(o2))
+        let o3 = uniformDraw(TYPE_ORDERS).join('');
+        condition(o3 !== o1 && o3 !== o2 && _.last(o2) !== _.first(o3));
+        let l = _.last(o3)
+        let o4 = _.shuffle(_.without(_.keys(TYPE_MAP), l)).join('') + l
+        return o1 + o2 + o3 + o4
+      }});
+// Dist.support().length
+// _.map(Dist.support(), function(val){return val})
+
+let orders = Dist.support();
+json.write('trial_type_orders.json', orders);
+orders;
