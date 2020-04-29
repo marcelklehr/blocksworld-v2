@@ -83,15 +83,17 @@ trials_uncertain = function(){
 trials_ac = function(){
   let data = {};
   let meta = {
-    'ac1': ["high", "low", "train-a-implies-c-with-extra-block-c-falls"],
-    'ac2': ["uncertain", "uncertain", 'train-a-implies-c-c-falls'],
+    'ac1': ["high", "low", 'train-a-implies-c-c-falls'],
+    'ac2': ["high", "low", "train-a-implies-c-with-extra-block-c-falls"],
     'ac3': ["uncertain", "uncertain", "train-a-implies-c-c-falls-but-slowly"]
   };
   let colors = {'ac1': [cols.train_blocks[0], cols.train_blocks[1]],
                 'ac2': [cols.train_blocks[1], cols.train_blocks[0]],
                 'ac3': [cols.train_blocks[0], cols.train_blocks[1]]
               };
-  let horiz = {'ac1': [true, true], 'ac2': [false, true],
+  let horiz = {
+    'ac1': [true, false],
+    'ac2': [true, true],
     'ac3': [false, true]}
 
   _.keys(colors).forEach(function(key, i){
@@ -102,11 +104,9 @@ trials_ac = function(){
       colors[key][1], 'blockLow_' + key, horiz[key][1]);
     let blocks = [];
 
-    if(key === "ac3" || key === "ac2") {
+    if(key === "ac3") {
       Body.setPosition(b1, {x: b1.position.x-2, y: b1.position.y});
-      key === "ac2" ? Body.setPosition(b2, {x: b2.position.x+1.5, y: b2.position.y})
-                    : null;
-    } else if (key === "ac1") {
+    } else if (key === "ac2") {
       let w1Bounds = walls[1].bounds;
       Body.setPosition(walls[1], {x: walls[1].position.x - 40,
           y: walls[0].bounds.max.y + 150 + (w1Bounds.max.y - w1Bounds.min.y)/2});
