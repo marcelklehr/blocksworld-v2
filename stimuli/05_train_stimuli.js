@@ -83,29 +83,44 @@ trials_uncertain = function(){
 trials_ac = function(){
   let data = {};
   let meta = {
-    'ac1': ["high", "low", 'train-a-implies-c-c-falls'],
+    'ac1': ["high", "low", "train-a-implies-c-with-extra-block-c-falls"],
     'ac2': ["uncertain", "uncertain", 'train-a-implies-c-c-falls'],
-    'ac3': ["uncertain", "uncertain", "train-a-implies-c-c-doesnt-fall"]
+    'ac3': ["uncertain", "uncertain", "train-a-implies-c-c-falls-but-slowly"]
   };
   let colors = {'ac1': [cols.train_blocks[0], cols.train_blocks[1]],
                 'ac2': [cols.train_blocks[1], cols.train_blocks[0]],
-                'ac3': [cols.train_blocks[0], cols.train_blocks[1]]};
-  let horiz = {'ac1': [true, false], 'ac2': [false, true], 'ac3': [false, true]}
+                'ac3': [cols.train_blocks[0], cols.train_blocks[1]]
+              };
+  let horiz = {'ac1': [true, true], 'ac2': [false, true],
+    'ac3': [false, true]}
 
-  let blocks = {};
   _.keys(colors).forEach(function(key, i){
-    let b1 = blockOnBase(Walls.train.a_implies_c[0], -PRIOR[meta[key][0]],
+    let walls = Walls.train.a_implies_c();
+    let b1 = blockOnBase(walls[0], -PRIOR[meta[key][0]],
       colors[key][0], 'blockUp_' + key, horiz[key][0]);
-    let b2 = blockOnBase(Walls.train.a_implies_c[1], PRIOR[meta[key][1]],
+    let b2 = blockOnBase(walls[1], PRIOR[meta[key][1]],
       colors[key][1], 'blockLow_' + key, horiz[key][1]);
+    let blocks = [];
 
     if(key === "ac3" || key === "ac2") {
       Body.setPosition(b1, {x: b1.position.x-2, y: b1.position.y});
       key === "ac2" ? Body.setPosition(b2, {x: b2.position.x+1.5, y: b2.position.y})
                     : null;
+    } else if (key === "ac1") {
+      let w1Bounds = walls[1].bounds;
+      Body.setPosition(walls[1], {x: walls[1].position.x - 40,
+          y: walls[0].bounds.max.y + 150 + (w1Bounds.max.y - w1Bounds.min.y)/2});
+
+      let wx = wall('xWall', w1Bounds.max.x - props.blocks.h/1.2,
+        w1Bounds.min.y - props.blocks.w/2, props.blocks.h, props.blocks.w);
+        walls.push(wx);
+
+      b2 = blockOnBase(wx, PRIOR[meta[key][1]], colors[key][1],
+        'blockLow_' + key, horiz[key][1]);
     }
+    blocks = blocks.concat([b1, b2]);
     let id = "a_implies_c_" + i
-    data[id] = {objs: [b1, b2].concat(Walls.train.a_implies_c),
+    data[id] = {objs: blocks.concat(walls),
                 meta: meta[key], id}
     });
     return data

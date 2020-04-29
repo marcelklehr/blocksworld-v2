@@ -82,11 +82,11 @@ testTrials_ac = function(priors){
   let walls = Walls.test["a_implies_c"][data.idx_w];
   objs = objs.concat(walls);
 
-  let bX1 = block(data.pf.bounds[data.bX1_x].x + data.moveBlocksTo * 1.5 * props.blocks.h/2,
-    data.pf.bounds.min.y, cols.darkgrey, 'bX1', true)
+  let wX1 = wall('wX1', data.pf.bounds[data.bX1_x].x + data.moveBlocksTo * 1.5 * props.blocks.h/2,
+    data.pf.bounds.min.y - props.blocks.w/2, props.blocks.h, props.blocks.w)
   let b1 = blockOnBase(walls[0], PRIOR[priors[0]] * data.moveBlocksTo, cols.test_blocks[colors[0]], 'blockA', true);
-  let b2 = blockOnBase(bX1, PRIOR["very_low"] * data.moveBlocksTo, cols.test_blocks[colors[1]], 'blockC', true);
-  blocks = blocks.concat([b1, b2, bX1]);
+  let b2 = blockOnBase(wX1, PRIOR["low"] * data.moveBlocksTo, cols.test_blocks[colors[1]], 'blockC', true);
+  blocks = blocks.concat([b1, b2, wX1]);
 
   return blocks.concat(objs)
 }

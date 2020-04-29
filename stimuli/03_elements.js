@@ -5,14 +5,6 @@ const Bottom = wall(label='bottom', x=scene.w/2, y=scene.h - props.bottom.h/2,
   w=scene.w, h=props.bottom.h);
 
 // base walls
-// let W1 = wall(x=320, y=100, w=props.walls.w, h=props.walls.h, 'wallUpLeft');
-// let W2 = wall(x= W1.bounds.max.x - 10, y=240, w=props.walls.w, h=props.walls.h, 'wallLowRight');
-// let W3 = wall(W2.position.x+4, W2.position.y, props.walls.w + 25, props.walls.h,'wallRampLowInd')
-// let W4 = wall(x=550, y=100, w=props.walls.w, h=props.walls.h, 'wallUpRight');
-// let W5 = wall(x=420, y=120, w=props.walls.w/1.5, h=props.walls.h, 'wallShortUpLeft');
-// let P1 = wall(x=570, y=Bottom.bounds.min.y - 100/2, w=150, h=100, 'platform1');
-// let WP1 = wall(x= W1.bounds.max.x - 10, y=220, w=props.walls.w/1.5, h=props.walls.h, 'wallLowRightP1');
-
 let W1 = wall('w1_upLeft', 320, 100);
 let W1_2 = wall('w1_2_upRight', 480, 100);
 
@@ -63,7 +55,6 @@ makeRamp = function(angle, tilt_increase, wallLow){
     y = wallTop_y - props.walls.h/2
   );
   pos.x_ball = tilt_increase ? wallTop.bounds.min.x - 4 : wallTop.bounds.max.x + 4;
-
   let ball1 = ball(pos.x_ball, wallTop.bounds.min.y - props.balls.radius,
     props.balls.radius, 'ball1', ball_colors[Math.abs(angle).toString()]);
   Body.setAngle(ramp, -pos.shift_x * r);
@@ -143,7 +134,7 @@ Walls.test.tilted['a_iff_c'] = function(tilt, increase, base){
 //// Elements for TRAINING TRIALS //////
 Walls.train.independent = [W4];
 Walls.train.tilted_independent =  function(tilt, increase, base) {
-  let angle = tilt === "steep" ? -45 : -30;
+  let angle = tilt === "steep" ? -45 : tilt === "plane" ? -30 : null;
   let ramp =  makeRamp(angle, increase, base)
   return _.values(ramp)
 }
@@ -154,10 +145,11 @@ let W9 = wall('w9_middle_right', (3/4) * scene.w, scene.h/3);
 let W10 = wall('w10_right_low', (2/3) * scene.w, (3/4) * scene.h);
 Walls.train.uncertain = [W8, W9, W10]
 
-Walls.train.a_implies_c = [
-  wall('wall_ac_top_left', 400, 100),
-  wall('wall_ac_low_right', 100 + props.walls.w/2 - 10, 240)
-];
+Walls.train.a_implies_c = function(){
+  return [wall('wall_ac_top', 400, 100),
+    wall('wall_ac_low', 100 + props.walls.w/2 - 10, 240)
+  ];
+}
 
 Walls.train.seesaw_trials = function(){
   let objs = seesaw(scene.w/2)
