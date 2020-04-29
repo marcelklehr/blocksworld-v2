@@ -64,12 +64,8 @@ makeRamp = function(angle, tilt_increase, wallLow){
   );
   pos.x_ball = tilt_increase ? wallTop.bounds.min.x - 4 : wallTop.bounds.max.x + 4;
 
-  let a = Math.abs(angle)
-  let col = a=== 45 ? cols.blue : a === 30 ? cols.purple : a===25 ?
-    cols.orange : a===20 ? cols.yellow : cols.brown;
-
   let ball1 = ball(pos.x_ball, wallTop.bounds.min.y - props.balls.radius,
-                   props.balls.radius, 'ball1', col);
+    props.balls.radius, 'ball1', ball_colors[Math.abs(angle).toString()]);
   Body.setAngle(ramp, -pos.shift_x * r);
   return {'tilted': ramp, 'top': wallTop, 'ball': ball1}
 }
@@ -129,12 +125,13 @@ Walls.test.seesaw_trials = function(offset){
 
 Walls.test.tilted = {};
 Walls.test.tilted['independent'] = function(tilt, increase, base){
-  let angle = tilt === "steep" ? -45 : -30;
+  let angle = tilt === "steep" ? -45 : tilt === "plane" ? -30 : null;
   return _.values(makeRamp(angle, increase, base))
 }
 
 Walls.test.tilted["a_implies_c"] = function(tilt, increase, base){
-  let angle = tilt === "steep" ? -45 : tilt === 'plane' ? -20 : -30;
+  let angle = tilt === "steep" ? -45 : tilt === 'plane' ? -20 :
+    tilt === "middle" ? -30 : null;
   return _.values(makeRamp(angle, increase, base))
 }
 
