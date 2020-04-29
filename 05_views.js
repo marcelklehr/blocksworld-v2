@@ -195,6 +195,9 @@ const post_test = magpieViews.view_generator("post_test", {
   // languages_question: 'Muttersprache',
   // languages_more: '(in der Regel die Sprache, die Sie als Kind zu Hause gesprochen haben)',
   comments_question: 'Further comments <br/><small>(was there anything about the different stimuli you realized in particular?)</small>'
+}, {
+  answer_container_generator: custom_posttest_generator.answer_container_gen,
+  handle_response_function: custom_posttest_generator.handle_response_function
 });
 
 // The 'thanks' view is crucial; never delete it; it submits the results!

@@ -210,3 +210,82 @@ const multi_slider_generator = {
     });
   }
 };
+
+
+const custom_posttest_generator = {
+  answer_container_gen: function (config, CT) {
+    const quest = magpieUtils.view.fill_defaults_post_test(config);
+    return `<form>
+                    <p class='magpie-view-text'>
+                        <label for="age">${quest.age.title}:</label>
+                        <input type="number" name="age" min="18" max="110" id="age" />
+                    </p>
+                    <p class='magpie-view-text'>
+                        <label for="gender">${quest.gender.title}:</label>
+                        <select id="gender" name="gender">
+                            <option></option>
+                            <option value="${quest.gender.male}">${quest.gender.male}</option>
+                            <option value="${quest.gender.female}">${quest.gender.female}</option>
+                            <option value="${quest.gender.other}">${quest.gender.other}</option>
+                        </select>
+                    </p>
+                    <p class='magpie-view-text'>
+                        <label for="education">${quest.edu.title}:</label>
+                        <select id="education" name="education">
+                            <option></option>
+                            <option value="${quest.edu.graduated_high_school}">${quest.edu.graduated_high_school}</option>
+                            <option value="${quest.edu.graduated_college}">${quest.edu.graduated_college}</option>
+                            <option value="${quest.edu.higher_degree}">${quest.edu.higher_degree}</option>
+                        </select>
+                    </p>
+                    <p class='magpie-view-text'>
+                        <label for="languages" name="languages">${quest.langs.title}:<br /><span>${quest.langs.text}</</span></label>
+                        <input type="text" id="languages"/>
+                    </p>
+                    <p class="magpie-view-text">
+                        <label for="ramp">Did you notice that the incline in the trials was of different steepness, depending on the color of the ball?</label>
+                        <textarea name="ramp" id="ramp" rows="6" cols="40"></textarea>
+                    </p>
+                    <p class="magpie-view-text">
+                        <label for="comments">${quest.comments.title}</label>
+                        <textarea name="comments" id="comments" rows="6" cols="40"></textarea>
+                    </p>
+
+                    <button id="next" class='magpie-view-button'>${config.button}</button>
+            </form>`
+  },
+
+  handle_response_function: function (config, CT, magpie, answer_container_generator, startingTime) {
+    $(".magpie-view")
+      .append(answer_container_generator(config, CT));
+
+    $("#next")
+      .on("click", function (e) {
+        // prevents the form from submitting
+        e.preventDefault();
+
+        // records the post test info
+        magpie.global_data.age = $("#age")
+          .val();
+        magpie.global_data.gender = $("#gender")
+          .val();
+        magpie.global_data.education = $("#education")
+          .val();
+        magpie.global_data.languages = $("#languages")
+          .val();
+        magpie.global_data.comments = $("#comments")
+          .val()
+          .trim();
+        magpie.global_data.ramp = $("ramp")
+          .val();
+        magpie.global_data.endTime = Date.now();
+        magpie.global_data.timeSpent =
+          (magpie.global_data.endTime -
+            magpie.global_data.startTime) /
+          60000;
+
+        // moves to the next view
+        magpie.findNextView();
+      });
+  }
+};
