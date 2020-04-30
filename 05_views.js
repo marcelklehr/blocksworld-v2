@@ -129,6 +129,9 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
     <br />
   In this trial, we ask you to indicate <b>how likely</b> you think certain
   blocks <b>will or will not fall</b> by moving the corresponding sliders.
+   <br />
+  The circle on the sliders will turn green after you moved it and clicked to
+  fix its new position.
     <br />
     <br />
   You may wonder whether the probabilities that you assign to the four described
@@ -137,8 +140,9 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   estimates may, but don't have to sum to 100%</b>.
     <br />
     <br />
-  After you have provided all four estimates, you will be able to run the
-  animation and after that, proceed to the test phase of the experiment.
+  After you have provided all four estimates (the circles of all four sliders
+  have to be green), you will be able to run the animation and after that,
+  proceed to the test phase of the experiment.
   `
 });
 
@@ -149,17 +153,21 @@ const instructions_test = magpieViews.view_generator("instructions", {
   text: `Great - you've now completed the training phase and we'll continue with
           the test phase next. Again, you will be shown scenes of different block
           arrangements. As in the previous trial, we will ask you to
-          indicate how likely you think certain blocks will fall / not fall.
+          indicate <b>how likely</b> you think certain blocks <b>will fall /
+          not fall</b>.
           <br />
           The only difference is, that now you will <i>not</i> get
           feedback about what will actually happen since you will be shown
           static pictures only.
+          <br />
+          After you have provided all four estimates (the circles of all four
+          sliders have to be green), you will be able proceed to the next trial.
             <br />
             <br />
           Please keep in mind:
             <br/>
-          1. A block is considered to <b><i>fall</i> as soon as it drops from a
-          platform or topples over</b> - that is, a block does not necessarily
+          1. A block is considered to <b><i>fall</i> as soon as it <i>drops</i> from a
+          platform or <i>topples over</i></b> - that is, a block does not necessarily
           need to fall to the ground in order to count as <i>falling</i>.
           <br/>
           2. The probabilities that you assign to the four events do <b>not have to
