@@ -7,8 +7,8 @@ var color_vision_test = [
     picture2: "stimuli/img/color_vision_test1.jpg",
     option1: "no",
     option2: "yes",
-    expected: "yes"
-
+    expected: "yes",
+    id: 'color-vision-test-test-blue'
   },
   {
     QUD: "Please click on the button with the correct answer.",
@@ -17,8 +17,8 @@ var color_vision_test = [
     picture2: "stimuli/img/color_vision_test0.jpg",
     option1: "no",
     option2: "yes",
-    expected: "yes"
-
+    expected: "yes",
+    id: 'color-vision-test-test-green'
   },
   {
     QUD: "Please click on the button with the correct answer.",
@@ -27,8 +27,8 @@ var color_vision_test = [
     option1: "no",
     option2: "yes",
     question: "Is the RED block on the left picture?",
-    expected: "yes"
-
+    expected: "yes",
+    id: 'color-vision-train-train-red'
   },
   {
     QUD: "Please click on the button with the correct answer.",
@@ -37,8 +37,8 @@ var color_vision_test = [
     option1: "no",
     option2: "yes",
     question: "Is the YELLOW block on the left picture?",
-    expected: "no"
-
+    expected: "no",
+    id: 'color-vision-train-train-yellow'
   }
 ]
 
@@ -337,6 +337,7 @@ let train_slider_trials = [
     question2: id2QuestionTrain.a,
     question3: id2QuestionTrain.c,
     question4: id2QuestionTrain.none,
+    question: 'ac-a-c-none',
     optionLeft: "impossible",
     optionRight: "certainly"
   }

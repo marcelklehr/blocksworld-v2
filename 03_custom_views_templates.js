@@ -80,11 +80,12 @@ const animation_view1 = {
         }
         let data = getButtonQA();
         let trial_data = {
-          trial_name: SHUFFLED_TRAIN_STIMULI[CT].id,
+          trial_name: 'animation_buttons',
           trial_number: CT + 1,
           response: data.responses,
           utterances: data.questions,
-          RT: RT
+          RT: RT,
+          id: SHUFFLED_TRAIN_STIMULI[CT].id
         };
         trial_data = magpieUtils.view.save_config_trial_data(
           TRAIN_TRIALS[CT],
@@ -142,11 +143,12 @@ const animation_view2 = {
         let data = getSliderQA("train");
         console.log(data)
         let trial_data = {
-          trial_name: SHUFFLED_TRAIN_STIMULI[CT].id,
+          trial_name: 'animation_slider',
           trial_number: CT + 1,
           response: data.responses,
           utterances: data.utterances,
-          RT: RT
+          RT: RT,
+          id: SHUFFLED_TRAIN_STIMULI[CT].id
         };
         trial_data = magpieUtils.view.save_config_trial_data(
           TRAIN_TRIALS[CT],
