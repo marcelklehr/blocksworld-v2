@@ -46,7 +46,7 @@ var color_vision_test = [
 var slider_rating_trials = [
   {
     picture: "stimuli/img/group/a_implies_c_ll.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -57,7 +57,7 @@ var slider_rating_trials = [
   },
   // {
   //   picture: "stimuli/img/group/a_implies_c_lu.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur!",
+  //   QUD: "Please indicate how likely you think the represented events will occur.",
   //   question: 'gb-b-g-none',
   //   question: 'gb-b-g-none',
   //   question1: id2Question.bg,
@@ -69,7 +69,7 @@ var slider_rating_trials = [
   // },
   {
     picture: "stimuli/img/group/a_implies_c_lh.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -80,7 +80,7 @@ var slider_rating_trials = [
   },
   {
     picture: "stimuli/img/group/a_implies_c_ul.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -91,7 +91,7 @@ var slider_rating_trials = [
   },
   {
     picture: "stimuli/img/group/a_implies_c_uu.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -102,7 +102,7 @@ var slider_rating_trials = [
   },
   {
     picture: "stimuli/img/group/a_implies_c_uh.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -113,7 +113,7 @@ var slider_rating_trials = [
   },
   {
     picture: "stimuli/img/group/a_implies_c_hl.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -124,7 +124,7 @@ var slider_rating_trials = [
   },
   // {
   //   picture: "stimuli/img/group/a_implies_c_hu.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur!",
+  //   QUD: "Please indicate how likely you think the represented events will occur.",
   //   question: 'gb-b-g-none',
   //   question1: id2Question.bg,
   //   question2: id2Question.b,
@@ -135,7 +135,7 @@ var slider_rating_trials = [
   // },
   {
     picture: "stimuli/img/group/a_implies_c_hh.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -146,7 +146,7 @@ var slider_rating_trials = [
   },
   {
     picture: "stimuli/img/group/a_iff_c_ll.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -157,7 +157,7 @@ var slider_rating_trials = [
   },
   // {
   //   picture: "stimuli/img/group/a_iff_c_ul.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur!",
+  //   QUD: "Please indicate how likely you think the represented events will occur.",
   //   question: 'gb-b-g-none',
   //   question1: id2Question.bg,
   //   question2: id2Question.b,
@@ -168,7 +168,7 @@ var slider_rating_trials = [
   // },
   {
     picture: "stimuli/img/group/a_iff_c_hl.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -180,7 +180,7 @@ var slider_rating_trials = [
 
   {
     picture: "stimuli/img/group/a_iff_c_uu.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -191,7 +191,7 @@ var slider_rating_trials = [
   },
   // {
   //   picture: "stimuli/img/group/a_iff_c_hu.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur!",
+  //   QUD: "Please indicate how likely you think the represented events will occur.",
   //   question: 'gb-b-g-none',
   //   question1: id2Question.bg,
   //   question2: id2Question.b,
@@ -202,7 +202,7 @@ var slider_rating_trials = [
   // },
   {
     picture: "stimuli/img/group/a_iff_c_hh.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -213,7 +213,7 @@ var slider_rating_trials = [
   },
   {
     picture: "stimuli/img/group/independent_ll.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -224,7 +224,7 @@ var slider_rating_trials = [
   },
   // {
   //   picture: "stimuli/img/group/independent_lu.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur!",
+  //   QUD: "Please indicate how likely you think the represented events will occur.",
   //   question: 'gb-b-g-none',
   //   question1: id2Question.bg,
   //   question2: id2Question.b,
@@ -235,7 +235,7 @@ var slider_rating_trials = [
   // },
   {
     picture: "stimuli/img/group/independent_lh.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -246,7 +246,7 @@ var slider_rating_trials = [
   },
   {
     picture: "stimuli/img/group/independent_ul.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -257,7 +257,7 @@ var slider_rating_trials = [
   },
   {
     picture: "stimuli/img/group/independent_uu.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -268,7 +268,7 @@ var slider_rating_trials = [
   },
   {
     picture: "stimuli/img/group/independent_uh.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -279,7 +279,7 @@ var slider_rating_trials = [
   },
   {
     picture: "stimuli/img/group/independent_hl.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -290,7 +290,7 @@ var slider_rating_trials = [
   },
   // {
   //   picture: "stimuli/img/group/independent_hu.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur!",
+  //   QUD: "Please indicate how likely you think the represented events will occur.",
   //   question: 'gb-b-g-none',
   //   question1: id2Question.bg,
   //   question2: id2Question.b,
@@ -301,7 +301,7 @@ var slider_rating_trials = [
   // },
   {
     picture: "stimuli/img/group/independent_hh.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question: 'gb-b-g-none',
     question1: id2Question.bg,
     question2: id2Question.b,
@@ -332,7 +332,7 @@ _.map(slider_rating_trials, function (trial) {
 let train_slider_trials = [
   {
     picture: "",
-    QUD: "Please indicate how likely you think the represented events will occur!",
+    QUD: "Please indicate how likely you think the represented events will occur.",
     question1: id2QuestionTrain.ac,
     question2: id2QuestionTrain.a,
     question3: id2QuestionTrain.c,

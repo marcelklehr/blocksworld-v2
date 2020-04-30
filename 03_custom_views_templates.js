@@ -243,9 +243,13 @@ const custom_posttest_generator = {
                         <input type="text" id="languages"/>
                     </p>
                     <p class="magpie-view-text">
-                        <label for="ramp">1. Did you notice that the incline in the trials was of different steepness?
-                        2. And did you notice that the color of the ball was different depending on the steepness?</label>
-                        <textarea name="ramp" id="ramp" rows="6" cols="40"></textarea>
+                        <label for="ramp1">Did you notice that the incline in the trials was of different steepness?
+                        </label>
+                        <textarea name="ramp1" id="ramp1" rows="3" cols="40"></textarea>
+                    </p>
+                    <p class="magpie-view-text">
+                        <label for="ramp2">Did you notice that the color of the ball was different depending on the steepness of the incline?</label>
+                        <textarea name="ramp2" id="ramp2" rows="3" cols="40"></textarea>
                     </p>
                     <p class="magpie-view-text">
                         <label for="comments">${quest.comments.title}</label>
@@ -277,7 +281,9 @@ const custom_posttest_generator = {
         magpie.global_data.comments = $("#comments")
           .val()
           .trim();
-        magpie.global_data.ramp = $("ramp")
+        magpie.global_data.ramp = $("ramp1")
+          .val();
+        magpie.global_data.ramp = $("ramp2")
           .val();
         magpie.global_data.endTime = Date.now();
         magpie.global_data.timeSpent =
