@@ -58,24 +58,18 @@ const NB_TRAIN_TRIALS = TrainStimuli.list_all.length;
 // const NB_TRAIN_TRIALS = 3;
 const TRAIN_BTTN_IDS = ['ac', 'a', 'c', 'none'];
 
-const TYPE_MAP = {x: 'a_implies_c', y: 'independent', z: 'a_iff_c'}
+let block_cols = {
+  test: ['blue', 'green'],
+  train: ['red', 'yellow']
+}
+let block_cols_short = {
+  test: [block_cols.test[0][0], block_cols.test[1][0]],
+  train: [block_cols.train[0][0], block_cols.train[1][0]]
+}
 // each letter represents one trial!
 // 3 blocks a 5 trials each (zz-yy-x) + 1 block a 3 trials (x-y-z)
 // --> 7z + 7y + 4x = 18 trials
-// TYPE_ORDERS are the 10 unique possibilities to join different cn trial types
-// zz-yy-x without repeating one in a row
-const TYPE_ORDERS = [
-  ['y', 'z', 'x', 'y', 'z'],
-  ['x', 'y', 'z', 'y', 'x'],
-  ['y', 'x', 'z', 'y', 'x'],
-  ['z', 'y', 'x', 'y', 'x'],
-  ['x', 'y', 'z', 'x', 'y'],
-  ['x', 'z', 'y', 'x', 'y'],
-  ['y', 'x', 'z', 'x', 'y'],
-  ['z', 'x', 'y', 'x', 'y'],
-  ['x', 'y', 'x', 'y', 'z'],
-  ['y', 'x', 'y', 'x', 'z']
-];
+const TYPE_MAP = {x: 'a_implies_c', y: 'independent', z: 'a_iff_c'}
 
 getRealTypes = function(pseudo_types){
   pseudo_types = pseudo_types.split('').join(' ')
@@ -147,46 +141,41 @@ abbreviateQuestion = function(question, symbols){
   return q_short.toLowerCase();
 }
 
-iconHtml2Utterance = function(question, symbols) {
-  let words = question.trim().split('/');
+iconHtml2Utterance = function(icon_html) {
+  let words = icon_html.trim().split('/');
   let utt1 = words[3].split('.')[0]
   let utt2 = words[6].split('.')[0]
   let utt;
   if(utt1.includes('not')){
-    utt = utt2.includes('not') ? 'none' : symbols[1];
+    utt = utt2.includes('not') ? 'none' : utt2[0]; //'not-blue-red';
   } else {
-    utt = utt2.includes('not') ? symbols[0] : symbols.join('');
+    utt = utt2.includes('not') ? utt1[0] : utt1[0] + utt2[0] // blue-not-red : 'blue-red';
   }
   return {short: utt, long: [utt1, utt2].join('-')};
 }
 
-getButtonQA = function() {
+getButtonResponse = function() {
   let button_ids = ['ac', 'a', 'c', 'none']
-  let questions = [];
-  let responses = [];
-  button_ids.forEach(function(id){
-    responses.push($('#' + id).hasClass('selected'));
-    questions.push(id)
-  });
-  return {questions, responses}
-}
-
-getSliderQA = function(trial_type="test"){
-  let questions = [];
-  let responses = [];
-  let utterances = [];
-  let qs = trial_type==="test" ? [block_cols.test[0][0], block_cols.test[1][0]] :
-    ['a', 'c'];
-  _.range(1,5).forEach(function(i){
-    let question = $("#" + "question" + i).html();
-    // let q_short = abbreviateQuestion(question, qs);
-    let data = iconHtml2Utterance(question, qs);
-    utterances.push(data.short);
-    questions.push(data.long);
-    let response = $("#response" + i).val();
+  let responses = []
+  let trial_data = {}
+  button_ids.forEach(function(id, i){
+    let response = $('#' + id).hasClass('selected');
+    trial_data['response' + (i+1)] = response
     responses.push(response)
   });
-  return {questions, responses, utterances};
+  return Object.assign(trial_data, {'response': responses});
+}
+
+getSliderResponse = function(trial_type="test"){
+  let responses = [];
+  let trial_data = {}
+  _.range(1,5).forEach(function(i){
+    let response = $("#response" + i).val();
+    responses.push(response)
+    trial_data['response' + i] = response
+  });
+  trial_data = Object.assign(trial_data, {'response': responses});
+  return trial_data;
 }
 
 

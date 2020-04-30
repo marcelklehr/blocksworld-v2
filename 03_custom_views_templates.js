@@ -78,17 +78,22 @@ const animation_view1 = {
         if (!cleared) {
           clearWorld(animation.engine, animation.render, stop2Render = false);
         }
-        let data = getButtonQA();
-        let trial_data = {
+        let data = getButtonResponse();
+        let trial_data = Object.assign(data, {
           trial_name: 'animation_buttons',
           trial_number: CT + 1,
-          response: data.responses,
-          utterances: data.questions,
           RT: RT,
           id: SHUFFLED_TRAIN_STIMULI[CT].id
-        };
+        });
+
+        let copied = Object.assign({}, TRAIN_TRIALS[CT])
+        copied.icon1 = iconHtml2Utterance(copied.icon1).short;
+        copied.icon2 = iconHtml2Utterance(copied.icon2).short;
+        copied.icon3 = iconHtml2Utterance(copied.icon3).short;
+        copied.icon4 = iconHtml2Utterance(copied.icon4).short;
+
         trial_data = magpieUtils.view.save_config_trial_data(
-          TRAIN_TRIALS[CT],
+          copied,
           trial_data
         );
         magpie.trial_data.push(trial_data);
@@ -140,18 +145,21 @@ const animation_view2 = {
         if (!cleared) {
           clearWorld(animation.engine, animation.render, stop2Render = false);
         }
-        let data = getSliderQA("train");
-        console.log(data)
-        let trial_data = {
+        let data = getSliderResponse("train");
+        let trial_data = Object.assign(data, {
           trial_name: 'animation_slider',
           trial_number: CT + 1,
-          response: data.responses,
-          utterances: data.utterances,
           RT: RT,
           id: SHUFFLED_TRAIN_STIMULI[CT].id
-        };
+        });
+        var copied = Object.assign({}, TRAIN_TRIALS[CT]);
+        copied.icon1 = iconHtml2Utterance(copied.icon1).short;
+        copied.icon2 = iconHtml2Utterance(copied.icon2).short;
+        copied.icon3 = iconHtml2Utterance(copied.icon3).short;
+        copied.icon4 = iconHtml2Utterance(copied.icon4).short;
+
         trial_data = magpieUtils.view.save_config_trial_data(
-          TRAIN_TRIALS[CT],
+          copied,
           trial_data
         );
         magpie.trial_data.push(trial_data);
@@ -195,16 +203,21 @@ const multi_slider_generator = {
     addCheckSliderResponse(button);
     button.on("click", function () {
       const RT = Date.now() - startingTime; // measure RT before anything else
-      let responseData = getSliderQA("test");
-      let trial_data = {
+      let responseData = getSliderResponse("test");
+      let trial_data = Object.assign(responseData, {
         trial_name: config.name,
         trial_number: CT + 1,
-        response: responseData.responses,
-        utterances: responseData.utterances,
         RT: RT
-      };
+      });
+
+      var copied = Object.assign({}, config.data[CT]);
+      copied.icon1 = iconHtml2Utterance(copied.icon1).short;
+      copied.icon2 = iconHtml2Utterance(copied.icon2).short;
+      copied.icon3 = iconHtml2Utterance(copied.icon3).short;
+      copied.icon4 = iconHtml2Utterance(copied.icon4).short;
+
       trial_data = magpieUtils.view.save_config_trial_data(
-        config.data[CT],
+        copied,
         trial_data
       );
       magpie.trial_data.push(trial_data);
