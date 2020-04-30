@@ -50,6 +50,7 @@ const animation_view1 = {
     });
 
     let animationStarted = false;
+    let id_button_correct;
     $('#runButton')
       .on('click', function (e) {
         if (!animationStarted) {
@@ -63,7 +64,7 @@ const animation_view1 = {
             .off("click");
 
           let c = SHUFFLED_TRAIN_STIMULI[CT].id
-          let id_button_correct = ["independent_2", "uncertain_0"].includes(c) ? "a" : ['independent_1', "uncertain_1"].includes(c) ? "c" : "ac";
+          id_button_correct = ["independent_2", "uncertain_0"].includes(c) ? "a" : ['independent_1', "uncertain_1"].includes(c) ? "c" : "ac";
           $('#' + id_button_correct)
             .addClass("correct");
           id_bttn_selected !== id_button_correct ?
@@ -91,6 +92,10 @@ const animation_view1 = {
         copied.icon2 = iconHtml2Utterance(copied.icon2).short;
         copied.icon3 = iconHtml2Utterance(copied.icon3).short;
         copied.icon4 = iconHtml2Utterance(copied.icon4).short;
+        copied.expected = id_button_correct === "ac" ? 'response1' :
+          id_button_correct === "a" ? 'response2' :
+          id_button_correct === "c" ? 'response3' :
+          id_button_correct === "none" ? 'response4' : '';
 
         trial_data = magpieUtils.view.save_config_trial_data(
           copied,
@@ -157,6 +162,7 @@ const animation_view2 = {
         copied.icon2 = iconHtml2Utterance(copied.icon2).short;
         copied.icon3 = iconHtml2Utterance(copied.icon3).short;
         copied.icon4 = iconHtml2Utterance(copied.icon4).short;
+        copied.expected = '';
 
         trial_data = magpieUtils.view.save_config_trial_data(
           copied,
