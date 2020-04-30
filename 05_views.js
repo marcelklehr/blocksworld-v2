@@ -66,7 +66,7 @@ const instructions_train1_colors = magpieViews.view_generator("instructions", {
          Please note:
          <br/>
          Throughout the experiment, you may want to go into Full Screen Mode
-         (usually switched on/off with F11), otherwise you may need to
+         (usually switched on/off with F11), in order to minimize the need to
          scroll down to see all buttons.`,
   buttonText: "START"
 });
