@@ -106,7 +106,7 @@ const instructions_train2 = magpieViews.view_generator("instructions", {
          <br/>
          <br/>
          A block is considered to <b><i>fall</i></b> <b>as soon as it <i>topples
-         over</i> or <i>drops</i> from a platform.</b>
+         over</i> or <i>drops</i> from a platform or another block.</b>
          <br/>
          The colored blocks represent common toy blocks, they do not have any
          special properties and they are only distinguishable by their color.
@@ -167,8 +167,9 @@ const instructions_test = magpieViews.view_generator("instructions", {
           Please keep in mind:
             <br/>
           1. A block is considered to <b><i>fall</i> as soon as it <i>drops</i> from a
-          platform or <i>topples over</i></b> - that is, a block does not necessarily
-          need to fall to the ground in order to count as <i>falling</i>.
+          platform or from another block or simply <i>topples over</i></b> -
+          that is, a block does not necessarily need to fall to the ground in
+          order to count as <i>falling</i>.
           <br/>
           2. The probabilities that you assign to the four events do <b>not have to
           sum up to 100%</b>.
