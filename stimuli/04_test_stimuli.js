@@ -104,7 +104,7 @@ testTrials_independent = function(priors){
   let shift = independent_shift[priors[1]];
   Matter.Body.setPosition(b2, {x: b2.position.x + shift * -data.sides[0], y: b2.position.y});
   // add seesaw as distractor
-  let dist = seesaw(data.increase ? 220 : 580, "independent")
+  let dist = seesaw(data.increase ? 170 : 630, "independent")
   let tilt = priors[1] === "high" ? 'steep' : 'plane';
   let ramp = Walls.test.tilted["independent"](tilt, data.increase, data.walls[1]);
   let objs = data.walls.concat([dist.skeleton]).concat(ramp);
