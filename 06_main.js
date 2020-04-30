@@ -16,12 +16,12 @@ $("document")
     window.magpie_monitor = magpieInit({
       // You have to specify all views you want to use in this experiment and the order of them
       views_seq: [
-      intro,
-      instructions_train1_colors,
-      sentence_choice_custom,
-      instructions_train2,
+      // intro,
+      // instructions_train1_colors,
+      // sentence_choice_custom,
+      // instructions_train2,
       animation_view1,
-      instructions_train3,
+      // instructions_train3,
       animation_view2,
       instructions_test,
       multiple_slider,
