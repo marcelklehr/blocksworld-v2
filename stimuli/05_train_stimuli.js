@@ -17,7 +17,6 @@ trials_independent = function(){
   let bA = block(x_max_base - lengthOnBase("uncertain", true) - 25 + props.blocks.h/2,
     y_min_base, cols.train_blocks[0],'blockLowA', horiz=true);
   // steep falls
-  //x=350
   let bB = block(x=430, y_min_base = 225-props.walls.h/2, cols.train_blocks[1],
     'blockLowB', horiz=true);
   // plane uncertain doesnt fall
@@ -29,9 +28,8 @@ trials_independent = function(){
     "blockLowB": ["high", "low", "train-independent-steep-falls"],
     "blockLowC": ["uncertain", "high", "train-independent-plane-doesnt-fall"]
   };
-
-  // 2.trial: steep and plane tilted walls are different
   [bA, bB, bC].forEach(function(block1, i){
+    let seesaw_dist = seesaw(data.increase ? 220 : 580, "independent")
     let id = "independent_" + i;
     let ramp_type = block1.label === "blockLowB" ? "steep" : "plane";
     let walls = Walls.train.independent.concat(
@@ -44,9 +42,12 @@ trials_independent = function(){
         y: walls[0].position.y})
     }
     let i_dist_col = block1.render.fillStyle === cols.train_blocks[0] ? 1 : 0;
-    let distractor = blockOnBase(W4, PRIOR[meta[block1.label][1]],
+    let distractor = blockOnBase(W4, -1 * PRIOR[meta[block1.label][1]],
       cols.train_blocks[i_dist_col], 'distractorBlock');
-    let objs = {'objs': [block1, distractor].concat(walls),
+
+    walls = walls.concat([seesaw_dist.skeleton]);
+    let objs = {'objs': [block1, distractor, seesaw_dist.plank,
+                         seesaw_dist.constraint].concat(walls),
                 'meta': meta[block1.label], id: id}
     data[id] = objs
   });

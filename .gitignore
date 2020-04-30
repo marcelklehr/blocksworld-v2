@@ -4,3 +4,6 @@
 .Ruserdata
 
 data/test-runs
+
+# file generated from trial_type_orders.wppl
+trial_type_orders.json

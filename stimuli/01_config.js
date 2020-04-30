@@ -9,10 +9,12 @@ props = {'blocks': {'w':40, 'h': 80},
          'walls': {'w': 200, 'h': 20},
          'balls': {'radius': 16, 'color': cols.purple},
          'bottom': {'w': scene.w, 'h': 20},
-         'seesaw': {'stick': {'w': 20, 'h': 80},
-                    'plank': {'w': 220, 'h': 10},
-                    'link': {'w': 5, 'h': 10}
-                  }
+         'seesaw_a_iff_c': {'stick': {'w': 20, 'h': 80},
+                            'plank': {'w': 220, 'h': 10},
+                            'link': {'w': 5, 'h': 10}},
+        'seesaw_independent': {'stick': {'w': 20, 'h': 40},
+                               'plank': {'w': 220, 'h': 10},
+                               'link': {'w': 5, 'h': 10}}
        };
 
 OPTS = {

@@ -13,7 +13,7 @@ let W2 = wall('w2_lowRight', 420 - 10, 240);
 let W3 = wall('w3_rampLowInd', 410+4, 240, props.walls.w + 25)
 let W3_2 = wall('w3_2_rampLowInd', 390-4, 240, props.walls.w + 25)
 
-let W4 = wall('w4_upRight', 550, 100);
+let W4 = wall('w4_upRight', 750, 240, 90);
 let W5 = wall('w5_shortUpRight', 420, 120, props.walls.w/1.5);
 let W5_2 = wall('w5_2_shortUpLeft', 380, 120, props.walls.w/1.5);
 
@@ -66,17 +66,16 @@ makeRamp = function(angle, tilt_increase, wallLow){
 let W6 = function(){return wall('wall_seesaw_left', 225, 240, props.walls.w/1.5)};
 let W7 = function(){return wall('wall_seesaw_right', 575, 240, props.walls.w/1.5)};
 
-
-// seesaw
-seesaw = function(pos){
+seesaw = function(pos, trial_type="a_iff_c"){
+  let kind = "seesaw_" + trial_type;
   let stick = wall('stick', x=pos,
-    y=scene.h - props.bottom.h - props.seesaw.stick.h / 2,
-    w=props.seesaw.stick.w, h=props.seesaw.stick.h,
+    y=scene.h - props.bottom.h - props[kind].stick.h / 2,
+    w=props[kind].stick.w, h=props[kind].stick.h,
     opts={render: {fillStyle: cols.darkgrey}}
   );
 
-  let link = wall('link', pos, stick.bounds.min.y - props.seesaw.link.h/2,
-    props.seesaw.link.w, props.seesaw.link.h, {render: {fillStyle: cols.darkbrown}}
+  let link = wall('link', pos, stick.bounds.min.y - props[kind].link.h/2,
+    props[kind].link.w, props[kind].link.h, {render: {fillStyle: cols.darkbrown}}
   );
 
   let skeleton = Body.create({'parts': [stick, link],
@@ -85,8 +84,8 @@ seesaw = function(pos){
   });
 
   let defPlank = Object.assign({x: pos,
-    y: link.bounds.min.y - props.seesaw.plank.h/2,
-  }, props.seesaw.plank);
+    y: link.bounds.min.y - props[kind].plank.h/2,
+  }, props[kind].plank);
   let plank = rect(defPlank, {'label':'plank', 'render':{'fillStyle':cols.plank}})
 
   var constraint = Constraint.create({
