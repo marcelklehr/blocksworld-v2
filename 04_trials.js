@@ -47,7 +47,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/a_implies_c_ll.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -62,7 +61,6 @@ var slider_rating_trials = [
   // {
   //   picture: "stimuli/img/group/a_implies_c_lu.jpg",
   //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   question: 'ac-a-c-none',
   //   icon1: id2Icon.ac,
   //   icon2: id2Icon.a,
   //   icon3: id2Icon.c,
@@ -77,7 +75,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/a_implies_c_lh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -92,7 +89,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/a_implies_c_ul.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -107,7 +103,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/a_implies_c_uu.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -122,7 +117,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/a_implies_c_uh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -137,7 +131,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/a_implies_c_hl.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -152,7 +145,6 @@ var slider_rating_trials = [
   // {
   //   picture: "stimuli/img/group/a_implies_c_hu.jpg",
   //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   question: 'ac-a-c-none',
   //   icon1: id2Icon.ac,
   //   icon2: id2Icon.a,
   //   icon3: id2Icon.c,
@@ -167,7 +159,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/a_implies_c_hh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -182,7 +173,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/a_iff_c_ll.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -197,7 +187,6 @@ var slider_rating_trials = [
   // {
   //   picture: "stimuli/img/group/a_iff_c_ul.jpg",
   //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   question: 'ac-a-c-none',
   //   icon1: id2Icon.ac,
   //   icon2: id2Icon.a,
   //   icon3: id2Icon.c,
@@ -212,7 +201,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/a_iff_c_hl.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -228,7 +216,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/a_iff_c_uu.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -243,7 +230,6 @@ var slider_rating_trials = [
   // {
   //   picture: "stimuli/img/group/a_iff_c_hu.jpg",
   //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   question: 'ac-a-c-none',
   //   icon1: id2Icon.ac,
   //   icon2: id2Icon.a,
   //   icon3: id2Icon.c,
@@ -258,7 +244,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/a_iff_c_hh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -273,7 +258,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/independent_ll.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -288,7 +272,6 @@ var slider_rating_trials = [
   // {
   //   picture: "stimuli/img/group/independent_lu.jpg",
   //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   question: 'ac-a-c-none',
   //   icon1: id2Icon.ac,
   //   icon2: id2Icon.a,
   //   icon3: id2Icon.c,
@@ -303,7 +286,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/independent_lh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -318,7 +300,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/independent_ul.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -333,7 +314,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/independent_uu.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -348,7 +328,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/independent_uh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -363,7 +342,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/independent_hl.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -378,7 +356,6 @@ var slider_rating_trials = [
   // {
   //   picture: "stimuli/img/group/independent_hu.jpg",
   //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   question: 'ac-a-c-none',
     // icon1: id2Icon.ac,
     // icon2: id2Icon.a,
     // icon3: id2Icon.c,
@@ -393,7 +370,6 @@ var slider_rating_trials = [
   {
     picture: "stimuli/img/group/independent_hh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
-    question: 'ac-a-c-none',
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
     icon3: id2Icon.c,
@@ -457,7 +433,6 @@ _.range(0, NB_TRAIN_TRIALS - 1)
       question2: text_train_buttons.short.a,
       question3: text_train_buttons.short.c,
       question4: text_train_buttons.short.none,
-      question: 'ac-a-c-none'
     };
     TRAIN_TRIALS.push(data);
   });

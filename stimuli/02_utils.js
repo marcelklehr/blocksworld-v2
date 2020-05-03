@@ -1,7 +1,13 @@
-blockOnBase = function(base, propOnBase, color, label, horiz=false) {
-  let w = horiz ? props.blocks.h : props.blocks.w;
-  let h = horiz ? props.blocks.w : props.blocks.h;
-  // when propOnBase is negative, block is put on left side of the base, else right side
+blockOnBase = function(base, propOnBase, color, label, horiz=false, wh={}) {
+  let w,
+      h;
+  w = Object.keys(wh).length === 0 ?
+    (horiz ? props.blocks.h : props.blocks.w) : wh.w;
+  h = Object.keys(wh).length === 0 ?
+    (horiz ? props.blocks.w : props.blocks.h) : wh.h;
+
+  // when propOnBase is negative, block is put on left side of the base,
+  // else right side
   let edge = propOnBase < 0 ? "min" : "max"
   let factor = propOnBase < 0 ? - propOnBase : (1-propOnBase)
   let x = base.bounds[edge]["x"] + factor * w - w / 2;

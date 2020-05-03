@@ -24,17 +24,17 @@ testTrials_a_iff_c = function(priors){
     {side: "left", i: 0, 'moveBlock': -1, 'increase': false};
 
   let offset = data_ramp.side === "left" ? 50 : -50;
-  let seesaw = Walls.test.seesaw_trials(offset)
+  let seesaw_elems = Walls.test.seesaw_trials(offset)
 
   let ramp_walls;
   if (priors[data_ramp.i] === "uncertain" || priors[data_ramp.i] === "low") {
     ramp_walls = Walls.test.tilted.a_iff_c('plane', data_ramp.increase,
-      seesaw.walls[data_ramp.i])
+      seesaw_elems.walls[data_ramp.i])
   } else {
     ramp_walls = Walls.test.tilted.a_iff_c('steep', data_ramp.increase,
-      seesaw.walls[data_ramp.i]);
+      seesaw_elems.walls[data_ramp.i]);
   }
-  let objs = seesaw.dynamic.concat(ramp_walls).concat(seesaw.walls)
+  let objs = seesaw_elems.dynamic.concat(ramp_walls).concat(seesaw_elems.walls)
   // add 2 blocks + extra block for iff-trials
   let xBlock,
       bases,
@@ -42,13 +42,25 @@ testTrials_a_iff_c = function(priors){
       factor;
   if (data_ramp.side === "left") {
     factor = -1
-    xBlock = blockOnBase(seesaw.walls[1], factor * 0.52, cols.darkgrey, "XblockR", true)
-    bases = [seesaw.walls[0], xBlock]
+    let wr = seesaw_elems.walls[1];
+    let xl = wr.bounds.min.x;
+    let width = wr.bounds.max.x - wr.bounds.min.x;
+    Matter.Body.scale(wr, 2/3, 1)
+    Matter.Body.setPosition(wr, {x: xl + (2/3) *  width / 2, y: wr.position.y});
+    xBlock = blockOnBase(wr, factor * 0.52, cols.darkgrey,
+      "XblockR", true, {w: props.blocks.h*1.5, h: props.blocks.w})
+    bases = [seesaw_elems.walls[0], xBlock]
     sides = [1, 1]
   } else {
     factor = 1;
-    xBlock = blockOnBase(seesaw.walls[0], factor * 0.52, cols.darkgrey, "XblockL", true)
-    bases = [xBlock, seesaw.walls[1]]
+    let wl = seesaw_elems.walls[0]
+    let xr = wl.bounds.max.x;
+    let width = wl.bounds.max.x - wl.bounds.min.x;
+    Matter.Body.scale(wl, 2/3, 1)
+    Matter.Body.setPosition(wl, {x: xr - (2/3) *  width / 2, y: wl.position.y});
+    xBlock = blockOnBase(wl, factor * 0.52, cols.darkgrey,
+      "XblockL", true, {w: props.blocks.h*1.5, h: props.blocks.w})
+    bases = [xBlock, seesaw_elems.walls[1]]
     sides = [-1, -1]
   }
   let blocks = [];

@@ -106,7 +106,7 @@ const instructions_train2 = magpieViews.view_generator("instructions", {
          <br/>
          <br/>
          A block is considered to <b><i>fall</i></b> <b>as soon as it <i>topples
-         over</i> or <i>drops</i> from a platform or another block.</b>
+         over</i> or <i>drops</i> from a platform or from another block.</b>
          <br/>
          The colored blocks represent common toy blocks, they do not have any
          special properties and they are only distinguishable by their color.
@@ -130,14 +130,32 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   In this trial, we ask you to indicate <b>how likely</b> you think certain
   blocks <b>will or will not fall</b> by moving the corresponding sliders.
    <br />
+  The larger your belief is that the event you are asked for <b>willl</b> occur,
+  the more you should position the corresponding slider towards its
+  right end (<i>certainly</i>/100%).
+  <br />
+  The larger your belief is that the event <b>will not</b> occur, the more you
+  should position the corresponding slider towards its left (<i>impossible</i>/0%).
+  Here is an example:
+  <br />
+  <br />
+  <input type='range' id=ex_slider class='magpie-response-slider replied' min='0' max='100' value='40' oninput='ex_slider.value + "%"'/>
+  <output name=ex_slider_out id=out_ex class="thick">40%</output>
+  <script>document.getElementById("ex_slider").disabled=true;</script>
+  <br/>
+  <br/>
+  If you positioned the slider like or close to this at 40%, you indicate that you
+  are quite <b>undecided</b> whether or not the event will occur, but you judge
+  it <i>a bit <b>more</b> likely that it will <b>not</b></i> occur.
+  <br />
   The circle on the sliders will turn green after you moved it and clicked to
-  fix its new position.
+  fix its new position, as is shown on the example slider above.
     <br />
     <br />
   You may wonder whether the probabilities that you assign to the four described
   events must sum up to 100%. In this respect, note that we are interested in how
-  you rate the four events relative to each other. This means that <b>your
-  estimates may, but don't have to sum to 100%</b>.
+  you rate the four events relative to each other. This means that your
+  estimates <b>may</b>, but <b>do not have to</b> <i>sum to 100%</i>.
     <br />
     <br />
   After you have provided all four estimates (the circles of all four sliders
