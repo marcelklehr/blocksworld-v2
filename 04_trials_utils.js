@@ -58,6 +58,7 @@ pseudoRandomTestTrials = function(){
   })
   return trials
 }
+
 // save trial data to make it accessible in magpie experiment
 const shuffled_test_ids = pseudoRandomTestTrials();
 let test_ids = _.map(slider_rating_trials, 'id');
@@ -70,7 +71,8 @@ shuffled_test_ids.forEach(function(id){
 if (DEBUG){
   let arr = _.map(TEST_TRIALS, 'id')
   let res = _.countBy(arr, function(id) {
-    return id ? (id.includes('independent') ? 'ind' : id.includes('iff') ? 'iff' : 'ac') : 'undefined';
+    return id ? (id.includes('independent') ? 'ind' :
+      id.includes('iff') ? 'iff' : 'ac') : 'undefined';
   });
   console.log(res)
 }

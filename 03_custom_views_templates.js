@@ -150,7 +150,7 @@ const animation_view2 = {
         if (!cleared) {
           clearWorld(animation.engine, animation.render, stop2Render = false);
         }
-        let data = getSliderResponse("train");
+        let data = getSliderResponse();
         let trial_data = Object.assign(data, {
           trial_name: 'animation_slider',
           trial_number: CT + 1,
@@ -162,7 +162,7 @@ const animation_view2 = {
         copied.icon2 = iconHtml2Utterance(copied.icon2).short;
         copied.icon3 = iconHtml2Utterance(copied.icon3).short;
         copied.icon4 = iconHtml2Utterance(copied.icon4).short;
-        copied.expected = '';
+        copied.expected = ''; // sliders dont have an expected outcome!
 
         trial_data = magpieUtils.view.save_config_trial_data(
           copied,
@@ -209,7 +209,7 @@ const multi_slider_generator = {
     addCheckSliderResponse(button);
     button.on("click", function () {
       const RT = Date.now() - startingTime; // measure RT before anything else
-      let responseData = getSliderResponse("test");
+      let responseData = getSliderResponse();
       let trial_data = Object.assign(responseData, {
         trial_name: config.name,
         trial_number: CT + 1,
@@ -268,7 +268,7 @@ const custom_posttest_generator = {
                         <textarea name="ramp1" id="ramp1" rows="1" cols="40"></textarea>
                     </p>
                     <p class="magpie-view-text">
-                        <label for="ball">Did you notice that the color of the ball was different depending on the steepness of the incline?</label>
+                        <label for="ball">Did you notice that the color of the ball was different?</label>
                         <textarea name="ramp2" id="ramp2" rows="1" cols="40"></textarea>
                     </p>
                     <p class="magpie-view-text">

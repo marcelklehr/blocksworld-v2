@@ -412,14 +412,13 @@ let train_slider_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.train),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.train),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.train),
-    question: 'ac-a-c-none',
     optionLeft: "impossible",
     optionRight: "certainly"
   }
 ];
 
-// the data of the training stimuli is always the same, buttons are always shown in
-// same order
+// the data of the training stimuli is always the same, buttons are always shown
+// in same order
 let TRAIN_TRIALS = [];
 _.range(0, NB_TRAIN_TRIALS - 1)
   .forEach(function (i) {

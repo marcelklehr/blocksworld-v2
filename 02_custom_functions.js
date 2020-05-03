@@ -166,7 +166,7 @@ getButtonResponse = function() {
   return Object.assign(trial_data, {'response': responses});
 }
 
-getSliderResponse = function(trial_type="test"){
+getSliderResponse = function(){
   let responses = [];
   let trial_data = {}
   _.range(1,5).forEach(function(i){
