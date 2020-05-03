@@ -1,0 +1,91 @@
+---
+title: "stats Experiment 1"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(here)
+library(tidyverse)
+source(here("R", "utils.R"))
+
+target_dir <-  here("data", "test-runs");
+# target_dir <- here("data", "prolific", "raw")
+target_fn <- "exp1_tidy.rds"
+path_data <- paste(target_dir, target_fn, sep=.Platform$file.sep)
+
+data <- readRDS(path_data)
+```
+
+## Duration
+
+```{r}
+df <- data$info %>% group_by(prolific_id) %>% distinct()
+
+p <- df %>%
+  ggplot(aes(x=factor(0), y=timeSpent)) + geom_boxplot() + 
+  geom_jitter(shape=16) +
+  geom_hline(aes(yintercept = mean(df$timeSpent) + sd(df$timeSpent),
+                 color="yellow")) +
+  geom_hline(aes(yintercept = mean(df$timeSpent) + 2 * sd(df$timeSpent),
+                 color="red")) +
+  theme(legend.position="none") + 
+  labs(x = "", y="timeSpent in min.")
+p
+
+df %>% ungroup() %>%  group_by(prolific_id) %>%  summary()
+```
+
+## Train Trials Color Vision
+
+```{r}
+df <- data$color %>% group_by(prolific_id, id) %>% 
+  mutate(correct = expected == response)
+
+df %>%
+  ggplot(aes(x=id)) + geom_bar(position="dodge", aes(fill=correct)) + 
+  theme(axis.text.x = element_text(angle=90, hjust=1), legend.position = "top")
+
+```
+
+## Train Trials
+
+```{r}
+df <- data$train %>% group_by(prolific_id, id)
+df.correct = df %>% filter(case_when(expected == "response1" ~ icon_idx == 1,
+                                     expected == "response2" ~ icon_idx == 2, 
+                                     expected == "response3" ~ icon_idx == 3,
+                                     expected == "response4" ~ icon_idx == 4, 
+                                     ))
+
+df.correct %>%
+  ggplot(aes(x=id)) + geom_bar(position="dodge", aes(fill=response)) + 
+  theme(axis.text.x=element_text(angle=90, hjust=1), legend.position = "top") + 
+  guides(fill = guide_legend(title = "correct"))
+
+
+```
+
+
+## Reaction times (per experimental trial)
+
+```{r}
+df <- data$test %>% select(prolific_id, id, RT) %>% group_by(id) %>% distinct()
+
+# TODO: points are added twice?
+RT_mu = mean(df$RT)
+p <- df %>%  ggplot(aes(x=id, y=RT)) + geom_boxplot() +
+  geom_hline(aes(yintercept = RT_mu), color="green", linetype="dashed") +
+  geom_hline(aes(yintercept = RT_mu + sd(df$RT)), color="orange") +
+  geom_hline(aes(yintercept = RT_mu + 2 * sd(df$RT)), color="red") +
+  theme(legend.position="none", axis.text.x = element_text(angle=90)) +
+  ggtitle("Reaction times per test stimulus")  
+p
+```
+
+General comments
+
+```{r}
+data$comments
+```

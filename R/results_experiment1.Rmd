@@ -1,0 +1,214 @@
+---
+title: "results experiment 1"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(here)
+library(tidyverse)
+source(here("R", "utils.R"))
+
+data_dir <-  here("data", "test-runs")
+# data_dir <- here("data", "prolific")
+
+result_dir <- here("data", "test-runs", "results", "experiment1")
+dir.create(result_dir, recursive=TRUE)
+
+fn <- "exp1_test_trials_processed.rds"
+data <- readRDS(paste(data_dir, fn, sep=.Platform$file.sep))
+stimuli <- data %>% pull(id) %>% unique()
+```
+
+Look for participants who gave all-or-none responses, if any, 
+which stimuli were rated as all-or-none by how many participants?
+
+```{r}
+N_participants <- data %>% pull(prolific_id) %>% unique() %>% length()
+df <- data %>% group_by(prolific_id, id) %>% 
+  summarise(n=max(response)) %>% 
+  filter(n==1)
+
+N0 <- N_participants - df %>% pull(prolific_id) %>% unique() %>% length()
+df0 <- tibble(prolific_id=rep('--', N0), n_all_none=rep(0, N0))
+  
+df.participants_all_none <- df %>% group_by(prolific_id) %>%
+  summarise(n_all_none = n()) %>%
+  mutate(prolific_id=as.character(prolific_id)) %>% 
+  bind_rows(df0)
+
+if (nrow(df.participants_all_none) != 0){
+  p <- df.participants_all_none %>%
+        ggplot(aes(n_all_none)) + geom_bar() +
+        labs(y="#participants", x="#all-none answers")
+  print(p)
+  print(df.participants_all_none)
+
+  df.stimuli_all_none <- df %>%
+    ungroup() %>% group_by(id) %>% summarise(n_participants = n()) 
+
+  p <- df.stimuli_all_none %>%
+        ggplot(aes(x=id, y=n_participants)) + geom_bar(stat="identity") + 
+        theme(axis.text.x = element_text(angle=90, hjust=1)) + 
+        labs(y="#participants who gave all-none answer")
+  print(p)
+} else {
+  print('nobody gave all-none responses (where sum=1)')
+}
+```
+
+
+## Result data
+
+```{r}
+dat <- data %>%
+  mutate(question = factor(question, levels = c("ac", "a", "c", "none")))
+
+labels <- c(ac="Blue and Green", a="Blue and ¬Green",
+            c="¬Blue and Green", none="¬Blue and ¬Green")
+
+df_means <- dat %>% group_by(id, question) %>%
+  summarise(m=mean(response), med=median(response))
+
+for (s in stimuli){
+  df <-dat %>% filter(id == s) 
+  means <- df_means %>% filter(id == s)
+  p <- df  %>% 
+    ggplot(aes(x=response, y=factor(0), fill=question)) +
+    geom_jitter(height = 0.1, alpha=0.5, aes(colour=factor(prolific_id))) +
+    #TODO: uncomment again!
+    # geom_point(data=means,  mapping=aes(x=med, y=factor(0)), col="yellow") +
+    # geom_point(data=means,  mapping=aes(x=m, y=factor(0)), col="red") +
+    # geom_violin(alpha=0.5) +
+    labs(x="estimates probability", y="") + 
+    theme_classic() +
+    facet_wrap(~question, labeller = labeller(question=labels)) + 
+    ggtitle(s) +
+    theme(legend.position = "right",
+          axis.text.y=element_blank(),
+          axis.ticks.y =element_blank(),
+          text = element_text(size=20),
+          panel.spacing = unit(2, "lines"))
+  p
+  fn <- paste("exp1-", s, ".png", sep="")
+  # ggsave(paste(result_dir, fn, sep=.Platform$file.sep), p, width=6, height=4)
+  print(p)
+}
+```
+
+
+```{r}
+df <- data %>% pivot_wider(names_from = question, values_from = response) %>% 
+  ungroup() %>% mutate(id=as.character(id)) %>% add_probs() %>% 
+  select(-group, -QUD, -n)
+
+as_independent <- c('a_implies_c_ll', 'a_implies_c_lu', 'a_implies_c_lh',
+                    'a_implies_c_uh', 'a_implies_c_hh',
+                    'a_iff_c_ll', 'a_iff_c_hh')
+ind <- df %>% filter(startsWith(id, "independent") | id %in% as_independent) %>% 
+  add_column(kind = "independent")
+
+as_a_implies_c_cause <- c('a_iff_c_lh', 'a_iff_c_hl', 'a_implies_c_hl')
+ac_cause <- df %>% filter(id %in% as_a_implies_c_cause) %>%
+  add_column(kind = "cause")
+
+as_a_implies_c_diagnostic <- c('a_iff_c_lu', 'a_iff_c_ul', 'a_implies_c_ul')
+ac_diagnostic <- df %>% filter(id %in% as_a_implies_c_diagnostic) %>%
+  add_column(kind = "diagnostic")
+
+others <- df %>% filter(id %in% c('a_implies_c_uu', 'a_implies_c_hu',
+                                  'a_iff_c_uu', 'a_iff_c_uh', 'a_iff_c_hu')) %>%
+  add_column(kind = "other")
+
+N <- ind %>% nrow() + others %>% nrow() + ac_cause %>% nrow() +
+  ac_diagnostic %>% nrow()
+stopifnot(N == nrow(df))
+```
+
+```{r, echo=FALSE}
+plotProbs = function(data){
+  stimuli <- data %>% pull(id) %>% unique()
+  labels <- c(p_a="P(Blue falls)", p_c="P(Green falls)",
+            p_c_given_a="P(Green| Blue)",
+            p_a_given_c="P(Blue| Green)")
+  df <- data %>%
+    select(prolific_id, id, p_a, p_c, p_c_given_a, p_a_given_c) %>% 
+    pivot_longer(cols=c(p_a, p_c, p_c_given_a, p_a_given_c),
+                 names_to = "p_key", values_to = "p") %>% 
+    mutate(p_key=factor(p_key,levels=c("p_a","p_c","p_a_given_c", "p_c_given_a")))
+  
+  for(s in stimuli) {
+    df.s <- df %>% filter(id == s) 
+    p <- df.s  %>%
+      ggplot(aes(x=p, y=factor(0), fill=prolific_id)) +
+      geom_jitter(height = 0.1, alpha=0.5, aes(colour=factor(prolific_id))) +
+      xlim(-0.1, 1.1) +
+      #TODO: uncomment again!
+      # geom_point(data=means,  mapping=aes(x=med, y=factor(0)), col="yellow") +
+      # geom_point(data=means,  mapping=aes(x=m, y=factor(0)), col="red") +
+      # geom_violin(alpha=0.5) +
+      labs(x="estimates probability", y="") + 
+      theme_classic() +
+      facet_wrap(~p_key, labeller = labeller(p_key=labels)) + 
+      ggtitle(s) +
+      theme(legend.position = "right",
+            axis.text.y=element_blank(),
+            axis.ticks.y =element_blank(),
+            axis.text = element_text(size=15),
+            panel.spacing = unit(2, "lines"))
+    print(p)
+  }
+}
+```
+
+
+Trials that are expected to be INDEPENDENT
+
+```{r}
+plotProbs(ind)
+```
+
+Trials that are expected to be A->C (cause)
+
+```{r}
+plotProbs(bind_rows(ac_cause, ac_diagnostic))
+```
+
+
+Other trials
+
+```{r}
+plotProbs(others)
+```
+
+
+```{r, echo = FALSE, message=FALSE}
+fn <- paste(data_dir, "exp1_prob_tables_mean.csv", sep=.Platform$file.sep)
+tables <- read_csv(fn) %>% add_probs() %>% 
+  pivot_longer(cols=starts_with("p_"), names_to = "key", values_to = "prob")
+```
+
+
+```{r, echo=FALSE}
+PlotDensity <- function(dat, p1, p2, save_as){
+  p <- dat %>%
+    filter(key==p1 | key == p2) %>% 
+    ggplot(aes(prob, fill=key)) +
+    geom_density(alpha=0.5)
+  
+  # ggsave(paste(TARGET_DIR, save_as, sep=.Platform$file.sep), p, width=6, height=4)
+  return(p)
+}
+```
+
+Distributions of peoples' beliefs about probabilities across all stimuli
+
+```{r}
+tables %>% PlotDensity("p_a_given_c", "p_c_given_a", "p-conditionals.png")
+tables %>% PlotDensity("p_a", "p_c", "p-marginals.png")
+tables %>% PlotDensity("p_na_given_nc", "p_nc_given_na", "p-neg-conditionals.png")
+tables %>% PlotDensity("p_na", "p_nc", "p-neg-marginals.png")
+
+```
+

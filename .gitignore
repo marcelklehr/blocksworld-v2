@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+R/*.html
 
 data/test-runs
 
