@@ -57,7 +57,7 @@ tidy_test <- function(df){
 
 tidy_train <- function(df){
   dat.train <- df %>% filter(startsWith(trial_name, "animation")) %>% 
-    select(prolific_id, RT, expected, QUD, id,
+    select(prolific_id, RT, expected, QUD, id, trial_name,
            icon1, icon2, icon3, icon4,
            response1, response2, response3, response4,
     ) %>% 
@@ -69,8 +69,7 @@ tidy_train <- function(df){
                  values_to = "response") %>% 
     filter(response_idx == icon_idx) %>% 
     select(-response_idx) %>% 
-    mutate(response = as.logical(response),
-           prolific_id = factor(prolific_id),
+    mutate(prolific_id = factor(prolific_id),
            id = factor(id))
   return(dat.train)
 }

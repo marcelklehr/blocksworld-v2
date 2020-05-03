@@ -53,13 +53,16 @@ df %>%
 
 ```{r}
 df <- data$train %>% group_by(prolific_id, id)
-df.correct = df %>% filter(case_when(expected == "response1" ~ icon_idx == 1,
-                                     expected == "response2" ~ icon_idx == 2, 
-                                     expected == "response3" ~ icon_idx == 3,
-                                     expected == "response4" ~ icon_idx == 4, 
-                                     ))
-
-df.correct %>%
+df.slider <- df %>% filter(trial_name == "animation_slider") 
+df.buttons_correct = df %>%
+  filter(case_when(expected == "response1" ~ icon_idx == 1,
+                   expected == "response2" ~ icon_idx == 2, 
+                   expected == "response3" ~ icon_idx == 3,
+                   expected == "response4" ~ icon_idx == 4, 
+                   ))
+# not everyone saw the same trial as slider - trial, therefore sums will not 
+# always be exactly the number of participants.
+df.buttons_correct %>%
   ggplot(aes(x=id)) + geom_bar(position="dodge", aes(fill=response)) + 
   theme(axis.text.x=element_text(angle=90, hjust=1), legend.position = "top") + 
   guides(fill = guide_legend(title = "correct"))
