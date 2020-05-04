@@ -66,8 +66,8 @@
     <script type="text/javascript">
       let worldElems = createWorld();
       let render = worldElems.render
-      let engine = worldElems.engine
-      MODE === "color-vision" ? addObjs2World(stimulus.objs, engine, false) :
+      let engine = worldElems.engine;
+      (MODE === "color-vision" || stimulus.id === "uncertain_2") ? addObjs2World(stimulus.objs, engine, false) :
         addObjs2World(stimulus.objs, engine);
     </script>
 

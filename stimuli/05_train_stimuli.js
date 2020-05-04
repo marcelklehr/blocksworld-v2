@@ -79,6 +79,10 @@ steepnessTrials = function(data, trial_id){
     walls.push(ramp.tilted);
     walls.push(ramp.top);
   });
+  let w_bottom = scene.w - walls[0].bounds.max.x;
+  let bottom = wall(label='bottom_half', x=walls[0].bounds.max.x + w_bottom / 2,
+    y=scene.h - props.bottom.h/2, w=w_bottom, h=props.bottom.h);
+  walls.push(bottom);
   data[trial_id] = {objs: objs_dyn.concat(walls), meta, id: trial_id}
   return data
 }
