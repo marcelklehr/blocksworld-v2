@@ -64,7 +64,7 @@ const animation_view1 = {
             .off("click");
 
           let c = SHUFFLED_TRAIN_STIMULI[CT].id
-          id_button_correct = ["independent_2", "uncertain_0"].includes(c) ? "a" : ['independent_1', "independent_0" "uncertain_1"].includes(c) ? "c" : "ac";
+          id_button_correct = ["independent_2", "uncertain_0"].includes(c) ? "a" : ['independent_1', "independent_0", "uncertain_1"].includes(c) ? "c" : "ac";
           $('#' + id_button_correct)
             .addClass("correct");
           id_bttn_selected !== id_button_correct ?
