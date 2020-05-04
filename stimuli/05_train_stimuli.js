@@ -24,9 +24,9 @@ trials_independent = function(){
     y_min_base, cols.train_blocks[1], 'blockLowC', horiz=true);
 
   let meta = {
-    "blockLowA": ["uncertain", "high","train-independent-plane-falls"],
+    "blockLowA": ["uncertain", "high","train-independent-plane-doesnt-fall"],
     "blockLowB": ["high", "low", "train-independent-steep-falls"],
-    "blockLowC": ["uncertain", "high", "train-independent-plane-doesnt-fall"]
+    "blockLowC": ["uncertain", "high", "train-independent-plane-falls"]
   };
   [bA, bB, bC].forEach(function(block1, i){
     let seesaw_dist = seesaw(data.increase ? 220 : 580, "independent")
@@ -40,15 +40,21 @@ trials_independent = function(){
       Matter.Body.scale(walls[0], 1.18, 1);
       Matter.Body.setPosition(walls[0], {x: walls[0].position.x + 28,
         y: walls[0].position.y})
+    } else if(block1.label === "blockLowA"){
+      Matter.Body.setPosition(block1,
+        {x: block1.position.x-INDEPENDENT_SHIFT.uncertain,
+         y: block1.position.y}
+       );
     }
     let i_dist_col = block1.render.fillStyle === cols.train_blocks[0] ? 1 : 0;
     let distractor = blockOnBase(W4, -1 * PRIOR[meta[block1.label][1]],
-      cols.train_blocks[i_dist_col], 'distractorBlock');
+      cols.train_blocks[i_dist_col], 'b2_right');
 
     walls = walls.concat([seesaw_dist.skeleton]);
     let objs = {'objs': [block1, distractor, seesaw_dist.plank,
                          seesaw_dist.constraint].concat(walls),
-                'meta': meta[block1.label], id: id}
+                'meta': meta[block1.label],
+                'id': id}
     data[id] = objs
   });
   return data

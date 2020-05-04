@@ -53,10 +53,8 @@ makeRamp = function(angle, tilt_increase, wallLow){
   return {'tilted': ramp, 'top': wallTop, 'ball': ball1}
 }
 
-// let W6 = wall(225, 240, props.walls.w/1.5, props.walls.h, 'wall_seesaw_left');
-// let W7 = wall(575, 240, props.walls.w/1.5, props.walls.h, 'wall_seesaw_right');
 let W6 = function(){return wall('wall_seesaw_left', 225, 240, props.walls.w/1.5)};
-let W7 = function(){return wall('wall_seesaw_right', 575, 240, props.walls.w/1.5)};
+let W7 = function(){return wall('wall_seesaw_right', 570, 240, props.walls.w/1.5)};
 
 seesaw = function(pos, trial_type="a_iff_c"){
   let kind = "seesaw_" + trial_type;
@@ -143,8 +141,8 @@ let W13 = wall('w13_down', 400, 350, 150)
 Walls.train.uncertain = [[W8, W9, W10], [W11, W12, W13]]
 
 Walls.train.a_implies_c = function(){
-  return [wall('wall_ac_top', 350, 150),
-    wall('wall_ac_low', 50 + props.walls.w/2 - 10, 290)
+  return [wall('wall_ac_top', 550, 150),
+    wall('wall_ac_low', 250 + props.walls.w/2 - 10, 290)
   ];
 }
 

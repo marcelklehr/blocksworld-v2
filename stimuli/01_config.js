@@ -13,7 +13,7 @@ props = {'blocks': {'w':40, 'h': 80},
                             'plank': {'w': 210, 'h': 10},
                             'link': {'w': 5, 'h': 10}},
         'seesaw_independent': {'stick': {'w': 20, 'h': 40},
-                               'plank': {'w': 210, 'h': 10},
+                               'plank': {'w': 220, 'h': 10},
                                'link': {'w': 5, 'h': 10}}
        };
 
@@ -30,8 +30,8 @@ let Relations = ['a_implies_c', 'a_iff_c', 'independent'];
 let PRIOR = {'high': 0.35, 'uncertain': 0.51, 'low': 0.70}
 
 // for independent trials, one block is shifted to the right depending on prior
-let independent_shift = {"high": 12, "uncertain": 25, "low": 85, "very_low": 100};
-let iff_shift = {"high": 12, "uncertain": 25, "low": 70, "very_low": 100};
+let INDEPENDENT_SHIFT = {"high": 12, "uncertain": 25, "low": 85, "very_low": 100};
+let IFF_SHIFT = {"high": 12, "uncertain": 25, "low": 70, "very_low": 100};
 
 let overlap_shift = {"angle45": 25, "angle30": 14.5, "angle15": 7,
   "angle25": 10, "angle20": 7}

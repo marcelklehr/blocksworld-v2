@@ -72,7 +72,7 @@ testTrials_a_iff_c = function(priors){
   }
 
   let twoBlocks = make2ColoredBlocks(bases, priors, sides);
-  let shift = iff_shift[priors[data_ramp.i]] * data_ramp.moveBlock;
+  let shift = IFF_SHIFT[priors[data_ramp.i]] * data_ramp.moveBlock;
   let b = twoBlocks[data_ramp.i]
   Matter.Body.setPosition(b, {x: b.position.x + shift, y: b.position.y});
   blocks = blocks.concat(twoBlocks).concat(xBlock);
@@ -116,7 +116,7 @@ testTrials_independent = function(priors){
   // and angle of tilted wall has to be adjusted
   let blocks = make2ColoredBlocks(data.walls, priors, data.sides);
   let b2 = blocks[1];
-  let shift = independent_shift[priors[1]];
+  let shift = INDEPENDENT_SHIFT[priors[1]];
   Matter.Body.setPosition(b2, {x: b2.position.x + shift * -data.sides[0], y: b2.position.y});
   // add seesaw as distractor
   let dist = seesaw(data.increase ? 170 : 630, "independent")
