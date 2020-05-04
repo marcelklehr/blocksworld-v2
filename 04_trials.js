@@ -55,6 +55,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -83,6 +84,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -97,6 +99,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -111,6 +114,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -125,6 +129,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -139,6 +144,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -153,6 +159,7 @@ var slider_rating_trials = [
   // question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
   // question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
   // question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+  // question: '',
   //   optionLeft: "impossible",
   //   optionRight: "certainly"
   // },
@@ -167,6 +174,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -181,6 +189,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -195,6 +204,7 @@ var slider_rating_trials = [
   // question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
   // question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
   // question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+  // question: '',
   //   optionLeft: "impossible",
   //   optionRight: "certainly"
   // },
@@ -209,6 +219,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -224,6 +235,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -238,6 +250,7 @@ var slider_rating_trials = [
   // question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
   // question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
   // question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+  // question: '',
   //   optionLeft: "impossible",
   //   optionRight: "certainly"
   // },
@@ -252,6 +265,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -266,6 +280,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -280,6 +295,7 @@ var slider_rating_trials = [
   // question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
   // question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
   // question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+  // question: '',
   //   optionLeft: "impossible",
   //   optionRight: "certainly"
   // },
@@ -294,6 +310,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -308,6 +325,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -322,6 +340,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -336,6 +355,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -350,6 +370,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   },
@@ -364,6 +385,7 @@ var slider_rating_trials = [
     // question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     // question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     // question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    // question: '',
   //   optionLeft: "impossible",
   //   optionRight: "certainly"
   // },
@@ -378,6 +400,7 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   }
@@ -398,7 +421,6 @@ _.map(slider_rating_trials, function (trial) {
 // shuffle questions for each trial to later be able to randomly show the utterances
 // slider_rating_trials = shuffleQuestionsAllTrials(_.values(id2Icon), slider_rating_trials);
 
-
 // TRAINING TRIALS (some with buttons some with sliders)
 let train_slider_trials = [
   {
@@ -412,6 +434,7 @@ let train_slider_trials = [
     question2: abbreviateQuestion(text_sliders.a,  block_cols_short.train),
     question3: abbreviateQuestion(text_sliders.c,  block_cols_short.train),
     question4: abbreviateQuestion(text_sliders.none,  block_cols_short.train),
+    question: '',
     optionLeft: "impossible",
     optionRight: "certainly"
   }
@@ -432,6 +455,7 @@ _.range(0, NB_TRAIN_TRIALS - 1)
       question2: text_train_buttons.short.a,
       question3: text_train_buttons.short.c,
       question4: text_train_buttons.short.none,
+      question: ''
     };
     TRAIN_TRIALS.push(data);
   });
