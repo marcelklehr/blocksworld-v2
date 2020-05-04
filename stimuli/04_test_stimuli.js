@@ -6,7 +6,6 @@ let TestStimuli = {"independent": {}, "a_implies_c": {}, "a_iff_c": {}};
 make2ColoredBlocks = function(bases, priors_str, sides){
   let priors = [PRIOR[priors_str[0]], PRIOR[priors_str[1]]];
   let colors = assignColors(); // colors randomly assigned
-  // let colors = [1, 0];
   let blocks = [];
   for(var i=0; i<=1; i++){
     let prior = priors[i]
