@@ -87,18 +87,22 @@ testTrials_ac = function(priors){
   let p1 = priors[0];
   let p2 = priors[1];
   let data = ['ll', 'hl'].includes(p1[0]+p2[0]) ?
-    {ramp_base: WP1, pf: P1, moveBlocksTo: 1, increase: false, idx_w: 0, bX1_x: "min"} :
-    {ramp_base: WP2, pf: P2, moveBlocksTo: -1, increase: true, idx_w: 1, bX1_x: "max"};
-  let tilt = p2==="high" ? "steep" : p2==="low" ? "plane" : "middle";
-  let objs = Walls.test.tilted.a_implies_c(tilt, data.increase, data.ramp_base);
+    {moveBLow: 1, moveBUp: -1, increase: false, idx_w: 0, edge_bX: "max"} :
+    {moveBLow: -1, moveBUp: 1, increase: true, idx_w: 1, edge_bX: "min"};
+
   let walls = Walls.test["a_implies_c"][data.idx_w];
+  let w1 = walls[1]
+  let tilt = p2==="high" ? "steep" : p2==="low" ? "plane" : "middle";
+  let objs = Walls.test.tilted.a_implies_c(tilt, data.increase, w1);
   objs = objs.concat(walls);
 
-  let wX1 = wall('wX1', data.pf.bounds[data.bX1_x].x + data.moveBlocksTo * 1.5 * props.blocks.h/2,
-    data.pf.bounds.min.y - props.blocks.w/2, props.blocks.h, props.blocks.w)
-  let b1 = blockOnBase(walls[0], PRIOR[priors[0]] * data.moveBlocksTo, cols.test_blocks[colors[0]], 'blockA', true);
-  let b2 = blockOnBase(wX1, PRIOR["low"] * data.moveBlocksTo, cols.test_blocks[colors[1]], 'blockC', true);
-  blocks = blocks.concat([b1, b2, wX1]);
+  let bX = block(w1.bounds[data.edge_bX].x + data.moveBUp*(20+props.blocks.h/2),
+    w1.bounds.min.y, cols.darkgrey, 'xBlockLow', true)
+
+  let b1 = blockOnBase(walls[0], PRIOR[priors[0]] * data.moveBUp, cols.test_blocks[colors[0]], 'blockA', true);
+  let b2 = blockOnBase(bX, PRIOR["low"] * data.moveBLow,
+    cols.test_blocks[colors[1]], 'blockC', true);
+  blocks = blocks.concat([b1, b2, bX]);
 
   return blocks.concat(objs)
 }

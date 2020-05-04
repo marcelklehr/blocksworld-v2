@@ -14,14 +14,6 @@ let W3 = wall('w3_rampLowInd', 410+4, 240, props.walls.w + 25)
 let W3_2 = wall('w3_2_rampLowInd', 390-4, 240, props.walls.w + 25)
 
 let W4 = wall('w4_upRight', 750, 240, 90);
-let W5 = wall('w5_shortUpRight', 420, 120, props.walls.w/1.5);
-let W5_2 = wall('w5_2_shortUpLeft', 380, 120, props.walls.w/1.5);
-
-let P1 = wall('platform1', 570, Bottom.bounds.min.y - 100/2, 150, 100);
-let WP1 = wall('wp1', 420 - 10, 220, props.walls.w/1.5);
-let P2 = wall('platform2', 230, Bottom.bounds.min.y - 100/2, 150, 100);
-let WP2 = wall('wp2', 380 + 10, 220, props.walls.w/1.5);
-
 
 // This is important because, it gets scaled in some trials! Therefore different
 // instances are needed!
@@ -97,9 +89,13 @@ seesaw = function(pos, trial_type="a_iff_c"){
   return {stick, link, skeleton, plank, constraint}
 }
 
+W_IF_UP1 = wall('wall_ac_top', 600, 100),
+W_IF_UP2 = wall('wall_ac_top', 100, 100),
+W_IF_LOW = wall('wall_ac_low', 350, 290)
+
 // The first two list entries are respectively the bases for block1 and block2
 Walls.test = {'independent': [[W1, W3], [W1_2, W3_2]], // tilted wall+ball added dep on prior
-              'a_implies_c': [[W5, P1, WP1], [W5_2, P2, WP2]],
+              'a_implies_c': [[W_IF_UP1, W_IF_LOW], [W_IF_UP2, W_IF_LOW]],
               'a_iff_c': []
               };
 
@@ -138,15 +134,17 @@ Walls.train.tilted_independent =  function(tilt, increase, base) {
   return _.values(ramp)
 }
 
-//let W8 = wall(x=scene.w/2, y=scene.h/2, w=props.walls.w, h=props.walls.h, 'wallMiddle');
 let W8 = wall('w8_middle_left', (1/4) * scene.w, scene.h/3);
 let W9 = wall('w9_middle_right', (3/4) * scene.w, scene.h/3);
 let W10 = wall('w10_right_low', (2/3) * scene.w, (3/4) * scene.h);
-Walls.train.uncertain = [W8, W9, W10]
+let W11 = wall('w11_top', 400, 145, 150)
+let W12 = wall('w12_middle', 400, 230, 150)
+let W13 = wall('w13_down', 400, 350, 150)
+Walls.train.uncertain = [[W8, W9, W10], [W11, W12, W13]]
 
 Walls.train.a_implies_c = function(){
-  return [wall('wall_ac_top', 400, 100),
-    wall('wall_ac_low', 100 + props.walls.w/2 - 10, 240)
+  return [wall('wall_ac_top', 350, 150),
+    wall('wall_ac_low', 50 + props.walls.w/2 - 10, 290)
   ];
 }
 

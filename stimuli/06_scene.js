@@ -27,7 +27,7 @@ createWorld = function(){
 }
 
 addObjs2World = function(objs, engine, bottom=true){
-  objs = bottom ? [Bottom].concat(objs) : objs;
+  objs = bottom ? objs.concat([Bottom]) : objs;
   World.add(engine.world, objs);
 }
 
