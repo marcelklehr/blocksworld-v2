@@ -203,7 +203,8 @@ showAnimationInTrial = function(CT, html_answers, progress_bar=true){
   let worldElems = createWorld();
   let engine = worldElems.engine;
   let render = worldElems.render;
-  addObjs2World(stimulus.objs, engine);
+  let add_bottom = stimulus.id === "uncertain_2" ? false : true;
+  addObjs2World(stimulus.objs, engine, add_bottom);
   show(engine, render);
   let startTime = Date.now();
 
