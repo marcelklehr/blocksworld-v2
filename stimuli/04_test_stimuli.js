@@ -18,6 +18,7 @@ make2ColoredBlocks = function(bases, priors_str, sides){
 }
 
 testTrials_a_iff_c = function(priors){
+  let pp = priors[0][0] + priors[1][0]
   let data_ramp = priors[0] === priors[1] ?
     {side: "right", i: 1, 'moveBlock': 1, 'increase': true} :
     {side: "left", i: 0, 'moveBlock': -1, 'increase': false};
@@ -34,7 +35,7 @@ testTrials_a_iff_c = function(priors){
       seesaw_elems.walls[data_ramp.i]);
   }
   let objs = seesaw_elems.dynamic.concat(ramp_walls).concat(seesaw_elems.walls)
-  // add 2 blocks + extra block for iff-trials
+  // add 2 blocks + 1 extra block
   let xBlock,
       bases,
       sides,
@@ -63,14 +64,13 @@ testTrials_a_iff_c = function(priors){
     sides = [-1, -1]
   }
   let blocks = [];
-  if (priors[0] === "high" && priors[1] === "high") {
+  if (pp === "hh") {
     let xBlock2 = blockOnBase(xBlock, 0.52 * -factor, cols.grey, "xBlock2", true)
     blocks.push(xBlock2)
     let idx = factor === -1 ? 1 : 0;
     bases[idx] = xBlock2
     sides[idx] = sides[idx] * -1
   }
-
   let twoBlocks = make2ColoredBlocks(bases, priors, sides);
   let shift = IFF_SHIFT[priors[data_ramp.i]] * data_ramp.moveBlock;
   let b = twoBlocks[data_ramp.i]
