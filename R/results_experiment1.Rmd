@@ -91,12 +91,14 @@ for (s in stimuli){
           text = element_text(size=20),
           panel.spacing = unit(2, "lines"))
   p
-  fn <- paste("exp1-", s, ".png", sep="")
+  # fn <- paste("exp1-", s, ".png", sep="")
   # ggsave(paste(result_dir, fn, sep=.Platform$file.sep), p, width=6, height=4)
   print(p)
 }
 ```
 
+Sort trials according to how they are expected to be interpreted
+(as independent/a->c/a<->c)
 
 ```{r}
 df <- data %>% pivot_wider(names_from = question, values_from = response) %>% 
@@ -109,11 +111,11 @@ as_independent <- c('a_implies_c_ll', 'a_implies_c_lu', 'a_implies_c_lh',
 ind <- df %>% filter(startsWith(id, "independent") | id %in% as_independent) %>% 
   add_column(kind = "independent")
 
-as_a_implies_c_cause <- c('a_iff_c_lh', 'a_iff_c_hl', 'a_implies_c_hl')
+as_a_implies_c_cause <- c('a_iff_c_hl', 'a_implies_c_hl')
 ac_cause <- df %>% filter(id %in% as_a_implies_c_cause) %>%
   add_column(kind = "cause")
 
-as_a_implies_c_diagnostic <- c('a_iff_c_lu', 'a_iff_c_ul', 'a_implies_c_ul')
+as_a_implies_c_diagnostic <- c('a_iff_c_ul', 'a_implies_c_ul')
 ac_diagnostic <- df %>% filter(id %in% as_a_implies_c_diagnostic) %>%
   add_column(kind = "diagnostic")
 
@@ -127,19 +129,36 @@ stopifnot(N == nrow(df))
 ```
 
 ```{r, echo=FALSE}
-plotProbs = function(data){
+dataIndependent = function(data) {
   stimuli <- data %>% pull(id) %>% unique()
-  labels <- c(p_a="P(Blue falls)", p_c="P(Green falls)",
-            p_c_given_a="P(Green| Blue)",
-            p_a_given_c="P(Blue| Green)")
+  df <- data %>% mutate(prod_ac=p_a*p_c) %>%
+    select(prolific_id, id, prod_ac, ac) %>%
+    pivot_longer(cols=c(ac, prod_ac), names_to = "p_key", values_to = "p") %>% 
+    mutate(p_key=factor(p_key, levels=c("ac", "prod_ac")))
+    
+  labels <- c(ac="P(Blue,Green)", prod_ac="P(Blue) * P(Green)")
+  return(list(labels=labels, data=df, stimuli=stimuli))
+}
+
+dataImplies <- function(data){
+  stimuli <- data %>% pull(id) %>% unique()
   df <- data %>%
-    select(prolific_id, id, p_a, p_c, p_c_given_a, p_a_given_c) %>% 
-    pivot_longer(cols=c(p_a, p_c, p_c_given_a, p_a_given_c),
+    select(prolific_id, id, p_a_given_c, p_a_given_nc, p_c_given_a, p_c_given_na) %>%
+    pivot_longer(cols=c(p_a_given_c, p_a_given_nc, p_c_given_a, p_c_given_na),
                  names_to = "p_key", values_to = "p") %>% 
-    mutate(p_key=factor(p_key,levels=c("p_a","p_c","p_a_given_c", "p_c_given_a")))
-  
-  for(s in stimuli) {
-    df.s <- df %>% filter(id == s) 
+    mutate(p_key=factor(p_key,levels=c("p_a_given_c", "p_a_given_nc",
+                                       "p_c_given_a", "p_c_given_na")))
+  labels <- c(p_a_given_c="P(Blue| Green)", p_a_given_nc="P(Blue| ¬Green)",
+              p_c_given_a="P(Green| Blue)", p_c_given_na="P(Green| ¬Blue)")
+  return(list(labels=labels, data=df, stimuli=stimuli))
+}
+```
+
+
+```{r}
+plotProbs <- function(df){
+  for(s in df$stimuli) {
+    df.s <- df$data %>% filter(id == s) 
     p <- df.s  %>%
       ggplot(aes(x=p, y=factor(0), fill=prolific_id)) +
       geom_jitter(height = 0.1, alpha=0.5, aes(colour=factor(prolific_id))) +
@@ -150,7 +169,7 @@ plotProbs = function(data){
       # geom_violin(alpha=0.5) +
       labs(x="estimates probability", y="") + 
       theme_classic() +
-      facet_wrap(~p_key, labeller = labeller(p_key=labels)) + 
+      facet_wrap(~p_key, labeller = labeller(p_key=df$labels)) + 
       ggtitle(s) +
       theme(legend.position = "right",
             axis.text.y=element_blank(),
@@ -163,16 +182,19 @@ plotProbs = function(data){
 ```
 
 
-Trials that are expected to be INDEPENDENT
+## Trials that are expected to be INDEPENDENT
 
 ```{r}
-plotProbs(ind)
+df <- dataIndependent(ind)
+plotProbs(df)
 ```
 
 Trials that are expected to be A->C (cause)
 
 ```{r}
-plotProbs(bind_rows(ac_cause, ac_diagnostic))
+df_ac <- bind_rows(ac_cause, ac_diagnostic)
+df <- dataImplies(df_ac)
+plotProbs(df)
 ```
 
 

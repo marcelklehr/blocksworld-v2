@@ -196,7 +196,7 @@ const instructions_test = magpieViews.view_generator("instructions", {
           distinguishable by their color.
             </br>
             </br>
-          We will now start the experiment. There are <b>18</b> scenes in total.`,
+          We will now start the experiment. There are <b>20</b> scenes in total.`,
   buttonText: "start experiment"
 });
 

@@ -2,6 +2,7 @@ library(tidyverse)
 
 test_data <- function(path_to_csv) {
   data <- read_csv(path_to_csv) %>%
+    mutate(prolific_id = str_to_lower(prolific_id)) %>% 
     filter(str_detect(prolific_id, "test-.*"))
   return(data)
 }
@@ -17,7 +18,7 @@ anonymize_and_save <- function(data_dir, data_fn, fn, test_run=FALSE){
   data <- if(test_run) test_data(path_to_data) else experimental_data(path_to_data)
   
   # TODO: remove
-  data <- data %>% filter(prolific_id == "test-anna" | prolific_id == "test-papi02" | prolific_id == "test-rolf")
+  data <- data %>% filter(prolific_id == "test-anna" | prolific_id == "test-papi02" | prolific_id == "test-rolf" | prolific_id == "test-fabian")
   
   if(!test_run) {
     prolific_ids <- data %>% pull(prolific_id) %>% unique()
