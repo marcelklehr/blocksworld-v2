@@ -71,8 +71,9 @@ let block_cols_short = {
 // --> 7z + 7y + 4x = 18 trials
 const TYPE_MAP = {x: 'a_implies_c', y: 'independent', z: 'a_iff_c'}
 
+//@arg pseudo_types List<str>
 getRealTypes = function(pseudo_types){
-  pseudo_types = pseudo_types.split('').join(' ')
+  pseudo_types = pseudo_types.join(' ')
   let type_seq = pseudo_types.replace(/x/g, TYPE_MAP.x);
   type_seq = type_seq.replace(/y/g, TYPE_MAP.y);
   type_seq = type_seq.replace(/z/g, TYPE_MAP.z);

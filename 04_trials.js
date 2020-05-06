@@ -193,21 +193,21 @@ var slider_rating_trials = [
     optionLeft: "impossible",
     optionRight: "certainly"
   },
-  // {
-  //   picture: "stimuli/img/group/a_iff_c_ul.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   icon1: id2Icon.ac,
-  //   icon2: id2Icon.a,
-  //   icon3: id2Icon.c,
-  //   icon4: id2Icon.none,
-  // question1: abbreviateQuestion(text_sliders.ac, block_cols_short.test),
-  // question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
-  // question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
-  // question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
-  // question: '',
-  //   optionLeft: "impossible",
-  //   optionRight: "certainly"
-  // },
+  {
+    picture: "stimuli/img/group/a_iff_c_ul.jpg",
+    QUD: "Please indicate how likely you think the represented events will occur.",
+    icon1: id2Icon.ac,
+    icon2: id2Icon.a,
+    icon3: id2Icon.c,
+    icon4: id2Icon.none,
+    question1: abbreviateQuestion(text_sliders.ac, block_cols_short.test),
+    question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
+    question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
+    question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly"
+  },
   {
     picture: "stimuli/img/group/a_iff_c_hl.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
@@ -239,21 +239,21 @@ var slider_rating_trials = [
     optionLeft: "impossible",
     optionRight: "certainly"
   },
-  // {
-  //   picture: "stimuli/img/group/a_iff_c_hu.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   icon1: id2Icon.ac,
-  //   icon2: id2Icon.a,
-  //   icon3: id2Icon.c,
-  //   icon4: id2Icon.none,
-  // question1: abbreviateQuestion(text_sliders.ac, block_cols_short.test),
-  // question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
-  // question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
-  // question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
-  // question: '',
-  //   optionLeft: "impossible",
-  //   optionRight: "certainly"
-  // },
+  {
+    picture: "stimuli/img/group/a_iff_c_uh.jpg",
+    QUD: "Please indicate how likely you think the represented events will occur.",
+    icon1: id2Icon.ac,
+    icon2: id2Icon.a,
+    icon3: id2Icon.c,
+    icon4: id2Icon.none,
+    question1: abbreviateQuestion(text_sliders.ac, block_cols_short.test),
+    question2: abbreviateQuestion(text_sliders.a,  block_cols_short.test),
+    question3: abbreviateQuestion(text_sliders.c,  block_cols_short.test),
+    question4: abbreviateQuestion(text_sliders.none,  block_cols_short.test),
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly"
+  },
   {
     picture: "stimuli/img/group/a_iff_c_hh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
