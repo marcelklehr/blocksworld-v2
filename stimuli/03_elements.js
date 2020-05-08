@@ -7,10 +7,9 @@ const Bottom = wall(label='bottom', x=scene.w/2, y=scene.h - props.bottom.h/2,
 // base walls
 let W1 = wall('w1_upLeft', 320, 100);
 let W1_2 = wall('w1_2_upRight', 480, 100);
-
 let W3 = wall('w3_rampLowInd', 410+4, 240, 175)
 let W3_2 = wall('w3_2_rampLowInd', 390-4, 240, 175)
-
+let W4 = wall('w4_upRight', 750, 240, 90);
 Walls.train.independent = [wall('w4_upRight', 750, 240, 90)];
 
 baseRampTrain = function(){
@@ -83,7 +82,7 @@ seesaw = function(pos, trial_type="a_iff_c"){
 
 W_IF_UP1 = wall('wall_ac_top', 550, 100),
 W_IF_UP2 = wall('wall_ac_top', 100, 100),
-W_IF_LOW = wall('wall_ac_low', 325, W_BASE_RAMP)
+W_IF_LOW = wall('wall_ac_low', 325, 290, W_BASE_RAMP)
 
 // The first two list entries are respectively the bases for block1 and block2
 Walls.test = {'independent': [[W1, W3], [W1_2, W3_2]], // tilted wall+ball added dep on prior
