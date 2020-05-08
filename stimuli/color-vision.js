@@ -1,7 +1,7 @@
 makeColorVisionStimuli = function(){
   let stimuli = [];
-  let base = wall('w_center', scene.w/2, scene.h/2, props.walls.w,
-    props.walls.h, {'render': {'fillStyle': cols.grey}})
+  let base = wall('w_center', scene.w/2, scene.h/2, PROPS.walls.w,
+    PROPS.walls.h, {'render': {'fillStyle': cols.grey}})
   let cols_blocks = cols.train_blocks.concat(cols.test_blocks);
   let cols_distractors = [cols.grey, cols.darkgrey, cols.darkgrey, cols.grey]
 

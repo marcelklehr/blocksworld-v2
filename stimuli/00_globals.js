@@ -27,11 +27,12 @@ cols = {
       'yellow': '#FFC966',
       'bordeaux': '#D81159',
       'darkyellow': '#FFBC42',
-      'darkgreen': '#119533'
+      'darkgreen': '#119533',
+      'darkred': '#8F2D56'
     };
 cols.plank = cols.blue
 cols.test_blocks = [cols.green, cols.royal];
 cols.train_blocks = [cols.bordeaux, cols.darkyellow];
 
-ball_colors = {'45': cols.purple, '30': cols.red, '25': cols.orange,
-  '20': cols.darkyellow, '15': cols.yellow};
+ball_colors = {'test': cols.darkred,
+  'train': {'43': cols.purple, '30': cols.red, '27': cols.orange, '22': cols.darkyellow}}

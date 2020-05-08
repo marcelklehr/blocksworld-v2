@@ -5,7 +5,7 @@ var MODE = "test"
 // var MODE = "experiment"
 
 var scene = {w: 800, h: 400};
-props = {'blocks': {'w':40, 'h': 80},
+PROPS = {'blocks': {'w':40, 'h': 80},
          'walls': {'w': 200, 'h': 20},
          'balls': {'radius': 16, 'color': cols.purple},
          'bottom': {'w': scene.w, 'h': 20},
@@ -33,7 +33,7 @@ let PRIOR = {'high': 0.35, 'uncertain': 0.505, 'low': 0.65, 'uncertainL': 0.52}
 // shift of ramp walls such that there is no edge
 let overlap_shift = {"angle43": 25, "angle40": 20, "angle30": 14.5,
   "angle28": 10, "angle27": 10, "angle26": 9, "angle25": 9, "angle24": 8,
-  "angle23": 8, "angle21": 7}
+  "angle23": 8, "angle22": 7}
 
 let ANGLES = {
   'horizontal': {"high": 43, "uncertainH": 30, "uncertain": 28, "uncertainL": 25, "low": 24},

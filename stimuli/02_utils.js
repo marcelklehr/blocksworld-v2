@@ -2,9 +2,9 @@ blockOnBase = function(base, propOnBase, color, label, horiz=false, wh={}) {
   let w,
       h;
   w = Object.keys(wh).length === 0 ?
-    (horiz ? props.blocks.h : props.blocks.w) : wh.w;
+    (horiz ? PROPS.blocks.h : PROPS.blocks.w) : wh.w;
   h = Object.keys(wh).length === 0 ?
-    (horiz ? props.blocks.w : props.blocks.h) : wh.h;
+    (horiz ? PROPS.blocks.w : PROPS.blocks.h) : wh.h;
 
   // when propOnBase is negative, block is put on left side of the base,
   // else right side
@@ -18,13 +18,13 @@ blockOnBase = function(base, propOnBase, color, label, horiz=false, wh={}) {
 
 // create a rectangle block at particular position
 block = function(x, y_min_base, col, label, horiz=false, opts={}){
-  let w = horiz ? props.blocks.h : props.blocks.w;
-  let h = horiz ? props.blocks.w : props.blocks.h;
+  let w = horiz ? PROPS.blocks.h : PROPS.blocks.w;
+  let h = horiz ? PROPS.blocks.w : PROPS.blocks.h;
   opts = Object.assign(opts, {'render': {'fillStyle': col}, label}, OPTS.blocks)
   return Bodies.rectangle(x, y_min_base - h/2, w, h, opts);
 }
 
-wall = function(label, x, y, w=props.walls.w, h=props.walls.h, opts={}){
+wall = function(label, x, y, w=PROPS.walls.w, h=PROPS.walls.h, opts={}){
   opts = Object.assign({label}, OPTS.walls, opts);
   return Bodies.rectangle(x, y, w, h, opts);
 }
@@ -46,7 +46,7 @@ radians = function(angle){
 // }
 
 // let lengthOnBase = function(p_fall, horiz){
-//   return horiz ? PRIOR[p_fall] * props.blocks.h : PRIOR[p_fall] * props.blocks.w
+//   return horiz ? PRIOR[p_fall] * PROPS.blocks.h : PRIOR[p_fall] * PROPS.blocks.w
 // }
 
 sortConditions = function(conditions){

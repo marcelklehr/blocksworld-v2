@@ -32,7 +32,7 @@ testTrials_a_iff_c = function(priors){
   }
   let colors = assignColors();
   let c1 = cols.test_blocks[colors[0]]; let c2 = cols.test_blocks[colors[1]];
-  let w = horiz[data.i_ramp] ? props.blocks.h : props.blocks.w;
+  let w = horiz[data.i_ramp] ? PROPS.blocks.h : PROPS.blocks.w;
   let ps = [];
   ps[0] = data.i_ramp === 0 ? (w + DIST_EDGE) / w : PRIOR[priors[0]];
   ps[1] = data.i_ramp === 1 ? (w + DIST_EDGE) / w : PRIOR[priors[1]];
@@ -41,7 +41,7 @@ testTrials_a_iff_c = function(priors){
   let twoBlocks = [b1, b2];
   if (pp === "uu") {
     let xBlock2 = blockOnBase(w_ramp, -0.52, cols.darkgrey, 'xBlock2', true,
-      {w: 1.08 * props.blocks.h, h: props.blocks.w})
+      {w: 1.08 * PROPS.blocks.h, h: PROPS.blocks.w})
     blocks.push(xBlock2)
     twoBlocks[1] = blockOnBase(xBlock2, PRIOR["low"], c2, 'blockC', horiz[1]);
   }
@@ -64,7 +64,7 @@ testTrials_ac = function(priors){
   let objs = rampElems(p2, data.increase, w1, true)
   objs = objs.concat(walls);
 
-  let h = props.blocks.h;
+  let h = PROPS.blocks.h;
   let bX = blockOnBase(w1, data.moveBLow * (h+DIST_EDGE)/h, cols.darkgrey, 'xBlockLow', true)
   let b1 = blockOnBase(walls[0], PRIOR[priors[0]] * data.moveBUp, cols.test_blocks[colors[0]], 'blockA', true);
   let b2 = blockOnBase(bX, PRIOR["low"] * data.moveBLow,
@@ -84,7 +84,7 @@ testTrials_independent = function(priors){
   let b1 = blockOnBase(data.walls[0], data.sides[0] * PRIOR[priors[0]],
     cols.test_blocks[colors[0]], "blockA", horiz[0])
 
-  let w2 = horiz[1] ? props.blocks.h : props.blocks.w;
+  let w2 = horiz[1] ? PROPS.blocks.h : PROPS.blocks.w;
   let b2 = blockOnBase(data.walls[1], data.sides[1] * (w2 + DIST_EDGE) / w2,
     cols.test_blocks[colors[1]], "blockC", horiz[1])
 
