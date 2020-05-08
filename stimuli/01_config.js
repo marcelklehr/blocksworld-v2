@@ -9,8 +9,9 @@ props = {'blocks': {'w':40, 'h': 80},
          'walls': {'w': 200, 'h': 20},
          'balls': {'radius': 16, 'color': cols.purple},
          'bottom': {'w': scene.w, 'h': 20},
-         'seesaw_a_iff_c': {'stick': {'w': 20, 'h': 80},
-                            'plank': {'w': 210, 'h': 10},
+         'seesaw': {'d_to_walls': 5},
+         'seesaw_a_iff_c': {'stick': {'w': 20, 'h': 95},
+                            'plank': {'w': 220, 'h': 10},
                             'link': {'w': 5, 'h': 10}},
         'seesaw_independent': {'stick': {'w': 20, 'h': 40},
                                'plank': {'w': 220, 'h': 10},
@@ -27,13 +28,30 @@ OPTS = {
 let Relations = ['a_implies_c', 'a_iff_c', 'independent'];
 // Proportion of blocks that's on top of their base walls
 // let PRIOR = {'high': 0.35, 'uncertain': 0.54, 'low': 0.68, 'very_low': 0.85}
-let PRIOR = {'high': 0.35, 'uncertain': 0.51, 'low': 0.70}
+let PRIOR = {'high': 0.35, 'uncertain': 0.505, 'low': 0.65, 'uncertainL': 0.52}
 
-// for independent trials, one block is shifted to the right depending on prior
-let INDEPENDENT_SHIFT = {"high": 12, "uncertain": 25, "low": 85, "very_low": 100};
-let IFF_SHIFT = {"high": 12, "uncertain": 18, "low": 70, "very_low": 100};
+// shift of ramp walls such that there is no edge
+let overlap_shift = {"angle43": 25, "angle40": 20, "angle30": 14.5,
+  "angle28": 10, "angle27": 10, "angle26": 9, "angle25": 9, "angle24": 8,
+  "angle23": 8, "angle21": 7}
 
-let overlap_shift = {"angle45": 25, "angle30": 14.5, "angle15": 7,
-  "angle25": 10, "angle20": 7}
+let ANGLES = {
+  'horizontal': {"high": 43, "uncertainH": 30, "uncertain": 28, "uncertainL": 25, "low": 24},
+  'vertical': {"high": 40, "uncertainH": 27, "uncertain": 25, "uncertainL": 24, "low": 22}
+}
 
+let W_BASE_RAMP = 175;
+// when uncertainty comes from balls, this dist is left towards the edge of platform
+let DIST_EDGE = 5;
 let SIMULATION = {'duration': 5000};
+
+
+let HORIZ_IFF = {'ll': [false, true], 'ul': [false, true], 'lu': [false, true],
+                 'uu': [false, true], 'hu': [false, true], 'uh': [false, true],
+                 'hh': [false, true], 'hl': [true, false], 'lh': [true, false]}
+
+let HORIZ_IND = {'ll': [false, true], 'ul': [false, true],
+                 'uu': [true, false], 'uh': [true, false],
+                 'hh': [false, true], 'hl': [true, false],
+                 'lh': [true, false],
+                 'hu': [true, false], 'lu': [false, true]}

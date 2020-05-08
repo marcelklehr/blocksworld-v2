@@ -16,16 +16,12 @@ blockOnBase = function(base, propOnBase, color, label, horiz=false, wh={}) {
   return Bodies.rectangle(x, base.bounds.min.y - h / 2, w, h, opts);
 }
 
+// create a rectangle block at particular position
 block = function(x, y_min_base, col, label, horiz=false, opts={}){
   let w = horiz ? props.blocks.h : props.blocks.w;
   let h = horiz ? props.blocks.w : props.blocks.h;
   opts = Object.assign(opts, {'render': {'fillStyle': col}, label}, OPTS.blocks)
   return Bodies.rectangle(x, y_min_base - h/2, w, h, opts);
-}
-
-rect = function(props, opts={}){
-  opts = Object.assign(opts, OPTS.blocks);
-  return Bodies.rectangle(props.x, props.y, props.w, props.h, opts);
 }
 
 wall = function(label, x, y, w=props.walls.w, h=props.walls.h, opts={}){
@@ -42,16 +38,16 @@ radians = function(angle){
   return (2 * Math.PI / 360) * angle;
 }
 
-move = function(obj, pos_hit, angle, force){
-  let pos = pos_hit == "center" ? obj.position : {};
-  let x = Math.cos(radians(angle)) * force * obj.mass;
-  let y = Math.sin(radians(angle)) * force * obj.mass;
-  Body.applyForce(obj, pos, {x, y});
-}
+// move = function(obj, pos_hit, angle, force){
+//   let pos = pos_hit == "center" ? obj.position : {};
+//   let x = Math.cos(radians(angle)) * force * obj.mass;
+//   let y = Math.sin(radians(angle)) * force * obj.mass;
+//   Body.applyForce(obj, pos, {x, y});
+// }
 
-let lengthOnBase = function(p_fall, horiz){
-  return horiz ? PRIOR[p_fall] * props.blocks.h : PRIOR[p_fall] * props.blocks.w
-}
+// let lengthOnBase = function(p_fall, horiz){
+//   return horiz ? PRIOR[p_fall] * props.blocks.h : PRIOR[p_fall] * props.blocks.w
+// }
 
 sortConditions = function(conditions){
   let filtered = {};
