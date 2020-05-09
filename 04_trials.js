@@ -434,6 +434,7 @@ let pretest_trial = function(angle, dir){
           icon2: '',
           icon3: '',
           icon4: '',
+          expected: '',
           id: ''};
 }
 var pretest_trials = [];
