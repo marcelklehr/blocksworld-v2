@@ -1,8 +1,8 @@
-const DEBUG = true;
+const DEBUG = false;
 // var MODE = "color-vision"
 // var MODE = "train"
-var MODE = "test"
-// var MODE = "pretest"
+// var MODE = "test"
+var MODE = "pretest"
 // var MODE = "experiment"
 
 var scene = {w: 800, h: 400};

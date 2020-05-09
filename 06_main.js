@@ -17,18 +17,18 @@ $("document")
       // You have to specify all views you want to use in this experiment and the order of them
       views_seq: [
       intro,
-      // instructions_pretest,
-      instructions_train1_colors,
-      sentence_choice_custom,
-      instructions_train2,
-      animation_view1,
-      instructions_train3,
-      animation_view2,
-      instructions_test,
-      multiple_slider,
-      // slider_rating_pretest,
-      post_test,
-      // post_test_simple,
+      instructions_pretest,
+      // instructions_train1_colors,
+      // sentence_choice_custom,
+      // instructions_train2,
+      // animation_view1,
+      // instructions_train3,
+      // animation_view2,
+      // instructions_test,
+      // multiple_slider,
+      slider_rating_pretest,
+      // post_test,
+      post_test_simple,
       thanks
     ],
       // Here, you can specify all information for the deployment
@@ -38,7 +38,7 @@ $("document")
         // Possible deployment methods are:
         // "debug" and "directLink"
         // As well as "MTurk", "MTurkSandbox" and "Prolific"
-        deployMethod: "debug",
+        deployMethod: "Prolific",
         contact_email: "britta.grusdt@uni-osnabrueck.de",
         prolificURL: "https://app.prolific.co/submissions/complete?cc=1A1C9196"
       },
