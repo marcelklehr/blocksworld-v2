@@ -418,8 +418,144 @@ _.map(slider_rating_trials, function (trial) {
   trial.id = id[id.length - 1].slice(0, -4);
 });
 
-// shuffle questions for each trial to later be able to randomly show the utterances
-// slider_rating_trials = shuffleQuestionsAllTrials(_.values(id2Icon), slider_rating_trials);
+// PRE-TEST for steepness / edge
+var pretest_trials = [
+  {
+    QUD: "Do you think the <b>group</b> block will fall?",
+    question: "",
+    picture: "stimuli/img/pretest/horiz-30-group.jpg",
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly",
+    id: ''
+  },
+  {
+    QUD: "Do you think the <b>group</b> block will fall?",
+    question: "",
+    picture: "stimuli/img/pretest/horiz-28-group.jpg",
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly",
+    id: ''
+  },
+  {
+    QUD: "Do you think the <b>group</b> block will fall?",
+    question: "",
+    picture: "stimuli/img/pretest/horiz-26-group.jpg",
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly",
+    id: ''
+  },
+  {
+    QUD: "Do you think the <b>group</b> block will fall?",
+    question: "",
+    picture: "stimuli/img/pretest/horiz-25-group.jpg",
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly",
+    id: ''
+  },
+  {
+    QUD: "Do you think the <b>group</b> block will fall?",
+    question: "",
+    picture: "stimuli/img/pretest/horiz-24-group.jpg",
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly",
+    id: ''
+  },
+  {
+    QUD: "Do you think the <b>group</b> block will fall?",
+    question: "",
+    picture: "stimuli/img/pretest/horiz-22-group.jpg",
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly",
+    id: ''
+  },
+  {
+    QUD: "Do you think the <b>group</b> block will fall?",
+    question: "",
+    picture: "stimuli/img/pretest/horiz-20-group.jpg",
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly",
+    id: ''
+  },
+  {
+    QUD: "Do you think the <b>group</b> block will fall?",
+    question: "",
+    picture: "stimuli/img/pretest/vert-30-group.jpg",
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly",
+    id: ''
+  },
+  {
+    QUD: "Do you think the <b>group</b> block will fall?",
+    question: "",
+    picture: "stimuli/img/pretest/vert-28-group.jpg",
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly",
+    id: ''
+  },
+  {
+    QUD: "Do you think the <b>group</b> block will fall?",
+    question: "",
+    picture: "stimuli/img/pretest/vert-26-group.jpg",
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly",
+    id: ''
+  },
+  {
+    QUD: "Do you think the <b>group</b> block will fall?",
+    question: "",
+    picture: "stimuli/img/pretest/vert-25-group.jpg",
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly",
+    id: ''
+  },
+  {
+    QUD: "Do you think the <b>group</b> block will fall?",
+    question: "",
+    picture: "stimuli/img/pretest/vert-24-group.jpg",
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly",
+    id: ''
+  },
+  {
+    QUD: "Do you think the <b>group</b> block will fall?",
+    question: "",
+    picture: "stimuli/img/pretest/vert-22-group.jpg",
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly",
+    id: ''
+  },
+  {
+    QUD: "Do you think the <b>group</b> block will fall?",
+    question: "",
+    picture: "stimuli/img/pretest/vert-20-group.jpg",
+    question: '',
+    optionLeft: "impossible",
+    optionRight: "certainly",
+    id: ''
+  }
+]
+
+_.map(pretest_trials, function (trial) {
+  let color = _.sample(block_cols.test);
+  trial.picture = trial.picture.replace("group", color);
+  trial.QUD = trial.QUD.replace("group", color);
+  let id = trial.picture.split("/")
+  trial.id = id[id.length - 1].slice(0, -4);
+});
+
 
 // TRAINING TRIALS (some with buttons some with sliders)
 let train_slider_trials = [

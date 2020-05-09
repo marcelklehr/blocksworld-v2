@@ -252,6 +252,26 @@ const sentence_choice_custom = magpieViews.view_generator("sentence_choice", {
   }
 });
 
+const slider_rating_pretest = magpieViews.view_generator("slider_rating", {
+  trials: color_vision_test.length,
+  name: "pretest",
+  trials: pretest_trials.length,
+  data: _.shuffle(pretest_trials)
+}, {
+  stimulus_container_generator: function (config, CT) {
+    return `<div class='magpie-view'>
+      <h1 class='magpie-view-title'>${config.title}</h1>
+      <p class='magpie-view-question magpie-view-qud'>${config.data[CT].QUD}</p>
+      <div class='stimulus' id='stimulus-pic'>
+        <img src=${config.data[CT].picture} class ='picture'>
+      </div>
+    </div>`;
+  },
+  // answer_container_generator: multi_slider_generator.answer_container_gen,
+  // handle_response_function: multi_slider_generator.handle_response_function
+}
+);
+
 // experimental phase trials
 const multiple_slider = magpieViews.view_generator(
   "slider_rating", {
