@@ -240,7 +240,7 @@ var slider_rating_trials = [
     optionRight: "certainly"
   },
   {
-    picture: "stimuli/img/group/a_iff_c_hu.jpg",
+    picture: "stimuli/img/group/a_iff_c_uh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
