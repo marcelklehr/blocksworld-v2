@@ -426,16 +426,11 @@ let pretest_trial = function(angle, dir){
           question: 'Do you think the <b>group</b> block will fall?',
           optionLeft: "impossible",
           optionRight: "certainly",
-          question1: '',
-          question2: '',
-          question3: '',
-          question4: '',
-          icon1: '',
-          icon2: '',
-          icon3: '',
-          icon4: '',
-          expected: '',
-          id: ''};
+          id: '', question1: '', question2: '', question3: '', question4: '',
+          icon1: '', icon2: '', icon3: '', icon4: '',
+          response1: '', response2: '', response3: '', response4: '',
+          expected: ''
+        };
 }
 var pretest_trials = [];
 PRETEST_ANGLES.forEach(function(angle){
