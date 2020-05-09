@@ -130,7 +130,7 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   In this trial, we ask you to indicate <b>how likely</b> you think certain
   blocks <b>will or will not fall</b> by moving the corresponding sliders.
    <br />
-  The larger your belief is that the event you are asked for <b>willl</b> occur,
+  The larger your belief is that the event you are asked for <b>will</b> occur,
   the more you should position the corresponding slider towards its
   right end (<i>certainly</i>/100%).
   <br />
@@ -243,22 +243,14 @@ const instructions_pretest = magpieViews.view_generator("instructions", {
   text: `In this short experiment, we ask you to indicate <b>how likely</b> you think
   a shown toy block <b>will or will not fall</b> by moving a slider.
    <br />
-  The larger your belief is that the block <b>willl</b> fall,
+  The larger your belief is that the block <b>will</b> fall,
   the more you should position the slider towards its right end (<i>certainly</i>/100%).
   <br />
   The larger your belief is that it <b>will not</b> fall, the more you
   should position the slider towards its left (<i>impossible</i>/0%).
-  Here is an example:
-  <br />
-  <br />
-  <input type='range' id=ex_slider class='magpie-response-slider replied' min='0' max='100' value='40' oninput='ex_slider.value + "%"'/>
-  <output name=ex_slider_out id=out_ex class="thick">40%</output>
-  <script>document.getElementById("ex_slider").disabled=true;</script>
   <br/>
-  <br/>
-  If you positioned the slider like or close to this at 40%, you indicate that you
-  are quite <b>undecided</b> whether or not the event will occur, but you judge
-  it <i>a bit <b>more</b> likely that it will <b>not</b></i> occur.
+  If you are quite <b>undecided</b> whether or not the block will fall, but you judge
+  it <i>a bit <b>more</b> likely that it <b>won't</b></i> fall, you should for instance move the slider a bit to the left.
     <br />
     <br />
   After you have given your estimate by changing the position of the slider, you
