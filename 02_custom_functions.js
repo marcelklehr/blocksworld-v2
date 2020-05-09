@@ -58,14 +58,6 @@ const NB_TRAIN_TRIALS = TrainStimuli.list_all.length;
 // const NB_TRAIN_TRIALS = 3;
 const TRAIN_BTTN_IDS = ['ac', 'a', 'c', 'none'];
 
-let block_cols = {
-  test: ['blue', 'green'],
-  train: ['red', 'yellow']
-}
-let block_cols_short = {
-  test: [block_cols.test[0][0], block_cols.test[1][0]],
-  train: [block_cols.train[0][0], block_cols.train[1][0]]
-}
 // each letter represents one trial!
 // 3 blocks a 5 trials each (zz-yy-x) + 1 block a 3 trials (x-y-z)
 // --> 7z + 7y + 4x = 18 trials

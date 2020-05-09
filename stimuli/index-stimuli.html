@@ -56,9 +56,17 @@
         id =  rel + '_' + nb;
       } else if (MODE == "color-vision"){
         let ColorVisionStimuli = [];
-        let id = 1;
+        id = 1;
         let stimuli = makeColorVisionStimuli();
         stimulus = stimuli[id]
+      } else if (MODE === "pretest"){
+        let stimuli = pretestTrials();
+        console.log(stimuli)
+        id = [_.sample(['horiz', 'vert']), _.sample(PRETEST_ANGLES),
+              _.sample(block_cols.test)].join('-');
+        // id = 'vert-30-green'
+        stimulus = stimuli[id]
+        stimulus['meta'] = ['', '', '']
       }
       console.log(id)
     </script>

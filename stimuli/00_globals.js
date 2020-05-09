@@ -36,3 +36,12 @@ cols.train_blocks = [cols.bordeaux, cols.darkyellow];
 
 ball_colors = {'test': cols.darkred,
   'train': {'43': cols.purple, '30': cols.red, '27': cols.orange, '22': cols.darkyellow}}
+
+let block_cols = {
+  test: ['green', 'blue'],
+  train: ['red', 'yellow']
+}
+let block_cols_short = {
+  test: [block_cols.test[0][0], block_cols.test[1][0]],
+  train: [block_cols.train[0][0], block_cols.train[1][0]]
+}

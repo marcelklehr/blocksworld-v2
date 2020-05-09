@@ -1,7 +1,8 @@
 const DEBUG = true;
 // var MODE = "color-vision"
 // var MODE = "train"
-var MODE = "test"
+// var MODE = "test"
+var MODE = "pretest"
 // var MODE = "experiment"
 
 var scene = {w: 800, h: 400};
@@ -30,14 +31,17 @@ let Relations = ['a_implies_c', 'a_iff_c', 'independent'];
 let PRIOR = {'high': 0.35, 'uncertain': 0.505, 'low': 0.65, 'uncertainL': 0.52}
 
 // shift of ramp walls such that there is no edge
-let OVERLAP_SHIFT = {"angle43": 25, "angle40": 20, "angle30": 14.5,
-  "angle28": 10, "angle27": 10, "angle25": 9, "angle24": 8, "angle22": 7
+let OVERLAP_SHIFT = {"angle43": 25, "angle40": 20, "angle35": 18, "angle32": 16,
+  "angle30": 14.5, "angle28": 10, "angle27": 10, "angle26": 9, "angle25": 9,
+  "angle24": 8, "angle22": 7, "angle20": 6
 }
 
 let ANGLES = {
   'horizontal': {"high": 43, "uncertainH": 30, "uncertain": 28, "uncertainL": 25, "low": 24},
   'vertical': {"high": 40, "uncertainH": 27, "uncertain": 25, "uncertainL": 24, "low": 22}
 }
+
+let PRETEST_ANGLES = [22, 24, 25, 26, 28, 30, 32, 35];
 
 let W_BASE_RAMP = 175;
 // when uncertainty comes from balls, this dist is left towards the edge of platform

@@ -69,6 +69,34 @@ steepnessTrials = function(data, trial_id){
   return data
 }
 
+pretestTrials = function(){
+  let horiz = [true, false]
+  let data = {};
+  [0, 1].forEach(function(ci){
+    let col_str = block_cols.test[ci];
+    let col = cols.test_blocks[ci];
+    horiz.forEach(function(dir){
+      PRETEST_ANGLES.forEach(function(angle) {
+        let trial_id = [(dir ? "horiz" : "vert"), angle.toString(), col_str].join('-');
+        let increase = _.sample([true, false])
+        let x = increase ? scene.w/3 : scene.w * (2/3)
+        let walls = [wall('w_middle', x, scene.h/2)]
+        let ramp = makeRamp(angle, increase, walls[0]);
+        // block
+        let w = dir ? PROPS.blocks.h : PROPS.blocks.w;
+        let fct = increase ? -1 : 1;
+        let b = blockOnBase(walls[0], fct * (w+DIST_EDGE)/w, col, "block", dir);
+
+        let objs_dyn = [b, ramp.ball];
+        walls.push(ramp.tilted);
+        walls.push(ramp.top);
+        data[trial_id] = {objs: objs_dyn.concat(walls), id: trial_id}
+      });
+    });
+  })
+  return data
+}
+
 // TRAIN UNCERTAINTY BLOCKS TO FALL
 trials_uncertain = function(){
   let data = {}
