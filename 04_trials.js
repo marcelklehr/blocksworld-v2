@@ -429,7 +429,8 @@ let pretest_trial = function(angle, dir){
           id: '', question1: '', question2: '', question3: '', question4: '',
           icon1: '', icon2: '', icon3: '', icon4: '',
           response1: '', response2: '', response3: '', response4: '',
-          expected: ''
+          expected: '', group: '',	picture1: '',	picture2: '',
+          noticed_steepness: '',	noticed_ball: ''
         };
 }
 var pretest_trials = [];
