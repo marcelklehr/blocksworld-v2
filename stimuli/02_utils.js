@@ -45,10 +45,6 @@ radians = function(angle){
 //   Body.applyForce(obj, pos, {x, y});
 // }
 
-// let lengthOnBase = function(p_fall, horiz){
-//   return horiz ? PRIOR[p_fall] * PROPS.blocks.h : PRIOR[p_fall] * PROPS.blocks.w
-// }
-
 sortConditions = function(conditions){
   let filtered = {};
   let iff = [];

@@ -26,14 +26,13 @@ OPTS = {
 }
 
 let Relations = ['a_implies_c', 'a_iff_c', 'independent'];
-// Proportion of blocks that's on top of their base walls
-// let PRIOR = {'high': 0.35, 'uncertain': 0.54, 'low': 0.68, 'very_low': 0.85}
+// Proportion of block that's ON TOP of its base wall beneath
 let PRIOR = {'high': 0.35, 'uncertain': 0.505, 'low': 0.65, 'uncertainL': 0.52}
 
 // shift of ramp walls such that there is no edge
-let overlap_shift = {"angle43": 25, "angle40": 20, "angle30": 14.5,
-  "angle28": 10, "angle27": 10, "angle26": 9, "angle25": 9, "angle24": 8,
-  "angle23": 8, "angle22": 7}
+let OVERLAP_SHIFT = {"angle43": 25, "angle40": 20, "angle30": 14.5,
+  "angle28": 10, "angle27": 10, "angle25": 9, "angle24": 8, "angle22": 7
+}
 
 let ANGLES = {
   'horizontal': {"high": 43, "uncertainH": 30, "uncertain": 28, "uncertainL": 25, "low": 24},

@@ -15,7 +15,7 @@ let W6 = wall('w6_upRight', 750, 240, 90)
 
 
 makeRamp = function(angle, tilt_increase, wallLow, test=true){
-  let overlap = overlap_shift[ "angle" + Math.abs(angle)];
+  let overlap = OVERLAP_SHIFT[ "angle" + Math.abs(angle)];
 
   let pos = tilt_increase ? {shift_x: 1, w_low_x_edge: wallLow.bounds.max.x} :
     {shift_x: -1, w_low_x_edge: wallLow.bounds.min.x};

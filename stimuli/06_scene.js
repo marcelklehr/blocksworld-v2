@@ -5,7 +5,9 @@ createWorld = function(){
   let engine = Engine.create({
     timing: {
       timeScale: 1
-    }
+    },
+    velocityIterations: 7,
+    positionIterations: 7
   });
 
   let renderAt = MODE === "experiment" ?

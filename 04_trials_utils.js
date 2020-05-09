@@ -6,14 +6,14 @@ pseudoRandomTrainTrials = function(){
   let cat0 = _.sample(categories)
   let nb0 = _.sample(indices)
   order[0] = TrainStimuli.map_category[cat0][cat0 + "_" + nb0]
-  order[1] = TrainStimuli.map_category["a_iff_c"]["a_iff_c_0"]
+  order[1] = TrainStimuli.map_category["uncertain"]["uncertain_2"]
 
   let cat1 = cat0 === "uncertain" ?  "a_implies_c" : "uncertain"
   let nb1 = _.sample(indices)
   order[2] = TrainStimuli.map_category[cat1][cat1 + "_" + nb1]
   order[3] = TrainStimuli.map_category["independent"]["independent_0"]
   order[4] = TrainStimuli.map_category["independent"]["independent_1"]
-  order[5] = TrainStimuli.map_category["uncertain"]["uncertain_2"]
+  order[5] = TrainStimuli.map_category["a_iff_c"]["a_iff_c_0"]
   order[6] = TrainStimuli.map_category["independent"]["independent_2"]
 
   let nb7 = nb0 === 0 ? 1 : 0;
