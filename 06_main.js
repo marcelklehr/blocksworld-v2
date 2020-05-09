@@ -47,7 +47,8 @@ $("document")
         in: [
         // list the view-names of the views for which you want a progress bar
         animation_view1.name,
-        multiple_slider.name
+        multiple_slider.name,
+        slider_rating_pretest.name
       ],
         // Possible styles are "default", "separate" and "chunks"
         style: "separate",
