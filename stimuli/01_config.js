@@ -1,8 +1,8 @@
 const DEBUG = true;
 // var MODE = "color-vision"
 // var MODE = "train"
-// var MODE = "test"
-var MODE = "pretest"
+var MODE = "test"
+// var MODE = "pretest"
 // var MODE = "experiment"
 
 var scene = {w: 800, h: 400};
@@ -41,7 +41,7 @@ let ANGLES = {
   'vertical': {"high": 40, "uncertainH": 27, "uncertain": 25, "uncertainL": 24, "low": 22}
 }
 
-let PRETEST_ANGLES = [22, 24, 25, 26, 28, 30, 32, 35];
+let PRETEST_ANGLES = [22, 24, 26, 28, 30, 32, 35, 40, 43];
 
 let W_BASE_RAMP = 175;
 // when uncertainty comes from balls, this dist is left towards the edge of platform

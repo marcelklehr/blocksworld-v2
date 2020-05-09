@@ -419,142 +419,33 @@ _.map(slider_rating_trials, function (trial) {
 });
 
 // PRE-TEST for steepness / edge
-var pretest_trials = [
-  {
-    QUD: "Do you think the <b>group</b> block will fall?",
-    question: "",
-    picture: "stimuli/img/pretest/horiz-30-group.jpg",
-    question: '',
-    optionLeft: "impossible",
-    optionRight: "certainly",
-    id: ''
-  },
-  {
-    QUD: "Do you think the <b>group</b> block will fall?",
-    question: "",
-    picture: "stimuli/img/pretest/horiz-28-group.jpg",
-    question: '',
-    optionLeft: "impossible",
-    optionRight: "certainly",
-    id: ''
-  },
-  {
-    QUD: "Do you think the <b>group</b> block will fall?",
-    question: "",
-    picture: "stimuli/img/pretest/horiz-26-group.jpg",
-    question: '',
-    optionLeft: "impossible",
-    optionRight: "certainly",
-    id: ''
-  },
-  {
-    QUD: "Do you think the <b>group</b> block will fall?",
-    question: "",
-    picture: "stimuli/img/pretest/horiz-25-group.jpg",
-    question: '',
-    optionLeft: "impossible",
-    optionRight: "certainly",
-    id: ''
-  },
-  {
-    QUD: "Do you think the <b>group</b> block will fall?",
-    question: "",
-    picture: "stimuli/img/pretest/horiz-24-group.jpg",
-    question: '',
-    optionLeft: "impossible",
-    optionRight: "certainly",
-    id: ''
-  },
-  {
-    QUD: "Do you think the <b>group</b> block will fall?",
-    question: "",
-    picture: "stimuli/img/pretest/horiz-22-group.jpg",
-    question: '',
-    optionLeft: "impossible",
-    optionRight: "certainly",
-    id: ''
-  },
-  {
-    QUD: "Do you think the <b>group</b> block will fall?",
-    question: "",
-    picture: "stimuli/img/pretest/horiz-20-group.jpg",
-    question: '',
-    optionLeft: "impossible",
-    optionRight: "certainly",
-    id: ''
-  },
-  {
-    QUD: "Do you think the <b>group</b> block will fall?",
-    question: "",
-    picture: "stimuli/img/pretest/vert-30-group.jpg",
-    question: '',
-    optionLeft: "impossible",
-    optionRight: "certainly",
-    id: ''
-  },
-  {
-    QUD: "Do you think the <b>group</b> block will fall?",
-    question: "",
-    picture: "stimuli/img/pretest/vert-28-group.jpg",
-    question: '',
-    optionLeft: "impossible",
-    optionRight: "certainly",
-    id: ''
-  },
-  {
-    QUD: "Do you think the <b>group</b> block will fall?",
-    question: "",
-    picture: "stimuli/img/pretest/vert-26-group.jpg",
-    question: '',
-    optionLeft: "impossible",
-    optionRight: "certainly",
-    id: ''
-  },
-  {
-    QUD: "Do you think the <b>group</b> block will fall?",
-    question: "",
-    picture: "stimuli/img/pretest/vert-25-group.jpg",
-    question: '',
-    optionLeft: "impossible",
-    optionRight: "certainly",
-    id: ''
-  },
-  {
-    QUD: "Do you think the <b>group</b> block will fall?",
-    question: "",
-    picture: "stimuli/img/pretest/vert-24-group.jpg",
-    question: '',
-    optionLeft: "impossible",
-    optionRight: "certainly",
-    id: ''
-  },
-  {
-    QUD: "Do you think the <b>group</b> block will fall?",
-    question: "",
-    picture: "stimuli/img/pretest/vert-22-group.jpg",
-    question: '',
-    optionLeft: "impossible",
-    optionRight: "certainly",
-    id: ''
-  },
-  {
-    QUD: "Do you think the <b>group</b> block will fall?",
-    question: "",
-    picture: "stimuli/img/pretest/vert-20-group.jpg",
-    question: '',
-    optionLeft: "impossible",
-    optionRight: "certainly",
-    id: ''
-  }
-]
+let pretest_trial = function(angle, dir){
+  return {QUD: "Please answer the question below by moving the slider.",
+          question: '',
+          picture: "stimuli/img/pretest/ramp-side/" + dir + "-" + angle.toString() + "-group.jpg",
+          question: 'Do you think the <b>group</b> block will fall?',
+          optionLeft: "impossible",
+          optionRight: "certainly",
+          id: ''};
+}
+var pretest_trials = [];
+PRETEST_ANGLES.forEach(function(angle){
+  pretest_trials.push(pretest_trial(angle, "horiz"))
+  pretest_trials.push(pretest_trial(angle, "vert"))
+})
 
-_.map(pretest_trials, function (trial) {
+let sides = ["left", "right"];
+pretest_trials = _.shuffle(pretest_trials);
+_.map(pretest_trials, function (trial, i) {
   let color = _.sample(block_cols.test);
   trial.picture = trial.picture.replace("group", color);
-  trial.QUD = trial.QUD.replace("group", color);
+  let side = i % 2 === 0 ? sides[0] : sides[1];
+  trial.picture = trial.picture.replace("side", side);
+  trial.question = trial.question.replace("group", color);
   let id = trial.picture.split("/")
   trial.id = id[id.length - 1].slice(0, -4);
 });
+console.log(_.map(pretest_trials, 'id'))
 
 
 // TRAINING TRIALS (some with buttons some with sliders)

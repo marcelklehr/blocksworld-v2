@@ -61,10 +61,10 @@
         stimulus = stimuli[id]
       } else if (MODE === "pretest"){
         let stimuli = pretestTrials();
-        console.log(stimuli)
         id = [_.sample(['horiz', 'vert']), _.sample(PRETEST_ANGLES),
               _.sample(block_cols.test)].join('-');
-        // id = 'vert-30-green'
+
+        id = 'vert-40-blue'
         stimulus = stimuli[id]
         stimulus['meta'] = ['', '', '']
       }

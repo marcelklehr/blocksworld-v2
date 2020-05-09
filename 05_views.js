@@ -227,6 +227,45 @@ const post_test = magpieViews.view_generator("post_test", {
   handle_response_function: custom_posttest_generator.handle_response_function
 });
 
+
+const post_test_simple = magpieViews.view_generator("post_test", {
+  trials: 1,
+  name: "post_test",
+  title: "Additional information",
+  text: "Answering the following questions is optional, but your answers will help us analyze our results.",
+  comments_question: 'Further comments'
+});
+
+const instructions_pretest = magpieViews.view_generator("instructions", {
+  trials: 1,
+  name: "instructions_pretest",
+  title: "Instructions",
+  text: `In this short experiment, we ask you to indicate <b>how likely</b> you think
+  a shown toy block <b>will or will not fall</b> by moving a slider.
+   <br />
+  The larger your belief is that the block <b>willl</b> fall,
+  the more you should position the slider towards its right end (<i>certainly</i>/100%).
+  <br />
+  The larger your belief is that it <b>will not</b> fall, the more you
+  should position the slider towards its left (<i>impossible</i>/0%).
+  Here is an example:
+  <br />
+  <br />
+  <input type='range' id=ex_slider class='magpie-response-slider replied' min='0' max='100' value='40' oninput='ex_slider.value + "%"'/>
+  <output name=ex_slider_out id=out_ex class="thick">40%</output>
+  <script>document.getElementById("ex_slider").disabled=true;</script>
+  <br/>
+  <br/>
+  If you positioned the slider like or close to this at 40%, you indicate that you
+  are quite <b>undecided</b> whether or not the event will occur, but you judge
+  it <i>a bit <b>more</b> likely that it will <b>not</b></i> occur.
+    <br />
+    <br />
+  After you have given your estimate by changing the position of the slider, you
+  will see a button saying NEXT which will bring you to the next trial.
+  `
+});
+
 // The 'thanks' view is crucial; never delete it; it submits the results!
 const thanks = magpieViews.view_generator("thanks", {
   trials: 1,
@@ -253,24 +292,21 @@ const sentence_choice_custom = magpieViews.view_generator("sentence_choice", {
 });
 
 const slider_rating_pretest = magpieViews.view_generator("slider_rating", {
-  trials: color_vision_test.length,
-  name: "pretest",
   trials: pretest_trials.length,
-  data: _.shuffle(pretest_trials)
-}, {
+  name: "pretest",
+  data: pretest_trials
+},
+{
   stimulus_container_generator: function (config, CT) {
-    return `<div class='magpie-view'>
-      <h1 class='magpie-view-title'>${config.title}</h1>
-      <p class='magpie-view-question magpie-view-qud'>${config.data[CT].QUD}</p>
-      <div class='stimulus' id='stimulus-pic'>
-        <img src=${config.data[CT].picture} class ='picture'>
-      </div>
-    </div>`;
-  },
-  // answer_container_generator: multi_slider_generator.answer_container_gen,
-  // handle_response_function: multi_slider_generator.handle_response_function
-}
-);
+      return `<div class='magpie-view'>
+        <h1 class='magpie-view-title'>${config.title}</h1>
+        <p class='magpie-view-question magpie-view-qud'>${config.data[CT].QUD}</p>
+        <div class='stimulus' id='stimulus-pic'>
+          <img src=${config.data[CT].picture}>
+        </div>
+      </div>`;
+  }
+});
 
 // experimental phase trials
 const multiple_slider = magpieViews.view_generator(

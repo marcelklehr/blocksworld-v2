@@ -116,7 +116,6 @@ pseudoRandomTestTrials = function(){
 
 // save trial data to make it accessible in magpie experiment
 const shuffled_test_ids = pseudoRandomTestTrials();
-console.log(shuffled_test_ids)
 let test_ids = _.map(slider_rating_trials, 'id');
 let TEST_TRIALS = [];
 shuffled_test_ids.forEach(function(id){
