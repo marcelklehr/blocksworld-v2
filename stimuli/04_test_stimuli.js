@@ -89,7 +89,7 @@ testTrials_independent = function(priors){
     cols.test_blocks[colors[1]], "blockC", horiz[1])
 
   // add seesaw as distractor
-  let dist = seesaw(data.increase ? 170 : 630, "independent")
+  let dist = seesaw(data.increase ? 170 : 630, "low")
   let ramp = rampElems(priors[1], data.increase, data.walls[1], horiz[1]);
   let objs = data.walls.concat([dist.skeleton]).concat(ramp);
   return [b1, b2].concat([dist.plank, dist.constraint]).concat(objs);

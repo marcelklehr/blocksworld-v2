@@ -9,33 +9,39 @@ let TrainStimuli = {
 // INDPENDENT TRIALS
 trials_independent = function(){
   let data = {}
-  let bases = [W5, W5, W5]
+  let bases = [W5, W5, W5, W5]
   let x_max_base = bases[0].bounds.max.x;
   let y_min_base = bases[0].bounds.min.y;
   let meta = {
-    "blockLowA": ["uncertainL", "high","train-independent-plane-doesnt-fall"],
-    "blockLowB": ["high", "low", "train-independent-steep-falls"],
-    "blockLowC": ["uncertainH", "high", "train-independent-plane-falls"]
+    "blockA": ["uncertainLL", "high","ind-ball-uncLL-edge-high"],
+    "blockB": ["uncertainH", "low", "ind-ball-uncH-edge-low"],
+    "blockC": ["uncertainH", "high", "ind-ball-uncH-edge-high"],
+    "blockD": ["uncertainLL", "low", "ind-ball-uncLL-edge-low"]
   };
+  let horiz = [true, true, false, false];
   let h = PROPS.blocks.h
-  let bA = blockOnBase(bases[0], (h+DIST_EDGE)/h, cols.train_blocks[0], 'blockLowA', true);
-  let bB = blockOnBase(bases[1], (h+DIST_EDGE)/h, cols.train_blocks[1], 'blockLowB', true);
-  let bC = blockOnBase(bases[2], (h+DIST_EDGE)/h, cols.train_blocks[1], 'blockLowC', true);
+  let bA = blockOnBase(bases[0], (h+DIST_EDGE)/h, cols.train_blocks[0], 'blockA', horiz[0]);
+  let bB = blockOnBase(bases[1], (h+DIST_EDGE)/h, cols.train_blocks[1], 'blockB', horiz[1]);
+  let bC = blockOnBase(bases[2], (h+DIST_EDGE)/h, cols.train_blocks[1], 'blockC', horiz[2]);
+  let bD = blockOnBase(bases[3], (h+DIST_EDGE)/h, cols.train_blocks[0], 'blockD', horiz[3]);
 
-  [bA, bB, bC].forEach(function(block1, i){
-    let seesaw_dist = seesaw(data.increase ? 220 : 580, "independent")
+  [bA, bB, bC, bD].forEach(function(block1, i) {
+    let label = block1.label;
+    let ss_height = label === "blockC" ? "high" : "low";
+    let seesaw_dist = seesaw(data.increase ? 220 : 580, ss_height)
     let id = "independent_" + i;
-    let ramp_type = meta[block1.label][0]
-    let walls = [W6].concat(rampElems(ramp_type, false, W5, true, test=false));
+    let ramp_type = meta[label][0]
+    let walls = [W6].concat(rampElems(ramp_type, false, W5, horiz[i], test=false));
     walls.unshift(bases[i]);
     let i_dist_col = block1.render.fillStyle === cols.train_blocks[0] ? 1 : 0;
-    let distractor = blockOnBase(W4, -1 * PRIOR[meta[block1.label][1]],
-      cols.train_blocks[i_dist_col], 'b2_right');
+    let dist_horiz = (label === "blockC" || label === "blockD") ? true : false;
+    let distractor = blockOnBase(W4, -1 * PRIOR[meta[label][1]],
+      cols.train_blocks[i_dist_col], 'block_dist_right', dist_horiz);
 
     walls = walls.concat([seesaw_dist.skeleton]);
     let objs = {'objs': [block1, distractor, seesaw_dist.plank,
                          seesaw_dist.constraint].concat(walls),
-                'meta': meta[block1.label],
+                'meta': meta[label],
                 'id': id}
     data[id] = objs
   });
@@ -43,57 +49,45 @@ trials_independent = function(){
 }
 
 // TRAIN DIFFERENT STEEPNESS OF RAMPS
-steepnessTrials = function(data, trial_id){
-  let meta = ["falls", "doesnt fall", "train-steepness"]
-  let walls = Walls.train.uncertain[1]
-  let ramp1 = makeRamp(43, false, walls[0], test=false)
-  let ramp2 = makeRamp(27, false, walls[1], test=false)
-  let ramp3 = makeRamp(22, false, walls[2], test=false)
-  ramp2.ball.label = 'ball2'; ramp2.ball.render.fillStyle = cols.orange;
-  ramp3.ball.label = 'ball3'; ramp3.ball.render.fillStyle = cols.darkyellow;
-  let w_horiz = PROPS.blocks.h; let w_vert = PROPS.blocks.w;
-  let b1 = blockOnBase(walls[0], (w_horiz+DIST_EDGE)/w_horiz, cols.train_blocks[1], "block1", true);
-  let b2 = blockOnBase(walls[1], (w_horiz+DIST_EDGE)/w_horiz, cols.train_blocks[0], "block2", true);
-  let b3 = blockOnBase(walls[2], (w_vert + DIST_EDGE) / w_vert, cols.darkgrey, "block3");
-
-  let objs_dyn = [b1, ramp1.ball, b2, ramp2.ball, b3, ramp3.ball];
-  [ramp1, ramp2, ramp3].forEach(function(ramp){
-    walls.push(ramp.tilted);
-    walls.push(ramp.top);
-  });
-  let w_bottom = scene.w - walls[0].bounds.max.x;
-  let bottom = wall(label='bottom_half', x=walls[0].bounds.max.x + w_bottom / 2,
-    y=scene.h - PROPS.bottom.h/2, w=w_bottom, h=PROPS.bottom.h);
-  walls.push(bottom);
-  data[trial_id] = {objs: objs_dyn.concat(walls), meta, id: trial_id}
-  return data
-}
-
-pretestTrials = function(){
-  let horiz = [true, false]
+steepnessTrials = function(id_start){
+  let meta_all = [["low", "uncertainH", "high", "train0-ball-high-low-steepness"],
+                  ["low", "high", "uncertainLL", "train1-ball-high-low-steepness"]];
+  let horiz_all = [[false, true, false], [true, true, false]];
   let data = {};
-  [0, 1].forEach(function(ci){
-    let col_str = block_cols.test[ci];
-    let col = cols.test_blocks[ci];
-    horiz.forEach(function(dir){
-      PRETEST_ANGLES.forEach(function(angle) {
-        let trial_id = [(dir ? "horiz" : "vert"), angle.toString(), col_str].join('-');
-        let increase = _.sample([true, false])
-        let x = increase ? scene.w/3 : scene.w * (2/3)
-        let walls = [wall('w_middle', x, scene.h/2)]
-        let ramp = makeRamp(angle, increase, walls[0]);
-        // block
-        let w = dir ? PROPS.blocks.h : PROPS.blocks.w;
-        let fct = increase ? -1 : 1;
-        let b = blockOnBase(walls[0], fct * (w+DIST_EDGE)/w, col, "block", dir);
 
-        let objs_dyn = [b, ramp.ball];
-        walls.push(ramp.tilted);
-        walls.push(ramp.top);
-        data[trial_id] = {objs: objs_dyn.concat(walls), id: trial_id}
-      });
+  ["horizontal", "vertical"].forEach(function(direction, i) {
+    let walls = Array.from(Walls.train.uncertain[1]);
+    let trial_id = "uncertain_" + (i + id_start);
+    let w_bottom = scene.w - walls[0].bounds.max.x;
+    let bottom = wall(label='bottom_half', x=walls[0].bounds.max.x + w_bottom / 2,
+    y=scene.h - PROPS.bottom.h/2, w=w_bottom, h=PROPS.bottom.h);
+    walls.push(bottom);
+    let meta = meta_all[i];
+    let horiz = horiz_all[i];
+    let prop_on_base = [];
+    horiz.forEach(function(d){
+      let w_horiz = d ? PROPS.blocks.h :PROPS.blocks.w;
+      prop_on_base.push((w_horiz+DIST_EDGE)/w_horiz);
+    })
+
+    let ramp1 = makeRamp(ANGLES[direction][meta[0]], false, walls[0], test=false)
+    let ramp2 = makeRamp(ANGLES[direction][meta[1]], false, walls[1], test=false)
+    let ramp3 = makeRamp(ANGLES[direction][meta[2]], false, walls[2], test=false)
+    ramp2.ball.label = 'ball2';
+    ramp3.ball.label = 'ball3';
+    let cs = cols.train_blocks;
+    let w_horiz = PROPS.blocks.h; let w_vert = PROPS.blocks.w;
+    let b1 = blockOnBase(walls[0], prop_on_base[0], cs[1], "blockA", horiz[0]);
+    let b2 = blockOnBase(walls[1], prop_on_base[1], cs[0], "blockC", horiz[1]);
+    let b3 = blockOnBase(walls[2], prop_on_base[2], cols.darkgrey, "block3", horiz[2]);
+
+    let objs_dyn = [b1, ramp1.ball, b2, ramp2.ball, b3, ramp3.ball];
+    [ramp1, ramp2, ramp3].forEach(function(ramp){
+      walls.push(ramp.tilted);
+      walls.push(ramp.top);
     });
-  })
+    data[trial_id] = {objs: objs_dyn.concat(walls), meta, id: trial_id}
+  });
   return data
 }
 
@@ -117,8 +111,9 @@ trials_uncertain = function(){
     data[id] = {objs: blocks.concat(walls),
                 meta: meta[i],id}
   });
-  data = steepnessTrials(data, "uncertain_2");
-  return data
+  let train_steepness = steepnessTrials(2);
+
+  return Object.assign(data, train_steepness)
 }
 
 // A implies C TRIALS
@@ -166,20 +161,54 @@ trials_ac = function(){
 // Seesaw TRIALS
 trials_iff = function(){
   data = {};
+  let cs = cols.train_blocks;
+  let horiz = [[false, false], [true, true]]
+  let meta = [["uncertain", "low", "train-iff-vert"],
+              ["high", "low", "train-iff-horiz"]]
   let objs = Walls.train.seesaw_trials();
   let walls = objs.walls;
-  let bA = block(walls[0].bounds.max.x, walls[0].bounds.min.y,
-    cols.train_blocks[1], 'blockA', horiz=false);
-  let bB = block(walls[1].bounds.min.x + 2, walls[1].bounds.min.y,
-    cols.train_blocks[0], 'blockB', horiz=false);
+  let bA = block(walls[0].bounds.max.x, walls[0].bounds.min.y,cs[1], 'blockA', horiz[0][0]);
+  let bB = block(walls[1].bounds.min.x + 2, walls[1].bounds.min.y,cs[0], 'blockB', horiz[0][1]);
+  let bC = block(walls[0].bounds.max.x, walls[0].bounds.min.y,cs[1], 'blockA', horiz[1][0]);
+  let bD = block(walls[1].bounds.min.x + 2, walls[1].bounds.min.y,cs[0], 'blockB', horiz[1][1]);
 
-  [[bA, bB]].forEach(function(blocks, i){
+  [[bA, bB], [bC, bD]].forEach(function(blocks, i){
     let id = "a_iff_c_" + i
     data[id] = {objs: blocks.concat(objs.dynamic).concat(walls),
                 meta: ["uncertain", "low", "train-iff"], id}
   });
   return data
 }
+
+pretestTrials = function(){
+  let horiz = [true, false]
+  let data = {};
+  [0, 1].forEach(function(ci){
+    let col_str = block_cols.test[ci];
+    let col = cols.test_blocks[ci];
+    horiz.forEach(function(dir){
+      PRETEST_ANGLES.forEach(function(angle) {
+        let trial_id = [(dir ? "horiz" : "vert"), angle.toString(), col_str].join('-');
+        let increase = _.sample([true, false])
+        increase = true;
+        let x = increase ? scene.w/3 : scene.w * (2/3)
+        let walls = [wall('w_middle', x, scene.h/2)]
+        let ramp = makeRamp(angle, increase, walls[0]);
+        // block
+        let w = dir ? PROPS.blocks.h : PROPS.blocks.w;
+        let fct = increase ? -1 : 1;
+        let b = blockOnBase(walls[0], fct * (w+DIST_EDGE)/w, col, "block", dir);
+
+        let objs_dyn = [b, ramp.ball];
+        walls.push(ramp.tilted);
+        walls.push(ramp.top);
+        data[trial_id] = {objs: objs_dyn.concat(walls), id: trial_id}
+      });
+    });
+  })
+  return data
+}
+
 
 getTrainStimulus = function(kind, nb) {
   let stimulus = TrainStimuli.map_category[kind][kind + "_" + nb];

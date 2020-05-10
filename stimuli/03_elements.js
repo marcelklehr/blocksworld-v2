@@ -7,10 +7,11 @@ const Bottom = wall(label='bottom', x=scene.w/2, y=scene.h - PROPS.bottom.h/2,
 // base walls
 let W1 = wall('w1_upLeft', 320, 100);
 let W1_2 = wall('w1_2_upRight', 480, 100);
-let W3 = wall('w3_rampLowInd', 410+4, 240, 175)
-let W3_2 = wall('w3_2_rampLowInd', 390-4, 240, 175)
+let W3 = wall('w3_rampLowInd', 414, 240, 175)
+let W3_2 = wall('w3_2_rampLowInd', 386, 240, 175)
 let W4 = wall('w4_upRight', 750, 240, 90);
-let W5 = wall('w5_base_ramp', 250+(PROPS.walls.w+25)/2, 225, W_BASE_RAMP)
+// let W5 = wall('w5_base_ramp', 250+(PROPS.walls.w+25)/2, 225, W_BASE_RAMP)
+let W5 = wall('w5_base_ramp', 320, 225, W_BASE_RAMP)
 let W6 = wall('w6_upRight', 750, 240, 90)
 
 
@@ -40,7 +41,6 @@ makeRamp = function(angle, tilt_increase, wallLow, test=true){
   );
   pos.x_ball = tilt_increase ? wallTop.bounds.min.x - 4 : wallTop.bounds.max.x + 4;
   let col_ball = test ? ball_colors.test : ball_colors.train[Math.abs(angle).toString()];
-
   let ball1 = ball(pos.x_ball, wallTop.bounds.min.y - PROPS.balls.radius,
     PROPS.balls.radius, 'ball1', col_ball);
   Body.setAngle(ramp, -pos.shift_x * r);
@@ -53,8 +53,8 @@ rampElems = function(ramp_type, increase, base, horiz, test=true){
   return _.values(makeRamp(angle, increase, base, test))
 }
 
-seesaw = function(pos, trial_type="a_iff_c"){
-  let kind = "seesaw_" + trial_type;
+seesaw = function(pos, height="high"){
+  let kind = "seesaw_" + height;
   let stick = wall('stick', pos, scene.h - PROPS.bottom.h - PROPS[kind].stick.h / 2,
     PROPS[kind].stick.w, PROPS[kind].stick.h, {render: {fillStyle: cols.darkgrey}});
 
@@ -93,7 +93,7 @@ Walls.test.seesaw_trials = function(side_ramp, offset=PROPS.seesaw.d_to_walls){
   let data = side_ramp === "right" ? {x0: 175, w0: 0.6 * W_BASE_RAMP, w1: W_BASE_RAMP}
                                    : {x0: 275, w0: W_BASE_RAMP, w1: 0.6 * W_BASE_RAMP};
   let base0 = wall('wall_seesaw_left', data.x0, 240, data.w0);
-  let pos = base0.bounds.max.x + PROPS.seesaw_a_iff_c.plank.w/2 + offset;
+  let pos = base0.bounds.max.x + PROPS.seesaw_high.plank.w/2 + offset;
   let objs = seesaw(pos);
   let base1 = wall('wall_seesaw_right',
     objs.plank.bounds.max.x + offset + data.w1/2, base0.position.y, data.w1);
@@ -106,7 +106,7 @@ Walls.test.seesaw_trials = function(side_ramp, offset=PROPS.seesaw.d_to_walls){
 let W8 = wall('w8_middle_left', 0.3 * scene.w, scene.h/3);
 let W9 = wall('w9_middle_right', (3/4) * scene.w, scene.h/3);
 let W10 = wall('w10_right_low', (2/3) * scene.w, (3/4) * scene.h);
-let W11 = wall('w11_top', 400, 145, W_BASE_RAMP)
+let W11 = wall('w11_top', 400, 120, W_BASE_RAMP)
 let W12 = wall('w12_middle', 400, 230, W_BASE_RAMP)
 let W13 = wall('w13_down', 400, 350, W_BASE_RAMP)
 Walls.train.uncertain = [[W8, W9, W10], [W11, W12, W13]]
