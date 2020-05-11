@@ -189,7 +189,7 @@ const instructions_test = magpieViews.view_generator("instructions", {
           that is, a block does not necessarily need to fall to the ground in
           order to count as <i>falling</i>.
           <br/>
-          3. The colored blocks all have <b>the same properties</b>, they are only
+          2. The colored blocks all have <b>the same properties</b>, they are only
           distinguishable by their color.
             </br>
             </br>
