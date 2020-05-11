@@ -113,7 +113,7 @@ Walls.train.uncertain = [[W8, W9, W10], [W11, W12, W13]]
 
 Walls.train.a_implies_c = function(){
   return [wall('wall_ac_top', 580, 150, W_BASE_RAMP),
-          wall('wall_ac_low', 390, 290)];
+          wall('wall_ac_low', 390, 320)];
 }
 
 Walls.train.seesaw_trials = function(){

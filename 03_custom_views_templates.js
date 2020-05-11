@@ -267,7 +267,7 @@ const custom_posttest_generator = {
                         <input type="text" id="languages"/>
                     </p>
                     <p class="magpie-view-text">
-                        <label for="ramp1">Did you notice that the incline in the trials was of different steepness?</label>
+                        <label for="ramp1">Did you notice that in those trials, where a ball was present, the incline of the ramp was of different steepness?</label>
                         <textarea name="ramp1" id="ramp1" rows="1" cols="40"></textarea>
                     </p>
                     <p class="magpie-view-text">

@@ -45,9 +45,9 @@ const intro = magpieViews.view_generator("intro", {
   buttonText: "begin the experiment"
 });
 
-const instructions_train1_colors = magpieViews.view_generator("instructions", {
+const instructions_general = magpieViews.view_generator("instructions", {
   trials: 1,
-  name: "instructions_train1_colors",
+  name: "instructions_general",
   title: "General Instructions",
   text: `In this experiment you are shown pictures of different arrangements of
           blocks.
@@ -56,12 +56,6 @@ const instructions_train1_colors = magpieViews.view_generator("instructions", {
          The experiment consists of two phases, a training and a testing phase.
          In total, you will need about 15-20 minutes to finish it.
          <br/>
-         <br />
-         The training phase comprises three short parts. We will now start with the
-         first, in which you are shown four pictures containing toy
-         blocks. Please answer the question shown below the pictures by clicking on
-         the respective button.
-         <br />
          <br/>
          Please note:
          <br/>
@@ -93,6 +87,7 @@ const instructions_train2 = magpieViews.view_generator("instructions", {
         For each presented scene you will be asked to indicate which of the
          colored blocks you think will fall by clicking on the button with the
          respective icons.
+         <br />
          A falling block is represented by a skewed rectangle
         and a resting block that <i>does not fall</i> is represented by a rectangle
         with a line below. Here is an exemplary icon for the event
@@ -108,8 +103,8 @@ const instructions_train2 = magpieViews.view_generator("instructions", {
          A block is considered to <b><i>fall</i></b> <b>as soon as it <i>topples
          over</i> or <i>drops</i> from a platform or from another block.</b>
          <br/>
-         The colored blocks represent common toy blocks, they do not have any
-         special or unexpected properties and they are only distinguishable by
+         The colored blocks represent common toy blocks, they <b>do not have</b> any
+         <i>special or unexpected</i> properties and they are only distinguishable by
         their color.
              <br />
              <br />
@@ -124,9 +119,9 @@ const instructions_train2 = magpieViews.view_generator("instructions", {
 const instructions_train3 = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_train3",
-  title: "Instructions Training 2",
-  text: `Great - we will now proceed with the second part of the training phase
-  consisting of a single trial.
+  title: "Instructions Training",
+  text: `Great - there is only one trial left in the training phase to which we
+  will proceed now.
     <br />
   In this trial, we ask you to indicate <b>how likely</b> you think certain
   blocks <b>will or will not fall</b> by moving the corresponding sliders.
@@ -153,12 +148,6 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   fix its new position, as is shown on the example slider above.
     <br />
     <br />
-  You may wonder whether the probabilities that you assign to the four described
-  events must sum up to 100%. In this respect, note that we are interested in how
-  you rate the four events relative to each other. This means that your
-  estimates <b>may</b>, but <b>do not have to</b> <i>sum to 100%</i>.
-    <br />
-    <br />
   After you have provided all four estimates (the circles of all four sliders
   have to be green), you will be able to run the animation and after that,
   proceed to the test phase of the experiment.
@@ -170,12 +159,14 @@ const instructions_test = magpieViews.view_generator("instructions", {
   name: "instructions_test",
   title: "Instructions Test Phase",
   text: `Great - you've now completed the training phase and we'll continue with
-          the test phase next. Again, you will be shown scenes of different block
-          arrangements. As in the previous trial, we will ask you to
-          indicate <b>how likely</b> you think certain blocks <b>will fall /
-          not fall</b>.
+          the test phase next.
           <br />
-          The only difference is, that now you will <i>not</i> get
+          Again, you will be shown scenes of different block
+          arrangements.
+          <br />
+          As in the previous trial, we will ask you to
+          indicate <b>how likely</b> you think certain blocks <b>will or will
+          not fall</b>. The only difference is, that now you will <i>not</i> get
           feedback about what will actually happen since you will be shown
           static pictures only.
           <br />
@@ -183,16 +174,21 @@ const instructions_test = magpieViews.view_generator("instructions", {
           sliders have to be green), you will be able proceed to the next trial.
             <br />
             <br />
-          Please keep in mind:
+          Please note:
+          <br />
+          You may have wondered whether the probabilities that you assign to the
+          four described events must sum up to 100%. Since we are interested in how
+          you rate the four events relative to each other, your estimates
+          <b>may</b>, but <b>do not have to</b> <i>sum to 100%</i>.
+          <br />
+          <br />
+          Two more things to keep in mind:
             <br/>
           1. A block is considered to <b><i>fall</i> as soon as it <i>drops</i> from a
           platform or from another block or simply <i>topples over</i></b> -
           that is, a block does not necessarily need to fall to the ground in
           order to count as <i>falling</i>.
           <br/>
-          2. The probabilities that you assign to the four events do <b>not have to
-          sum up to 100%</b>.
-            </br>
           3. The colored blocks all have <b>the same properties</b>, they are only
           distinguishable by their color.
             </br>

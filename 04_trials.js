@@ -240,7 +240,7 @@ var slider_rating_trials = [
     optionRight: "certainly"
   },
   {
-    picture: "stimuli/img/group/a_iff_c_uh.jpg",
+    picture: "stimuli/img/group/a_iff_c_hu.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -450,7 +450,7 @@ _.map(pretest_trials, function (trial, i) {
   let id = trial.picture.split("/")
   trial.id = id[id.length - 1].slice(0, -4);
 });
-console.log(_.map(pretest_trials, 'id'))
+// console.log(_.map(pretest_trials, 'id'))
 
 
 // TRAINING TRIALS (some with buttons some with sliders)

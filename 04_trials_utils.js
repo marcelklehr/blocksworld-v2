@@ -117,7 +117,18 @@ const shuffled_test_ids = pseudoRandomTestTrials();
 let test_ids = _.map(slider_rating_trials, 'id');
 let TEST_TRIALS = [];
 shuffled_test_ids.forEach(function(id){
-  let idx = _.indexOf(test_ids, id)
+  let idx = _.lastIndexOf(test_ids, id)
+  if(idx === -1) {
+    let kind = id.slice(0, _.lastIndexOf(id, "_"));
+    let ps = id.slice(_.lastIndexOf(id, "_") + 1);
+    if(kind === "a_iff_c") {
+      // a_iff_c trials are identical for ul-lu / uh-hu / lh -hl etc.
+      idx = _.indexOf(test_ids, kind + "_" + ps[1] + ps[0])
+    } else {
+      console.error('check test-ids!' + id + ' not found.')
+    }
+  }
+  // console.log(id + ' ' + idx)
   TEST_TRIALS.push(slider_rating_trials[idx]);
 });
 

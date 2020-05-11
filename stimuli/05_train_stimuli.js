@@ -139,11 +139,9 @@ trials_ac = function(){
     let blocks = [];
 
     let w1Bounds = walls[1].bounds;
-    Body.setPosition(walls[1], {x: walls[1].position.x - 40,
-      y: walls[0].bounds.max.y + 150 + (w1Bounds.max.y - w1Bounds.min.y)/2});
-      let wx = wall('xWall', w1Bounds.max.x - PROPS.blocks.h/1.2,
-      w1Bounds.min.y - PROPS.blocks.w/2, PROPS.blocks.h, PROPS.blocks.w);
-      walls.push(wx);
+    let wx = wall('xWall', w1Bounds.max.x - PROPS.blocks.h/1.2,
+                  w1Bounds.min.y - PROPS.blocks.w/2, PROPS.blocks.h, PROPS.blocks.w);
+    walls.push(wx);
     // if(key === "ac1") {
     //   let ramp = rampElems("uncertainH", true, walls[0], false, test=false);
     //   let w = horiz.ac1[0] ? PROPS.blocks.h : PROPS.blocks.w;
