@@ -82,9 +82,9 @@ const instructions_train1_colors = magpieViews.view_generator("instructions", {
 const instructions_train2 = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_train2",
-  title: "Instructions Training 2",
-  text: `Great - we will now continue with the second part of the training phase
-          which consists of 8 trials. You will see block arrangements similar
+  title: "Instructions Training",
+  text: `We will start with the the training phase
+          which consists of 11 trials. You will see block arrangements similar
           to those you will be shown later in the test phase, such that you are
           able to develop intuitions about the physical properties and get
           familiar with the stimuli.
@@ -124,8 +124,8 @@ const instructions_train2 = magpieViews.view_generator("instructions", {
 const instructions_train3 = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_train3",
-  title: "Instructions Training 3",
-  text: `Great - we will now proceed with the last part of the training phase
+  title: "Instructions Training 2",
+  text: `Great - we will now proceed with the second part of the training phase
   consisting of a single trial.
     <br />
   In this trial, we ask you to indicate <b>how likely</b> you think certain

@@ -53,6 +53,7 @@ steepnessTrials = function(id_start){
   let meta_all = [["low", "uncertainH", "high", "train0-ball-high-low-steepness"],
                   ["low", "high", "uncertainLL", "train1-ball-high-low-steepness"]];
   let horiz_all = [[false, true, false], [true, true, false]];
+  let colors = [cols.train_blocks, cols.train_blocks.reverse()];
   let data = {};
 
   ["horizontal", "vertical"].forEach(function(direction, i) {
@@ -75,10 +76,9 @@ steepnessTrials = function(id_start){
     let ramp3 = makeRamp(ANGLES[direction][meta[2]], false, walls[2], test=false)
     ramp2.ball.label = 'ball2';
     ramp3.ball.label = 'ball3';
-    let cs = cols.train_blocks;
     let w_horiz = PROPS.blocks.h; let w_vert = PROPS.blocks.w;
-    let b1 = blockOnBase(walls[0], prop_on_base[0], cs[1], "blockA", horiz[0]);
-    let b2 = blockOnBase(walls[1], prop_on_base[1], cs[0], "blockC", horiz[1]);
+    let b1 = blockOnBase(walls[0], prop_on_base[0], colors[i][1], "blockA", horiz[0]);
+    let b2 = blockOnBase(walls[1], prop_on_base[1], colors[i][0], "blockC", horiz[1]);
     let b3 = blockOnBase(walls[2], prop_on_base[2], cols.darkgrey, "block3", horiz[2]);
 
     let objs_dyn = [b1, ramp1.ball, b2, ramp2.ball, b3, ramp3.ball];
@@ -164,19 +164,18 @@ trials_iff = function(){
   data = {};
   let cs = cols.train_blocks;
   let horiz = [[false, false], [true, true]]
-  let meta = [["uncertain", "low", "train-iff-vert"],
-              ["high", "low", "train-iff-horiz"]]
-  let objs = Walls.train.seesaw_trials();
-  let walls = objs.walls;
-  let bA = block(walls[0].bounds.max.x, walls[0].bounds.min.y,cs[1], 'blockA', horiz[0][0]);
-  let bB = block(walls[1].bounds.min.x + 2, walls[1].bounds.min.y,cs[0], 'blockB', horiz[0][1]);
-  let bC = block(walls[0].bounds.max.x, walls[0].bounds.min.y,cs[1], 'blockA', horiz[1][0]);
-  let bD = block(walls[1].bounds.min.x + 2, walls[1].bounds.min.y,cs[0], 'blockB', horiz[1][1]);
+  let meta_data = [["uncertain", "low", "train-iff-vert"],
+                   ["high", "low", "train-iff-horiz"]]
 
-  [[bA, bB], [bC, bD]].forEach(function(blocks, i){
+  meta_data.forEach(function(meta, i){
+    let objs = Walls.train.seesaw_trials();
+    let walls = objs.walls;
+    let b1 = block(walls[0].bounds.max.x, walls[0].bounds.min.y,cs[1], 'blockA', horiz[i][0]);
+    let b2 = block(walls[1].bounds.min.x + 2, walls[1].bounds.min.y,cs[0], 'blockC', horiz[i][1]);
+    // let bC = block(walls[0].bounds.max.x, walls[0].bounds.min.y,cs[1], 'blockA', horiz[1][0]);
+    // let bD = block(walls[1].bounds.min.x + 2, walls[1].bounds.min.y,cs[0], 'blockB', horiz[1][1]);
     let id = "a_iff_c_" + i
-    data[id] = {objs: blocks.concat(objs.dynamic).concat(walls),
-                meta: ["uncertain", "low", "train-iff"], id}
+    data[id] = {objs: [b1, b2].concat(objs.dynamic).concat(walls), meta, id}
   });
   return data
 }

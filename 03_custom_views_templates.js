@@ -64,7 +64,10 @@ const animation_view1 = {
             .off("click");
 
           let c = SHUFFLED_TRAIN_STIMULI[CT].id
-          id_button_correct = ["independent_2", "uncertain_0"].includes(c) ? "a" : ['independent_1', "independent_0", "uncertain_1"].includes(c) ? "c" : "ac";
+          id_button_correct =
+            ["independent_3"].includes(c) ? "none" :
+            ['independent_1', "uncertain_0", "independent_0"].includes(c) ? "a" :
+            ["uncertain_1", "uncertain_2", "uncertain_3"].includes(c) ? "c" : "ac";
           $('#' + id_button_correct)
             .addClass("correct");
           id_bttn_selected !== id_button_correct ?
@@ -268,10 +271,6 @@ const custom_posttest_generator = {
                         <textarea name="ramp1" id="ramp1" rows="1" cols="40"></textarea>
                     </p>
                     <p class="magpie-view-text">
-                        <label for="ball">Did you notice that the color of the ball was different?</label>
-                        <textarea name="ramp2" id="ramp2" rows="1" cols="40"></textarea>
-                    </p>
-                    <p class="magpie-view-text">
                         <label for="comments">${quest.comments.title}</label>
                         <textarea name="comments" id="comments" rows="6" cols="40"></textarea>
                     </p>
@@ -302,8 +301,6 @@ const custom_posttest_generator = {
           .val()
           .trim();
         magpie.global_data.noticed_steepness = $("#ramp1")
-          .val();
-        magpie.global_data.noticed_ball = $("#ramp2")
           .val();
         magpie.global_data.endTime = Date.now();
         magpie.global_data.timeSpent =
