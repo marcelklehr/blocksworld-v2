@@ -2,32 +2,32 @@ library(tidyverse)
 
 test_data <- function(path_to_csv) {
   data <- read_csv(path_to_csv) %>%
-    mutate(prolific_id = str_to_lower(prolific_id)) %>% 
-    filter(str_detect(prolific_id, "test-.*"))
+    mutate(prolific_id = str_trim(str_to_lower(prolific_id))) %>% 
+    filter(str_detect(prolific_id, "test-.*") | str_detect(prolific_id, "test "))
   return(data)
 }
 
 experimental_data <- function(path_to_csv){
   data <- read_csv(path_to_csv) %>%
-    filter(!str_detect(prolific_id, "test-.*"))
+    mutate(prolific_id = str_trim(str_to_lower(prolific_id))) %>% 
+    filter(!str_detect(prolific_id, "test.*") & prolific_id != "" &
+           !is.na(prolific_id))
   return(data)
 }
 
-anonymize_and_save <- function(data_dir, data_fn, fn, test_run=FALSE){
+anonymize_and_save <- function(data_dir, data_fn, result_dir, result_fn, test_run=FALSE){
   path_to_data <- paste(data_dir, data_fn, sep=.Platform$file.sep)
   data <- if(test_run) test_data(path_to_data) else experimental_data(path_to_data)
-  
-  # TODO: remove
-  data <- data %>% filter(prolific_id == "test-anna" | prolific_id == "test-papi02" | prolific_id == "test-rolf" | prolific_id == "test-fabian")
-  
+    
   if(!test_run) {
+    # filter test debug trials
     prolific_ids <- data %>% pull(prolific_id) %>% unique()
     new_ids <- paste("participant", seq(1,  length(prolific_ids)), sep="")
     n_trials <- data %>% group_by(prolific_id) %>% summarize(n=n()) %>% pull(n) %>%
       unique()
     data <- data %>% mutate(prolific_id = rep(new_ids, each = n_trials))
   }
-  path_target <- paste(data_dir, paste(fn, "raw.csv", sep="_"), sep = .Platform$file.sep)
+  path_target <- paste(result_dir, paste(result_fn, "raw.csv", sep="_"), sep = .Platform$file.sep)
   write_excel_csv(data, path = path_target, delim = ",", append = FALSE, col_names=TRUE)
   print(paste('written anonymized version to:', path_target))
   return(data)
@@ -75,42 +75,57 @@ tidy_train <- function(df){
   return(dat.train)
 }
 
-tidy_data <- function(data, N_test=18, N_train=13){
+tidy_pretest <- function(df){
+  dat.pre <- df %>% filter(trial_name == "pretest") %>% 
+    select(prolific_id, question, response, id, trial_name, trial_number) %>% 
+    mutate(prolific_id = factor(prolific_id), id=factor(id), 
+           response = as.numeric(response),
+           trial_number = as.character(trial_number))
+  return(dat.pre)
+}
+
+tidy_and_save_data <- function(data, result_dir, fn, test_run, N_test=20, N_train=11){
   # 1. Select only columns relevant for data analysis
   df <- data %>% select(prolific_id,
                         question, question1, question2, question3, question4,
                         QUD, icon1, icon2, icon3, icon4, response, 
                         expected, response1, response2, response3, response4,
-                        id, trial_name, trial_number, group, picture1, picture2,
+                        id, trial_name, trial_number, group, 
                         timeSpent, RT,
-                        noticed_steepness, noticed_ball,
+                        noticed_steepness,
                         education, comments, gender, age)
   
   N_participants <- df %>% select(prolific_id) %>% unique() %>% nrow()
-  stopifnot(nrow(df) == N_participants * (N_test + N_train));
+  # stopifnot(nrow(df) == N_participants * (N_test + N_train));
 
   dat.comments <- df %>%
-    select(prolific_id, noticed_steepness, noticed_ball, comments) %>% 
+    select(prolific_id, noticed_steepness, comments) %>% 
     mutate(comments = if_else(is.na(comments), "", comments)) %>% 
     unique()
   dat.info <- df %>% select(prolific_id, education, gender, age, timeSpent) %>%
     unique()
-  dat.color_vision <- df %>% 
-    filter(trial_name == "color-vision") %>% 
-    select(prolific_id, id, question, response, expected, picture1, picture2, QUD)
+  # dat.color_vision <- df %>% 
+  #   filter(trial_name == "color-vision") %>% 
+  #   select(prolific_id, id, question, response, expected, picture1, picture2, QUD)
 
   dat.train <- tidy_train(df)
   dat.test <- tidy_test(df)
+  dat.pretest <- tidy_pretest(df)
+
+  dat.all <- list(test=dat.test, train=dat.train, 
+                  # color=dat.color_vision,
+                  info=dat.info, comments=dat.comments, pretest=dat.pretest)
   
-  dat.all <- list(test=dat.test, train=dat.train, color=dat.color_vision,
-                     info=dat.info, comments=dat.comments)
+  path_target <- paste(result_dir, paste(fn, "_tidy.rds", sep=""), sep=.Platform$file.sep) 
+  print(paste('written tidied anonymized data to:', path_target))
+  saveRDS(dat.all, path_target)
   return(dat.all)
 }
 
 standardize_color_groups <- function(df){
   df <- df %>%
     mutate(question = case_when(question == "none" ~ "none",
-                                question == "bg" ~ "ac",
+                                (question == "bg" | question == "gb") ~ "ac",
                                 (question == "b" & group == "group2") ~ "c",
                                 (question == "g" & group == "group2") ~ "a",
                                 TRUE ~ question)) %>% 

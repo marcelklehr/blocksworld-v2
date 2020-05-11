@@ -10,10 +10,11 @@ library(here)
 library(tidyverse)
 source(here("R", "utils.R"))
 
-data_dir <-  here("data", "test-runs")
-# data_dir <- here("data", "prolific")
+# data_dir <-  here("data", "test-runs")
+data_dir <- here("data", "prolific")
 
-result_dir <- here("data", "test-runs", "results", "experiment1")
+# result_dir <- here("data", "test-runs", "results", "experiment1")
+result_dir <- here("data", "prolific", "results", "experiment1")
 dir.create(result_dir, recursive=TRUE)
 
 fn <- "exp1_test_trials_processed.rds"

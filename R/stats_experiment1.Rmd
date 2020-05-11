@@ -10,10 +10,10 @@ library(here)
 library(tidyverse)
 source(here("R", "utils.R"))
 
-target_dir <-  here("data", "test-runs");
-# target_dir <- here("data", "prolific", "raw")
-target_fn <- "exp1_tidy.rds"
-path_data <- paste(target_dir, target_fn, sep=.Platform$file.sep)
+# result_dir <-  here("data", "test-runs");
+result_dir <- here("data", "prolific", "results", "experiment1")
+data_fn <- "exp1_tidy.rds"
+path_data <- paste(result_dir, data_fn, sep=.Platform$file.sep)
 
 data <- readRDS(path_data)
 ```
@@ -37,14 +37,15 @@ p
 df %>% ungroup() %>%  group_by(prolific_id) %>%  summary()
 ```
 
+
+```{r, include=FALSE}
 ## Train Trials Color Vision
 
-```{r}
-df <- data$color %>% group_by(prolific_id, id) %>% 
+df <- data$color %>% group_by(prolific_id, id) %>%
   mutate(correct = expected == response)
 
 df %>%
-  ggplot(aes(x=id)) + geom_bar(position="dodge", aes(fill=correct)) + 
+  ggplot(aes(x=id)) + geom_bar(position="dodge", aes(fill=correct)) +
   theme(axis.text.x = element_text(angle=90, hjust=1), legend.position = "top")
 
 ```
@@ -90,5 +91,7 @@ p
 General comments
 
 ```{r}
-data$comments
+print(data$comments)
+data$comments$comments
+
 ```

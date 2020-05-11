@@ -2,15 +2,15 @@ library(here)
 library(tidyverse)
 source("R/utils.R")
 
-target_dir <- here("data", "test-runs")
-# target_dir <- here("data", "prolific", "raw")
+# data_dir <- here("data", "test-runs")
+data_dir <- here("data", "prolific")
+data_fn <- "results_14_blocksworld-conditionals_BG.csv"
 
-fn <- "results_14_blocksworld-conditionals_BG.csv"
+result_dir <- paste(data_dir, "results", "experiment1", sep=.Platform$file.sep)
 
 # Anonymize and save ------------------------------------------------------
-dat.anonym <- anonymize_and_save(target_dir, fn, "exp1", test_run = TRUE)
-data <- tidy_data(dat.anonym)
-saveRDS(data, paste(target_dir, "exp1_tidy.rds", sep=.Platform$file.sep))
+dat.anonym <- anonymize_and_save(data_dir, data_fn, result_dir, "exp1", test_run = FALSE)
+data <- tidy_and_save_data(dat.anonym, result_dir, "exp1", test_run = FALSE)
 
 # Filter data -------------------------------------------------------------
 data <- data$test
@@ -43,18 +43,18 @@ df <- df %>% group_by(prolific_id, id) %>%
   mutate(n=sum(response), response=response/n)
 
 # save processed data -----------------------------------------------------
-saveRDS(df, paste(target_dir, "exp1_test_trials_processed.rds", sep=.Platform$file.sep))
+saveRDS(df, paste(result_dir, "exp1_test_trials_processed.rds", sep=.Platform$file.sep))
 
 means <- df %>% group_by(id, question) %>% summarise(mean=mean(response))
 write.table(means %>% pivot_wider(names_from = question, values_from = mean),
-            file=paste(target_dir, "exp1_prob_tables_mean.csv", sep=.Platform$file.sep),
+            file=paste(result_dir, "exp1_prob_tables_mean.csv", sep=.Platform$file.sep),
             sep = ",", row.names=FALSE)
 
 tables.all <- df %>% select(id, question, prolific_id, response) %>%
   group_by(id, question, prolific_id) %>%
   pivot_wider(names_from = question, values_from = response)
 
-write.table(tables.all, file=paste(target_dir, "exp1_prob_tables_all.csv",
+write.table(tables.all, file=paste(result_dir, "exp1_prob_tables_all.csv",
                                    sep=.Platform$file.sep),
             sep = ",", row.names=FALSE)
 

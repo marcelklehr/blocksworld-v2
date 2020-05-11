@@ -6,5 +6,5 @@ R/*.html
 
 data/test-runs
 
-# file generated from trial_type_orders.wppl
-trial_type_orders.json
+# dont include unanonymized data
+results_14_blocksworld-conditionals_BG.csv
