@@ -7,6 +7,7 @@ data_dir <- here("data", "prolific")
 data_fn <- "results_14_blocksworld-conditionals_BG.csv"
 
 result_dir <- paste(data_dir, "results", "experiment1", sep=.Platform$file.sep)
+dir.create(result_dir, recursive=TRUE)
 
 # Anonymize and save ------------------------------------------------------
 dat.anonym <- anonymize_and_save(data_dir, data_fn, result_dir, "exp1", test_run = FALSE)

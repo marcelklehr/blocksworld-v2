@@ -54,7 +54,7 @@ const instructions_general = magpieViews.view_generator("instructions", {
          <br />
          <br />
          The experiment consists of two phases, a training and a testing phase.
-         In total, you will need about 15-20 minutes to finish it.
+         In total, you will need about 20 minutes to finish it.
          <br/>
          <br/>
          Please note:

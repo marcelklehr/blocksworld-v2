@@ -13,12 +13,11 @@ source(here("R", "utils.R"))
 # data_dir <-  here("data", "test-runs")
 data_dir <- here("data", "prolific")
 
-# result_dir <- here("data", "test-runs", "results", "experiment1")
+# result_dir <- here("data", "test-runs", "experiment1")
 result_dir <- here("data", "prolific", "results", "experiment1")
-dir.create(result_dir, recursive=TRUE)
 
 fn <- "exp1_test_trials_processed.rds"
-data <- readRDS(paste(data_dir, fn, sep=.Platform$file.sep))
+data <- readRDS(paste(result_dir, fn, sep=.Platform$file.sep))
 stimuli <- data %>% pull(id) %>% unique()
 ```
 
@@ -86,7 +85,7 @@ for (s in stimuli){
     theme_classic() +
     facet_wrap(~question, labeller = labeller(question=labels)) + 
     ggtitle(s) +
-    theme(legend.position = "right",
+    theme(legend.position = "none",
           axis.text.y=element_blank(),
           axis.ticks.y =element_blank(),
           text = element_text(size=20),
@@ -153,6 +152,24 @@ dataImplies <- function(data){
               p_c_given_a="P(Green| Blue)", p_c_given_na="P(Green| ¬Blue)")
   return(list(labels=labels, data=df, stimuli=stimuli))
 }
+
+dataOthers <- function(data){
+  stimuli <- data %>% pull(id) %>% unique()
+  df <- data %>%
+    mutate(prod_ac=p_a*p_c) %>%
+    select(prolific_id, id, prod_ac, ac, p_a_given_c, p_a_given_nc,
+           p_c_given_a, p_c_given_na) %>%
+    pivot_longer(cols=c(prod_ac, ac, p_a_given_c, p_a_given_nc, p_c_given_a,
+                        p_c_given_na),
+                 names_to = "p_key", values_to = "p") %>% 
+    mutate(p_key=factor(p_key, levels=c("prod_ac", "ac",
+                                        "p_a_given_c", "p_a_given_nc",
+                                        "p_c_given_a", "p_c_given_na")))
+  labels <- c(ac="P(Blue,Green)", prod_ac="P(Blue) * P(Green)",
+              p_a_given_c="P(Blue| Green)", p_a_given_nc="P(Blue| ¬Green)",
+              p_c_given_a="P(Green| Blue)", p_c_given_na="P(Green| ¬Blue)")
+  return(list(labels=labels, data=df, stimuli=stimuli))
+}
 ```
 
 
@@ -172,7 +189,7 @@ plotProbs <- function(df){
       theme_classic() +
       facet_wrap(~p_key, labeller = labeller(p_key=df$labels)) + 
       ggtitle(s) +
-      theme(legend.position = "right",
+      theme(legend.position = "none",
             axis.text.y=element_blank(),
             axis.ticks.y =element_blank(),
             axis.text = element_text(size=15),
@@ -202,12 +219,13 @@ plotProbs(df)
 Other trials
 
 ```{r}
-plotProbs(others)
+df <- dataOthers(others)
+plotProbs(df)
 ```
 
 
 ```{r, echo = FALSE, message=FALSE}
-fn <- paste(data_dir, "exp1_prob_tables_mean.csv", sep=.Platform$file.sep)
+fn <- paste(result_dir, "exp1_prob_tables_mean.csv", sep=.Platform$file.sep)
 tables <- read_csv(fn) %>% add_probs() %>% 
   pivot_longer(cols=starts_with("p_"), names_to = "key", values_to = "prob")
 ```
