@@ -38,7 +38,7 @@ df %>% ungroup() %>%  group_by(prolific_id) %>%  summary()
 ```
 
 
-```{r, include=FALSE}
+```{r, include=FALSE, eval=FALSE}
 ## Train Trials Color Vision
 
 df <- data$color %>% group_by(prolific_id, id) %>%
@@ -91,7 +91,45 @@ p
 General comments
 
 ```{r}
-print(data$comments)
+data$comments
 data$comments$comments
-
+data$comments$noticed_steepness
 ```
+
+# Postprocessing
+##Filter out participants who did not notice different degrees of inclines
+
+```{r}
+filter_prolific_id <- function(df){
+  df <- df %>%
+    filter(prolific_id != "participant2" & prolific_id != "participant3" &
+           prolific_id != "participant11" & prolific_id != "participant13" &
+           prolific_id != "participant14")
+  print(paste('# filtered out because of not noticing steepness:', "5"))
+  return(df)
+}
+
+update_data <- function(result_dir){
+  target_fn <-"exp1_test_trials_processed.rds";
+  target_path <- paste(result_dir, target_fn, sep=.Platform$file.sep);
+  df <- readRDS(target_path) %>% filter_prolific_id();
+  saveRDS(df, paste(result_dir,
+    "exp1_test_trials_processed_steepness_noticed.rds", sep=.Platform$file.sep))
+  
+  # also update (mean) tables
+  tables.all <- df %>% select(id, question, prolific_id, response) %>%
+    group_by(id, question, prolific_id) %>%
+    pivot_wider(names_from = question, values_from = response)
+  write.table(tables.all, file=paste(result_dir,
+    "exp1_prob_tables_all_steepness_noticed.csv", sep=.Platform$file.sep),
+    sep = ",", row.names=FALSE)
+  
+  means <- df %>% group_by(id, question) %>% summarise(mean=mean(response))
+  write.table(means %>% pivot_wider(names_from = question, values_from = mean),
+              file=paste(result_dir, "exp1_prob_tables_mean_steepness_noticed.csv", sep=.Platform$file.sep),
+              sep = ",", row.names=FALSE)
+}
+
+update_data(result_dir);
+```
+

@@ -16,15 +16,20 @@ data_dir <- here("data", "prolific")
 # result_dir <- here("data", "test-runs", "experiment1")
 result_dir <- here("data", "prolific", "results", "experiment1")
 
-fn <- "exp1_test_trials_processed.rds"
+# fn <- "exp1_test_trials_processed.rds"
+fn <- "exp1_test_trials_processed_steepness_noticed.rds"
+
 data <- readRDS(paste(result_dir, fn, sep=.Platform$file.sep))
 stimuli <- data %>% pull(id) %>% unique()
+
+plot_dir <- paste(result_dir, "plots", sep=.Platform$file.sep);
+dir.create(plot_dir, showWarnings = FALSE)
 ```
 
-Look for participants who gave all-or-none responses, if any, 
-which stimuli were rated as all-or-none by how many participants?
 
-```{r}
+```{r, eval=FALSE, include=FALSE}
+# Look for participants who gave all-or-none responses, if any, 
+# which stimuli were rated as all-or-none by how many participants?
 N_participants <- data %>% pull(prolific_id) %>% unique() %>% length()
 df <- data %>% group_by(prolific_id, id) %>% 
   summarise(n=max(response)) %>% 
@@ -59,10 +64,10 @@ if (nrow(df.participants_all_none) != 0){
 ```
 
 
-## Result data
+## Experimental data: probability tables
 
 ```{r}
-dat <- data %>%
+dat <- data %>% ungroup() %>% 
   mutate(question = factor(question, levels = c("ac", "a", "c", "none")))
 
 labels <- c(ac="Blue and Green", a="Blue and ¬Green",
@@ -71,40 +76,67 @@ labels <- c(ac="Blue and Green", a="Blue and ¬Green",
 df_means <- dat %>% group_by(id, question) %>%
   summarise(m=mean(response), med=median(response))
 
+# s <- "a_implies_c_hl"
 for (s in stimuli){
   df <-dat %>% filter(id == s) 
   means <- df_means %>% filter(id == s)
   p <- df  %>% 
     ggplot(aes(x=response, y=factor(0), fill=question)) +
-    geom_jitter(height = 0.1, alpha=0.5, aes(colour=factor(prolific_id))) +
-    #TODO: uncomment again!
-    # geom_point(data=means,  mapping=aes(x=med, y=factor(0)), col="yellow") +
-    # geom_point(data=means,  mapping=aes(x=m, y=factor(0)), col="red") +
+    geom_jitter(height = 0.1, alpha=0.5, aes(colour=prolific_id)) +
+    # geom_point(data=means,  mapping=aes(x=med, y=factor(0)), shape=8) +
+    geom_point(data=means,  mapping=aes(x=m, y=factor(0)),  shape=24) +
+    geom_vline(xintercept=0.5, linetype="dashed", color = "red", size=1) +
+    scale_x_continuous(limits=c(-0.2, 1.2),
+                       breaks=c(0, 0.25, 0.5, 0.75, 1)) +
     # geom_violin(alpha=0.5) +
     labs(x="estimates probability", y="") + 
-    theme_classic() +
+    theme_bw() +
     facet_wrap(~question, labeller = labeller(question=labels)) + 
     ggtitle(s) +
-    theme(legend.position = "none",
-          axis.text.y=element_blank(),
+    theme(axis.text.y=element_blank(),
           axis.ticks.y =element_blank(),
           text = element_text(size=20),
-          panel.spacing = unit(2, "lines"))
+          panel.spacing = unit(2, "lines")) +
+    guides(color = FALSE, fill= FALSE, shape=TRUE)
   p
-  # fn <- paste("exp1-", s, ".png", sep="")
-  # ggsave(paste(result_dir, fn, sep=.Platform$file.sep), p, width=6, height=4)
+  fn <- paste(plot_dir, paste("exp1-", s, ".png", sep=""), sep=.Platform$file.sep)
+  ggsave(fn, p, width=8, height=5)
   print(p)
 }
 ```
 
+
+```{r, eval=FALSE, include=FALSE}
+# Which probabilities are highest - per stimulus and participant?
+# df <- data %>% pivot_wider(names_from = question, values_from = response) %>% 
+#   ungroup() %>% mutate(id=as.character(id)) %>% add_probs() %>% 
+#   select(-group, -QUD, -n)
+# 
+# dat.max <- df %>% pivot_longer(cols=c(-prolific_id, -RT, -id, -noticed_steepness), names_to = "p_key", values_to = "p") %>% 
+#   group_by(prolific_id, id) %>% mutate(max_p = max(p)) %>% 
+#   filter(p == max_p)
+# 
+# for(i in df$id %>% unique()){
+#   p <- dat.max %>% filter(id == i) %>%
+#     ggplot(aes(x=p_key, y=p, color=prolific_id)) + 
+#     geom_jitter(width=0.1, alpha=0.5) +
+#     # facet_wrap(~id) +
+#     theme(axis.text = element_text(angle=90)) +
+#     labs(title=i)
+#   print(p)
+# }
+
+```
+
+
 Sort trials according to how they are expected to be interpreted
 (as independent/a->c/a<->c)
+
 
 ```{r}
 df <- data %>% pivot_wider(names_from = question, values_from = response) %>% 
   ungroup() %>% mutate(id=as.character(id)) %>% add_probs() %>% 
   select(-group, -QUD, -n)
-
 as_independent <- c('a_implies_c_ll', 'a_implies_c_lu', 'a_implies_c_lh',
                     'a_implies_c_uh', 'a_implies_c_hh',
                     'a_iff_c_ll', 'a_iff_c_hh')
@@ -143,12 +175,12 @@ dataIndependent = function(data) {
 dataImplies <- function(data){
   stimuli <- data %>% pull(id) %>% unique()
   df <- data %>%
-    select(prolific_id, id, p_a_given_c, p_a_given_nc, p_c_given_a, p_c_given_na) %>%
-    pivot_longer(cols=c(p_a_given_c, p_a_given_nc, p_c_given_a, p_c_given_na),
+    select(prolific_id, id, p_a, p_c, p_a_given_c, p_a_given_nc, p_c_given_a, p_c_given_na) %>%
+    pivot_longer(cols=c(p_a, p_c, p_a_given_c, p_a_given_nc, p_c_given_a, p_c_given_na),
                  names_to = "p_key", values_to = "p") %>% 
-    mutate(p_key=factor(p_key,levels=c("p_a_given_c", "p_a_given_nc",
+    mutate(p_key=factor(p_key,levels=c("p_a", "p_c", "p_a_given_c", "p_a_given_nc",
                                        "p_c_given_a", "p_c_given_na")))
-  labels <- c(p_a_given_c="P(Blue| Green)", p_a_given_nc="P(Blue| ¬Green)",
+  labels <- c(p_a="P(Blue)", p_c="P(Green)", p_a_given_c="P(Blue| Green)", p_a_given_nc="P(Blue| ¬Green)",
               p_c_given_a="P(Green| Blue)", p_c_given_na="P(Green| ¬Blue)")
   return(list(labels=labels, data=df, stimuli=stimuli))
 }
@@ -157,15 +189,15 @@ dataOthers <- function(data){
   stimuli <- data %>% pull(id) %>% unique()
   df <- data %>%
     mutate(prod_ac=p_a*p_c) %>%
-    select(prolific_id, id, prod_ac, ac, p_a_given_c, p_a_given_nc,
+    select(prolific_id, id, p_a, p_c, prod_ac, ac, p_a_given_c, p_a_given_nc,
            p_c_given_a, p_c_given_na) %>%
-    pivot_longer(cols=c(prod_ac, ac, p_a_given_c, p_a_given_nc, p_c_given_a,
+    pivot_longer(cols=c(p_a, p_c, prod_ac, ac, p_a_given_c, p_a_given_nc, p_c_given_a,
                         p_c_given_na),
                  names_to = "p_key", values_to = "p") %>% 
-    mutate(p_key=factor(p_key, levels=c("prod_ac", "ac",
+    mutate(p_key=factor(p_key, levels=c("p_a", "p_c", "prod_ac", "ac",
                                         "p_a_given_c", "p_a_given_nc",
                                         "p_c_given_a", "p_c_given_na")))
-  labels <- c(ac="P(Blue,Green)", prod_ac="P(Blue) * P(Green)",
+  labels <- c(p_a="P(Blue)", p_c="P(Green)", ac="P(Blue,Green)", prod_ac="P(Blue) * P(Green)",
               p_a_given_c="P(Blue| Green)", p_a_given_nc="P(Blue| ¬Green)",
               p_c_given_a="P(Green| Blue)", p_c_given_na="P(Green| ¬Blue)")
   return(list(labels=labels, data=df, stimuli=stimuli))
@@ -175,26 +207,37 @@ dataOthers <- function(data){
 
 ```{r}
 plotProbs <- function(df){
+  df_means <- df$data %>% group_by(id, p_key) %>%
+                summarise(m=mean(p), med=median(p))
+  
   for(s in df$stimuli) {
     df.s <- df$data %>% filter(id == s) 
+    means <- df_means %>% filter(id == s) 
+    
     p <- df.s  %>%
       ggplot(aes(x=p, y=factor(0), fill=prolific_id)) +
       geom_jitter(height = 0.1, alpha=0.5, aes(colour=factor(prolific_id))) +
-      xlim(-0.1, 1.1) +
-      #TODO: uncomment again!
-      # geom_point(data=means,  mapping=aes(x=med, y=factor(0)), col="yellow") +
-      # geom_point(data=means,  mapping=aes(x=m, y=factor(0)), col="red") +
+      geom_vline(xintercept=0.5, linetype="dashed", color = "red", size=1) +
+      scale_x_continuous(limits=c(-0.2, 1.2),
+                         breaks=c(0, 0.25, 0.5, 0.75, 1)) +
+      facet_wrap(~p_key, labeller = labeller(p_key=df$labels)) + 
+      # todo: doesnt work to add means
+      # geom_point(data=means,  mapping=aes(x=m, y=factor(0)), shape = 24) +
+      # geom_point(data=means,  mapping=aes(x=med, y=factor(0)), shape = 19) +
       # geom_violin(alpha=0.5) +
       labs(x="estimates probability", y="") + 
-      theme_classic() +
-      facet_wrap(~p_key, labeller = labeller(p_key=df$labels)) + 
+      theme_bw() +
       ggtitle(s) +
       theme(legend.position = "none",
             axis.text.y=element_blank(),
             axis.ticks.y =element_blank(),
-            axis.text = element_text(size=15),
-            panel.spacing = unit(2, "lines"))
+            axis.text = element_text(size=12),
+            panel.spacing = unit(2, "lines")) +
+      guides(color = FALSE, fill= FALSE, shape=TRUE)
+
     print(p)
+    fn <- paste(plot_dir, paste("exp1-", s, "-probs.png", sep=""), sep=.Platform$file.sep)
+    ggsave(fn, p, width=8, height=5)
   }
 }
 ```
@@ -231,7 +274,7 @@ tables <- read_csv(fn) %>% add_probs() %>%
 ```
 
 
-```{r, echo=FALSE}
+```{r, include=FALSE, eval=FALSE}
 PlotDensity <- function(dat, p1, p2, save_as){
   p <- dat %>%
     filter(key==p1 | key == p2) %>% 
@@ -243,9 +286,10 @@ PlotDensity <- function(dat, p1, p2, save_as){
 }
 ```
 
-Distributions of peoples' beliefs about probabilities across all stimuli
 
-```{r}
+```{r, echo=FALSE, eval=FALSE, include=FALSE}
+# Distributions of peoples' beliefs about probabilities across all stimuli
+
 tables %>% PlotDensity("p_a_given_c", "p_c_given_a", "p-conditionals.png")
 tables %>% PlotDensity("p_a", "p_c", "p-marginals.png")
 tables %>% PlotDensity("p_na_given_nc", "p_nc_given_na", "p-neg-conditionals.png")

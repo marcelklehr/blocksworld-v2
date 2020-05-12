@@ -35,7 +35,7 @@ anonymize_and_save <- function(data_dir, data_fn, result_dir, result_fn, test_ru
 
 tidy_test <- function(df){
   dat.test <- df %>% filter(trial_name == "multiple_slider") %>% 
-    select(prolific_id, RT, QUD, id, group,
+    select(prolific_id, RT, QUD, id, group, noticed_steepness,
            icon1, icon2, icon3, icon4,
            response1, response2, response3, response4) %>% 
     pivot_longer(cols=c(contains("response")),
@@ -93,10 +93,9 @@ tidy_and_save_data <- function(data, result_dir, fn, test_run, N_test=20, N_trai
                         id, trial_name, trial_number, group, 
                         timeSpent, RT,
                         noticed_steepness,
-                        education, comments, gender, age)
-  
+                        education, comments, gender, age) 
   N_participants <- df %>% select(prolific_id) %>% unique() %>% nrow()
-  # stopifnot(nrow(df) == N_participants * (N_test + N_train));
+  stopifnot(nrow(df) == N_participants * (N_test + N_train));
 
   dat.comments <- df %>%
     select(prolific_id, noticed_steepness, comments) %>% 
@@ -124,14 +123,22 @@ tidy_and_save_data <- function(data, result_dir, fn, test_run, N_test=20, N_trai
 
 standardize_color_groups <- function(df){
   df <- df %>%
-    mutate(question = case_when(question == "none" ~ "none",
-                                (question == "bg" | question == "gb") ~ "ac",
-                                (question == "b" & group == "group2") ~ "c",
-                                (question == "g" & group == "group2") ~ "a",
-                                TRUE ~ question)) %>% 
-    mutate(question = case_when(question == "b" ~ "a", 
-                                question == "g" ~ "c", 
-                                TRUE ~ question),
+    # mutate(question = case_when(question == "none" ~ "none",
+    #                             (question == "bg" | question == "gb") ~ "ac",
+    #                             (question == "b" & group == "group2") ~ "c",
+    #                             (question == "g" & group == "group2") ~ "a",
+    #                             TRUE ~ question)) %>% 
+    # mutate(question = case_when((question == "b" & group == "group1") ~ "a", 
+    #                             (question == "g" & group == "group1") ~ "c", 
+    #                             TRUE ~ question),
+    mutate(question = case_when((question == "bg" | question == "gb") ~ "ac",
+                                 question == "none" ~ "none",
+                                 group == "group1" & question == "b" ~ "a",
+                                 group == "group1" & question == "g" ~ "c",
+                                 group == "group2" & question == "b" ~ "a",
+                                 group == "group2" & question == "g" ~ "c",
+                                 TRUE ~ "IMPOSSIBLE"
+                                ),
            group = "group1")
   return(df)
 }
