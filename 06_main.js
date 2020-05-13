@@ -16,15 +16,16 @@ $("document")
     window.magpie_monitor = magpieInit({
       // You have to specify all views you want to use in this experiment and the order of them
       views_seq: [
-      intro,
-      instructions_general,
+      fridge_view,
+      //intro,
+      //instructions_general,
       // sentence_choice_custom,
-      instructions_train2,
-      animation_view1,
-      instructions_train3,
-      animation_view2,
-      instructions_test,
-      multiple_slider,
+      // instructions_train2,
+      // animation_view1,
+      // instructions_train3,
+      // animation_view2,
+      // instructions_test,
+      // multiple_slider,
       post_test,
       // instructions_pretest,
       // instructions_train_pretest,
@@ -39,7 +40,7 @@ $("document")
         // Possible deployment methods are:
         // "debug" and "directLink"
         // As well as "MTurk", "MTurkSandbox" and "Prolific"
-        deployMethod: "Prolific",
+        deployMethod: "debug",
         contact_email: "britta.grusdt@uni-osnabrueck.de",
         prolificURL: "https://app.prolific.co/submissions/complete?cc=1A1C9196"
       },
