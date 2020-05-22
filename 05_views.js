@@ -362,7 +362,7 @@ const fridge_view = magpieViews.view_generator(
   "slider_rating", {
     // This will use all trials specified in `data`, you can use a smaller value
     // (for testing), but not a larger value
-    trials: 2, //TEST_TRIALS.length,
+    trials: 3, //TEST_TRIALS.length,
     // trials: 2,
     // name should be identical to the variable name
     name: "fridge",

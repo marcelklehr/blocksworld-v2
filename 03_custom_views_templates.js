@@ -419,10 +419,7 @@ const fridge_generator = {
           .replace(/,/g, " ");
         //sentence = sentence.replace(/,/, " ");
         console.log(sentence.replace(/,/, " "));
-        console.log(config.data[CT].sentence.value);
-        //check if sentence is submitted, next scenario and build another sentence are free to press
-        // new try 11.5.
-        // sentence = document.getElementById('sentence');
+
         _checkBuildSentence(sentence_array, submitbutton)
         //sentence = sentence.replace(/,/, " ");
         console.log(sentence);

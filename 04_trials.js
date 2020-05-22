@@ -410,6 +410,7 @@ var slider_rating_trials = [
 // adapt path to pictures depending on colour group in each trial
 // add group and id separately
 let n = slider_rating_trials.length;
+// here I changed code to save changes into slider_rating_trials 22.5. Malin
 _.map(slider_rating_trials, function (trial) {
   let group = _.sample(["group1", "group2"]);
   trial.picture = trial.picture.replace("group", group);
@@ -417,6 +418,8 @@ _.map(slider_rating_trials, function (trial) {
   let id = trial.picture.split("/")
   trial.id = id[id.length - 1].slice(0, -4);
 });
+
+console.log(slider_rating_trials);
 
 // PRE-TEST for steepness / edge
 let pretest_trial = function (angle, dir) {
@@ -512,30 +515,10 @@ _.range(0, NB_TRAIN_TRIALS - 1)
 TRAIN_TRIALS = TRAIN_TRIALS.concat(train_slider_trials);
 
 
+// fridge trials take in input and thereby info of slider_rating_trials
+var fridge_trials = _.cloneDeep(slider_rating_trials)
 
-// ab hier fridge view
-var fridge_trials = [
-  {
-    picture: "stimuli/img/color_vision_train0.jpg",
-    QUD: "How would you describe the following scene?",
-    // question1: id2Question.bg,
-    // question2: id2Question.b,
-    // question3: id2Question.g,
-    // question4: id2Question.none,
-    // optionLeft: "impossible event",
-    // optionRight: "certain event",
-    sentence: [" "]
-
-  },
-  {
-    picture: "stimuli/img/group1/independent_ul.jpg",
-    QUD: "How would you describe the following scene?",
-    // question1: id2Question.bg,
-    // question2: id2Question.b,
-    // question3: id2Question.g,
-    // question4: id2Question.none,
-    // optionLeft: "impossible event",
-    // optionRight: "certain event",
-    sentence: [" "]
-  }
-]
+_.map(fridge_trials, function (trial, i) {
+  trial.sentence = [" "];
+  trial.QUD = "How would you describe the following scene?";
+});
