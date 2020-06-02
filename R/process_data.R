@@ -39,23 +39,45 @@ print(paste('filtered due to sum=4 or sum=0:', nrow(filtered_sum)))
 # standardize colour groups -----------------------------------------------
 df <- standardize_color_groups(df)
 
-# normalize such that slider responses sum up to 1 ------------------------
+# normalize such that slider responses sum up to 1 but also keep original response 
 df <- df %>% group_by(prolific_id, id) %>% 
-  mutate(n=sum(response), response=response/n)
+  mutate(n=sum(response), r_norm=response/n) %>% 
+  rename(r_orig=response)
+
+# also save version of data that only contains filtered values
+df_filtered <- df %>% filter_noticed_steepness()
+
 
 # save processed data -----------------------------------------------------
+# all processed data
 saveRDS(df, paste(result_dir, "exp1_test_trials_processed.rds", sep=.Platform$file.sep))
+saveRDS(df_filtered,
+        paste(result_dir, "exp1_test_trials_processed_steepness_noticed.rds", sep=.Platform$file.sep)
+)
 
-means <- df %>% group_by(id, question) %>% summarise(mean=mean(response))
+# Just Table means of normalized values
+means <- df %>% group_by(id, question) %>% summarise(mean=mean(r_norm))
+means_filtered <- df_filtered %>% group_by(id, question) %>% summarise(mean=mean(r_norm))
+
 write.table(means %>% pivot_wider(names_from = question, values_from = mean),
             file=paste(result_dir, "exp1_prob_tables_mean.csv", sep=.Platform$file.sep),
             sep = ",", row.names=FALSE)
+write.table(means_filtered %>% pivot_wider(names_from = question, values_from = mean),
+            file=paste(result_dir, "exp1_prob_tables_mean_steepness_noticed.csv", sep=.Platform$file.sep),
+            sep = ",", row.names=FALSE)
 
-tables.all <- df %>% select(id, question, prolific_id, response) %>%
+# All Tables (with normalized values)
+tables.all <- df %>% select(id, question, prolific_id, r_norm) %>%
   group_by(id, question, prolific_id) %>%
-  pivot_wider(names_from = question, values_from = response)
+  pivot_wider(names_from = question, values_from = r_norm)
+tables.all_filtered <- df_filtered %>% select(id, question, prolific_id, r_norm) %>%
+  group_by(id, question, prolific_id) %>%
+  pivot_wider(names_from = question, values_from = r_norm)
 
-write.table(tables.all, file=paste(result_dir, "exp1_prob_tables_all.csv",
+write.table(tables.all_filtered, file=paste(result_dir, "exp1_prob_tables_all.csv",
+                                            sep=.Platform$file.sep),
+            sep = ",", row.names=FALSE)
+write.table(tables.all_filtered, file=paste(result_dir, "exp1_prob_tables_all_steepness_noticed.csv",
                                    sep=.Platform$file.sep),
             sep = ",", row.names=FALSE)
 

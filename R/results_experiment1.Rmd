@@ -6,6 +6,7 @@ output:
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(ggplus)
 library(here)
 library(tidyverse)
 source(here("R", "utils.R"))
@@ -16,22 +17,28 @@ data_dir <- here("data", "prolific")
 # result_dir <- here("data", "test-runs", "experiment1")
 result_dir <- here("data", "prolific", "results", "experiment1")
 
-# fn <- "exp1_test_trials_processed.rds"
-fn <- "exp1_test_trials_processed_steepness_noticed.rds"
+fn <- "exp1_test_trials_processed.rds"
+# fn <- "exp1_test_trials_processed_steepness_noticed.rds"
 
-data <- readRDS(paste(result_dir, fn, sep=.Platform$file.sep))
-stimuli <- data %>% pull(id) %>% unique()
+data.from_rds <- readRDS(paste(result_dir, fn, sep=.Platform$file.sep))
+data.orig <- data.from_rds %>% mutate(response=r_orig) %>% select(-r_norm, -r_orig)
+data.norm <- data.from_rds %>% mutate(response=r_norm) %>% select(-r_norm, -r_orig)
+# choose wether normalized or unnormalized values shall be plotted
+data.plot <- data.orig
+
+
+stimuli <- data.from_rds %>% pull(id) %>% unique()
+N_participants <- data.from_rds %>% pull(prolific_id) %>% unique() %>% length()
 
 plot_dir <- paste(result_dir, "plots", sep=.Platform$file.sep);
 dir.create(plot_dir, showWarnings = FALSE)
 ```
 
 
-```{r, eval=FALSE, include=FALSE}
+```{r, eval=FALSE}
 # Look for participants who gave all-or-none responses, if any, 
 # which stimuli were rated as all-or-none by how many participants?
-N_participants <- data %>% pull(prolific_id) %>% unique() %>% length()
-df <- data %>% group_by(prolific_id, id) %>% 
+df <- data.norm %>% group_by(prolific_id, id) %>% 
   summarise(n=max(response)) %>% 
   filter(n==1)
 
@@ -67,7 +74,7 @@ if (nrow(df.participants_all_none) != 0){
 ## Experimental data: probability tables
 
 ```{r}
-dat <- data %>% ungroup() %>% 
+dat <- data.plot %>% ungroup() %>% 
   mutate(question = factor(question, levels = c("ac", "a", "c", "none")))
 
 labels <- c(ac="Blue and Green", a="Blue and ¬Green",
@@ -134,7 +141,8 @@ Sort trials according to how they are expected to be interpreted
 
 
 ```{r}
-df <- data %>% pivot_wider(names_from = question, values_from = response) %>% 
+df <- data.norm %>% 
+  pivot_wider(names_from = question, values_from = response) %>% 
   ungroup() %>% mutate(id=as.character(id)) %>% add_probs() %>% 
   select(-group, -QUD, -n)
 as_independent <- c('a_implies_c_ll', 'a_implies_c_lu', 'a_implies_c_lh',
@@ -163,50 +171,41 @@ stopifnot(N == nrow(df))
 ```{r, echo=FALSE}
 dataIndependent = function(data) {
   stimuli <- data %>% pull(id) %>% unique()
-  df <- data %>% mutate(prod_ac=p_a*p_c) %>%
-    select(prolific_id, id, prod_ac, ac) %>%
-    pivot_longer(cols=c(ac, prod_ac), names_to = "p_key", values_to = "p") %>% 
-    mutate(p_key=factor(p_key, levels=c("ac", "prod_ac")))
+  df <- data %>% mutate(prod_ac=p_a*p_c, p=ac-prod_ac, p_key = "diff_ac_prod_ac") %>% 
+    select(prolific_id, id, p, p_key)
     
-  labels <- c(ac="P(Blue,Green)", prod_ac="P(Blue) * P(Green)")
+  labels <- c(diff_ac_prod_ac="P(A,C)-P(A)xP(C)")
+              # , ac="P(Blue,Green)", prod_ac="P(Blue) * P(Green)")
   return(list(labels=labels, data=df, stimuli=stimuli))
 }
 
 dataImplies <- function(data){
   stimuli <- data %>% pull(id) %>% unique()
   df <- data %>%
-    select(prolific_id, id, p_a, p_c, p_a_given_c, p_a_given_nc, p_c_given_a, p_c_given_na) %>%
-    pivot_longer(cols=c(p_a, p_c, p_a_given_c, p_a_given_nc, p_c_given_a, p_c_given_na),
-                 names_to = "p_key", values_to = "p") %>% 
-    mutate(p_key=factor(p_key,levels=c("p_a", "p_c", "p_a_given_c", "p_a_given_nc",
-                                       "p_c_given_a", "p_c_given_na")))
-  labels <- c(p_a="P(Blue)", p_c="P(Green)", p_a_given_c="P(Blue| Green)", p_a_given_nc="P(Blue| ¬Green)",
-              p_c_given_a="P(Green| Blue)", p_c_given_na="P(Green| ¬Blue)")
+    select(prolific_id, id, p_c, p_c_given_a) %>%
+    mutate(p = p_c_given_a - p_c, p_key = factor("delta_p")) %>%  
+    select(-p_c, -p_c_given_a)
+  labels <- c(delta_p="P(C|A)-P(C)")
   return(list(labels=labels, data=df, stimuli=stimuli))
 }
 
 dataOthers <- function(data){
   stimuli <- data %>% pull(id) %>% unique()
   df <- data %>%
-    mutate(prod_ac=p_a*p_c) %>%
-    select(prolific_id, id, p_a, p_c, prod_ac, ac, p_a_given_c, p_a_given_nc,
-           p_c_given_a, p_c_given_na) %>%
-    pivot_longer(cols=c(p_a, p_c, prod_ac, ac, p_a_given_c, p_a_given_nc, p_c_given_a,
-                        p_c_given_na),
-                 names_to = "p_key", values_to = "p") %>% 
-    mutate(p_key=factor(p_key, levels=c("p_a", "p_c", "prod_ac", "ac",
-                                        "p_a_given_c", "p_a_given_nc",
-                                        "p_c_given_a", "p_c_given_na")))
-  labels <- c(p_a="P(Blue)", p_c="P(Green)", ac="P(Blue,Green)", prod_ac="P(Blue) * P(Green)",
-              p_a_given_c="P(Blue| Green)", p_a_given_nc="P(Blue| ¬Green)",
-              p_c_given_a="P(Green| Blue)", p_c_given_na="P(Green| ¬Blue)")
+    select(prolific_id, id, p_c, p_c_given_a, none) %>%
+    mutate(p_delta = p_c_given_a - p_c, p_delta_star = if_else(none==0, 1, p_delta/none)) %>% 
+    select(prolific_id, id, p_delta_star) %>% 
+    rename(p=p_delta_star) %>% 
+    add_column(p_key=factor("delta_p_star"))
+  labels <- c(delta_p_star="(P(C|A)-P(C))/P(¬A,¬C)")
+
   return(list(labels=labels, data=df, stimuli=stimuli))
 }
 ```
 
 
 ```{r}
-plotProbs <- function(df){
+plotProbs <- function(df, xlab, limits_x = c(-0.2, 1.2), breaks_x = c(0, 0.25, 0.5, 0.75, 1)){
   df_means <- df$data %>% group_by(id, p_key) %>%
                 summarise(m=mean(p), med=median(p))
   
@@ -215,26 +214,22 @@ plotProbs <- function(df){
     means <- df_means %>% filter(id == s) 
     
     p <- df.s  %>%
-      ggplot(aes(x=p, y=factor(0), fill=prolific_id)) +
+      ggplot(aes(x=p, y=factor(0))) +
       geom_jitter(height = 0.1, alpha=0.5, aes(colour=factor(prolific_id))) +
-      geom_vline(xintercept=0.5, linetype="dashed", color = "red", size=1) +
-      scale_x_continuous(limits=c(-0.2, 1.2),
-                         breaks=c(0, 0.25, 0.5, 0.75, 1)) +
-      facet_wrap(~p_key, labeller = labeller(p_key=df$labels)) + 
-      # todo: doesnt work to add means
-      # geom_point(data=means,  mapping=aes(x=m, y=factor(0)), shape = 24) +
-      # geom_point(data=means,  mapping=aes(x=med, y=factor(0)), shape = 19) +
+      scale_x_continuous(limits=limits_x, breaks=breaks_x) +
+      geom_vline(data = means, aes(xintercept=m, linetype=p_key), color="orange", size=0.5) +
+      geom_point(data=means,  mapping=aes(x=med, y=factor(0)), shape = 5, size=2, alpha=0.5) +
+      # scale_shape_identity(guide = "legend", aesthetics="shape") + 
       # geom_violin(alpha=0.5) +
-      labs(x="estimates probability", y="") + 
+      labs(x=xlab, y="") + 
       theme_bw() +
       ggtitle(s) +
       theme(legend.position = "none",
             axis.text.y=element_blank(),
             axis.ticks.y =element_blank(),
             axis.text = element_text(size=12),
-            panel.spacing = unit(2, "lines")) +
-      guides(color = FALSE, fill= FALSE, shape=TRUE)
-
+            panel.spacing = unit(2, "lines"))
+      # guides(color = FALSE, linetype=guide_legend(title="mean value")) 
     print(p)
     fn <- paste(plot_dir, paste("exp1-", s, "-probs.png", sep=""), sep=.Platform$file.sep)
     ggsave(fn, p, width=8, height=5)
@@ -245,9 +240,9 @@ plotProbs <- function(df){
 
 ## Trials that are expected to be INDEPENDENT
 
-```{r}
+```{r, warning=FALSE}
 df <- dataIndependent(ind)
-plotProbs(df)
+plotProbs(df, "P(A,C)-P(A)xP(C)", limits_x = c(-0.5, 0.5), breaks_x = seq(-0.5, 0.5, 0.25))
 ```
 
 Trials that are expected to be A->C (cause)
@@ -255,7 +250,11 @@ Trials that are expected to be A->C (cause)
 ```{r}
 df_ac <- bind_rows(ac_cause, ac_diagnostic)
 df <- dataImplies(df_ac)
-plotProbs(df)
+min <- df$data$p %>% min() - 0.1
+max <-  df$data$p %>% max() + 0.1
+plotProbs(df, "delta p: P(C|A)-P(C)",
+          limits_x = c(min, max),
+          breaks_x = c(0, seq(round(min, 1), round(max, 1) + 0.05, 0.25)))
 ```
 
 
@@ -263,7 +262,11 @@ Other trials
 
 ```{r}
 df <- dataOthers(others)
-plotProbs(df)
+min <- df$data$p %>% min() - 0.1
+max <-  df$data$p %>% max() + 0.1
+plotProbs(df, "delta P* = (P(C|A)-P(C))/(P(¬A,¬C)", 
+          limits_x = c(min, max),
+          breaks_x = c(seq(round(min, 1), round(max, 1) + 0.05, 0.25)))
 ```
 
 
