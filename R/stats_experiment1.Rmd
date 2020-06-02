@@ -7,6 +7,7 @@ output:
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(here)
+library(scales)
 library(tidyverse)
 source(here("R", "utils.R"))
 
@@ -38,7 +39,7 @@ df %>% ungroup() %>%  group_by(prolific_id) %>%  summary()
 ```
 
 
-```{r, include=FALSE, eval=FALSE}
+```{r, include=FALSE, eval=FALSE, echo=FALSE}
 ## Train Trials Color Vision
 
 df <- data$color %>% group_by(prolific_id, id) %>%
@@ -78,15 +79,76 @@ df.buttons_correct %>%
 df <- data$test %>% select(prolific_id, id, RT) %>% group_by(id) %>% distinct()
 
 # TODO: points are added twice?
-RT_mu = mean(df$RT)
-p <- df %>%  ggplot(aes(x=id, y=RT)) + geom_boxplot() +
-  geom_hline(aes(yintercept = RT_mu), color="green", linetype="dashed") +
-  geom_hline(aes(yintercept = RT_mu + sd(df$RT)), color="orange") +
-  geom_hline(aes(yintercept = RT_mu + 2 * sd(df$RT)), color="red") +
-  theme(legend.position="none", axis.text.x = element_text(angle=90)) +
-  ggtitle("Reaction times per test stimulus")  
+RT_mu = df %>% group_by(id) %>% summarise(m=mean(RT), s=sd(RT))
+p <- df %>% group_by(id) %>% 
+  ggplot(aes(y=RT)) + geom_boxplot() +
+  geom_jitter(aes(x=0, color=prolific_id), width = 0.1, alpha = 0.5) +
+  geom_hline(data=RT_mu, aes(yintercept = m), color="green", linetype="dashed") +
+  geom_hline(data=RT_mu, aes(yintercept = m + s), color="orange") +
+  # geom_hline(aes(yintercept = RT_mu + 2 * sd(df$RT)), color="red") +
+  theme(legend.position="none", axis.ticks.x = element_blank(), axis.text.x = element_blank()) +
+  labs(x="") +
+  facet_wrap(~id) + 
+  scale_y_continuous(trans = log2_trans(),
+                     breaks = trans_breaks("log2", function(x) 2^x),
+                     labels = trans_format("log2", math_format(2^.x))) + 
+  ggtitle("Reaction times per test stimulus") 
 p
 ```
+
+# Quality of the data
+For each participant and trial, compute the distance in RESPONSE to all other participants
+and compute the average distance for this participant from all other participants. 
+
+```{r, echo=FALSE}
+df <- data$test %>% unite(col = "id_quest", "id", "question", remove=FALSE)
+distances <- tibble()
+for(proband in df$prolific_id %>% unique()) {
+  print(proband)
+  res = df %>% filter(prolific_id == proband)
+  for(stimulus in df$id %>% unique()) {
+    # print(stimulus)
+    dat <- df %>% filter(id == stimulus);
+    res_proband = res %>% filter(str_detect(string = id_quest, pattern = paste(stimulus, ".*", sep=""))) %>% 
+      select(id_quest, response) %>% rename(r_proband = response) %>% 
+      add_column(comparator = proband)
+    distances <- bind_rows(distances,
+                  dat %>% left_join(res_proband, by="id_quest") %>% mutate(diff = r_proband - response)); 
+  }
+}
+```
+
+```{r}
+df <- distances %>% filter(comparator != prolific_id) %>%
+  group_by(comparator, id, question) %>% mutate(m=mean(diff))
+
+facet_labels <- c(
+  `gb` = "Blue and Green", 
+  `b` = "Blue but not Green",
+  `g` = "Green but not Blue",
+  `none` = "Neither Green nor Blue"
+);
+for(s in df$id %>% unique()) {
+ p <- df %>% filter(id == s) %>% select(comparator, question, m, id) %>%
+   ungroup() %>% mutate(question = factor(question, levels=c("gb", "b", "g", "none"))) %>% 
+   group_by(comparator, question) %>% unique() %>%
+   ggplot(aes(y=m, x=factor(0))) +
+   geom_boxplot() +
+   geom_jitter(aes(color=comparator), width = 0.1, alpha = 0.5) +
+   geom_hline(yintercept=0, linetype="dashed", color = "orange", size=.8) +
+   scale_y_continuous(limits=c(-1.1, 1.1), breaks=seq(-1, 1, 0.5)) +
+   facet_wrap(~question, ncol = 2, labeller = as_labeller(facet_labels)) +
+   ggtitle(s) +
+   theme(axis.ticks.x = element_blank(), axis.text.x = element_blank(), legend.position="none") +
+   labs(y="average difference to other participants' responses", x="")
+ print(p)
+}
+# facet_multiple(plot = p, facets = 'id', ncol = 1, nrow = 1)
+
+  
+```
+
+
 
 General comments
 
@@ -117,19 +179,20 @@ update_data <- function(result_dir){
     "exp1_test_trials_processed_steepness_noticed.rds", sep=.Platform$file.sep))
   
   # also update (mean) tables
-  tables.all <- df %>% select(id, question, prolific_id, response) %>%
+  tables.all <- df %>% select(id, question, prolific_id, r_norm) %>%
     group_by(id, question, prolific_id) %>%
-    pivot_wider(names_from = question, values_from = response)
+    pivot_wider(names_from = question, values_from = r_norm)
   write.table(tables.all, file=paste(result_dir,
     "exp1_prob_tables_all_steepness_noticed.csv", sep=.Platform$file.sep),
     sep = ",", row.names=FALSE)
   
-  means <- df %>% group_by(id, question) %>% summarise(mean=mean(response))
+  means <- df %>% group_by(id, question) %>% summarise(mean=mean(r_norm))
   write.table(means %>% pivot_wider(names_from = question, values_from = mean),
               file=paste(result_dir, "exp1_prob_tables_mean_steepness_noticed.csv", sep=.Platform$file.sep),
               sep = ",", row.names=FALSE)
 }
 
 update_data(result_dir);
+
 ```
 

@@ -163,6 +163,12 @@ add_probs <- function(df, keys){
   return(df)
 }
 
+filter_noticed_steepness <- function(df){
+  df$noticed_steepness %>% unique()
+  df <- df %>% mutate(noticed_steepness = str_to_lower(noticed_steepness))
+  return(df %>% filter(str_detect(noticed_steepness, "yes")))
+}
+
 # prepare_tables <- function(tables, N_test = 25){
 #   tables_wide <- tables %>%
 #     group_by(stimulus_id, participant_id) %>%
