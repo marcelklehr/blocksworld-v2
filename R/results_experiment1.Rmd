@@ -34,6 +34,8 @@ plot_dir <- paste(result_dir, "plots", sep=.Platform$file.sep);
 dir.create(plot_dir, showWarnings = FALSE)
 ```
 
+Use normalized data and check how many all-or-none answers were given since we 
+dont really want them, stimuli should have a little more uncertainty than that.
 
 ```{r, eval=FALSE}
 # Look for participants who gave all-or-none responses, if any, 
@@ -43,16 +45,16 @@ df <- data.norm %>% group_by(prolific_id, id) %>%
   filter(n==1)
 
 N0 <- N_participants - df %>% pull(prolific_id) %>% unique() %>% length()
-df0 <- tibble(prolific_id=rep('--', N0), n_all_none=rep(0, N0))
+df0 <- tibble(prolific_id=rep('--', N0), ratio_all_none=rep(0, N0))
   
 df.participants_all_none <- df %>% group_by(prolific_id) %>%
-  summarise(n_all_none = n()) %>%
+  summarise(ratio_all_none = n() / length(stimuli)) %>%
   mutate(prolific_id=as.character(prolific_id)) %>% 
   bind_rows(df0)
 
 if (nrow(df.participants_all_none) != 0){
   p <- df.participants_all_none %>%
-        ggplot(aes(n_all_none)) + geom_bar() +
+        ggplot(aes(ratio_all_none)) + geom_bar() +
         labs(y="#participants", x="#all-none answers")
   print(p)
   print(df.participants_all_none)
@@ -112,32 +114,9 @@ for (s in stimuli){
 }
 ```
 
-
-```{r, eval=FALSE, include=FALSE}
-# Which probabilities are highest - per stimulus and participant?
-# df <- data %>% pivot_wider(names_from = question, values_from = response) %>% 
-#   ungroup() %>% mutate(id=as.character(id)) %>% add_probs() %>% 
-#   select(-group, -QUD, -n)
-# 
-# dat.max <- df %>% pivot_longer(cols=c(-prolific_id, -RT, -id, -noticed_steepness), names_to = "p_key", values_to = "p") %>% 
-#   group_by(prolific_id, id) %>% mutate(max_p = max(p)) %>% 
-#   filter(p == max_p)
-# 
-# for(i in df$id %>% unique()){
-#   p <- dat.max %>% filter(id == i) %>%
-#     ggplot(aes(x=p_key, y=p, color=prolific_id)) + 
-#     geom_jitter(width=0.1, alpha=0.5) +
-#     # facet_wrap(~id) +
-#     theme(axis.text = element_text(angle=90)) +
-#     labs(title=i)
-#   print(p)
-# }
-
-```
-
-
+## Sorted according to expectations
 Sort trials according to how they are expected to be interpreted
-(as independent/a->c/a<->c)
+(depending on which utterances we expect)
 
 
 ```{r}
@@ -167,6 +146,8 @@ N <- ind %>% nrow() + others %>% nrow() + ac_cause %>% nrow() +
   ac_diagnostic %>% nrow()
 stopifnot(N == nrow(df))
 ```
+
+prepare the data
 
 ```{r, echo=FALSE}
 dataIndependent = function(data) {
@@ -203,6 +184,7 @@ dataOthers <- function(data){
 }
 ```
 
+Plot function
 
 ```{r}
 plotProbs <- function(df, xlab, limits_x = c(-0.2, 1.2), breaks_x = c(0, 0.25, 0.5, 0.75, 1)){
@@ -239,13 +221,15 @@ plotProbs <- function(df, xlab, limits_x = c(-0.2, 1.2), breaks_x = c(0, 0.25, 0
 
 
 ## Trials that are expected to be INDEPENDENT
+Here, P(A,C) - P(A) x P(C) should be close to zero.
 
 ```{r, warning=FALSE}
 df <- dataIndependent(ind)
 plotProbs(df, "P(A,C)-P(A)xP(C)", limits_x = c(-0.5, 0.5), breaks_x = seq(-0.5, 0.5, 0.25))
 ```
 
-Trials that are expected to be A->C (cause)
+## Trials that are expected to be A->C (cause). 
+Check delta p = P(C|A) - P(C).
 
 ```{r}
 df_ac <- bind_rows(ac_cause, ac_diagnostic)
