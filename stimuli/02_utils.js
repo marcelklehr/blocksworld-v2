@@ -25,8 +25,9 @@ block = function(x, y_min_base, col, label, horiz=false, opts={}){
 }
 
 wall = function(label, x, y, w=PROPS.walls.w, h=PROPS.walls.h, opts={}){
-  opts = Object.assign({label}, OPTS.walls, opts);
-  return Bodies.rectangle(x, y, w, h, opts);
+  let opt_vals = Object.assign({label}, OPTS.walls);
+  opt_vals = opts.length != 0 ? Object.assign(opt_vals, opts) : opt_vals;
+  return Bodies.rectangle(x, y, w, h, opt_vals);
 }
 
 ball = function(x, y, r, label, color, opts={}){

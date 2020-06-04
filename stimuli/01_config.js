@@ -1,29 +1,26 @@
-const DEBUG = false;
+const DEBUG = true;
 // var MODE = "color-vision"
 // var MODE = "train"
-// var MODE = "test"
+var MODE = "test"
 // var MODE = "pretest"
-var MODE = "experiment"
+// var MODE = "experiment"
 
-var scene = {w: 800, h: 400};
+const SCENE = {w: 800, h: 400};
 PROPS = {'blocks': {'w':40, 'h': 80},
          'walls': {'w': 200, 'h': 20},
-         'balls': {'radius': 16, 'color': cols.purple},
-         'bottom': {'w': scene.w, 'h': 20},
-         'seesaw': {'d_to_walls': 5},
-         'seesaw_high': {'stick': {'w': 20, 'h': 95},
-                            'plank': {'w': 220, 'h': 10},
-                            'link': {'w': 5, 'h': 10}},
-        'seesaw_low': {'stick': {'w': 20, 'h': 40},
-                               'plank': {'w': 220, 'h': 10},
-                               'link': {'w': 5, 'h': 10}}
+         'balls': {'radius': 20, 'color': cols.purple, 'move_to_roll': 4},
+         'bottom': {'w': SCENE.w, 'h': 20},
+         'seesaw': {'d_to_walls': 5,
+                    'stick': {'w': 20, 'h': 95},
+                    'plank': {'w': 220, 'h': 10},
+                    'link': {'w': 5, 'h': 10}}
        };
 
 OPTS = {
   'walls': {isStatic: true, render: {fillStyle: cols.grey}},
-  'balls': {isStatic: false, restitution: 0.02, friction: 0.001, density: 0.1},
-  'blocks': {isStatic: false, density: 0.006, restitution: .02, friction: 0.1},
-  'seesaw_plank': {isStatic: false}
+  'balls': {isStatic: false, restitution: 0.02, friction: 0.0001, density: 0.002},
+  'blocks': {isStatic: false, density: 0.001, restitution: .02, friction: 0.0005},
+  'plank': {isStatic: false, density: 0.001, restitution: .02, friction: 0.1}
 }
 
 let Relations = ['a_implies_c', 'a_iff_c', 'independent'];
@@ -52,7 +49,9 @@ let ANGLES = {
 
 // let PRETEST_ANGLES = [22, 24, 26, 28, 30, 32, 35, 40, 43, 20, 33, 29, 31, 37];
 let PRETEST_ANGLES = _.range(45);
-let W_BASE_RAMP = 200;
+let W_BASE_RAMP = {'default': 200, 'high': 150, 'uncertain': 200, 'low': 270,
+                   'uncertainL': 200, 'uncertainH': 200};
+
 // when uncertainty comes from balls, this dist is left towards the edge of platform
 let DIST_EDGE = 5;
 let SIMULATION = {'duration': 5000};
@@ -67,3 +66,9 @@ let HORIZ_IND = {'ll': [false, true], 'ul': [false, true],
                  'hh': [false, true], 'hl': [true, false],
                  'lh': [true, false],
                  'hu': [true, false], 'lu': [false, true]}
+
+let HORIZ_AC = {'ll': [false, true], 'ul': [false, true],
+                'uu': [true, true], 'uh': [true, false],
+                'hh': [false, false], 'hl': [true, true],
+                'lh': [true, false],
+                'hu': [true, false], 'lu': [false, true]}
