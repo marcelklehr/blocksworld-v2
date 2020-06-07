@@ -25,13 +25,13 @@ OPTS = {
 
 let Relations = ['a_implies_c', 'a_iff_c', 'independent'];
 // Proportion of block that's ON TOP of its base wall beneath
-let PRIOR = {'high': 0.35, 'uncertain': 0.505, 'low': 0.65, 'uncertainL': 0.52}
+let PRIOR = {'high': 0.35, 'uncertain': 0.505, 'low': 0.70, 'uncertainL': 0.52}
 
 // shift of ramp walls such that there is no edge
 let OVERLAP_SHIFT = {
-  "angle38": 19, "angle35": 16,  "angle30": 12, "angle29": 12,
-  "angle28": 13, "angle27": 12, "angle26": 12, "angle25": 12, "angle23": 10,
-  "angle20": 9,
+  "angle42": 15, "angle40": 22, "angle38": 19, "angle35": 16,  "angle30": 12,
+  "angle29": 12, "angle28": 13, "angle27": 12, "angle26": 12, "angle25": 12,
+  "angle23": 10, "angle20": 9,
 }
 // "angle32": 13,
 // "angle31": 12,
@@ -41,15 +41,15 @@ let OVERLAP_SHIFT = {
 // }
 
 let ANGLES = {
-  'horizontal': {"high": 38, "uncertainH": 30, "uncertain": 29, "uncertainL": 28,
+  'horizontal': {"high": 42, "uncertainH": 30, "uncertain": 29, "uncertainL": 28,
                  "uncertainLL": 27, "low": 23},
-  'vertical': {"high": 35, "uncertainH": 28, "uncertain": 27, "uncertainL": 26,
+  'vertical': {"high": 40, "uncertainH": 28, "uncertain": 27, "uncertainL": 26,
                "uncertainLL": 25, "low": 20}
 }
 
 // let PRETEST_ANGLES = [22, 24, 26, 28, 30, 32, 35, 40, 43, 20, 33, 29, 31, 37];
 let PRETEST_ANGLES = _.range(45);
-let W_BASE_RAMP = {'default': 200, 'high': 150, 'uncertain': 200, 'low': 270,
+let W_BASE_RAMP = {'default': 200, 'high': 150, 'uncertain': 200, 'low': 250,
                    'uncertainL': 200, 'uncertainH': 200};
 
 // when uncertainty comes from balls, this dist is left towards the edge of platform
@@ -57,9 +57,9 @@ let DIST_EDGE = 5;
 let SIMULATION = {'duration': 5000};
 
 
-let HORIZ_IFF = {'ll': [false, true], 'ul': [false, true], 'lu': [false, true],
-                 'uu': [false, true], 'hu': [false, true], 'uh': [false, true],
-                 'hh': [false, true], 'hl': [true, false], 'lh': [true, false]}
+let HORIZ_IFF = {'ll': [true, true], 'ul': [false, true], 'lu': [false, true],
+                 'uu': [true, true], 'hu': [false, true], 'uh': [false, true],
+                 'hh': [false, true], 'hl': [true, true], 'lh': [true, false]}
 
 let HORIZ_IND = {'ll': [false, true], 'ul': [false, true],
                  'uu': [true, false], 'uh': [true, false],
