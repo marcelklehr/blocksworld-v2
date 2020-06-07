@@ -17,8 +17,8 @@ createWorld = function(){
     element: renderAt,
     engine: engine,
     options: {
-      width: scene.w,
-      height: scene.h,
+      width: SCENE.w,
+      height: SCENE.h,
       // showAngleIndicator: true,
       // showCollisions: true,
       wireframes: false,

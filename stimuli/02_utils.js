@@ -53,20 +53,7 @@ sortConditions = function(conditions){
     filtered[rel] = [];
   })
   conditions.forEach(function(arr){
-    // in iff trials, prior a-b = prior b-a, use only once
-    if(arr[2] === "a_iff_c") {
-      let pr = arr.slice(0,2).join("_")
-      let add = false;
-      if(!iff.includes(arr[1] + "_" + arr[0])){
-        iff.push(pr);
-        add = true;
-      }
-      if(add) {
-        filtered[arr[2]].push(arr)
-      }
-    }else {
-      filtered[arr[2]].push(arr);
-    }
+    filtered[arr[2]].push(arr);
   });
   return filtered
 }

@@ -5,56 +5,47 @@ const Bottom = wall(label='bottom', x=SCENE.w/2, y=SCENE.h - PROPS.bottom.h/2,
   w=SCENE.w, h=PROPS.bottom.h);
 
 // base walls
-let W1 = wall('w1_upLeft', 320, 100);
-let W1_2 = wall('w1_2_upRight', 480, 100);
-let W3 = wall('w3_rampLowInd', 414, 240, 175)
-let W3_2 = wall('w3_2_rampLowInd', 386, 240, 175)
+// INDEPENDENT TRIALS
+let W_UP1 = wall('w_up1', 280, 100);
+let W_UP2 = wall('w_up2', 520, 100);
+let W_LOW1 = wall('w_low1', 300, 250, w=100)
+let W_LOW2 = wall('w_low2', 500, 250, w=100)
+
+
 let W4 = wall('w4_upRight', 750, 240, 90);
-// let W5 = wall('w5_base_ramp', 250+(PROPS.walls.w+25)/2, 225, W_BASE_RAMP.default)
 let W5 = wall('w5_base_ramp', 320, 225, W_BASE_RAMP.default)
 let W6 = wall('w6_upRight', 750, 240, 90)
 
 
-makeRamp = function(horiz, prior, increase, w1, label_w1="bottom", test=true) {
-  let angle =  -1 * ANGLES[horiz ? "horizontal" : "vertical"][prior]
-  let overlap = OVERLAP_SHIFT["angle" + Math.abs(angle)];
-  let label_w2 = label_w1 === "bottom" ? "top" : "bottom";
+makeRamp = function(horiz, prior, increase, w1, label1="bottom", test=true) {
+  let angle =  ANGLES[horiz ? "horizontal" : "vertical"][prior]
+  let overlap = OVERLAP_SHIFT["angle" + angle];
+  let label2 = label1 === "bottom" ? "top" : "bottom";
 
-  let dat = (increase && label_w1 === "bottom") ?
-    {move_x: 1, move_y: -1, edges_x: "max", edges_y: "min"} :
-
-    (increase && label_w1 === "top") ?
-    {move_y: 1, move_x: -1, edges_x: "min", edges_y: "max"} :
-
-    // decrease
-    (label_w1 === "top") ?
-    {move_x: 1, move_y: 1, edges_x: "max", edges_y: "max"} :
-    {move_x: -1, move_y: -1, edges_x: "min", edges_y: "min"};
-
+  let dat = increase && label1 === "top" ? {rx: "min", ry: "min", x: -1, y: 1} :
+            increase && label1 === "bottom" ? {rx: "max", ry: "max", x: 1, y: -1} :
+            label1 === "top" ? {rx: "max", ry: "min", x: 1, y: 1}
+                             : {rx: "min", ry: "max", x: -1, y: -1};
   // 1. sin(angle) = h/w_tillted and 2. h² + w_low² = ramp²
-  let r = radians(Math.abs(angle))
+  let r = increase ? radians(360 - angle) : radians(angle);
   let ramp_width = Math.sqrt(Math.pow(100, 2) / (1 - Math.pow(Math.sin(r), 2)))
-  let ramp_x = w1.bounds[dat.edges_x].x + dat.move_x*ramp_width/2 - dat.move_x * overlap
-  let hMiddle = Math.sqrt(Math.pow(ramp_width/2, 2) -
-    Math.pow(Math.cos(r)*ramp_width/2, 2));
-  let ramp_y = w1.position.y + dat.move_y * hMiddle;
-  let ramp = wall('ramp' + angle, ramp_x, ramp_y, ramp_width);
-  Body.setAngle(ramp, increase ? -r : r);
+  let ramp = wall('ramp' + angle, w1.bounds[dat.rx].x + dat.x * ramp_width/2,
+    w1.bounds[dat.ry].y + dat.y * PROPS.walls.h/2, ramp_width);
+  Body.rotate(ramp, r, {x: w1.bounds[dat.rx].x, y: w1.bounds[dat.ry].y});
 
   let width_w2 = W_BASE_RAMP[prior]
-  let w2 = wall(label = 'ramp_' + label_w2 + angle,
-    x = ramp.bounds[dat.edges_x].x + dat.move_x * width_w2/2 - dat.move_x * overlap,
-    y = ramp.bounds[dat.edges_y].y - dat.move_y * PROPS.walls.h/2,
-    w = width_w2
-  );
+  let x2 = dat.x == 1 ? "max" : "min";
+  let y2 = dat.y == 1 ? "max" : "min";
+  let w2 = wall(label = 'ramp_' + label2 + angle,
+    ramp.bounds[x2].x + dat.x * width_w2/2 - dat.x * overlap,
+    ramp.bounds[y2].y - dat.y * PROPS.walls.h/2, width_w2);
 
-  dat.walls = label_w1==="bottom" ? {'top': w2, 'bottom': w1}
-                                  : {'top': w1, 'bottom': w2};
+  dat.walls = label1==="bottom" ? {'top': w2, 'bottom': w1} : {'top': w1, 'bottom': w2};
   dat.x_ball = increase ? dat.walls.top.bounds.min.x - PROPS.balls.move_to_roll : dat.walls.top.bounds.max.x + PROPS.balls.move_to_roll;
-
-  let col_ball = test ? ball_colors.test : ball_colors.train[Math.abs(angle).toString()];
+  let col_ball = test ? ball_colors.test : ball_colors.train[angle.toString()];
   let ball1 = ball(dat.x_ball, dat.walls.top.bounds.min.y - PROPS.balls.radius,
     PROPS.balls.radius, 'ball1', col_ball);
+
   return {'tilted': ramp, 'wall_top': dat.walls.top,
    'wall_bottom': dat.walls.bottom, 'ball': ball1}
 }
@@ -100,20 +91,22 @@ W_IF_RAMP_TOP = function(side){
 }
 
 // The first two list entries are respectively the bases for block1 and block2
-Walls.test = {'independent': [[W1, W3], [W1_2, W3_2]], // tilted wall+ball added dep on prior
+Walls.test = {'independent': [[W_UP1, W_LOW1], [W_UP2, W_LOW2]],
               'a_implies_c': [[W_IF_UP1,  W_IF_BASE],
                               [W_IF_UP2,  W_IF_BASE]],
               'a_iff_c': []
               };
 
-Walls.test.seesaw_trials = function(side_ramp, offset=PROPS.seesaw.d_to_walls){
-  let data = side_ramp === "right" ? {x0: 175, w0: 0.6 * W_BASE_RAMP.default, w1: W_BASE_RAMP.default}
-                                   : {x0: 275, w0: W_BASE_RAMP.default, w1: 0.6 * W_BASE_RAMP.default};
-  let base0 = wall('wall_seesaw_left', data.x0, 240, data.w0);
+Walls.test.seesaw_trials = function(prior, side_ramp, offset=PROPS.seesaw.d_to_walls){
+  let y_bases = 220;
+  let data = side_ramp === "right" ?
+    {x0: 75, y0: y_bases, w0: 0.6 * PROPS.walls.w, y1: y_bases, w1: W_BASE_RAMP[prior]} :
+    {x0: 275, y0: y_bases, w0: W_BASE_RAMP[prior], y1: y_bases, w1: 0.6 * PROPS.walls.w};
+  let base0 = wall('seesaw_base_left', data.x0, data.y0, data.w0);
   let pos = base0.bounds.max.x + PROPS.seesaw.plank.w/2 + offset;
   let objs = seesaw(pos);
-  let base1 = wall('wall_seesaw_right',
-    objs.plank.bounds.max.x + offset + data.w1/2, base0.position.y, data.w1);
+  let base1 = wall('seesaw_base_right',
+    objs.plank.bounds.max.x + offset + data.w1/2, data.y1, data.w1);
   let walls = [base0, base1].concat([objs.skeleton]);
   return {'walls': walls, 'dynamic': [objs.plank, objs.constraint]}
 }

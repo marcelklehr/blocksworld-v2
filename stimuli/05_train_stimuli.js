@@ -31,7 +31,11 @@ trials_independent = function(){
     let seesaw_dist = seesaw(data.increase ? 220 : 580, ss_height)
     let id = "independent_" + i;
     let ramp_type = meta[label][0]
-    let walls = [W6].concat(rampElems(ramp_type, false, W5, horiz[i], test=false));
+    // todo change prior here from "high"
+    let ramp = makeRamp(horiz[i], "high", false, W5, "bottom", false);
+    // rampElems(ramp_type, false, W5, horiz[i], test=false)
+
+    let walls = [W6].concat([ramp.tilted, ramp.wall_top, ramp.wall_bottom]);
     walls.unshift(bases[i]);
     let i_dist_col = block1.render.fillStyle === cols.train_blocks[0] ? 1 : 0;
     let dist_horiz = (label === "blockC" || label === "blockD") ? true : false;
@@ -39,7 +43,7 @@ trials_independent = function(){
       cols.train_blocks[i_dist_col], 'block_dist_right', dist_horiz);
 
     walls = walls.concat([seesaw_dist.skeleton]);
-    let objs = {'objs': [block1, distractor, seesaw_dist.plank,
+    let objs = {'objs': [block1, distractor, ramp.ball, seesaw_dist.plank,
                          seesaw_dist.constraint].concat(walls),
                 'meta': meta[label],
                 'id': id}
@@ -59,9 +63,9 @@ steepnessTrials = function(id_start){
   ["horizontal", "vertical"].forEach(function(direction, i) {
     let walls = Array.from(Walls.train.uncertain[1]);
     let trial_id = "uncertain_" + (i + id_start);
-    let w_bottom = scene.w - walls[0].bounds.max.x;
+    let w_bottom = SCENE.w - walls[0].bounds.max.x;
     let bottom = wall(label='bottom_half', x=walls[0].bounds.max.x + w_bottom / 2,
-    y=scene.h - PROPS.bottom.h/2, w=w_bottom, h=PROPS.bottom.h);
+    y=SCENE.h - PROPS.bottom.h/2, w=w_bottom, h=PROPS.bottom.h);
     walls.push(bottom);
     let meta = meta_all[i];
     let horiz = horiz_all[i];
@@ -71,9 +75,9 @@ steepnessTrials = function(id_start){
       prop_on_base.push((w_horiz+DIST_EDGE)/w_horiz);
     })
 
-    let ramp1 = makeRamp(ANGLES[direction][meta[0]], false, walls[0], test=false)
-    let ramp2 = makeRamp(ANGLES[direction][meta[1]], false, walls[1], test=false)
-    let ramp3 = makeRamp(ANGLES[direction][meta[2]], false, walls[2], test=false)
+    let ramp1 = makeRamp(ANGLES[direction][meta[0]], false, walls[0], "bottom", false)
+    let ramp2 = makeRamp(ANGLES[direction][meta[1]], false, walls[1], "bottom", false)
+    let ramp3 = makeRamp(ANGLES[direction][meta[2]], false, walls[2], "bottom", false)
     ramp2.ball.label = 'ball2';
     ramp3.ball.label = 'ball3';
     let w_horiz = PROPS.blocks.h; let w_vert = PROPS.blocks.w;
@@ -83,8 +87,7 @@ steepnessTrials = function(id_start){
 
     let objs_dyn = [b1, ramp1.ball, b2, ramp2.ball, b3, ramp3.ball];
     [ramp1, ramp2, ramp3].forEach(function(ramp){
-      walls.push(ramp.tilted);
-      walls.push(ramp.top);
+      walls = walls.concat([ramp.tilted, ramp.wall_top]);
     });
     data[trial_id] = {objs: objs_dyn.concat(walls), meta, id: trial_id}
   });
@@ -189,9 +192,9 @@ pretestTrials = function(){
         let trial_id = [(dir ? "horiz" : "vert"), angle.toString(), col_str].join('-');
         let increase = _.sample([true, false])
         increase = true;
-        let x = increase ? scene.w/3 : scene.w * (2/3)
-        let walls = [wall('w_middle', x, scene.h/2)]
-        let ramp = makeRamp(angle, increase, walls[0]);
+        let x = increase ? SCENE.w/3 : SCENE.w * (2/3)
+        let walls = [wall('w_middle', x, SCENE.h/2)]
+        let ramp = makeRamp(angle, increase, walls[0], "bottom");
         // block
         let w = dir ? PROPS.blocks.h : PROPS.blocks.w;
         let fct = increase ? -1 : 1;
@@ -199,7 +202,7 @@ pretestTrials = function(){
 
         let objs_dyn = [b, ramp.ball];
         walls.push(ramp.tilted);
-        walls.push(ramp.top);
+        walls.push(ramp.wall_top);
         data[trial_id] = {objs: objs_dyn.concat(walls), id: trial_id}
       });
     });
