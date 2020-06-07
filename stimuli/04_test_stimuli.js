@@ -1,8 +1,8 @@
-let TestStimuli = {"independent": {}, "a_implies_c": {}, "a_iff_c": {}};
+let TestStimuli = {"independent": {}, "a_implies_c": {}, "ac_2": {}};
 
 // IMPORTANT: DYNAMIC BLOCKS HAVE TO BE ADDED BEFORE STATIC OBJECTS, OTHERWISE
 // THEY WILL FALL VERY ODD (JITTERING)
-testTrials_a_iff_c = function(priors){
+testTrials_ac_2 = function(priors){
   let pp = priors[0][0] + priors[1][0]
   let horiz = HORIZ_IFF[pp];
   let data = priors[0] !== priors[1] ?
@@ -127,8 +127,8 @@ makeTestStimuli = function(conditions, relations){
       let pb1 = priors[0]
       let pb2 = priors[1]
       let id = rel + '_' + pb1[0] + pb2[0];
-      let blocks = rel === "a_iff_c" ?
-        testTrials_a_iff_c(priors) : rel === "a_implies_c" ?
+      let blocks = rel === "ac_2" ?
+        testTrials_ac_2(priors) : rel === "a_implies_c" ?
         testTrials_ac_updated(priors) : rel === "independent" ?
         // testTrials_ac(priors) : rel === "independent" ?
         testTrials_independent(priors) : null;

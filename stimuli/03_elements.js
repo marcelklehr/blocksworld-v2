@@ -94,7 +94,7 @@ W_IF_RAMP_TOP = function(side){
 Walls.test = {'independent': [[W_UP1, W_LOW1], [W_UP2, W_LOW2]],
               'a_implies_c': [[W_IF_UP1,  W_IF_BASE],
                               [W_IF_UP2,  W_IF_BASE]],
-              'a_iff_c': []
+              'ac_2': []
               };
 
 Walls.test.seesaw_trials = function(prior, side_ramp, offset=PROPS.seesaw.d_to_walls){

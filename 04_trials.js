@@ -179,7 +179,7 @@ var slider_rating_trials = [
     optionRight: "certainly"
   },
   {
-    picture: "stimuli/img/group/a_iff_c_ll.jpg",
+    picture: "stimuli/img/group/ac_2_ll.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -194,7 +194,7 @@ var slider_rating_trials = [
     optionRight: "certainly"
   },
   {
-    picture: "stimuli/img/group/a_iff_c_ul.jpg",
+    picture: "stimuli/img/group/ac_2_ul.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -209,7 +209,7 @@ var slider_rating_trials = [
     optionRight: "certainly"
   },
   {
-    picture: "stimuli/img/group/a_iff_c_hl.jpg",
+    picture: "stimuli/img/group/ac_2_hl.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -225,7 +225,7 @@ var slider_rating_trials = [
   },
 
   {
-    picture: "stimuli/img/group/a_iff_c_uu.jpg",
+    picture: "stimuli/img/group/ac_2_uu.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -240,7 +240,7 @@ var slider_rating_trials = [
     optionRight: "certainly"
   },
   {
-    picture: "stimuli/img/group/a_iff_c_hu.jpg",
+    picture: "stimuli/img/group/ac_2_hu.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -255,7 +255,7 @@ var slider_rating_trials = [
     optionRight: "certainly"
   },
   {
-    picture: "stimuli/img/group/a_iff_c_hh.jpg",
+    picture: "stimuli/img/group/ac_2_hh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,

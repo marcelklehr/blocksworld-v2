@@ -6,13 +6,13 @@ pseudoRandomTrainTrials = function(){
   let order23 = _.shuffle([2, 3])
   let order_iff = _.shuffle([0,1])
 
-  order[0] = TrainStimuli.map_category["a_iff_c"]["a_iff_c_" + order_iff[0]]
+  order[0] = TrainStimuli.map_category["ac_2"]["ac_2_" + order_iff[0]]
   order[1] = TrainStimuli.map_category["independent"]["independent_"+order23[0]]
   order[2] = TrainStimuli.map_category["uncertain"]["uncertain_"+order23[0]]
 
   order[3] = TrainStimuli.map_category[cats[0]][cats[0] + "_" + order01[0]]
   order[4] = TrainStimuli.map_category[cats[1]][cats[1] + "_" + order01[0]]
-  order[5] = TrainStimuli.map_category["a_iff_c"]["a_iff_c_" + order_iff[1]]
+  order[5] = TrainStimuli.map_category["ac_2"]["ac_2_" + order_iff[1]]
   order[6] = TrainStimuli.map_category[cats[0]][cats[0] + "_" + order01[1]]
   order[7] = TrainStimuli.map_category[cats[1]][cats[1] + "_" + order01[1]]
 
@@ -27,7 +27,7 @@ const SHUFFLED_TRAIN_STIMULI = pseudoRandomTrainTrials();
 // TEST TRIALS //
 // the different priors (do block a/b fall) are put in 3 different categories:
 // x: [('lu'), 'hh', 'ul'], y: ['uh', 'll', ('hu')],
-// z: ['lh'(not for a_iff_c), 'uu', 'hl'] (sorted such that always 2xl,2xh,2xu)
+// z: ['lh'(not for ac_2), 'uu', 'hl'] (sorted such that always 2xl,2xh,2xu)
 // for each trial type (a->c, a<->c, independent), each entry in the three
 // categories x,y,z must occur exactly once: we sample one combination of x,y,z
 // for each of the three trial types, e.g.:
@@ -44,15 +44,15 @@ let type_orders = {
 categoriesPerBlock2Priors = function(category_order){
   let mapping = {'a_implies_c': ['hh', 'ul'],
                  'independent': ['uh', 'll'],
-                 'a_iff_c': ['lh', 'uu', 'hl']}
+                 'ac_2': ['lh', 'uu', 'hl']}
 
-  let trial_types = ['a_implies_c', 'independent', 'a_iff_c'];
+  let trial_types = ['a_implies_c', 'independent', 'ac_2'];
   let trials = {};
   category_order.forEach(function(o, i){
     let arr = _.shuffle(mapping[TYPE_MAP[o]]);
     let tt = trial_types[i]
     if (o === "z") {
-      arr = tt == "a_iff_c" ? _.without(arr, 'lh') : arr.slice(0,2);
+      arr = tt == "ac_2" ? _.without(arr, 'lh') : arr.slice(0,2);
     }
     trials[trial_types[i]] = arr
   })
@@ -69,13 +69,13 @@ pseudoRandomPriors = function(){
   let ac = _.flatten(_.map(blocks, "a_implies_c"))
   let ind4 = !ind.includes('lh') ? 'lh' : !ind.includes('uu') ? 'uu' : 'hl';
   let ac4 = !ac.includes('lh') ? 'lh' : !ac.includes('uu') ? 'uu' : 'hl';
-  blocks.push({'independent': ind4, 'a_implies_c': ac4, 'a_iff_c': ''});
+  blocks.push({'independent': ind4, 'a_implies_c': ac4, 'ac_2': ''});
   let orders = {
     'a_implies_c': _.flatten(_.map(blocks, 'a_implies_c')),
-    'a_iff_c': _.flatten(_.map(blocks, 'a_iff_c')),
+    'ac_2': _.flatten(_.map(blocks, 'ac_2')),
     'independent': _.flatten(_.map(blocks, 'independent'))
   }
-  orders.a_iff_c = _.without(orders.a_iff_c, '')
+  orders.ac_2 = _.without(orders.ac_2, '')
   return orders;
 }
 pseudoRandomTypes = function() {
@@ -121,8 +121,8 @@ shuffled_test_ids.forEach(function(id){
   if(idx === -1) {
     let kind = id.slice(0, _.lastIndexOf(id, "_"));
     let ps = id.slice(_.lastIndexOf(id, "_") + 1);
-    if(kind === "a_iff_c") {
-      // a_iff_c trials are identical for ul-lu / uh-hu / lh -hl etc.
+    if(kind === "ac_2") {
+      // ac_2 trials are identical for ul-lu / uh-hu / lh -hl etc.
       idx = _.indexOf(test_ids, kind + "_" + ps[1] + ps[0])
     } else {
       console.error('check test-ids!' + id + ' not found.')

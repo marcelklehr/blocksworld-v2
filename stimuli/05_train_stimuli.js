@@ -1,6 +1,6 @@
 let TrainStimuli = {
   'map_category': {"independent": {}, "uncertain": {}, "a_implies_c": {},
-                   "a_iff_c": {}},
+                   "ac_2": {}},
   'list_all': []
 };
 // IMPORTANT: DYNAMIC BLOCKS HAVE TO BE ADDED BEFORE STATIC OBJECTS, OTHERWISE
@@ -175,7 +175,7 @@ trials_iff = function(){
     let b2 = block(walls[1].bounds.min.x + 2, walls[1].bounds.min.y,cs[0], 'blockC', horiz[i][1]);
     // let bC = block(walls[0].bounds.max.x, walls[0].bounds.min.y,cs[1], 'blockA', horiz[1][0]);
     // let bD = block(walls[1].bounds.min.x + 2, walls[1].bounds.min.y,cs[0], 'blockB', horiz[1][1]);
-    let id = "a_iff_c_" + i
+    let id = "ac_2_" + i
     data[id] = {objs: [b1, b2].concat(objs.dynamic).concat(walls), meta, id}
   });
   return data
@@ -218,7 +218,7 @@ getTrainStimulus = function(kind, nb) {
 
 if (MODE === "train" || MODE === "experiment") {
   // generate all train stimuli!
-  TrainStimuli.map_category["a_iff_c"] = trials_iff();
+  TrainStimuli.map_category["ac_2"] = trials_iff();
   TrainStimuli.map_category["uncertain"] = trials_uncertain();
   TrainStimuli.map_category["independent"] = trials_independent();
   TrainStimuli.map_category["a_implies_c"] = trials_ac();

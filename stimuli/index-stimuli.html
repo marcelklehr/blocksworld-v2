@@ -29,13 +29,13 @@
       if(MODE === "test") {
         let relations = Array.from(Relations);
         // relations = ['independent']
-        // relations = ['a_iff_c']
+        // relations = ['ac_2']
         // relations = ['a_implies_c']
 
         rel = relations[_.random(0, relations.length-1)];
         let p1 = _.sample(['u', 'h', 'l']);
         // a<->c only 6 cases:  ul, hu, hl, uu, ll, hh
-        let p2 = rel === "a_iff_c" ? (p1==='u' ? 'l' :
+        let p2 = rel === "ac_2" ? (p1==='u' ? 'l' :
           p1==='h' ? _.sample(['u', 'l']) : 'l') : _.sample(['l', 'h', 'u']);
 
         // p1 = 'h'
@@ -44,11 +44,11 @@
         stimulus = getTestStimulus(rel, p);
         id =  rel + '_' + p
       } else if(MODE === "train") {
-        let types = ["independent", "a_implies_c", "uncertain", "a_iff_c"];
+        let types = ["independent", "a_implies_c", "uncertain", "ac_2"];
         // types = ["a_implies_c"]
         // types = ["independent"];
         // types = ["uncertain"]
-        // types = ["a_iff_c"];
+        // types = ["ac_2"];
         rel = types[_.random(0, types.length-1)];
         let nb = _.random(0, _.size(TrainStimuli.map_category[rel])-1);
         // nb = 0;
