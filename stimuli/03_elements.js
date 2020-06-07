@@ -92,7 +92,7 @@ W_IF_RAMP_TOP = function(side){
 
 // The first two list entries are respectively the bases for block1 and block2
 Walls.test = {'independent': [[W_UP1, W_LOW1], [W_UP2, W_LOW2]],
-              'a_implies_c': [[W_IF_UP1,  W_IF_BASE],
+              'ac_1': [[W_IF_UP1,  W_IF_BASE],
                               [W_IF_UP2,  W_IF_BASE]],
               'ac_2': []
               };
@@ -121,7 +121,7 @@ let W12 = wall('w12_middle', 400, 230, W_BASE_RAMP.default)
 let W13 = wall('w13_down', 400, 350, W_BASE_RAMP.default)
 Walls.train.uncertain = [[W8, W9, W10], [W11, W12, W13]]
 
-Walls.train.a_implies_c = function(){
+Walls.train.ac_1 = function(){
   return [wall('wall_ac_top', 580, 150, W_BASE_RAMP.default),
           wall('wall_ac_low', 390, 320)];
 }

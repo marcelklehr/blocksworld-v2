@@ -30,7 +30,7 @@
         let relations = Array.from(Relations);
         // relations = ['independent']
         // relations = ['ac_2']
-        // relations = ['a_implies_c']
+        relations = ['ac_1']
 
         rel = relations[_.random(0, relations.length-1)];
         let p1 = _.sample(['u', 'h', 'l']);
@@ -38,14 +38,14 @@
         let p2 = rel === "ac_2" ? (p1==='u' ? 'l' :
           p1==='h' ? _.sample(['u', 'l']) : 'l') : _.sample(['l', 'h', 'u']);
 
-        // p1 = 'h'
-        // p2 = 'h'
+        p1 = 'l'
+        p2 = 'l'
         let p = p1 + p2;
         stimulus = getTestStimulus(rel, p);
         id =  rel + '_' + p
       } else if(MODE === "train") {
-        let types = ["independent", "a_implies_c", "uncertain", "ac_2"];
-        // types = ["a_implies_c"]
+        let types = ["independent", "ac_1", "uncertain", "ac_2"];
+        // types = ["ac_1"]
         // types = ["independent"];
         // types = ["uncertain"]
         // types = ["ac_2"];

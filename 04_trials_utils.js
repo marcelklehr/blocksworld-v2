@@ -17,7 +17,7 @@ pseudoRandomTrainTrials = function(){
   order[7] = TrainStimuli.map_category[cats[1]][cats[1] + "_" + order01[1]]
 
   order[8] = TrainStimuli.map_category["uncertain"]["uncertain_"+order23[1]]
-  order[9] = TrainStimuli.map_category["a_implies_c"]["a_implies_c_0"]
+  order[9] = TrainStimuli.map_category["ac_1"]["ac_1_0"]
   order[10] = TrainStimuli.map_category["independent"]["independent_"+order23[1]]
 
   return order
@@ -42,11 +42,11 @@ let type_orders = {
   't4': ['z', 'x', 'y'], 't5': ['y', 'z', 'x']
 }
 categoriesPerBlock2Priors = function(category_order){
-  let mapping = {'a_implies_c': ['hh', 'ul'],
+  let mapping = {'ac_1': ['hh', 'ul'],
                  'independent': ['uh', 'll'],
                  'ac_2': ['lh', 'uu', 'hl']}
 
-  let trial_types = ['a_implies_c', 'independent', 'ac_2'];
+  let trial_types = ['ac_1', 'independent', 'ac_2'];
   let trials = {};
   category_order.forEach(function(o, i){
     let arr = _.shuffle(mapping[TYPE_MAP[o]]);
@@ -66,12 +66,12 @@ pseudoRandomPriors = function(){
     blocks = blocks.concat(categoriesPerBlock2Priors(cats_block));
   })
   let ind = _.flatten(_.map(blocks, "independent"))
-  let ac = _.flatten(_.map(blocks, "a_implies_c"))
+  let ac = _.flatten(_.map(blocks, "ac_1"))
   let ind4 = !ind.includes('lh') ? 'lh' : !ind.includes('uu') ? 'uu' : 'hl';
   let ac4 = !ac.includes('lh') ? 'lh' : !ac.includes('uu') ? 'uu' : 'hl';
-  blocks.push({'independent': ind4, 'a_implies_c': ac4, 'ac_2': ''});
+  blocks.push({'independent': ind4, 'ac_1': ac4, 'ac_2': ''});
   let orders = {
-    'a_implies_c': _.flatten(_.map(blocks, 'a_implies_c')),
+    'ac_1': _.flatten(_.map(blocks, 'ac_1')),
     'ac_2': _.flatten(_.map(blocks, 'ac_2')),
     'independent': _.flatten(_.map(blocks, 'independent'))
   }

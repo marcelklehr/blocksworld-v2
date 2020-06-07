@@ -23,7 +23,7 @@ OPTS = {
   'plank': {isStatic: false, density: 0.001, restitution: .02, friction: 0.1}
 }
 
-let Relations = ['a_implies_c', 'ac_2', 'independent'];
+let Relations = ['ac_1', 'ac_2', 'independent'];
 // Proportion of block that's ON TOP of its base wall beneath
 let PRIOR = {'high': 0.35, 'uncertain': 0.505, 'low': 0.70, 'uncertainL': 0.52}
 

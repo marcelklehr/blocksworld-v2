@@ -61,7 +61,7 @@ const TRAIN_BTTN_IDS = ['ac', 'a', 'c', 'none'];
 // each letter represents one trial!
 // 3 blocks a 5 trials each (zz-yy-x) + 1 block a 3 trials (x-y-z)
 // --> 7z + 7y + 4x = 18 trials
-const TYPE_MAP = {x: 'a_implies_c', y: 'independent', z: 'ac_2'}
+const TYPE_MAP = {x: 'ac_1', y: 'independent', z: 'ac_2'}
 
 //@arg pseudo_types List<str>
 getRealTypes = function(pseudo_types){

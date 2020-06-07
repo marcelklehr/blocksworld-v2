@@ -1,4 +1,4 @@
-let TestStimuli = {"independent": {}, "a_implies_c": {}, "ac_2": {}};
+let TestStimuli = {"independent": {}, "ac_1": {}, "ac_2": {}};
 
 // IMPORTANT: DYNAMIC BLOCKS HAVE TO BE ADDED BEFORE STATIC OBJECTS, OTHERWISE
 // THEY WILL FALL VERY ODD (JITTERING)
@@ -76,7 +76,7 @@ testTrials_ac_updated = function(priors){
   {edge_blocks: -1, increase: true, idx_w: 0, moveBall: 1, side:"right"} :
   {edge_blocks: 1, increase: false, idx_w: 1, moveBall: -1, side:"left"};
 
-  let walls = Walls.test["a_implies_c"][data.idx_w];
+  let walls = Walls.test["ac_1"][data.idx_w];
   let ramp_top = W_IF_RAMP_TOP(data.side);
   let ramp = makeRamp(horiz, p2, data.increase, ramp_top, "top")
   let ball = ramp.ball
@@ -128,7 +128,7 @@ makeTestStimuli = function(conditions, relations){
       let pb2 = priors[1]
       let id = rel + '_' + pb1[0] + pb2[0];
       let blocks = rel === "ac_2" ?
-        testTrials_ac_2(priors) : rel === "a_implies_c" ?
+        testTrials_ac_2(priors) : rel === "ac_1" ?
         testTrials_ac_updated(priors) : rel === "independent" ?
         // testTrials_ac(priors) : rel === "independent" ?
         testTrials_independent(priors) : null;

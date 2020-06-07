@@ -1,5 +1,5 @@
 let TrainStimuli = {
-  'map_category': {"independent": {}, "uncertain": {}, "a_implies_c": {},
+  'map_category': {"independent": {}, "uncertain": {}, "ac_1": {},
                    "ac_2": {}},
   'list_all': []
 };
@@ -133,7 +133,7 @@ trials_ac = function(){
     // 'ac1': [false, true]}
 
   _.keys(colors).forEach(function(key, i){
-    let walls = Walls.train.a_implies_c();
+    let walls = Walls.train.ac_1();
     let cols = colors[key]
     let p1 = meta[key][0]
     let p2 = meta[key][1]
@@ -154,7 +154,7 @@ trials_ac = function(){
     // }
     b2 = blockOnBase(wx, PRIOR[p2], cols[1], 'blockLow_' + key, horiz[key][1]);
     blocks = blocks.concat([b1, b2]);
-    let id = "a_implies_c_" + i
+    let id = "ac_1_" + i
     data[id] = {objs: blocks.concat(walls), meta: meta[key], id}
     });
     return data
@@ -221,7 +221,7 @@ if (MODE === "train" || MODE === "experiment") {
   TrainStimuli.map_category["ac_2"] = trials_iff();
   TrainStimuli.map_category["uncertain"] = trials_uncertain();
   TrainStimuli.map_category["independent"] = trials_independent();
-  TrainStimuli.map_category["a_implies_c"] = trials_ac();
+  TrainStimuli.map_category["ac_1"] = trials_ac();
   // put all train stimuli into array independent of kind
   let train_keys = _.keys(TrainStimuli.map_category);
   train_keys.forEach(function(kind){

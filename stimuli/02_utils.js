@@ -62,7 +62,7 @@ sortConditions = function(conditions){
 *@return Object with key-val pairs:
  independent: [[pa,pc,"independent"], ...]
  ac_2: [[pa,pc, "ac_2"], ...]
- a_implies_c: [[pa, pc, "a_implies_c"], ...]
+ ac_1: [[pa, pc, "ac_1"], ...]
 **/
 getConditions = function(){
   let keys = _.keys(PRIOR);
