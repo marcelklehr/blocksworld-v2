@@ -25,83 +25,25 @@ pseudoRandomTrainTrials = function(){
 const SHUFFLED_TRAIN_STIMULI = pseudoRandomTrainTrials();
 
 // TEST TRIALS //
-// the different priors (do block a/b fall) are put in 3 different categories:
-// x: [('lu'), 'hh', 'ul'], y: ['uh', 'll', ('hu')],
-// z: ['lh'(not for ac_2), 'uu', 'hl'] (sorted such that always 2xl,2xh,2xu)
-// for each trial type (a->c, a<->c, independent), each entry in the three
-// categories x,y,z must occur exactly once: we sample one combination of x,y,z
-// for each of the three trial types, e.g.:
-// independent: x - y - z
-// A->C :       x - z - y
-// A<->C:       z - y - x
-// (one column is one block)
-// the fourth block contains one trial for A->C and one for independent.
-let type_orders = {
-  't0': ['x', 'z', 'y'], 't1': ['z', 'y', 'x'],
-  't2': ['y', 'x', 'z'], 't3': ['x', 'y', 'z'],
-  't4': ['z', 'x', 'y'], 't5': ['y', 'z', 'x']
-}
-categoriesPerBlock2Priors = function(category_order){
-  let mapping = {'ac_1': ['hh', 'ul'],
-                 'independent': ['uh', 'll'],
-                 'ac_2': ['lh', 'uu', 'hl']}
-
-  let trial_types = ['ac_1', 'independent', 'ac_2'];
-  let trials = {};
-  category_order.forEach(function(o, i){
-    let arr = _.shuffle(mapping[TYPE_MAP[o]]);
-    let tt = trial_types[i]
-    if (o === "z") {
-      arr = tt == "ac_2" ? _.without(arr, 'lh') : arr.slice(0,2);
-    }
-    trials[trial_types[i]] = arr
-  })
-  return(trials)
-}
-pseudoRandomPriors = function(){
-  let combis = Object.values(type_orders)
-  let categories_b123 = _.zip(_.sample(combis), _.sample(combis), _.sample(combis))//e.g.[[x,y,z], [y,x,x], [z,z,y]]
-  let blocks = [];
-  categories_b123.forEach(function(cats_block){
-    blocks = blocks.concat(categoriesPerBlock2Priors(cats_block));
-  })
-  let ind = _.flatten(_.map(blocks, "independent"))
-  let ac = _.flatten(_.map(blocks, "ac_1"))
-  let ind4 = !ind.includes('lh') ? 'lh' : !ind.includes('uu') ? 'uu' : 'hl';
-  let ac4 = !ac.includes('lh') ? 'lh' : !ac.includes('uu') ? 'uu' : 'hl';
-  blocks.push({'independent': ind4, 'ac_1': ac4, 'ac_2': ''});
-  let orders = {
-    'ac_1': _.flatten(_.map(blocks, 'ac_1')),
-    'ac_2': _.flatten(_.map(blocks, 'ac_2')),
-    'independent': _.flatten(_.map(blocks, 'independent'))
+sequencePriors = function(){
+  return {
+    'ac_1': _.shuffle(['hh', 'uh', 'uu', 'lh']),
+    'ac_2': _.shuffle(['hl', 'hh', 'ul', 'uh', 'll']),
+    'independent': _.shuffle(['hl', 'hh', 'ul', 'uh', 'll'])
   }
-  orders.ac_2 = _.without(orders.ac_2, '')
-  return orders;
 }
 pseudoRandomTypes = function() {
-  let mapping = {0: [0,1,3,4], 1: [1,2,4,5], 2:[0,2,3,5],
-                 3: [0,2,3,4], 4: [0,1,3,4], 5: [1,2,4,5]}
-
-  let pseudo_types = [_.sample(_.range(0,6))];
-  _.range(0,5).forEach(function(i){
-      let t = _.sample(mapping[pseudo_types[i]]);
-      pseudo_types.push(t)
-  })
-  _.range(0,6).forEach(function(i){
-    pseudo_types[i] = type_orders['t' + pseudo_types[i]]
-  })
-  let trials = _.flatten(pseudo_types)
-  let last_trial = trials[trials.length -1]
-  let last2 = last_trial == 'z' ? _.shuffle(['x', 'y']) :
-      last_trial == 'x' ? ['y', 'x'] : ['x', 'y']
-
-  trials = trials.concat(last2);
-  trials = getRealTypes(trials);
+  let order = _.random(0, 1) == 0 ? ['independent', 'ac_1', 'ac_2'] :
+    ['ac_2', 'ac_1', 'independent'];
+  let trials = _.reduce(_.range(1,3), function(memo, val){
+    return memo.concat(memo);
+  }, order);
+  trials = trials.concat(_.without(order, 'ac_1'));
   return trials
 }
 pseudoRandomTestTrials = function(){
   let trial_types = pseudoRandomTypes();
-  let priors = pseudoRandomPriors();
+  let priors = sequencePriors();
   Relations.forEach(function(rel){
     let conditions = priors[rel]
     conditions.forEach(function(p, k){
@@ -121,12 +63,7 @@ shuffled_test_ids.forEach(function(id){
   if(idx === -1) {
     let kind = id.slice(0, _.lastIndexOf(id, "_"));
     let ps = id.slice(_.lastIndexOf(id, "_") + 1);
-    if(kind === "ac_2") {
-      // ac_2 trials are identical for ul-lu / uh-hu / lh -hl etc.
-      idx = _.indexOf(test_ids, kind + "_" + ps[1] + ps[0])
-    } else {
-      console.error('check test-ids!' + id + ' not found.')
-    }
+      console.warn('Test trial with id: ' + id + ' not found.')
   }
   // console.log(id + ' ' + idx)
   TEST_TRIALS.push(slider_rating_trials[idx]);

@@ -75,9 +75,9 @@ steepnessTrials = function(id_start){
       prop_on_base.push((w_horiz+DIST_EDGE)/w_horiz);
     })
 
-    let ramp1 = makeRamp(ANGLES[direction][meta[0]], false, walls[0], "bottom", false)
-    let ramp2 = makeRamp(ANGLES[direction][meta[1]], false, walls[1], "bottom", false)
-    let ramp3 = makeRamp(ANGLES[direction][meta[2]], false, walls[2], "bottom", false)
+    let ramp1 = makeRamp(horiz, meta[0], false, walls[0], "bottom", false)
+    let ramp2 = makeRamp(horiz, meta[1], false, walls[1], "bottom", false)
+    let ramp3 = makeRamp(horiz, meta[2], false, walls[2], "bottom", false)
     ramp2.ball.label = 'ball2';
     ramp3.ball.label = 'ball3';
     let w_horiz = PROPS.blocks.h; let w_vert = PROPS.blocks.w;
