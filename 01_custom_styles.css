@@ -239,6 +239,7 @@ input[type="range"].replied::-webkit-slider-thumb {
 
 .picture{
   max-width: 75%;
+  max-height: 65%;
 }
 
 #buttonNext {
