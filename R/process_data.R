@@ -9,19 +9,21 @@ data_fn <- "results_14_blocksworld-conditionals_BG.csv"
 result_dir <- paste(data_dir, "results", "experiment1", sep=.Platform$file.sep)
 dir.create(result_dir, recursive=TRUE)
 
-# Anonymize and save ------------------------------------------------------
+# Anonymize and save raw ------------------------------------------------------
 dat.anonym <- anonymize_and_save(data_dir, data_fn, result_dir, "exp1", test_run = FALSE)
-data <- tidy_and_save_data(dat.anonym, result_dir, "exp1", test_run = FALSE)
+dat.tidy <- tidy_data(dat.anonym)
+dat.all <- list(train=dat.tidy$train, info=dat.tidy$info, comments=dat.tidy$comments)
+                # pretest=tidy_data.pretest, color=tidy_data.color_vision)
 
-# Filter data -------------------------------------------------------------
-data <- data$test
+# Process test data -----------------------------------------------------------
+data <- dat.tidy$test
+# filter
 # 1. Reaction time
 filtered_rt <- data %>% filter(RT < 4 * 1000 | RT > 3 * 60  * 1000)
 
 #TODO: uncomment filtering again!
 # df <- data %>% filter(RT >= 4000 & RT <= 3 * 60 * 1000)
 df <- data
-
 print(paste('filtered due to RT:', nrow(filtered_rt)))
 
 # 2. Comments
@@ -44,40 +46,23 @@ df <- df %>% group_by(prolific_id, id) %>%
   mutate(n=sum(response), r_norm=response/n) %>% 
   rename(r_orig=response)
 
-# also save version of data that only contains filtered values
-df_filtered <- df %>% filter_noticed_steepness()
-
-
 # save processed data -----------------------------------------------------
-# all processed data
-saveRDS(df, paste(result_dir, "exp1_test_trials_processed.rds", sep=.Platform$file.sep))
-saveRDS(df_filtered,
-        paste(result_dir, "exp1_test_trials_processed_steepness_noticed.rds", sep=.Platform$file.sep)
-)
+path_target <- paste(result_dir, "exp1_tidy.rds", sep=.Platform$file.sep) 
+print(paste('written processed anonymized tidy data to:', path_target))
+dat.all$test <- df
+saveRDS(dat.all, path_target)
 
-# Just Table means of normalized values
+# Also save just Table means of normalized values as csv files
 means <- df %>% group_by(id, question) %>% summarise(mean=mean(r_norm))
-means_filtered <- df_filtered %>% group_by(id, question) %>% summarise(mean=mean(r_norm))
 
 write.table(means %>% pivot_wider(names_from = question, values_from = mean),
-            file=paste(result_dir, "exp1_prob_tables_mean.csv", sep=.Platform$file.sep),
-            sep = ",", row.names=FALSE)
-write.table(means_filtered %>% pivot_wider(names_from = question, values_from = mean),
-            file=paste(result_dir, "exp1_prob_tables_mean_steepness_noticed.csv", sep=.Platform$file.sep),
+            file=paste(result_dir, "exp1_tables_mean.csv", sep=.Platform$file.sep),
             sep = ",", row.names=FALSE)
 
 # All Tables (with normalized values)
 tables.all <- df %>% select(id, question, prolific_id, r_norm) %>%
   group_by(id, question, prolific_id) %>%
   pivot_wider(names_from = question, values_from = r_norm)
-tables.all_filtered <- df_filtered %>% select(id, question, prolific_id, r_norm) %>%
-  group_by(id, question, prolific_id) %>%
-  pivot_wider(names_from = question, values_from = r_norm)
 
-write.table(tables.all_filtered, file=paste(result_dir, "exp1_prob_tables_all.csv",
-                                            sep=.Platform$file.sep),
+write.table(tables.all, file=paste(result_dir, "exp1_tables_all.csv", sep=.Platform$file.sep),
             sep = ",", row.names=FALSE)
-write.table(tables.all_filtered, file=paste(result_dir, "exp1_prob_tables_all_steepness_noticed.csv",
-                                   sep=.Platform$file.sep),
-            sep = ",", row.names=FALSE)
-

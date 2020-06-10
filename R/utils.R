@@ -84,7 +84,7 @@ tidy_pretest <- function(df){
   return(dat.pre)
 }
 
-tidy_and_save_data <- function(data, result_dir, fn, test_run, N_test=20, N_train=11){
+tidy_data <- function(data, N_test=20, N_train=11){
   # 1. Select only columns relevant for data analysis
   df <- data %>% select(prolific_id,
                         question, question1, question2, question3, question4,
@@ -93,7 +93,11 @@ tidy_and_save_data <- function(data, result_dir, fn, test_run, N_test=20, N_trai
                         id, trial_name, trial_number, group, 
                         timeSpent, RT,
                         noticed_steepness,
-                        education, comments, gender, age) 
+                        education, comments, gender, age)
+  # always use the same abbreviation
+  df <- df %>% mutate(question1 = case_when(question1 == "gb" ~ "bg",
+                                            question1 == "yr" ~ "ry",
+                                           TRUE ~ question1));
   N_participants <- df %>% select(prolific_id) %>% unique() %>% nrow()
   stopifnot(nrow(df) == N_participants * (N_test + N_train));
 
@@ -115,42 +119,35 @@ tidy_and_save_data <- function(data, result_dir, fn, test_run, N_test=20, N_trai
                   # color=dat.color_vision,
                   info=dat.info, comments=dat.comments, pretest=dat.pretest)
   
-  path_target <- paste(result_dir, paste(fn, "_tidy.rds", sep=""), sep=.Platform$file.sep) 
-  print(paste('written tidied anonymized data to:', path_target))
-  saveRDS(dat.all, path_target)
   return(dat.all)
 }
 
 standardize_color_groups <- function(df){
   df <- df %>%
-    # mutate(question = case_when(question == "none" ~ "none",
-    #                             (question == "bg" | question == "gb") ~ "ac",
-    #                             (question == "b" & group == "group2") ~ "c",
-    #                             (question == "g" & group == "group2") ~ "a",
-    #                             TRUE ~ question)) %>% 
-    # mutate(question = case_when((question == "b" & group == "group1") ~ "a", 
-    #                             (question == "g" & group == "group1") ~ "c", 
-    #                             TRUE ~ question),
     mutate(question = case_when((question == "bg" | question == "gb") ~ "ac",
                                  question == "none" ~ "none",
                                  group == "group1" & question == "b" ~ "a",
                                  group == "group1" & question == "g" ~ "c",
-                                 group == "group2" & question == "b" ~ "a",
-                                 group == "group2" & question == "g" ~ "c",
-                                 TRUE ~ "IMPOSSIBLE"
+                                 group == "group2" & question == "g" ~ "a",
+                                 group == "group2" & question == "b" ~ "c"
                                 ),
-           group = "group1")
+           group = "group1", 
+           question = case_when(question == "a" ~ "b",
+                                question == "c" ~ "g", 
+                                question == "ac" ~ "bg", 
+                                question == "none" ~ "none")
+           )
   return(df)
 }
 
 
 # @arg df: data frame containing columns ac, a
 add_probs <- function(df, keys){
-  df <- df %>% mutate(p_a=ac+a, p_c=ac+c, p_na=1-p_a, p_nc=1-p_c) %>%
-    mutate(p_c_given_a = if_else(p_a==0, 0, ac / p_a),
-           p_c_given_na = if_else(p_na==0, 0, c / p_na),
-           p_a_given_c = if_else(p_c==0, 0, ac / p_c),
-           p_a_given_nc = if_else(p_nc==0, 0, a / p_nc),
+  df <- df %>% mutate(p_a=bg+b, p_c=bg+g, p_na=1-p_a, p_nc=1-p_c) %>%
+    mutate(p_c_given_a = if_else(p_a==0, 0, bg / p_a),
+           p_c_given_na = if_else(p_na==0, 0, g / p_na),
+           p_a_given_c = if_else(p_c==0, 0, bg / p_c),
+           p_a_given_nc = if_else(p_nc==0, 0, b / p_nc),
            p_nc_given_a = 1 - p_c_given_a,
            p_nc_given_na = 1 - p_c_given_na,
            p_na_given_c = 1 - p_a_given_c,
@@ -167,6 +164,25 @@ filter_noticed_steepness <- function(df){
   df$noticed_steepness %>% unique()
   df <- df %>% mutate(noticed_steepness = str_to_lower(noticed_steepness))
   return(df %>% filter(str_detect(noticed_steepness, "yes")))
+}
+
+cluster_responses <- function(dat, quest){
+  dat.kmeans <- dat %>% filter(question == quest) %>%
+    select(prolific_id, id, response) %>% add_column(y=1) %>% 
+    group_by(prolific_id, id) %>% 
+    unite("rowid", "prolific_id", "id", sep="--") %>% 
+    column_to_rownames(var = "rowid")
+  clusters <- kmeans(dat.kmeans, 2) 
+  
+  dat.kmeans <- dat.kmeans %>%
+    rownames_to_column(var = "rowid") %>%
+    as_tibble() %>% 
+    separate(col="rowid", sep="--", into=c("prolific_id", "id")) %>% 
+    mutate(cluster=as.factor(clusters$cluster), id=as.factor(id),
+           prolific_id = as.factor(prolific_id)) %>% 
+    select(prolific_id, id, cluster)
+  df <- left_join(dat, dat.kmeans)
+  return(df)
 }
 
 # prepare_tables <- function(tables, N_test = 25){

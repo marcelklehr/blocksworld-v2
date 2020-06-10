@@ -39,7 +39,7 @@ ball_colors = {'test': cols.darkred,
   '28': cols.red, '25': cols.pinkish , '23': cols.orange, '20': cols.purple}}
 
 let block_cols = {
-  test: ['green', 'blue'],
+  test: ['blue', 'green'],
   train: ['red', 'yellow']
 }
 let block_cols_short = {
