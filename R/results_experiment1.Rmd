@@ -6,7 +6,7 @@ output:
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-library(ggplus)
+library(ggforce)
 library(here)
 library(tidyverse)
 source(here("R", "utils.R"))
@@ -17,18 +17,25 @@ data_dir <- here("data", "prolific")
 # result_dir <- here("data", "test-runs", "experiment1")
 result_dir <- here("data", "prolific", "results", "experiment1")
 
-fn <- "exp1_test_trials_processed.rds"
-# fn <- "exp1_test_trials_processed_steepness_noticed.rds"
+fn <- "exp1_tidy.rds"
+# fn <- "exp1_tidy_steepness_noticed.rds"
+# fn <- "exp1_tidy_quality.rds"
 
 data.from_rds <- readRDS(paste(result_dir, fn, sep=.Platform$file.sep))
-data.orig <- data.from_rds %>% mutate(response=r_orig) %>% select(-r_norm, -r_orig)
-data.norm <- data.from_rds %>% mutate(response=r_norm) %>% select(-r_norm, -r_orig)
+if(str_split(fn, "_")[[1]] %>% length() == 2) {
+  data <- data.from_rds$test
+} else {
+  data <- data.from_rds
+}
+
+data.orig <- data %>% mutate(response=r_orig) %>% select(-r_norm, -r_orig)
+data.norm <- data %>% mutate(response=r_norm) %>% select(-r_norm, -r_orig)
 # choose wether normalized or unnormalized values shall be plotted
 data.plot <- data.orig
 
 
-stimuli <- data.from_rds %>% pull(id) %>% unique()
-N_participants <- data.from_rds %>% pull(prolific_id) %>% unique() %>% length()
+stimuli <- data.orig %>% pull(id) %>% unique()
+N_participants <- data.orig %>% pull(prolific_id) %>% unique() %>% length()
 
 plot_dir <- paste(result_dir, "plots", sep=.Platform$file.sep);
 dir.create(plot_dir, showWarnings = FALSE)
@@ -77,42 +84,36 @@ if (nrow(df.participants_all_none) != 0){
 
 ```{r}
 dat <- data.plot %>% ungroup() %>% 
-  mutate(question = factor(question, levels = c("ac", "a", "c", "none")))
+  mutate(question = factor(question, levels = c("bg", "b", "g", "none")))
 
-labels <- c(ac="Blue and Green", a="Blue and ¬Green",
-            c="¬Blue and Green", none="¬Blue and ¬Green")
+labels <- c(bg="Blue and Green", b="Blue and ¬Green",
+            g="¬Blue and Green", none="¬Blue and ¬Green")
 
-df_means <- dat %>% group_by(id, question) %>%
-  summarise(m=mean(response), med=median(response))
+df <- cluster_responses(dat, "g") %>% 
+  group_by(question, id) %>% mutate(mu=mean(response), med=median(response));
 
-# s <- "a_implies_c_hl"
-for (s in stimuli){
-  df <-dat %>% filter(id == s) 
-  means <- df_means %>% filter(id == s)
+for (pa in seq(1, 10)){
   p <- df  %>% 
-    ggplot(aes(x=response, y=factor(0), fill=question)) +
-    geom_jitter(height = 0.1, alpha=0.5, aes(colour=prolific_id)) +
-    # geom_point(data=means,  mapping=aes(x=med, y=factor(0)), shape=8) +
-    geom_point(data=means,  mapping=aes(x=m, y=factor(0)),  shape=24) +
-    geom_vline(xintercept=0.5, linetype="dashed", color = "red", size=1) +
+    ggplot(aes(x=response, y=factor(0))) +
+    geom_jitter(height = 0.1, alpha=0.5, aes(colour = cluster)) +
+    geom_point(mapping=aes(x=mu, y=factor(0)),  shape=24, color = "red") +
+    geom_vline(aes(xintercept=med), color = "red", size=0.5) +
     scale_x_continuous(limits=c(-0.2, 1.2),
                        breaks=c(0, 0.25, 0.5, 0.75, 1)) +
-    # geom_violin(alpha=0.5) +
     labs(x="estimates probability", y="") + 
     theme_bw() +
-    facet_wrap(~question, labeller = labeller(question=labels)) + 
-    ggtitle(s) +
+    facet_grid_paginate(id~question, nrow=2, ncol = 4,
+                        labeller = labeller(question=labels),
+                        page = pa) + 
     theme(axis.text.y=element_blank(),
           axis.ticks.y =element_blank(),
-          text = element_text(size=20),
-          panel.spacing = unit(2, "lines")) +
-    guides(color = FALSE, fill= FALSE, shape=TRUE)
-  p
-  fn <- paste(plot_dir, paste("exp1-", s, ".png", sep=""), sep=.Platform$file.sep)
-  ggsave(fn, p, width=8, height=5)
+          text = element_text(size=14),
+          axis.text.x=element_text(angle=45, vjust = 0.5),
+          legend.position = "none") 
   print(p)
 }
 ```
+
 
 ## Sorted according to expectations
 Sort trials according to how they are expected to be interpreted
@@ -152,11 +153,11 @@ prepare the data
 ```{r, echo=FALSE}
 dataIndependent = function(data) {
   stimuli <- data %>% pull(id) %>% unique()
-  df <- data %>% mutate(prod_ac=p_a*p_c, p=ac-prod_ac, p_key = "diff_ac_prod_ac") %>% 
+  df <- data %>% mutate(prod_ac=p_a*p_c, p=bg-prod_ac, p_key = "diff_ac_prod_ac") %>% 
     select(prolific_id, id, p, p_key)
     
-  labels <- c(diff_ac_prod_ac="P(A,C)-P(A)xP(C)")
-              # , ac="P(Blue,Green)", prod_ac="P(Blue) * P(Green)")
+  labels <- c(diff_ac_prod_ac="P(B,G)-P(B)xP(G)")
+              # , bg="P(Blue,Green)", prod_ac="P(Blue) * P(Green)")
   return(list(labels=labels, data=df, stimuli=stimuli))
 }
 
@@ -187,34 +188,33 @@ dataOthers <- function(data){
 Plot function
 
 ```{r}
-plotProbs <- function(df, xlab, limits_x = c(-0.2, 1.2), breaks_x = c(0, 0.25, 0.5, 0.75, 1)){
-  df_means <- df$data %>% group_by(id, p_key) %>%
-                summarise(m=mean(p), med=median(p))
-  
-  for(s in df$stimuli) {
-    df.s <- df$data %>% filter(id == s) 
-    means <- df_means %>% filter(id == s) 
-    
-    p <- df.s  %>%
+plotProbs <- function(df, xlab, title, limits_x = c(-0.2, 1.2),
+                      breaks_x = c(0, 0.25, 0.5, 0.75, 1)) {
+  df_means <- df$data %>% as_tibble() %>% group_by(id, p_key) %>%
+                summarise(mu=mean(p), med=median(p))
+  dat <- left_join(df$data, df_means) 
+  n = 1; pa = 1;
+  while(pa <= n) {
+    p <- dat %>% 
       ggplot(aes(x=p, y=factor(0))) +
       geom_jitter(height = 0.1, alpha=0.5, aes(colour=factor(prolific_id))) +
       scale_x_continuous(limits=limits_x, breaks=breaks_x) +
-      geom_vline(data = means, aes(xintercept=m, linetype=p_key), color="orange", size=0.5) +
-      geom_point(data=means,  mapping=aes(x=med, y=factor(0)), shape = 5, size=2, alpha=0.5) +
-      # scale_shape_identity(guide = "legend", aesthetics="shape") + 
-      # geom_violin(alpha=0.5) +
       labs(x=xlab, y="") + 
       theme_bw() +
-      ggtitle(s) +
+      facet_wrap_paginate(c("id"), nrow=2, ncol = 4, page = pa) + 
+      geom_vline(aes(xintercept=med), color="orange", size=0.5) +
+      geom_point(aes(x=mu, y=factor(0)), color="red", shape=24, size=0.75) +
       theme(legend.position = "none",
             axis.text.y=element_blank(),
             axis.ticks.y =element_blank(),
-            axis.text = element_text(size=12),
-            panel.spacing = unit(2, "lines"))
-      # guides(color = FALSE, linetype=guide_legend(title="mean value")) 
+            axis.text = element_text(size=11, angle=45, hjust=1),
+            panel.spacing = unit(2, "lines")) + 
+      ggtitle(title)
     print(p)
-    fn <- paste(plot_dir, paste("exp1-", s, "-probs.png", sep=""), sep=.Platform$file.sep)
-    ggsave(fn, p, width=8, height=5)
+    n <- n_pages(p)
+    pa <- pa + 1
+    # fn <- paste(plot_dir, paste("exp1-", s, "-probs.png", sep=""), sep=.Platform$file.sep)
+    # ggsave(fn, p, width=8, height=5)
   }
 }
 ```
@@ -225,7 +225,8 @@ Here, P(A,C) - P(A) x P(C) should be close to zero.
 
 ```{r, warning=FALSE}
 df <- dataIndependent(ind)
-plotProbs(df, "P(A,C)-P(A)xP(C)", limits_x = c(-0.5, 0.5), breaks_x = seq(-0.5, 0.5, 0.25))
+plotProbs(df, "P(A,C)-P(A)xP(C)", "expected interpretation: independent",
+          limits_x = c(-0.5, 0.5), breaks_x = seq(-0.5, 0.5, 0.25))
 ```
 
 ## Trials that are expected to be A->C (cause). 
@@ -236,11 +237,10 @@ df_ac <- bind_rows(ac_cause, ac_diagnostic)
 df <- dataImplies(df_ac)
 min <- df$data$p %>% min() - 0.1
 max <-  df$data$p %>% max() + 0.1
-plotProbs(df, "delta p: P(C|A)-P(C)",
+plotProbs(df, "delta p: P(C|A)-P(C)", "expected interpretation: A->C",
           limits_x = c(min, max),
-          breaks_x = c(0, seq(round(min, 1), round(max, 1) + 0.05, 0.25)))
+          breaks_x = c(seq(round(min, 1), round(max, 1) + 0.05, 0.25)))
 ```
-
 
 Other trials
 
@@ -248,14 +248,14 @@ Other trials
 df <- dataOthers(others)
 min <- df$data$p %>% min() - 0.1
 max <-  df$data$p %>% max() + 0.1
-plotProbs(df, "delta P* = (P(C|A)-P(C))/(P(¬A,¬C)", 
+plotProbs(df, "delta P* = (P(C|A)-P(C))/(P(¬A,¬C)", "other interpretations",
           limits_x = c(min, max),
-          breaks_x = c(seq(round(min, 1), round(max, 1) + 0.05, 0.25)))
+          breaks_x = c(seq(round(min, 1), round(max, 1) + 0.05, 1)))
 ```
 
 
 ```{r, echo = FALSE, message=FALSE}
-fn <- paste(result_dir, "exp1_prob_tables_mean.csv", sep=.Platform$file.sep)
+fn <- paste(result_dir, "exp1_tables_mean.csv", sep=.Platform$file.sep)
 tables <- read_csv(fn) %>% add_probs() %>% 
   pivot_longer(cols=starts_with("p_"), names_to = "key", values_to = "prob")
 ```
