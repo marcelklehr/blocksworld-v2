@@ -5,7 +5,7 @@ let placeholder = {
   'DET_N': ['neither', 'nor'],
   'COL': ['green', 'blue'],
   'CONJ': ['and', 'but', 'because of'],
-  'MOD': ['probably', 'likely', 'defenitely', 'maybe'],
+  'MOD': ['probably', 'likely', 'defenitely', 'maybe', 'also'],
   'V_I': ['fall'],
   'V': ['falls'],
   'V_AUX_I': ['make', 'cause'],
@@ -13,20 +13,20 @@ let placeholder = {
 }
 let rules = {
  'S': ['MOD', 'IF', 'the', 'both', 'DET_N'], //start symbol
- 'MOD': ['the', 'both'],
+ 'MOD': ['the', 'both', 'V_AUX', 'V_AUX_I', 'V', 'V_I'],
  'the': ['COL'],
  'IF': ['the'],
  'DET_N': ['the'],
- 'COL': ['block'],
+ 'COL': ['block', 'nor', 'CONJ'],
  'both': ['blocks'],
  'blocks': ['will', 'fall'],
- 'block': ['to', 'will', 'V', 'V_AUX'],
+ 'block': ['to', 'will', 'nor', 'V', 'V_AUX'],
  'will': ['MOD', 'not', 'V_I', 'V_AUX_I'],
  'not': ['V_I', 'V_AUX_I'],
- 'and': ['the'],
+ 'and': ['the', 'MOD'],
  'but': ['not', 'the'],
- 'V_I': ['CONJ'],
- 'V' : ['CONJ'],
+ 'V_I': ['CONJ', 'the'],
+ 'V' : ['CONJ', 'the'],
  'V_AUX_I': ['the'],
  'V_AUX': ['the']
 }
@@ -35,7 +35,7 @@ let rules = {
 // no?
 // due to?
 let word_groups = [
-  {words: ["maybe", "likely", "probably", 'defenitely'], col: 'green'},
+  {words: ["maybe", "likely", "probably", 'defenitely', 'also'], col: 'green'},
   {words: ["not", "neither", "nor", "but"], col: 'red'},
   {words: ["if and only if", "only if", "if", "and", "or",
            "because of", "the"], col: 'blue'},
