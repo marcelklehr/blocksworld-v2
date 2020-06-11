@@ -345,7 +345,8 @@ const fridge_generator = {
       return array.map((word, index) => {
         let clickable = start_words.includes(word) ? ' ' : ' not-clickable ';
           return (
-            `<div class="word ` + color +  clickable + `"id=` +  word +` >
+            `<div class="word ` + color +  clickable + `"id=` +
+            word.replace(/\s/g,'') +` >
             <p> ` +
             word +
             ` </p>
@@ -369,6 +370,7 @@ const fridge_generator = {
       return_word_array(word_groups[2].words, word_groups[2].col) +
       return_word_array(word_groups[3].words, word_groups[3].col) +
       return_word_array(word_groups[4].words, word_groups[4].col) +
+      return_word_array(word_groups[5].words, word_groups[5].col) +
       `</div>
       <br><br/>
       <div class ="sentence selected1" style = "font-size: 20px"> Your sentence:
@@ -419,23 +421,28 @@ const fridge_generator = {
           .replace(/(\r\n|\n|\r)/gm, " ")
           .trim();
         sentence_array.push(value)
-        console.log(sentence_array);
-        console.log(value);
+        // console.log(sentence_array);
+        WORDS.forEach(function(word){
+          $("#" + word.replace(/\s/g,'')).addClass('not-clickable');
+        })
         let poss_words = shownNext(value);
         console.log(poss_words);
-        _.map(function(word){$("#" + word).toggleClass('clickable')}, poss_words);
+        poss_words.forEach(function(word){
+          console.log(word)
+          $("#" + word).toggleClass('not-clickable');
+        });
         $(".selected-words")
           .append(" " + value)
-        console.log(sentence_array);
-        console.log(config.data[CT].sentence);
+        // console.log(sentence_array);
+        // console.log(config.data[CT].sentence);
         sentence = sentence_array.toString()
           .replace(/,/g, " ");
         //sentence = sentence.replace(/,/, " ");
-        console.log(sentence.replace(/,/, " "));
+        // console.log(sentence.replace(/,/, " "));
 
         _checkBuildSentence(sentence_array, submitbutton)
         //sentence = sentence.replace(/,/, " ");
-        console.log(sentence);
+        // console.log(sentence);
       });
 
     $(".delete-word")

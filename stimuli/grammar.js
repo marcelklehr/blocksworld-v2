@@ -38,12 +38,14 @@ let word_groups = [
   {words: ["maybe", "likely", "probably", 'defenitely'], col: 'green'},
   {words: ["not", "neither", "nor", "but"], col: 'red'},
   {words: ["if and only if", "only if", "if", "and", "or",
-                    "because of", "the"], col: 'blue'},
+           "because of", "the"], col: 'blue'},
   {words: ["block", "blocks", "both"], col: 'purple'},
   {words: ["fall", "falls", "will", "cause", "causes", "make", "makes",
                     "does"], col: 'orange'},
-  {words: ["green", "blue"], col: 'grey'}
+  {words: ["green", "blue"], col: 'black'}
 ];
+let WORDS = _.flatten(_.map(_.values(word_groups), 'words'));
+console.log(WORDS)
 
 let shownNext = function(last){
   let arr = Object.keys(rules).includes(last) ? rules[last] :
