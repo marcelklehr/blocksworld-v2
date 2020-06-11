@@ -20,7 +20,7 @@ let rules = {
  'COL': ['block', 'nor', 'CONJ'],
  'both': ['blocks'],
  'blocks': ['will', 'fall'],
- 'block': ['to', 'will', 'nor', 'V', 'V_AUX'],
+ 'block': ['to', 'will', 'nor', 'V', 'V_AUX', 'V_I'],
  'will': ['MOD', 'not', 'V_I', 'V_AUX_I'],
  'not': ['V_I', 'V_AUX_I'],
  'and': ['the', 'MOD'],
