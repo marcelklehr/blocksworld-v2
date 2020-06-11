@@ -358,20 +358,26 @@ const fridge_generator = {
     let wordArray4 = ["block", "blocks", "green", "blue", "red", "yellow", "both"]
     let wordArray5 = ["fall", "falls", "will", "cause", "causes", "make", "makes", "do", "does"]
 
-    return `<div class = "fix-box"> <div class="fridge">` + return_word_array(wordArray1, "magpie-view-button green") +
-      return_word_array(wordArray2, "red") + return_word_array(wordArray3, "blue") + return_word_array(wordArray4, "purple") +
-      return_word_array(wordArray5, "orange") +
+    return `<div class = "fix-box"> <div class="fridge">` +
+      // return_word_array(wordArray1, "magpie-view-button green") +
+      // return_word_array(wordArray2, "red") + return_word_array(wordArray3, "blue") + return_word_array(wordArray4, "purple") +
+      // return_word_array(wordArray5, "orange") +
+      return_word_array(word_groups[0].words, "magpie-view-button green") +
+      return_word_array(word_groups[1].words, word_groups[1].col) + return_word_array(word_groups[2].words, word_groups[2].col) + return_word_array(word_groups[3].words, word_groups[3].col) +
+      return_word_array(word_groups[4].words, word_groups[4].col) +
       `</div>
       <br><br/>
-      <div class ="sentence selected1" style = "font-size: 20px"> Your sentence:  <span class = "selected-words" id ="sentence"> ${config.data[CT].sentence} </span>
-      </div> <button id='buttonDelete' class='magpie-view-button delete-word'> delete last word </button>
+      <div class ="sentence selected1" style = "font-size: 20px"> Your sentence:
+        <span class = "selected-words" id ="sentence"> ${config.data[CT].sentence} </span>
+      </div>
+      <button id='buttonDelete' class='magpie-view-button delete-word'> delete last word </button>
       <br><br/>
       <br><br/>
       <button id='buttonSubmit' class='magpie-view-button grid-button submit-sentence '> submit sentence</button>
       <div class = "magpie-nodisplay custom-sentence sentence" >
         <p class="magpie-view-text">
-              <label for="custom-text" style = "font-size: 20px"> Your custom sentence: </label>
-               <input type="text" id="custom-text" name="textbox-input" cols = 50 class='magpie-response-text selected-words'>
+          <label for="custom-text" style = "font-size: 20px"> Your custom sentence: </label>
+          <input type="text" id="custom-text" name="textbox-input" cols = 50 class='magpie-response-text selected-words'>
         </p>
       </div>
       <div class = "buttons">
