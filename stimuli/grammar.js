@@ -6,7 +6,10 @@ let placeholder = {
   'COL': ['green', 'blue'],
   'CONJ': ['and', 'but', 'because of'],
   'MOD': ['probably', 'likely', 'defenitely', 'maybe'],
-  'V': ['make', 'cause', 'makes', 'causes']
+  'V_I': ['fall'],
+  'V': ['falls'],
+  'V_AUX_I': ['make', 'cause'],
+  'V_AUX': ['makes', 'causes']
 }
 let rules = {
  'S': ['MOD', 'IF', 'the', 'both', 'DET_N'], //start symbol
@@ -17,11 +20,15 @@ let rules = {
  'COL': ['block'],
  'both': ['blocks'],
  'blocks': ['will', 'fall'],
- 'block': ['to', 'will', 'and', 'but', 'does', 'falls', 'makes', 'causes'],
- 'will': ['MOD', 'not', 'fall', 'make', 'cause'],
+ 'block': ['to', 'will', 'V', 'V_AUX'],
+ 'will': ['MOD', 'not', 'V_I', 'V_AUX_I'],
+ 'not': ['V_I', 'V_AUX_I'],
  'and': ['the'],
  'but': ['not', 'the'],
- 'V': ['the']
+ 'V_I': ['CONJ'],
+ 'V' : ['CONJ'],
+ 'V_AUX_I': ['the'],
+ 'V_AUX': ['the']
 }
 // rather ?
 // only without if?
@@ -51,7 +58,7 @@ let shownNext = function(last){
   return symbols
 }
 // let symbols = shownNext('S')
-// // console.log(_.flatten(symbols))
+// console.log(_.flatten(symbols))
 // let i = _.random(0, symbols.length - 1)
 // let selected = typeof(symbols[i]) == 'string' ? symbols[i] : _.sample(symbols[i]);
 // console.log('selected: ' + selected)

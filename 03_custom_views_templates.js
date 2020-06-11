@@ -340,10 +340,12 @@ const fridge_generator = {
 
   answer_container_gen: function (config, CT) {
 
+    let start_words = _.flatten(shownNext('S'));
     function return_word_array(array, color) {
       return array.map((word, index) => {
+        let clickable = start_words.includes(word) ? ' ' : ' not-clickable ';
           return (
-            `<div class="word ` + color + `" id=word` + index + ` >
+            `<div class="word ` + color +  clickable + `"id=` +  word +` >
             <p> ` +
             word +
             ` </p>
@@ -363,7 +365,9 @@ const fridge_generator = {
       // return_word_array(wordArray2, "red") + return_word_array(wordArray3, "blue") + return_word_array(wordArray4, "purple") +
       // return_word_array(wordArray5, "orange") +
       return_word_array(word_groups[0].words, "magpie-view-button green") +
-      return_word_array(word_groups[1].words, word_groups[1].col) + return_word_array(word_groups[2].words, word_groups[2].col) + return_word_array(word_groups[3].words, word_groups[3].col) +
+      return_word_array(word_groups[1].words, word_groups[1].col) +
+      return_word_array(word_groups[2].words, word_groups[2].col) +
+      return_word_array(word_groups[3].words, word_groups[3].col) +
       return_word_array(word_groups[4].words, word_groups[4].col) +
       `</div>
       <br><br/>
@@ -416,7 +420,10 @@ const fridge_generator = {
           .trim();
         sentence_array.push(value)
         console.log(sentence_array);
-
+        console.log(value);
+        let poss_words = shownNext(value);
+        console.log(poss_words);
+        _.map(function(word){$("#" + word).toggleClass('clickable')}, poss_words);
         $(".selected-words")
           .append(" " + value)
         console.log(sentence_array);
