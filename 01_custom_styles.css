@@ -405,6 +405,13 @@ input[type="range"].replied::-webkit-slider-thumb {
   border-radius: 15px;
 }
 
+.black:hover {
+  background-color: black;
+  color: white;
+    border-radius: 15px;
+}
+
+
 .not-clickable {
   background-color: #a9a9a9;
   border: 3px solid #a9a9a9;
