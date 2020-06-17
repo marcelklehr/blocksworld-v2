@@ -53,7 +53,7 @@ trials_independent = function(){
 }
 
 // TRAIN DIFFERENT STEEPNESS OF RAMPS
-steepnessTrials = function(id_start){
+trials_ramp = function(){
   let meta_all = {steepness: ["low", "uncertain", "high"],
                   distance: ["uncertainH", "uncertainH", "uncertainH"]};
   let horiz_all = {steepness: [false, true, false],
@@ -109,7 +109,6 @@ steepnessTrials = function(id_start){
     });
     data[trial_id] = {objs: objs_dyn.concat(walls), meta, id: trial_id}
   });
-
   return data
 }
 
@@ -117,24 +116,23 @@ steepnessTrials = function(id_start){
 trials_uncertain = function(){
   let data = {}
   let meta = [["doesnt-fall", "falls-horiz", "train-uncertain"],
-              ["falls", "doesnt-fall-horiz", "train-uncertain"]
-            ];
-  let walls = Walls.train.uncertain[0];
-  let bA = blockOnBase(walls[0], 0.55, cols.train_blocks[1], "blockaA"); //doesnt fall
-  let bB = blockOnBase(walls[1], -0.5, cols.train_blocks[0], "blockbC", true); // falls
-  let dist1 = blockOnBase(walls[2], -0.509, cols.darkgrey, 'dist1', true);
+  ["falls", "doesnt-fall-horiz", "train-uncertain"]
+];
+let walls = Walls.train.uncertain[0];
+let bA = blockOnBase(walls[0], 0.55, cols.train_blocks[1], "blockaA"); //doesnt fall
+let bB = blockOnBase(walls[1], -0.5, cols.train_blocks[0], "blockbC", true); // falls
+let dist1 = blockOnBase(walls[2], -0.509, cols.darkgrey, 'dist1', true);
 
-  let bC = blockOnBase(walls[0], 0.5, cols.train_blocks[1], "blockcA"); // falls
-  let bD = blockOnBase(walls[1], -0.53, cols.train_blocks[0], "blockdC", true); // doesnt fall
-  let dist2 = blockOnBase(walls[2], -0.6, cols.darkgrey, 'dist2', true);
+let bC = blockOnBase(walls[0], 0.5, cols.train_blocks[1], "blockcA"); // falls
+let bD = blockOnBase(walls[1], -0.53, cols.train_blocks[0], "blockdC", true); // doesnt fall
+let dist2 = blockOnBase(walls[2], -0.6, cols.darkgrey, 'dist2', true);
 
-  [[bA, bB, dist1], [bC, bD, dist2]].forEach(function(blocks, i){
-    let id = "uncertain_" + i
-    data[id] = {objs: blocks.concat(walls),
-                meta: meta[i],id}
+[[bA, bB, dist1], [bC, bD, dist2]].forEach(function(blocks, i){
+  let id = "uncertain_" + i
+  data[id] = {objs: blocks.concat(walls),
+    meta: meta[i],id}
   });
-  let train_steepness = steepnessTrials(2);
-  return Object.assign(data, train_steepness)
+return data
 }
 
 // A implies C TRIALS
@@ -236,6 +234,7 @@ getTrainStimulus = function(kind, nb) {
 
 if (MODE === "train" || MODE === "experiment") {
   // generate all train stimuli!
+  TrainStimuli.map_category["ramp"] = trials_ramp();
   TrainStimuli.map_category["uncertain"] = trials_uncertain();
   // TrainStimuli.map_category["ac_2"] = trials_iff();
   // TrainStimuli.map_category["independent"] = trials_independent();
