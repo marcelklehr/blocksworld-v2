@@ -433,7 +433,7 @@ const fridge_generator = {
         //sentence = sentence.replace(/,/, " ");
         // console.log(sentence.replace(/,/, " "));
 
-        _checkBuildSentence(sentence_array, submitbutton)
+        checkBuildSentence(sentence_array, submitbutton)
         //sentence = sentence.replace(/,/, " ");
         // console.log(sentence);
       });
@@ -455,13 +455,12 @@ const fridge_generator = {
 
         update_clickables(value);
 
-        _checkBuildSentence(sentence_array, submitbutton);
+        checkBuildSentence(sentence_array, submitbutton);
       });
 
 
     $("#customWords")
       .on("click", function () {
-        console.log("komme ich in customWords an?");
 
         const minChars = config.data[CT].min_chars === undefined ? 10 : config.data[CT].min_chars;
 

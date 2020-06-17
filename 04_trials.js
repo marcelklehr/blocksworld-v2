@@ -522,19 +522,6 @@ _.map(fridge_trials, function (trial, i) {
   trial.sentence = [" "];
   trial.QUD = "How would you describe the following scene?";
 });
-console.log(fridge_trials);
 for (var i = 0; i < fridge_trials.length; i++) {
   fridge_trials[i] = _.omit(fridge_trials[i], ["icon1", "icon2", "icon3", "icon4", "question1", "question2", "question3", "question4"]);
 }
-console.log("hello");
-console.log(fridge_trials);
-
-//delete v.icon1;
-//delete v.icon2;
-
-
-//_.omit(fridge_trials, ["icon1", "icon2", "icon3", "icon4", "question1", "question2", "question3", "question4"]);
-//delete fridge_trials.icon1;
-
-
-console.log(fridge_trials);
