@@ -65,7 +65,7 @@ sortConditions = function(conditions){
  ac_1: [[pa, pc, "ac_1"], ...]
 **/
 getConditions = function(){
-  let keys = _.keys(PRIOR);
+  let keys = _.keys(PRIOR['vertical']);
   let probs = [];
   keys.forEach(function(p){
     let vals = new Array(keys.length).fill(p);

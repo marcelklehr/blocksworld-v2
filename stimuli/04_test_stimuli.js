@@ -29,9 +29,10 @@ testTrials_ac_2 = function(priors){
   let c2 = cols.test_blocks[colors[1]];
 
   let w = horiz[data.i_ramp] ? PROPS.blocks.h : PROPS.blocks.w;
+  let dir = horiz[data.i_ramp] ? 'horizontal' : 'vertical';
   let ps = [];
-  ps[0] = data.i_ramp === 0 ? (w + DIST_EDGE) / w : PRIOR[priors[0]];
-  ps[1] = data.i_ramp === 1 ? (w + DIST_EDGE) / w : PRIOR[priors[1]];
+  ps[0] = data.i_ramp === 0 ? (w + DIST_EDGE) / w : PRIOR[dir][priors[0]];
+  ps[1] = data.i_ramp === 1 ? (w + DIST_EDGE) / w : PRIOR[dir][priors[1]];
   let b1 = blockOnBase(bases[0], data.b_sides[0]*ps[0], c1, 'blockA', horiz[0]);
   let b2 = blockOnBase(bases[1], data.b_sides[1]*ps[1], c2, 'blockC', horiz[1]);
   let twoBlocks = [b1, b2];
@@ -56,8 +57,9 @@ testTrials_ac = function(priors){
 
   let h = PROPS.blocks.h;
   let bX = blockOnBase(walls[1], data.moveBLow * (h+DIST_EDGE)/h, cols.darkgrey, 'xBlockLow', true)
-  let b1 = blockOnBase(walls[0], PRIOR[priors[0]] * data.moveBUp, cols.test_blocks[colors[0]], 'blockA', true);
-  let b2 = blockOnBase(bX, PRIOR["low"] * data.moveBLow,
+  let b1 = blockOnBase(walls[0], PRIOR['horizontal'][priors[0]] * data.moveBUp,
+    cols.test_blocks[colors[0]], 'blockA', true);
+  let b2 = blockOnBase(bX, PRIOR['horizontal']["low"] * data.moveBLow,
     cols.test_blocks[colors[1]], 'blockC', true);
   let blocks = [b1, b2, bX, ramp.ball];
 
@@ -87,9 +89,11 @@ testTrials_ac_updated = function(priors){
     {'stick': {'w': 20, 'h': 25}, 'plank': {'w': 300, 'h': 10}});
   objs = objs.concat([ssw.skeleton])
 
-  let b1 = blockOnBase(walls[0], PRIOR[p1] * data.edge_blocks,
+  let dir1 = horiz[0] ? 'horizontal' : 'vertical'
+  let b1 = blockOnBase(walls[0], PRIOR[dir1][p1] * data.edge_blocks,
     cols.test_blocks[colors[0]], 'blockA', horiz[0]);
-  let b2 = blockOnBase(ramp.wall_bottom, data.edge_blocks * (b2_w + DIST_EDGE) / b2_w,
+  let b2 = blockOnBase(ramp.wall_bottom,
+    data.edge_blocks * (b2_w + DIST_EDGE) / b2_w,
     cols.test_blocks[colors[1]], 'blockC', horiz[1]);
 
   return [b1, b2, ball, ssw.plank, ssw.constraint].concat(objs)
@@ -105,7 +109,8 @@ testTrials_independent = function(priors){
   let ramp = makeRamp(horiz[1], priors[1], data.increase, data.walls[1], "top");
 
   let colors = assignColors();
-  let b1 = blockOnBase(data.walls[0], data.sides[0] * PRIOR[priors[0]],
+  let dir = horiz[0] ? 'horizontal' : 'vertical';
+  let b1 = blockOnBase(data.walls[0], data.sides[0] * PRIOR[dir][priors[0]],
     cols.test_blocks[colors[0]], "blockA", horiz[0])
   let w2 = horiz[1] ? PROPS.blocks.h : PROPS.blocks.w;
   let b2 = blockOnBase(ramp.wall_bottom, data.sides[1] * (w2 + DIST_EDGE) / w2,

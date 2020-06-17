@@ -38,9 +38,10 @@ trials_independent = function(){
     let walls = [W6].concat([ramp.tilted, ramp.wall_top, ramp.wall_bottom]);
     walls.unshift(bases[i]);
     let i_dist_col = block1.render.fillStyle === cols.train_blocks[0] ? 1 : 0;
-    let dist_horiz = (label === "blockC" || label === "blockD") ? true : false;
-    let distractor = blockOnBase(W4, -1 * PRIOR[meta[label][1]],
-      cols.train_blocks[i_dist_col], 'block_dist_right', dist_horiz);
+    let dir_dist = (label === "blockC" || label === "blockD") ?
+      {horiz: true, str: 'horizontal'} : {horiz: false, str: 'vertical'};
+    let distractor = blockOnBase(W4, -1 * PRIOR[dir_dist.str][meta[label][1]],
+      cols.train_blocks[i_dist_col], 'block_dist_right', dir_dist.horiz);
 
     walls = walls.concat([seesaw_dist.skeleton]);
     let objs = {'objs': [block1, distractor, ramp.ball, seesaw_dist.plank,
@@ -144,8 +145,8 @@ trials_ac = function(){
     // 'ac1': ["uncertain", "uncertainL", "train-a-implies-c-c-falls-but-slowly"]};
   let colors = {'ac0': [cols.train_blocks[1], cols.train_blocks[0]]};
                 // 'ac1': [cols.train_blocks[0], cols.train_blocks[1]]};
-  let horiz = {
-    'ac0': [true, true]};
+  let dir = {
+    'ac0': ['horizontal', 'horizontal']};
     // 'ac1': [false, true]}
 
   _.keys(colors).forEach(function(key, i){
@@ -153,8 +154,10 @@ trials_ac = function(){
     let cols = colors[key]
     let p1 = meta[key][0]
     let p2 = meta[key][1]
-    let b1 = blockOnBase(walls[0], -PRIOR[p1], cols[0], 'blockUp_' + key, horiz[key][0]);
-    let b2 = blockOnBase(walls[1], PRIOR[p2], cols[1], 'blockLow_' + key, horiz[key][1]);
+    let b1 = blockOnBase(walls[0], -PRIOR[dir[key][0]][p1], cols[0],
+      'blockUp_' + key, dir[key][0] == 'horizontal');
+    let b2 = blockOnBase(walls[1], PRIOR[dir[key][1]][p2], cols[1],
+      'blockLow_' + key, dir[key][1] == 'horizontal');
     let blocks = [];
 
     let w1Bounds = walls[1].bounds;
@@ -163,12 +166,14 @@ trials_ac = function(){
     walls.push(wx);
     // if(key === "ac1") {
     //   let ramp = rampElems("uncertainH", true, walls[0], false, test=false);
-    //   let w = horiz.ac1[0] ? PROPS.blocks.h : PROPS.blocks.w;
-    //   b1 = blockOnBase(walls[0], -1*(w+DIST_EDGE)/w , cols[0], 'blockUp_ac1', horiz.ac1[0]);
+    //   let w = dir.ac1[0] == 'horizontal' ? PROPS.blocks.h : PROPS.blocks.w;
+    //   b1 = blockOnBase(walls[0], -1*(w+DIST_EDGE)/w , cols[0], 'blockUp_ac1',
+    //    dir.ac1[0] == 'horizontal');
     //   walls = walls.concat(ramp);
     // } else if (key === "ac0") {
     // }
-    b2 = blockOnBase(wx, PRIOR[p2], cols[1], 'blockLow_' + key, horiz[key][1]);
+    b2 = blockOnBase(wx, PRIOR[dir[key][1]][p2], cols[1], 'blockLow_' + key,
+      dir[key][1] == 'horizontal');
     blocks = blocks.concat([b1, b2]);
     let id = "ac_1_" + i
     data[id] = {objs: blocks.concat(walls), meta: meta[key], id}
@@ -176,22 +181,22 @@ trials_ac = function(){
     return data
 }
 
-// Seesaw TRIALS
+// TRIALS with seesaw (kickoff/dont kickoff block)
 trials_iff = function(){
   data = {};
   let cs = cols.train_blocks;
-  let horiz = [[false, false], [true, true]]
-  let meta_data = [["uncertain", "low", "train-iff-vert"],
-                   ["high", "low", "train-iff-horiz"]]
-
-  meta_data.forEach(function(meta, i){
+  let dirs = [['vertical', 'vertical'], ['horizontal', 'horizontal']]
+  let meta_data = [["uncertain", "uncertainL", "uncertain-vert-seesaw-kick-off"],
+                   ["high", "low", "high-horiz-seesaw-dont-kickoff"]];
+  ['ac_2_0', 'ac_2_1'].forEach(function(id, i){
+    let meta = meta_data[i];
+    let horiz = dirs[i];
     let objs = Walls.train.seesaw_trials();
     let walls = objs.walls;
-    let b1 = block(walls[0].bounds.max.x, walls[0].bounds.min.y,cs[1], 'blockA', horiz[i][0]);
-    let b2 = block(walls[1].bounds.min.x + 2, walls[1].bounds.min.y,cs[0], 'blockC', horiz[i][1]);
-    // let bC = block(walls[0].bounds.max.x, walls[0].bounds.min.y,cs[1], 'blockA', horiz[1][0]);
-    // let bD = block(walls[1].bounds.min.x + 2, walls[1].bounds.min.y,cs[0], 'blockB', horiz[1][1]);
-    let id = "ac_2_" + i
+    let b1 = blockOnBase(walls[0], PRIOR[horiz[0]][meta[0]], cs[0], 'blockC',
+      horiz[0] == 'horizontal');
+    let b2 = blockOnBase(walls[1], -PRIOR[horiz[1]][meta[1]], cs[1], 'blockC',
+      horiz[1] == 'horizontal');
     data[id] = {objs: [b1, b2].concat(objs.dynamic).concat(walls), meta, id}
   });
   return data
@@ -234,9 +239,9 @@ getTrainStimulus = function(kind, nb) {
 
 if (MODE === "train" || MODE === "experiment") {
   // generate all train stimuli!
-  TrainStimuli.map_category["ramp"] = trials_ramp();
-  TrainStimuli.map_category["uncertain"] = trials_uncertain();
-  // TrainStimuli.map_category["ac_2"] = trials_iff();
+  // TrainStimuli.map_category["ramp"] = trials_ramp();
+  // TrainStimuli.map_category["uncertain"] = trials_uncertain();
+  TrainStimuli.map_category["ac_2"] = trials_iff();
   // TrainStimuli.map_category["independent"] = trials_independent();
   // TrainStimuli.map_category["ac_1"] = trials_ac();
   // put all train stimuli into array independent of kind
