@@ -25,7 +25,7 @@ let rules = {
   'not': ['V_I', 'V_AUX_I'],
   'and': ['the', 'MOD'],
   'but': ['not', 'the'],
-  'V_I': ['CONJ', 'the', 'also'],
+  'V_I': ['CONJ', 'the', 'also', 'nor'],
   'V': ['CONJ', 'the', 'also'],
   'V_AUX_I': ['the'],
   'V_AUX': ['the']
