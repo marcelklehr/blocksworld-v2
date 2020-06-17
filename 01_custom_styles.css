@@ -241,11 +241,6 @@ input[type="range"].replied::-webkit-slider-thumb {
   max-width: 75%;
 }
 
-#buttonNext {
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-
 .butt{
   border: none;
   border-radius: 2px;
@@ -462,8 +457,8 @@ input[type="range"].replied::-webkit-slider-thumb {
 
 
 #buttonNext {
-  /* margin-top: 0px;
-  margin-bottom: 0px; */
+  margin-top: 40px;
+  margin-bottom: 20px;
 }
 
 
