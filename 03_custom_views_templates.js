@@ -337,7 +337,6 @@ const fridge_generator = {
   },
 
 
-
   answer_container_gen: function (config, CT) {
 
     let start_words = _.flatten(shownNext('S'));

@@ -234,7 +234,7 @@ input[type="range"].replied::-webkit-slider-thumb {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 2px auto 0px auto; 
+  margin: 2px auto 0px auto;
 
 }
 
@@ -287,9 +287,8 @@ input[type="range"].replied::-webkit-slider-thumb {
 }
 
 .word {
-  background-color: #F8EFE5; /* #e6e3e3; #f5f7f5;Green */
+  background-color: #F8EFE5;
   border: none;
-  /* color: rgb(117, 198, 79); */
   padding: 16px 32px;
   text-align: center;
   text-decoration: none;
@@ -305,19 +304,15 @@ input[type="range"].replied::-webkit-slider-thumb {
    color: black;
    display: block;
    font-family: "Lato", "Noto Sans", sans-serif;
-   /* font-size: 12px; */
    line-height: 20px;
    font-weight: 700;
    letter-spacing: 0.9px;
-   /* margin: 40px auto 20px auto; */
-   /* outline: none;*/
    padding: 10px 20px;
    text-transform: uppercase;
 }
 
 
 .blue{
-  /* background-color: white; */
   color: black;
   border: 3px solid #4059AD;
   border-radius: 15px;
@@ -330,7 +325,6 @@ input[type="range"].replied::-webkit-slider-thumb {
 }
 
 .red{
-  /* background-color: white; */
   color: black;
   border: 3px solid #C75C5C;
   /*#911f1f; */
@@ -344,7 +338,6 @@ input[type="range"].replied::-webkit-slider-thumb {
 }
 
 .orange{
-  /* background-color: white; */
   color: black;
   border: 3px solid #F4B942;
     border-radius: 15px;
@@ -357,7 +350,6 @@ input[type="range"].replied::-webkit-slider-thumb {
 }
 
 .green{
-  /* background-color: white; */
   color: black;
   border: 3px solid #97D8C4;
     border-radius: 15px;
@@ -370,7 +362,6 @@ input[type="range"].replied::-webkit-slider-thumb {
 }
 
 .purple{
-  /* background-color: white; */
   color: black;
   border: 3px solid #6B9AC4;
     border-radius: 15px;
@@ -383,7 +374,6 @@ input[type="range"].replied::-webkit-slider-thumb {
 }
 
 .black {
-  /* background-color: white; */
   color: black;
   border: 3px solid black;
   border-radius: 15px;
@@ -422,7 +412,6 @@ input[type="range"].replied::-webkit-slider-thumb {
     padding: 16px 32px;
 }
 
-
 #buttonDelete{
   margin: 0px;
   position: absolute;
@@ -434,7 +423,6 @@ input[type="range"].replied::-webkit-slider-thumb {
   margin: 0px;
   position: absolute;
   right: 10%;
-  /* background-color: green; */
 }
 
 
