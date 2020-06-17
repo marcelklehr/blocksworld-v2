@@ -517,11 +517,6 @@ const fridge_generator = {
         .addClass("magpie-nodisplay");
     });
 
-    // $("#customWords")
-    //   .on("click", function () {
-    //     button.removeClass("magpie-nodisplay");
-    //   });
-
     button.on("click", function () {
       const RT = Date.now() - startingTime; // measure RT before anything else
       // let responseData = saveTrialQA();
