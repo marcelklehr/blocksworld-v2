@@ -187,7 +187,7 @@ trials_iff = function(){
   let cs = cols.train_blocks;
   let dirs = [['vertical', 'vertical'], ['horizontal', 'horizontal']]
   let meta_data = [["uncertain", "uncertainL", "uncertain-vert-seesaw-kick-off"],
-                   ["high", "low", "high-horiz-seesaw-dont-kickoff"]];
+                   ["uncertain", "low", "high-horiz-seesaw-dont-kickoff"]];
   ['ac_2_0', 'ac_2_1'].forEach(function(id, i){
     let meta = meta_data[i];
     let horiz = dirs[i];
