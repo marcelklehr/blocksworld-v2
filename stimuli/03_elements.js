@@ -53,7 +53,6 @@ makeRamp = function(horiz, prior, increase, w1, label1="bottom", test=true) {
 seesaw = function(x, y_base_min=SCENE.h - PROPS.bottom.h, props={}){
   props = Object.keys(props).length == 0 ? PROPS.seesaw :
     Object.assign({}, PROPS.seesaw, props);
-
   let y = y_base_min - props.stick.h / 2;
   let stick = wall('stick', x, y,
     props.stick.w, props.stick.h, {render: {fillStyle: cols.darkgrey}});
@@ -81,21 +80,30 @@ seesaw = function(x, y_base_min=SCENE.h - PROPS.bottom.h, props={}){
 
 W_IF_UP1 = wall('wall_ac_up', 600, 90, 150),
 W_IF_UP2 = wall('wall_ac_up', 150, 90, 150),
-W_IF_BASE = wall('wall_base_seesaw', 375, 185, 80)
-
-W_IF_RAMP_TOP = function(side){
-  let move_x = side == "right" ? 1 : - 1;
-  let x = W_IF_BASE.position.x + move_x * 40 + move_x * PROPS.walls.w / 2;
-  let y = W_IF_BASE.position.y + 67;
-  return wall('ramp_top', x, y);
-}
+W_AC1_BASE = wall('wall_base_seesaw', 375, 185, PROPS.ac1_base_ssw.w,
+ PROPS.ac1_base_ssw.h)
 
 // The first two list entries are respectively the bases for block1 and block2
+wallsIf1 = function(side, horiz, prior){
+  let dat = side == "right" ? {w_up: W_IF_UP1, move_x: 1, increase: true} :
+  {w_up: W_IF_UP2, move_x: -1, increase: false};
+  let base_ssw = W_AC1_BASE;
+  let x = W_AC1_BASE.position.x + dat.move_x * 40 + dat.move_x * PROPS.walls.w/2
+  let y = W_AC1_BASE.position.y + 67;
+  let ramp_top = wall('ramp_top', x, y);
+  let ramp = makeRamp(horiz, prior, dat.increase, ramp_top, "top")
+  Body.setPosition(ramp.ball, {x: ramp.ball.position.x + 40 * dat.move_x,
+    y: ramp.ball.position.y});
+  let ssw = seesaw(base_ssw.position.x, base_ssw.bounds.min.y, PROPS.ac1_ssw);
+  return {walls: [dat.w_up, ramp.wall_bottom, ramp_top, ramp.tilted, base_ssw, ssw.skeleton],
+    dynamic: [ramp.ball, ssw.plank, ssw.constraint]}
+}
+
 Walls.test = {'independent': [[W_UP1, W_LOW1], [W_UP2, W_LOW2]],
-              'ac_1': [[W_IF_UP1,  W_IF_BASE],
-                              [W_IF_UP2,  W_IF_BASE]],
+              'ac_1': wallsIf1,
               'ac_2': []
               };
+
 
 Walls.test.seesaw_trials = function(prior, side_ramp, offset=PROPS.seesaw.d_to_walls){
   let y_bases = 220;
@@ -126,19 +134,12 @@ Walls.train.distance = [wall('w_ramp1', 150, 80, W_BASE_RAMP["low"]),
   wall('w_ramp2', 150, 180, W_BASE_RAMP["uncertain"]),
   wall('w_ramp3', 150, 300, W_BASE_RAMP["high"])];
 
-Walls.train.ac_1 = function(){
-  return [wall('wall_ac_top', 580, 150, W_BASE_RAMP.default),
-          wall('wall_ac_low', 390, 320)];
-}
+Walls.train.ac_1 = wallsIf1
+
 
 Walls.train.seesaw_trials = function(){
   let objs = seesaw(SCENE.w/2 - 30, SCENE.h - PROPS.bottom.h,
     props={'plank': {'w': 280, 'h': 10}});
-  // let angle = 45;
-  // let ramp = wall('ramp', 200, 175, Math.pow(10,2)*Math.sqrt(2), PROPS.walls.h,
-  //   OPTS['ramp'+angle]);
-  // Body.setAngle(ramp, radians(angle));
-  // first two elements are bases for blocks!
   let walls = [wall('wallTopLeft', 150, 155, 100),
                wall('wall_seesaw_right', 600, 240, 175)].concat([objs.skeleton]);
   return {'walls': walls, 'dynamic': [objs.plank, objs.constraint]}

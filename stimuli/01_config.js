@@ -13,7 +13,9 @@ PROPS = {'blocks': {'w':40, 'h': 80},
          'seesaw': {'d_to_walls': 5,
                     'stick': {'w': 20, 'h': 95},
                     'plank': {'w': 220, 'h': 10},
-                    'link': {'w': 5, 'h': 10}}
+                    'link': {'w': 5, 'h': 10}},
+         'ac1_ssw': {'stick': {'w': 20, 'h': 25}, 'plank': {'w': 300, 'h': 10}},
+         'ac1_base_ssw': {w: 80, h: 12}
        };
 
 OPTS = {

@@ -71,32 +71,23 @@ testTrials_ac_updated = function(priors){
   let p1 = priors[0];
   let p2 = priors[1];
   let horiz =  HORIZ_AC[p1[0]+p2[0]];
-  let b1_w = horiz[0] ? PROPS.blocks.h : PROPS.blocks.w;
   let b2_w = horiz[1] ? PROPS.blocks.h : PROPS.blocks.w;
 
   let data = ['ll', 'hl', 'uh', 'uu'].includes(p1[0]+p2[0]) ?
   {edge_blocks: -1, increase: true, idx_w: 0, moveBall: 1, side:"right"} :
   {edge_blocks: 1, increase: false, idx_w: 1, moveBall: -1, side:"left"};
 
-  let walls = Walls.test["ac_1"][data.idx_w];
-  let ramp_top = W_IF_RAMP_TOP(data.side);
-  let ramp = makeRamp(horiz, p2, data.increase, ramp_top, "top")
-  let ball = ramp.ball
-  Body.setPosition(ball, {x: ball.position.x + 40 * data.moveBall, y: ball.position.y})
-  let objs = _.filter(_.values(ramp), function(o){return o.label !== "ball1"}).concat(walls);
-
-  let ssw = seesaw(walls[1].position.x, walls[1].bounds.min.y,
-    {'stick': {'w': 20, 'h': 25}, 'plank': {'w': 300, 'h': 10}});
-  objs = objs.concat([ssw.skeleton])
+  let objs = Walls.test.ac_1(data.side, horiz, p2)
 
   let dir1 = horiz[0] ? 'horizontal' : 'vertical'
-  let b1 = blockOnBase(walls[0], PRIOR[dir1][p1] * data.edge_blocks,
+  let b1 = blockOnBase(objs.walls[0], PRIOR[dir1][p1] * data.edge_blocks,
     cols.test_blocks[colors[0]], 'blockA', horiz[0]);
-  let b2 = blockOnBase(ramp.wall_bottom,
+  let b2 = blockOnBase(objs.walls[1],
     data.edge_blocks * (b2_w + DIST_EDGE) / b2_w,
     cols.test_blocks[colors[1]], 'blockC', horiz[1]);
 
-  return [b1, b2, ball, ssw.plank, ssw.constraint].concat(objs)
+  let blocks = [b1, b2].concat(objs.dynamic);
+  return blocks.concat(objs.walls)
 }
 
 testTrials_independent = function(priors){
