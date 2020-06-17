@@ -5,7 +5,7 @@ let placeholder = {
   'DET_N': ['neither', 'nor'],
   'COL': ['green', 'blue'],
   'CONJ': ['and', 'but', 'because of'],
-  'MOD': ['probably', 'likely', 'defenitely', 'maybe', 'also'],
+  'MOD': ['probably', 'likely', 'defenitely', 'maybe', 'also', 'only'],
   'V_I': ['fall'],
   'V': ['falls'],
   'V_AUX_I': ['make', 'cause'],
@@ -36,7 +36,7 @@ let rules = {
 // due to?
 let word_groups = [
   {
-    words: ["maybe", "likely", "probably", 'defenitely', 'also'],
+    words: ["maybe", "likely", "probably", 'defenitely', 'also', 'only'],
     col: 'green'
   },
   {
