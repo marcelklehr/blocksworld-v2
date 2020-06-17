@@ -244,3 +244,16 @@ _checkBuildSentence = function (sentenceArray, button2Toggle) {
     button2Toggle.addClass("grid-button");
   }
 }
+
+update_clickables = function (lastSelected) {
+  WORDS.forEach(function (word) {
+    $("#" + word.replace(/\s/g, ''))
+      .addClass('not-clickable');
+  })
+  let poss_words = shownNext(lastSelected);
+  poss_words.forEach(function (word) {
+    $("#" + word)
+      .toggleClass('not-clickable');
+  });
+
+}

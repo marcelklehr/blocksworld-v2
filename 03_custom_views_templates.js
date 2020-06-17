@@ -341,12 +341,13 @@ const fridge_generator = {
   answer_container_gen: function (config, CT) {
 
     let start_words = _.flatten(shownNext('S'));
+
     function return_word_array(array, color) {
       return array.map((word, index) => {
-        let clickable = start_words.includes(word) ? ' ' : ' not-clickable ';
+          let clickable = start_words.includes(word) ? ' ' : ' not-clickable ';
           return (
-            `<div class="word ` + color +  clickable + `"id=` +
-            word.replace(/\s/g,'') +` >
+            `<div class="word ` + color + clickable + `"id=` +
+            word.replace(/\s/g, '') + ` >
             <p> ` +
             word +
             ` </p>
@@ -421,16 +422,9 @@ const fridge_generator = {
           .replace(/(\r\n|\n|\r)/gm, " ")
           .trim();
         sentence_array.push(value)
-        // console.log(sentence_array);
-        WORDS.forEach(function(word){
-          $("#" + word.replace(/\s/g,'')).addClass('not-clickable');
-        })
-        let poss_words = shownNext(value);
-        console.log(poss_words);
-        poss_words.forEach(function(word){
-          console.log(word)
-          $("#" + word).toggleClass('not-clickable');
-        });
+
+        update_clickables(value);
+
         $(".selected-words")
           .append(" " + value)
         // console.log(sentence_array);
@@ -456,8 +450,11 @@ const fridge_generator = {
         $(".selected-words")
           .append(sentence);
 
-        // dont remember if this is important
         config.data[CT].sentence = sentence;
+
+        let value = _.last(sentence_array)
+
+        update_clickables(value);
 
         _checkBuildSentence(sentence_array, submitbutton);
       });
