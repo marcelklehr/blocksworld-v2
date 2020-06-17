@@ -269,12 +269,12 @@ input[type="range"].replied::-webkit-slider-thumb {
 /* ab hier code für fridge-view */
 /* code for fridge box */
 .fix-box {
-  width: 80%;
+  width: 90%;
   display: run-in;
   align-items: center;
   align-content: center;
-  padding-left: 10%;
-  padding-right: 10%;
+  padding-left: 5%;
+  padding-right: 5%;
 }
 
 .fridge {

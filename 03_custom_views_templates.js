@@ -389,7 +389,7 @@ const fridge_generator = {
       </div>
       <div class = "buttons">
         <button id ='customWords' class="magpie-view-button custom-words magpie-nodisplay"> Use my own words </button>
-        <button id='buttonNext' class='magpie-view-button grid-button'>Next scenario</button>
+        <button id='buttonNext' class='magpie-view-button magpie-nodisplay'>Next scenario</button>
       </div>
       <br><br/>
 
@@ -504,7 +504,8 @@ const fridge_generator = {
     //addCheckResponseFunctionality(button);
 
     submitbutton.on("click", function () {
-      toggleNextIfDone($("#buttonNext"), true);
+      $("#buttonNext")
+        .removeClass("magpie-nodisplay")
       $("#customWords")
         .removeClass("magpie-nodisplay");
       toggleNextIfDone($("#customWords"), true);
