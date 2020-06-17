@@ -54,43 +54,62 @@ trials_independent = function(){
 
 // TRAIN DIFFERENT STEEPNESS OF RAMPS
 steepnessTrials = function(id_start){
-  let meta_all = [["low", "uncertainH", "high", "train0-ball-high-low-steepness"],
-                  ["low", "high", "uncertainLL", "train1-ball-high-low-steepness"]];
-  let horiz_all = [[false, true, false], [true, true, false]];
+  let meta_all = {steepness: ["low", "uncertain", "high"],
+                  distance: ["uncertainH", "uncertainH", "uncertainH"]};
+  let horiz_all = {steepness: [false, true, false],
+                   distance: [true, true, false]};
   let colors = [cols.train_blocks, cols.train_blocks.reverse()];
   let data = {};
-
-  ["horizontal", "vertical"].forEach(function(direction, i) {
-    let walls = Array.from(Walls.train.uncertain[1]);
-    let trial_id = "uncertain_" + (i + id_start);
-    let w_bottom = SCENE.w - walls[0].bounds.max.x;
-    let bottom = wall(label='bottom_half', x=walls[0].bounds.max.x + w_bottom / 2,
-    y=SCENE.h - PROPS.bottom.h/2, w=w_bottom, h=PROPS.bottom.h);
+  ["steepness", "distance"].forEach(function(trial_id, i) {
+    let meta = meta_all[trial_id];
+    let horiz = horiz_all[trial_id];
+    // add walls
+    let walls = Walls.train[trial_id]
+    let w_bottom = SCENE.w - walls[2].bounds.max.x;
+    let bottom = wall(label='bottom_half',
+                      x=walls[0].bounds.max.x + w_bottom / 2,
+                      y=SCENE.h - PROPS.bottom.h/2,
+                      w=w_bottom, h=PROPS.bottom.h);
     walls.push(bottom);
-    let meta = meta_all[i];
-    let horiz = horiz_all[i];
+    // add ramp walls
+    let loc = trial_id == "steepness" ? "bottom" : "top";
+    let ramp1 = makeRamp(horiz[0], meta[0], false, walls[0], loc, false)
+    let ramp2 = makeRamp(horiz[1], meta[1], false, walls[1], loc, false)
+    let ramp3 = makeRamp(horiz[2], meta[2], false, walls[2], loc, false)
+    ramp2.ball.label = 'ball2'; ramp3.ball.label = 'ball3';
+    let adjust_wall = function(wall, ref) {
+      const pos_x = ref.x_min + (ref.x_max - ref.x_min) / 2;
+      let width = wall.bounds.max.x - wall.bounds.min.x;
+      Body.setPosition(wall, {x: pos_x, y: wall.position.y});
+      Body.scale(wall, (ref.x_max - ref.x_min) / width, 1);
+    }
+    let ref = trial_id == "steepness" ?
+      [{x_min: ramp1.wall_top.bounds.min.x, x_max: ramp1.wall_top.bounds.max.x},
+       {x_min: ramp1.wall_top.bounds.min.x, x_max: ramp1.wall_top.bounds.max.x}] :
+      [{x_min: ramp1.wall_top.bounds.min.x, x_max: ramp2.wall_top.bounds.max.x},
+       {x_min: ramp1.wall_top.bounds.min.x, x_max: ramp3.wall_top.bounds.max.x}];
+    adjust_wall(ramp2.wall_top, ref[0]);
+    adjust_wall(ramp3.wall_top, ref[1]);
+    // add blocks
     let prop_on_base = [];
     horiz.forEach(function(d){
       let w_horiz = d ? PROPS.blocks.h :PROPS.blocks.w;
       prop_on_base.push((w_horiz+DIST_EDGE)/w_horiz);
     })
-
-    let ramp1 = makeRamp(horiz, meta[0], false, walls[0], "bottom", false)
-    let ramp2 = makeRamp(horiz, meta[1], false, walls[1], "bottom", false)
-    let ramp3 = makeRamp(horiz, meta[2], false, walls[2], "bottom", false)
-    ramp2.ball.label = 'ball2';
-    ramp3.ball.label = 'ball3';
-    let w_horiz = PROPS.blocks.h; let w_vert = PROPS.blocks.w;
-    let b1 = blockOnBase(walls[0], prop_on_base[0], colors[i][1], "blockA", horiz[0]);
-    let b2 = blockOnBase(walls[1], prop_on_base[1], colors[i][0], "blockC", horiz[1]);
-    let b3 = blockOnBase(walls[2], prop_on_base[2], cols.darkgrey, "block3", horiz[2]);
+    let bases = loc == "bottom" ? walls :
+      [ramp1.wall_bottom, ramp2.wall_bottom, ramp3.wall_bottom];
+    let b1 = blockOnBase(bases[0], prop_on_base[0], colors[i][1], "blockA", horiz[0]);
+    let b2 = blockOnBase(bases[1], prop_on_base[1], colors[i][0], "blockC", horiz[1]);
+    let b3 = blockOnBase(bases[2], prop_on_base[2], cols.darkgrey, "block3", horiz[2]);
 
     let objs_dyn = [b1, ramp1.ball, b2, ramp2.ball, b3, ramp3.ball];
-    [ramp1, ramp2, ramp3].forEach(function(ramp){
-      walls = walls.concat([ramp.tilted, ramp.wall_top]);
+    [ramp1, ramp2, ramp3].forEach(function(ramp, i){
+      walls.push(ramp.tilted);
+      loc=="bottom" ? walls.push(ramp.wall_top) : walls.push(ramp.wall_bottom);
     });
     data[trial_id] = {objs: objs_dyn.concat(walls), meta, id: trial_id}
   });
+
   return data
 }
 
@@ -115,7 +134,6 @@ trials_uncertain = function(){
                 meta: meta[i],id}
   });
   let train_steepness = steepnessTrials(2);
-
   return Object.assign(data, train_steepness)
 }
 
@@ -218,10 +236,10 @@ getTrainStimulus = function(kind, nb) {
 
 if (MODE === "train" || MODE === "experiment") {
   // generate all train stimuli!
-  TrainStimuli.map_category["ac_2"] = trials_iff();
   TrainStimuli.map_category["uncertain"] = trials_uncertain();
-  TrainStimuli.map_category["independent"] = trials_independent();
-  TrainStimuli.map_category["ac_1"] = trials_ac();
+  // TrainStimuli.map_category["ac_2"] = trials_iff();
+  // TrainStimuli.map_category["independent"] = trials_independent();
+  // TrainStimuli.map_category["ac_1"] = trials_ac();
   // put all train stimuli into array independent of kind
   let train_keys = _.keys(TrainStimuli.map_category);
   train_keys.forEach(function(kind){

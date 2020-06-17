@@ -34,8 +34,9 @@ cols.plank = cols.blue
 cols.test_blocks = [cols.green, cols.royal];
 cols.train_blocks = [cols.bordeaux, cols.darkyellow];
 
-ball_colors = {'test': cols.darkred,
+const COLORS_BALL = {'test': cols.darkred,
   'train': {'38': cols.turquois, '35': cols.blue,
+  '29': cols.red, '27': cols.yellow,
   '28': cols.red, '25': cols.pinkish , '23': cols.orange, '20': cols.purple}}
 
 let block_cols = {

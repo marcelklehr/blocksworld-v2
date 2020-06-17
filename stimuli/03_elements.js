@@ -1,4 +1,4 @@
-let Walls = {'test': {}, 'train': {}, 'tilted': {}};
+ let Walls = {'test': {}, 'train': {}, 'tilted': {}};
 
 // ground of scene
 const Bottom = wall(label='bottom', x=SCENE.w/2, y=SCENE.h - PROPS.bottom.h/2,
@@ -22,10 +22,10 @@ makeRamp = function(horiz, prior, increase, w1, label1="bottom", test=true) {
   let overlap = OVERLAP_SHIFT["angle" + angle];
   let label2 = label1 === "bottom" ? "top" : "bottom";
 
-  let dat = increase && label1 === "top" ? {rx: "min", ry: "min", x: -1, y: 1} :
-            increase && label1 === "bottom" ? {rx: "max", ry: "max", x: 1, y: -1} :
-            label1 === "top" ? {rx: "max", ry: "min", x: 1, y: 1}
-                             : {rx: "min", ry: "max", x: -1, y: -1};
+  let dat = increase && label1 === "top" ? {rx: "min", ry: "min", x: -1, y: 1, shift: 1} :
+            increase && label1 === "bottom" ? {rx: "max", ry: "max", x: 1, y: -1, shift: -1} :
+            label1 === "top" ? {rx: "max", ry: "min", x: 1, y: 1, shift: 1}
+                             : {rx: "min", ry: "max", x: -1, y: -1, shift: 1};
   // 1. sin(angle) = h/w_tillted and 2. h² + w_low² = ramp²
   let r = increase ? radians(360 - angle) : radians(angle);
   let ramp_width = Math.sqrt(Math.pow(100, 2) / (1 - Math.pow(Math.sin(r), 2)))
@@ -37,17 +37,17 @@ makeRamp = function(horiz, prior, increase, w1, label1="bottom", test=true) {
   let x2 = dat.x == 1 ? "max" : "min";
   let y2 = dat.y == 1 ? "max" : "min";
   let w2 = wall(label = 'ramp_' + label2 + angle,
-    ramp.bounds[x2].x + dat.x * width_w2/2 - dat.x * overlap,
+    ramp.bounds[x2].x + dat.x * width_w2/2 - dat.x * overlap * dat.shift,
     ramp.bounds[y2].y - dat.y * PROPS.walls.h/2, width_w2);
 
   dat.walls = label1==="bottom" ? {'top': w2, 'bottom': w1} : {'top': w1, 'bottom': w2};
   dat.x_ball = increase ? dat.walls.top.bounds.min.x - PROPS.balls.move_to_roll : dat.walls.top.bounds.max.x + PROPS.balls.move_to_roll;
-  let col_ball = test ? ball_colors.test : ball_colors.train[angle.toString()];
+  let col_ball = test ? COLORS_BALL.test : COLORS_BALL.train[angle.toString()];
   let ball1 = ball(dat.x_ball, dat.walls.top.bounds.min.y - PROPS.balls.radius,
     PROPS.balls.radius, 'ball1', col_ball);
 
   return {'tilted': ramp, 'wall_top': dat.walls.top,
-   'wall_bottom': dat.walls.bottom, 'ball': ball1}
+   'wall_bottom': dat.walls.bottom, 'ball': ball1, 'angle': angle}
 }
 
 seesaw = function(x, y_base_min=SCENE.h - PROPS.bottom.h, props={}){
@@ -116,10 +116,15 @@ Walls.test.seesaw_trials = function(prior, side_ramp, offset=PROPS.seesaw.d_to_w
 let W8 = wall('w8_middle_left', 0.3 * SCENE.w, SCENE.h/3);
 let W9 = wall('w9_middle_right', (3/4) * SCENE.w, SCENE.h/3);
 let W10 = wall('w10_right_low', (2/3) * SCENE.w, (3/4) * SCENE.h);
-let W11 = wall('w11_top', 400, 120, W_BASE_RAMP.default)
-let W12 = wall('w12_middle', 400, 230, W_BASE_RAMP.default)
-let W13 = wall('w13_down', 400, 350, W_BASE_RAMP.default)
-Walls.train.uncertain = [[W8, W9, W10], [W11, W12, W13]]
+Walls.train.uncertain = [[W8, W9, W10]];
+
+Walls.train.steepness = [wall('w_ramp1', SCENE.w/2, 100, W_BASE_RAMP.default),
+  wall('w_ramp2', SCENE.w/2, 220, W_BASE_RAMP.default),
+  wall('w_ramp3', SCENE.w/2, 340, W_BASE_RAMP.default)];
+
+Walls.train.distance = [wall('w_ramp1', 150, 80, W_BASE_RAMP["low"]),
+  wall('w_ramp2', 150, 180, W_BASE_RAMP["uncertain"]),
+  wall('w_ramp3', 150, 300, W_BASE_RAMP["high"])];
 
 Walls.train.ac_1 = function(){
   return [wall('wall_ac_top', 580, 150, W_BASE_RAMP.default),
@@ -127,13 +132,14 @@ Walls.train.ac_1 = function(){
 }
 
 Walls.train.seesaw_trials = function(){
-  let objs = seesaw(SCENE.w/2)
-  let angle = 45;
-  let ramp = wall('ramp', 200, 175, Math.pow(10,2)*Math.sqrt(2), PROPS.walls.h,
-    OPTS['ramp'+angle]);
-  Body.setAngle(ramp, radians(angle));
+  let objs = seesaw(SCENE.w/2 - 30, SCENE.h - PROPS.bottom.h,
+    props={'plank': {'w': 280, 'h': 10}});
+  // let angle = 45;
+  // let ramp = wall('ramp', 200, 175, Math.pow(10,2)*Math.sqrt(2), PROPS.walls.h,
+  //   OPTS['ramp'+angle]);
+  // Body.setAngle(ramp, radians(angle));
   // first two elements are bases for blocks!
-  let walls = [wall('wallTopLeft', 100, 125, 100),
-               wall('wall_seesaw_right', 600, 240, 175), ramp].concat([objs.skeleton]);
+  let walls = [wall('wallTopLeft', 150, 155, 100),
+               wall('wall_seesaw_right', 600, 240, 175)].concat([objs.skeleton]);
   return {'walls': walls, 'dynamic': [objs.plank, objs.constraint]}
 }

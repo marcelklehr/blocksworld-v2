@@ -1,4 +1,4 @@
-const DEBUG = false;
+const DEBUG = true;
 // var MODE = "color-vision"
 // var MODE = "train"
 var MODE = "test"
@@ -29,7 +29,7 @@ let PRIOR = {'high': 0.35, 'uncertain': 0.505, 'low': 0.70, 'uncertainL': 0.52}
 
 // shift of ramp walls such that there is no edge
 let OVERLAP_SHIFT = {
-  "angle42": 15, "angle40": 22, "angle38": 19, "angle35": 16,  "angle30": 12,
+  "angle42": 15, "angle40": 15, "angle38": 19, "angle35": 16,  "angle30": 12,
   "angle29": 12, "angle28": 13, "angle27": 12, "angle26": 12, "angle25": 12,
   "angle23": 10, "angle20": 9,
 }
@@ -50,7 +50,7 @@ let ANGLES = {
 // let PRETEST_ANGLES = [22, 24, 26, 28, 30, 32, 35, 40, 43, 20, 33, 29, 31, 37];
 let PRETEST_ANGLES = _.range(45);
 let W_BASE_RAMP = {'default': 200, 'high': 150, 'uncertain': 200, 'low': 250,
-                   'uncertainL': 200, 'uncertainH': 200};
+                   'uncertainL': 225, 'uncertainH': 175};
 
 // when uncertainty comes from balls, this dist is left towards the edge of platform
 let DIST_EDGE = 5;
