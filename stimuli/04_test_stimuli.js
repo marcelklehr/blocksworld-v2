@@ -2,14 +2,14 @@ let TestStimuli = {"independent": {}, "ac_1": {}, "ac_2": {}};
 
 // IMPORTANT: DYNAMIC BLOCKS HAVE TO BE ADDED BEFORE STATIC OBJECTS, OTHERWISE
 // THEY WILL FALL VERY ODD (JITTERING)
-testTrials_ac_2 = function(priors){
+testTrials_ac2 = function(priors){
   let pp = priors[0][0] + priors[1][0]
   let horiz = HORIZ_IFF[pp];
   let data = priors[0] !== priors[1] ?
     {side_ramp: "left", i_ramp: 0, b_sides: [1,1], prior: priors[0], 'increase': 0}:
     {side_ramp: "right", i_ramp: 1, b_sides: [-1,-1], prior: priors[1], 'increase': 1};
 
-  let seesaw = Walls.test.seesaw_trials(data.prior, data.side_ramp)
+  let seesaw = Walls.test.seesaw_ac2(data.prior, data.side_ramp)
   let ramp = makeRamp(horiz[data.i_ramp], priors[data.i_ramp], data.increase,
     seesaw.walls[data.i_ramp]);
   let objs = seesaw.dynamic.concat([ramp.ball]);
@@ -40,33 +40,7 @@ testTrials_ac_2 = function(priors){
   return blocks.concat(xBlock).concat(objs);
 }
 
-testTrials_ac = function(priors){
-  // first block is on top of a wall, second block on top of an extra block
-  let colors = assignColors();
-  let p1 = priors[0];
-  let p2 = priors[1];
-  let data = ['ll', 'hl'].includes(p1[0]+p2[0]) ?
-    {moveBLow: 1, moveBUp: -1, increase: false, idx_w: 0, edge_bX: "max"} :
-    {moveBLow: -1, moveBUp: 1, increase: true, idx_w: 1, edge_bX: "min"};
-
-  let w_low = wall('wall_ac_low', 325, 290, W_BASE_RAMP.default);
-  let ws = [[wall('wall_ac_top', 550, 100), w_low], [wall('wall_ac_top', 100, 100), w_low]];
-  let walls = ws[data.idx_w];
-  let ramp = makeRamp(true, p2, data.increase, walls[1]);
-  let objs = [ramp.tilted, ramp.wall_top].concat(walls);
-
-  let h = PROPS.blocks.h;
-  let bX = blockOnBase(walls[1], data.moveBLow * (h+DIST_EDGE)/h, cols.darkgrey, 'xBlockLow', true)
-  let b1 = blockOnBase(walls[0], PRIOR['horizontal'][priors[0]] * data.moveBUp,
-    cols.test_blocks[colors[0]], 'blockA', true);
-  let b2 = blockOnBase(bX, PRIOR['horizontal']["low"] * data.moveBLow,
-    cols.test_blocks[colors[1]], 'blockC', true);
-  let blocks = [b1, b2, bX, ramp.ball];
-
-  return blocks.concat(objs)
-}
-
-testTrials_ac_updated = function(priors){
+testTrials_ac1 = function(priors){
   let colors = assignColors();
   let p1 = priors[0];
   let p2 = priors[1];
@@ -124,9 +98,8 @@ makeTestStimuli = function(conditions, relations){
       let pb2 = priors[1]
       let id = rel + '_' + pb1[0] + pb2[0];
       let blocks = rel === "ac_2" ?
-        testTrials_ac_2(priors) : rel === "ac_1" ?
-        testTrials_ac_updated(priors) : rel === "independent" ?
-        // testTrials_ac(priors) : rel === "independent" ?
+        testTrials_ac2(priors) : rel === "ac_1" ?
+        testTrials_ac1(priors) : rel === "independent" ?
         testTrials_independent(priors) : null;
       TestStimuli[rel][id] = {"objs": blocks, "meta": priors};
     }

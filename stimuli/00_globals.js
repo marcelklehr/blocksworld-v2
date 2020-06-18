@@ -34,16 +34,20 @@ cols.plank = cols.blue
 cols.test_blocks = [cols.green, cols.royal];
 cols.train_blocks = [cols.bordeaux, cols.darkyellow];
 
-const COLORS_BALL = {'test': cols.darkred,
-  'train': {'38': cols.turquois, '35': cols.blue,
-  '29': cols.red, '27': cols.yellow,
-  '28': cols.red, '25': cols.pinkish , '23': cols.orange, '20': cols.purple}}
+const COLORS_BALL = {
+  'test': cols.darkred,
+  'train': {'40': cols.olive,
+            '38': cols.turquois, '35': cols.blue,
+            '30': cols.red, '29': cols.red, '28': cols.red,
+            '27': cols.yellow, '25': cols.pinkish , '23': cols.orange,
+            '20': cols.purple}
+  };
 
-let block_cols = {
+let BLOCK_COLS = {
   test: ['blue', 'green'],
   train: ['red', 'yellow']
 }
-let block_cols_short = {
-  test: [block_cols.test[0][0], block_cols.test[1][0]],
-  train: [block_cols.train[0][0], block_cols.train[1][0]]
+let BLOCK_COLS_SHORT = {
+  test: [BLOCK_COLS.test[0][0], BLOCK_COLS.test[1][0]],
+  train: [BLOCK_COLS.train[0][0], BLOCK_COLS.train[1][0]]
 }

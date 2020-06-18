@@ -31,19 +31,19 @@ sliderIcons = function (cols) {
   return id2Html;
 }
 
-// let id2Icon = sliderTexts(block_cols.test);
-let id2Icon = sliderIcons(block_cols.test);
-let text_sliders = sliderTexts(block_cols.test);
+// let id2Icon = sliderTexts(BLOCK_COLS.test);
+let id2Icon = sliderIcons(BLOCK_COLS.test);
+let text_sliders = sliderTexts(BLOCK_COLS.test);
 
-let id2IconTrain = sliderIcons(block_cols.train);
-// let id2IconTrain = sliderTexts(block_cols.train);
+let id2IconTrain = sliderIcons(BLOCK_COLS.train);
+// let id2IconTrain = sliderTexts(BLOCK_COLS.train);
 let text_train_buttons = {
-  'short': {ac: block_cols_short.train.join(''), a: block_cols_short.train[0],
-            c: block_cols_short.train[1], none: 'none'},
-  'long': {'ac': block_cols.train[0] + " and " + block_cols.train[1],
-    'a': block_cols.train[0] + " but <b>not</b> " + block_cols.train[1],
-    'c': "<b>Not </b>" + block_cols.train[0] + " but " + block_cols.train[1],
-    'none': "<b>Neither </b>" + block_cols.train[0] + " <b>nor</b> " + block_cols.train[1]
+  'short': {ac: BLOCK_COLS_SHORT.train.join(''), a: BLOCK_COLS_SHORT.train[0],
+            c: BLOCK_COLS_SHORT.train[1], none: 'none'},
+  'long': {'ac': BLOCK_COLS.train[0] + " and " + BLOCK_COLS.train[1],
+    'a': BLOCK_COLS.train[0] + " but <b>not</b> " + BLOCK_COLS.train[1],
+    'c': "<b>Not </b>" + BLOCK_COLS.train[0] + " but " + BLOCK_COLS.train[1],
+    'none': "<b>Neither </b>" + BLOCK_COLS.train[0] + " <b>nor</b> " + BLOCK_COLS.train[1]
   }
 };
 

@@ -17,8 +17,9 @@ let W5 = wall('w5_base_ramp', 320, 225, W_BASE_RAMP.default)
 let W6 = wall('w6_upRight', 750, 240, 90)
 
 
-makeRamp = function(horiz, prior, increase, w1, label1="bottom", test=true) {
-  let angle =  ANGLES[horiz ? "horizontal" : "vertical"][prior]
+makeRamp = function(dir, prior, increase, w1, label1="bottom", test=true) {
+  // let angle =  ANGLES[horiz ? "horizontal" : "vertical"][prior]
+  let angle = ANGLES[dir][prior];
   let overlap = OVERLAP_SHIFT["angle" + angle];
   let label2 = label1 === "bottom" ? "top" : "bottom";
 
@@ -33,13 +34,12 @@ makeRamp = function(horiz, prior, increase, w1, label1="bottom", test=true) {
     w1.bounds[dat.ry].y + dat.y * PROPS.walls.h/2, ramp_width);
   Body.rotate(ramp, r, {x: w1.bounds[dat.rx].x, y: w1.bounds[dat.ry].y});
 
-  let width_w2 = W_BASE_RAMP[prior]
+  let width_w2 = label1 == "bottom" ? W_BASE_RAMP.default : W_BASE_RAMP[prior]
   let x2 = dat.x == 1 ? "max" : "min";
   let y2 = dat.y == 1 ? "max" : "min";
   let w2 = wall(label = 'ramp_' + label2 + angle,
     ramp.bounds[x2].x + dat.x * width_w2/2 - dat.x * overlap * dat.shift,
     ramp.bounds[y2].y - dat.y * PROPS.walls.h/2, width_w2);
-
   dat.walls = label1==="bottom" ? {'top': w2, 'bottom': w1} : {'top': w1, 'bottom': w2};
   dat.x_ball = increase ? dat.walls.top.bounds.min.x - PROPS.balls.move_to_roll : dat.walls.top.bounds.max.x + PROPS.balls.move_to_roll;
   let col_ball = test ? COLORS_BALL.test : COLORS_BALL.train[angle.toString()];
@@ -105,7 +105,7 @@ Walls.test = {'independent': [[W_UP1, W_LOW1], [W_UP2, W_LOW2]],
               };
 
 
-Walls.test.seesaw_trials = function(prior, side_ramp, offset=PROPS.seesaw.d_to_walls){
+Walls.test.seesaw_ac2 = function(prior, side_ramp, offset=PROPS.seesaw.d_to_walls){
   let y_bases = 220;
   let data = side_ramp === "right" ?
     {x0: 75, y0: y_bases, w0: 0.6 * PROPS.walls.w, y1: y_bases, w1: W_BASE_RAMP[prior]} :
@@ -121,23 +121,22 @@ Walls.test.seesaw_trials = function(prior, side_ramp, offset=PROPS.seesaw.d_to_w
 
 
 //// Elements for TRAINING TRIALS //////
-let W8 = wall('w8_middle_left', 0.3 * SCENE.w, SCENE.h/3);
-let W9 = wall('w9_middle_right', (3/4) * SCENE.w, SCENE.h/3);
-let W10 = wall('w10_right_low', (2/3) * SCENE.w, (3/4) * SCENE.h);
-Walls.train.uncertain = [[W8, W9, W10]];
+Walls.train.uncertain = [wall('w_mid_left', 0.3 * SCENE.w, SCENE.h/2.5, 150),
+  wall('w_mid_right', (3/4) * SCENE.w, SCENE.h/2.5, 150),
+  wall('w_mid', SCENE.w / 2, (3/4) * SCENE.h)];
 
-Walls.train.steepness = [wall('w_ramp1', SCENE.w/2, 100, W_BASE_RAMP.default),
-  wall('w_ramp2', SCENE.w/2, 220, W_BASE_RAMP.default),
-  wall('w_ramp3', SCENE.w/2, 340, W_BASE_RAMP.default)];
+Walls.train.steepness = [wall('w_bottom1', SCENE.w/2, 100, W_BASE_RAMP.default),
+  wall('w_bottom2', SCENE.w/2, 220, W_BASE_RAMP.default),
+  wall('w_bottom3', SCENE.w/2, 340, W_BASE_RAMP.default)];
 
-Walls.train.distance = [wall('w_ramp1', 150, 80, W_BASE_RAMP["low"]),
-  wall('w_ramp2', 150, 180, W_BASE_RAMP["uncertain"]),
-  wall('w_ramp3', 150, 300, W_BASE_RAMP["high"])];
+Walls.train.distance = [wall('w_top1', 150, 70),
+  wall('w_top2', 150, 170), wall('w_top3', 150, 280)];
 
+Walls.train.independent = [wall('ramp_top', 100, 125, W_BASE_RAMP.default),
+                           wall('w_right', 750, 140, 90)];
 Walls.train.ac_1 = wallsIf1
 
-
-Walls.train.seesaw_trials = function(){
+Walls.train.ssw = function(){
   let objs = seesaw(SCENE.w/2 - 30, SCENE.h - PROPS.bottom.h,
     props={'plank': {'w': 280, 'h': 10}});
   let walls = [wall('wallTopLeft', 150, 155, 100),
