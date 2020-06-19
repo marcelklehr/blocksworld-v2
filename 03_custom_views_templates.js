@@ -63,11 +63,8 @@ const animation_view1 = {
           $(".unselected")
             .off("click");
 
-          let c = SHUFFLED_TRAIN_STIMULI[CT].id
-          id_button_correct =
-            ["independent_3"].includes(c) ? "none" :
-            ['independent_1', "uncertain_0", "independent_0"].includes(c) ? "a" :
-            ["uncertain_1", "uncertain_2", "uncertain_3"].includes(c) ? "c" : "ac";
+          let id = SHUFFLED_TRAIN_STIMULI[CT].id
+          id_button_correct = TrainExpectations[id]
           $('#' + id_button_correct)
             .addClass("correct");
           id_bttn_selected !== id_button_correct ?
@@ -90,16 +87,12 @@ const animation_view1 = {
           id: SHUFFLED_TRAIN_STIMULI[CT].id
         });
 
-        let copied = Object.assign({}, TRAIN_TRIALS[CT])
+        let copied = Object.assign({}, TRAIN_TRIALS[CT]);
         copied.icon1 = iconHtml2Utterance(copied.icon1).short;
         copied.icon2 = iconHtml2Utterance(copied.icon2).short;
         copied.icon3 = iconHtml2Utterance(copied.icon3).short;
         copied.icon4 = iconHtml2Utterance(copied.icon4).short;
-        copied.expected = id_button_correct === "ac" ? 'response1' :
-          id_button_correct === "a" ? 'response2' :
-          id_button_correct === "c" ? 'response3' :
-          id_button_correct === "none" ? 'response4' : '';
-
+        copied.expected = TrainExpectations[trial_data.id];
         trial_data = magpieUtils.view.save_config_trial_data(
           copied,
           trial_data
@@ -165,8 +158,7 @@ const animation_view2 = {
         copied.icon2 = iconHtml2Utterance(copied.icon2).short;
         copied.icon3 = iconHtml2Utterance(copied.icon3).short;
         copied.icon4 = iconHtml2Utterance(copied.icon4).short;
-        copied.expected = ''; // sliders dont have an expected outcome!
-
+        copied.expected = TrainExpectations[trial_data.id];
         trial_data = magpieUtils.view.save_config_trial_data(
           copied,
           trial_data

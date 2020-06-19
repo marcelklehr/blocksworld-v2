@@ -55,8 +55,8 @@ const DURATION_ANIMATION = 10000; // in ms
 const KEY2SELECTANSWER = "y";
 
 const NB_TRAIN_TRIALS = TrainStimuli.list_all.length;
-// const NB_TRAIN_TRIALS = 3;
-const TRAIN_BTTN_IDS = ['ac', 'a', 'c', 'none'];
+const TRAIN_BTTN_IDS = [BLOCK_COLS_SHORT.train.join(''), 'none'].concat(
+  BLOCK_COLS_SHORT.train);
 
 // each letter represents one trial!
 // 3 blocks a 5 trials each (zz-yy-x) + 1 block a 3 trials (x-y-z)
@@ -148,10 +148,9 @@ iconHtml2Utterance = function(icon_html) {
 }
 
 getButtonResponse = function() {
-  let button_ids = ['ac', 'a', 'c', 'none']
   let responses = []
   let trial_data = {}
-  button_ids.forEach(function(id, i){
+  TRAIN_BTTN_IDS.forEach(function(id, i){
     let response = $('#' + id).hasClass('selected');
     trial_data['response' + (i+1)] = response
     responses.push(response)

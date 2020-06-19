@@ -467,7 +467,8 @@ let train_slider_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.train),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certainly",
+    expected: ''
   }
 ];
 

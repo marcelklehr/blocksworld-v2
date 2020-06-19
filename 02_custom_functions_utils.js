@@ -115,11 +115,14 @@ htmlSliderAnswers = function (trial_data) {
 
 htmlButtonAnswers = function () {
   return `<bttns id=TrainButtons class=buttonContainer>
-    <button id="ac" class="unselected styled-button">` + id2IconTrain.ac + `</button>
+    <button id="` + BLOCK_COLS_SHORT.train.join('') +
+    `" class="unselected styled-button">` + id2IconTrain.ac + `</button>
     <div class="divider"/>
-    <button id="a" class="unselected styled-button">` + id2IconTrain.a + `</button>
+    <button id="` + BLOCK_COLS_SHORT.train[0] +
+    `" class="unselected styled-button">` + id2IconTrain.a + `</button>
     <div class="divider"/>
-    <button id="c" class="unselected styled-button">` + id2IconTrain.c + `</button>
+    <button id="` + BLOCK_COLS_SHORT.train[1] +
+    `" class="unselected styled-button">` + id2IconTrain.c + `</button>
     <div class="divider"/>
     <button id="none" class="unselected styled-button">` + id2IconTrain.none + `</button>
   </bttns>`;

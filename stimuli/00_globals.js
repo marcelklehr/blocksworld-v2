@@ -31,7 +31,7 @@ cols = {
       'darkred': '#8F2D56'
     };
 cols.plank = cols.blue
-cols.test_blocks = [cols.green, cols.royal];
+cols.test_blocks = [cols.royal, cols.green];
 cols.train_blocks = [cols.bordeaux, cols.darkyellow];
 
 const COLORS_BALL = {

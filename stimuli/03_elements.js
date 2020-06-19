@@ -78,8 +78,9 @@ wallsIf1 = function(side, horiz, prior){
   Body.setPosition(ramp.ball, {x: ramp.ball.position.x + 40 * dat.move_x,
     y: ramp.ball.position.y});
   let ssw = seesaw(base_ssw.position.x, base_ssw.bounds.min.y, PROPS.ac1_ssw);
-  return {walls: [dat.w_up, ramp.wall_bottom, ramp_top, ramp.tilted, base_ssw, ssw.skeleton],
-    dynamic: [ramp.ball, ssw.plank, ssw.constraint]}
+  return {walls: [dat.w_up, ramp.wall_bottom, ramp_top, ramp.tilted,
+                  base_ssw, ssw.skeleton],
+          dynamic: [ramp.ball, ssw.plank, ssw.constraint]}
 }
 
 Walls.test = {
