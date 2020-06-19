@@ -207,10 +207,10 @@ getTrainStimulus = function(kind, nb) {
 // generate all train stimuli!
 if (MODE === "train" || MODE === "experiment") {
   TrainStimuli.map_category["ramp"] = trials_ramp();
-  // TrainStimuli.map_category["uncertain"] = trials_uncertain();
-  // TrainStimuli.map_category["ac_2"] = trials_ssw();
-  // TrainStimuli.map_category["independent"] = trials_independent();
-  // TrainStimuli.map_category["ac_1"] = trials_ac();
+  TrainStimuli.map_category["uncertain"] = trials_uncertain();
+  TrainStimuli.map_category["ac_2"] = trials_ssw();
+  TrainStimuli.map_category["independent"] = trials_independent();
+  TrainStimuli.map_category["ac_1"] = trials_ac();
   // put all train stimuli into array independent of kind
   let train_keys = _.keys(TrainStimuli.map_category);
   train_keys.forEach(function(kind){
