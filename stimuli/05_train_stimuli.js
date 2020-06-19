@@ -198,12 +198,6 @@ trials_ssw = function(){
 //   return data
 // }
 
-
-getTrainStimulus = function(kind, nb) {
-  let stimulus = TrainStimuli.map_category[kind][kind + "_" + nb];
-  return stimulus
-};
-
 // generate all train stimuli!
 if (MODE === "train" || MODE === "experiment") {
   TrainStimuli.map_category["ramp"] = trials_ramp();

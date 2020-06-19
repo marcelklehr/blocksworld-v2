@@ -29,8 +29,8 @@
       if(MODE === "test") {
         let relations = Array.from(Relations);
         // relations = ['independent']
-        relations = ['ac_2']
-        // relations = ['ac_1']
+        // relations = ['ac_2']
+        relations = ['ac_1']
 
         rel = relations[_.random(0, relations.length-1)];
         let p1 = _.sample(['u', 'h', 'l']);
@@ -38,22 +38,21 @@
         let p2 = rel === "ac_2" ? (p1==='u' ? 'l' :
           p1==='h' ? _.sample(['u', 'l']) : 'l') : _.sample(['l', 'h', 'u']);
 
-        p1 = 'l'
-        p2 = 'l'
+        // p1 = 'l'
+        // p2 = 'l'
         let p = p1 + p2;
         stimulus = getTestStimulus(rel, p);
         id =  rel + '_' + p
       } else if(MODE === "train") {
-        let types = ["independent", "ac_1", "uncertain", "ac_2"];
+        let types = ["independent", "ac_1", "uncertain", "ramp", "ac_2"];
         // types = ["ac_1"]
         // types = ["independent"];
         // types = ["uncertain"]
         // types = ["ac_2"];
         rel = types[_.random(0, types.length-1)];
-        let nb = _.random(0, _.size(TrainStimuli.map_category[rel])-1);
-        // nb = 0;
-        stimulus = getTrainStimulus(rel, nb);
-        id =  rel + '_' + nb;
+        id = _.sample(_.keys(TrainStimuli.map_category[rel]));
+        // id = 'ind0';
+        stimulus = TrainStimuli.map_category[rel][id];
       } else if (MODE == "color-vision"){
         let ColorVisionStimuli = [];
         id = 1;
@@ -62,7 +61,7 @@
       } else if (MODE === "pretest"){
         let stimuli = pretestTrials();
         id = [_.sample(['horiz', 'vert']), _.sample(PRETEST_ANGLES),
-              _.sample(block_cols.test)].join('-');
+              _.sample(BLOCK_COLS.test)].join('-');
 
         id = 'vert-40-blue'
         stimulus = stimuli[id]
@@ -106,7 +105,6 @@
         document.getElementById("title").innerHTML = 'stimulus id: ' + id;
         document.getElementById("data").innerHTML =
           'P(A): ' + stimulus.meta[0] + ' P(C): ' + stimulus.meta[1] +
-          ', relation: ' + stimulus.meta[2] +
           ', mode: ' + MODE;
 
         let utterances = getExpectations(stimulus);
