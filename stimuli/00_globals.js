@@ -36,11 +36,8 @@ cols.train_blocks = [cols.bordeaux, cols.darkyellow];
 
 const COLORS_BALL = {
   'test': cols.darkred,
-  'train': {'40': cols.olive,
-            '38': cols.turquois, '35': cols.blue,
-            '30': cols.red, '29': cols.red, '28': cols.red,
-            '27': cols.yellow, '25': cols.pinkish , '23': cols.orange,
-            '20': cols.purple}
+  'train': [cols.turquois, cols.blue, cols.red, cols.yellow, cols.pinkish,
+            cols.orange, cols.purple]
   };
 
 let BLOCK_COLS = {

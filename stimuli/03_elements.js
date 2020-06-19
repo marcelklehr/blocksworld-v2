@@ -4,22 +4,9 @@
 const Bottom = wall(label='bottom', x=SCENE.w/2, y=SCENE.h - PROPS.bottom.h/2,
   w=SCENE.w, h=PROPS.bottom.h);
 
-// base walls
 // INDEPENDENT TRIALS
-let W_UP1 = wall('w_up1', 280, 100);
-let W_UP2 = wall('w_up2', 520, 100);
-let W_LOW1 = wall('w_low1', 300, 250, w=100)
-let W_LOW2 = wall('w_low2', 500, 250, w=100)
-
-
-let W4 = wall('w4_upRight', 750, 240, 90);
-let W5 = wall('w5_base_ramp', 320, 225, W_BASE_RAMP.default)
-let W6 = wall('w6_upRight', 750, 240, 90)
-
-
-makeRamp = function(dir, prior, increase, w1, label1="bottom", test=true) {
-  // let angle =  ANGLES[horiz ? "horizontal" : "vertical"][prior]
-  let angle = ANGLES[dir][prior];
+makeRamp = function(dir, prior, increase, w1, label1="bottom", test=true, col_ball=COLORS_BALL.test) {
+  let angle = ANGLES.default;
   let overlap = OVERLAP_SHIFT["angle" + angle];
   let label2 = label1 === "bottom" ? "top" : "bottom";
 
@@ -34,7 +21,7 @@ makeRamp = function(dir, prior, increase, w1, label1="bottom", test=true) {
     w1.bounds[dat.ry].y + dat.y * PROPS.walls.h/2, ramp_width);
   Body.rotate(ramp, r, {x: w1.bounds[dat.rx].x, y: w1.bounds[dat.ry].y});
 
-  let width_w2 = label1 == "bottom" ? W_BASE_RAMP.default : W_BASE_RAMP[prior]
+  let width_w2 = label1 == "bottom" ? BASE_RAMP.default : BASE_RAMP[dir][prior]
   let x2 = dat.x == 1 ? "max" : "min";
   let y2 = dat.y == 1 ? "max" : "min";
   let w2 = wall(label = 'ramp_' + label2 + angle,
@@ -42,7 +29,6 @@ makeRamp = function(dir, prior, increase, w1, label1="bottom", test=true) {
     ramp.bounds[y2].y - dat.y * PROPS.walls.h/2, width_w2);
   dat.walls = label1==="bottom" ? {'top': w2, 'bottom': w1} : {'top': w1, 'bottom': w2};
   dat.x_ball = increase ? dat.walls.top.bounds.min.x - PROPS.balls.move_to_roll : dat.walls.top.bounds.max.x + PROPS.balls.move_to_roll;
-  let col_ball = test ? COLORS_BALL.test : COLORS_BALL.train[angle.toString()];
   let ball1 = ball(dat.x_ball, dat.walls.top.bounds.min.y - PROPS.balls.radius,
     PROPS.balls.radius, 'ball1', col_ball);
 
@@ -78,18 +64,15 @@ seesaw = function(x, y_base_min=SCENE.h - PROPS.bottom.h, props={}){
   return {stick, link, skeleton, plank, constraint}
 }
 
-W_IF_UP1 = wall('wall_ac_up', 600, 90, 150),
-W_IF_UP2 = wall('wall_ac_up', 150, 90, 150),
-W_AC1_BASE = wall('wall_base_seesaw', 375, 185, PROPS.ac1_base_ssw.w,
- PROPS.ac1_base_ssw.h)
-
 // The first two list entries are respectively the bases for block1 and block2
 wallsIf1 = function(side, horiz, prior){
-  let dat = side == "right" ? {w_up: W_IF_UP1, move_x: 1, increase: true} :
-  {w_up: W_IF_UP2, move_x: -1, increase: false};
-  let base_ssw = W_AC1_BASE;
-  let x = W_AC1_BASE.position.x + dat.move_x * 40 + dat.move_x * PROPS.walls.w/2
-  let y = W_AC1_BASE.position.y + 67;
+  let dat = side == "right" ?
+    {w_up: wall('wall_ac_up', 600, 90, 150), move_x: 1, increase: true} :
+    {w_up:  wall('wall_ac_up', 150, 90, 150), move_x: -1, increase: false};
+  let base_ssw = wall('base_seesaw', 375, 185, PROPS.ac1_base_ssw.w,
+                      PROPS.ac1_base_ssw.h);
+  let x = base_ssw.position.x + dat.move_x * 40 + dat.move_x * PROPS.walls.w/2
+  let y = base_ssw.position.y + 67;
   let ramp_top = wall('ramp_top', x, y);
   let ramp = makeRamp(horiz, prior, dat.increase, ramp_top, "top")
   Body.setPosition(ramp.ball, {x: ramp.ball.position.x + 40 * dat.move_x,
@@ -99,17 +82,19 @@ wallsIf1 = function(side, horiz, prior){
     dynamic: [ramp.ball, ssw.plank, ssw.constraint]}
 }
 
-Walls.test = {'independent': [[W_UP1, W_LOW1], [W_UP2, W_LOW2]],
-              'ac_1': wallsIf1,
-              'ac_2': []
-              };
+Walls.test = {
+  'independent': [[wall('w_up1', 280, 100), wall('w_low1', 300, 250, w=100)],
+                  [wall('w_up2', 520, 100), wall('w_low2', 500, 250, w=100)]],
+  'ac_1': wallsIf1,
+  'ac_2': []
+};
 
 
 Walls.test.seesaw_ac2 = function(prior, side_ramp, offset=PROPS.seesaw.d_to_walls){
   let y_bases = 220;
   let data = side_ramp === "right" ?
-    {x0: 75, y0: y_bases, w0: 0.6 * PROPS.walls.w, y1: y_bases, w1: W_BASE_RAMP[prior]} :
-    {x0: 275, y0: y_bases, w0: W_BASE_RAMP[prior], y1: y_bases, w1: 0.6 * PROPS.walls.w};
+    {x0: 75, y0: y_bases, w0: 0.6 * PROPS.walls.w, y1: y_bases, w1: BASE_RAMP[prior]} :
+    {x0: 275, y0: y_bases, w0: BASE_RAMP[prior], y1: y_bases, w1: 0.6 * PROPS.walls.w};
   let base0 = wall('seesaw_base_left', data.x0, data.y0, data.w0);
   let pos = base0.bounds.max.x + PROPS.seesaw.plank.w/2 + offset;
   let objs = seesaw(pos);
@@ -121,19 +106,31 @@ Walls.test.seesaw_ac2 = function(prior, side_ramp, offset=PROPS.seesaw.d_to_wall
 
 
 //// Elements for TRAINING TRIALS //////
-Walls.train.uncertain = [wall('w_mid_left', 0.3 * SCENE.w, SCENE.h/2.5, 150),
-  wall('w_mid_right', (3/4) * SCENE.w, SCENE.h/2.5, 150),
-  wall('w_mid', SCENE.w / 2, (3/4) * SCENE.h)];
+Walls.train.uncertain = [
+  wall('w_mid_left', 0.3 * SCENE.w, SCENE.h/2, 150),
+  wall('w_mid_right', 0.75 * SCENE.w, SCENE.h/2, 150)
+];
 
-Walls.train.steepness = [wall('w_bottom1', SCENE.w/2, 100, W_BASE_RAMP.default),
-  wall('w_bottom2', SCENE.w/2, 220, W_BASE_RAMP.default),
-  wall('w_bottom3', SCENE.w/2, 340, W_BASE_RAMP.default)];
+Walls.train.steepness = [wall('w_bottom1', SCENE.w/2, 100),
+  wall('w_bottom2', SCENE.w/2, 220),
+  wall('w_bottom3', SCENE.w/2, 340)];
 
-Walls.train.distance = [wall('w_top1', 150, 70),
-  wall('w_top2', 150, 170), wall('w_top3', 150, 280)];
+Walls.train.distance0 = [
+  wall('w_top1', 150, 50),
+  wall('w_top2', 150, 160),
+  wall('w_top3', 150, 270)
+];
 
-Walls.train.independent = [wall('ramp_top', 100, 125, W_BASE_RAMP.default),
-                           wall('w_right', 750, 140, 90)];
+Walls.train.distance1 = [
+  wall('w_top1', 150, 50),
+  wall('w_top2', 150, 175),
+  wall('w_top3', 150, 300)
+];
+
+Walls.train.independent = [
+  wall('ramp_top', 100, 125),
+  wall('w_right', 750, 140, 90)
+];
 Walls.train.ac_1 = wallsIf1
 
 Walls.train.ssw = function(){

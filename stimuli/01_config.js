@@ -38,9 +38,11 @@ let PRIOR = {
 
 // shift of ramp walls such that there is no edge
 let OVERLAP_SHIFT = {
-  "angle42": 15, "angle40": 15, "angle38": 19, "angle35": 16,  "angle30": 12,
+  "angle45": 16,
+  "angle42": 15, "angle40": 15, "angle38": 19, "angle35": 16,
+  "angle32": 12, "angle30": 12,
   "angle29": 12, "angle28": 13, "angle27": 12, "angle26": 12, "angle25": 12,
-  "angle23": 10, "angle20": 9,
+  "angle23": 10, "angle20": 9, "angle18": 9
 }
 // "angle32": 13,
 // "angle31": 12,
@@ -50,15 +52,20 @@ let OVERLAP_SHIFT = {
 // }
 
 let ANGLES = {
-  'horizontal': {"high": 42, "uncertainH": 30, "uncertain": 29, "uncertainL": 28,
-                 "uncertainLL": 27, "low": 23},
-  'vertical': {"high": 40, "uncertainH": 30, "uncertain": 27, "uncertainL": 26,
-               "uncertainLL": 25, "low": 20}
+  // 'horizontal': {"high": 45, "uncertainH": 35, "uncertain": 32, "uncertainL": 28,
+  //                "uncertainLL": 27, "low": 18},
+  // 'vertical': {"high": 45, "uncertainH": 35, "uncertain": 32, "uncertainL": 28,
+  //              "uncertainLL": 27, "low": 18},
+  'default': 32
 }
 
 let PRETEST_ANGLES = _.range(45);
-let W_BASE_RAMP = {'default': 200, 'high': 150, 'uncertain': 175, 'low': 250,
-                   'uncertainL': 200, 'uncertainH': 150};
+let BASE_RAMP = {
+  'horizontal': {'high': 100, 'uncertainH': 115, 'uncertain': 150,
+                 'uncertainL': 175, 'low': 250},
+  'vertical': {'high': 150, 'uncertainH': 175, 'uncertain': 200,
+               'uncertainL': 225, 'low': 300}
+};
 
 // when uncertainty comes from balls, this dist is left towards the edge of platform
 let DIST_EDGE = 5;
