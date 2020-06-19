@@ -25,14 +25,15 @@ OPTS = {
   'plank': {isStatic: false, density: 0.001, restitution: .02, friction: 0.1}
 }
 
-let Relations = ['ac_1', 'ac_2', 'independent'];
+let TRIAL_TYPES = ['ac1', 'ac2', 'independent'];
 // Proportion of block that's ON TOP of its base wall beneath
 let PRIOR = {
   'vertical': {'high': 0.35, 'uncertain': 0.51, 'low': 0.75,
                'uncertainL': 0.55, 'uncertainH': 0.5},
   'horizontal': {'high': 0.35, 'uncertain': 0.50, 'low': 0.65,
                  'uncertainH': 0.49, 'uncertainL': 0.55, 'lowL': 0.70},
-  'impossible': 1
+  'impossible': 1,
+  'conditions': ['high', 'uncertain', 'low']
 }
 
 
@@ -44,18 +45,8 @@ let OVERLAP_SHIFT = {
   "angle29": 12, "angle28": 13, "angle27": 12, "angle26": 12, "angle25": 12,
   "angle23": 10, "angle20": 9, "angle18": 9
 }
-// "angle32": 13,
-// "angle31": 12,
-// "angle43": 25, "angle40": 20,  "angle33": 16,
-// "angle32": 16, "angle31": 15, "angle27": 10,
-// "angle24": 8, "angle22": 7, "angle20": 6, "angle29": 13,
-// }
 
 let ANGLES = {
-  // 'horizontal': {"high": 45, "uncertainH": 35, "uncertain": 32, "uncertainL": 28,
-  //                "uncertainLL": 27, "low": 18},
-  // 'vertical': {"high": 45, "uncertainH": 35, "uncertain": 32, "uncertainL": 28,
-  //              "uncertainLL": 27, "low": 18},
   'default': 32
 }
 
@@ -64,7 +55,8 @@ let BASE_RAMP = {
   'horizontal': {'high': 100, 'uncertainH': 115, 'uncertain': 150,
                  'uncertainL': 175, 'low': 250},
   'vertical': {'high': 150, 'uncertainH': 175, 'uncertain': 200,
-               'uncertainL': 225, 'low': 300}
+               'uncertainL': 225, 'low': 300},
+  'default': 200
 };
 
 // when uncertainty comes from balls, this dist is left towards the edge of platform

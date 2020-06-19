@@ -25,34 +25,29 @@
 
     <!-- choose experimental/train stimulus -->
     <script type="text/javascript">
-      let rel, stimulus, id;
+      let cond, stimulus, id;
       if(MODE === "test") {
-        let relations = Array.from(Relations);
-        // relations = ['independent']
-        // relations = ['ac_2']
-        relations = ['ac_1']
-
-        rel = relations[_.random(0, relations.length-1)];
+        let types = TRIAL_TYPES;
+        types = ['ac2']
+        cond = types[_.random(0, types.length-1)];
         let p1 = _.sample(['u', 'h', 'l']);
-        // a<->c only 6 cases:  ul, hu, hl, uu, ll, hh
-        let p2 = rel === "ac_2" ? (p1==='u' ? 'l' :
-          p1==='h' ? _.sample(['u', 'l']) : 'l') : _.sample(['l', 'h', 'u']);
+        let p2 = _.sample(['l', 'h', 'u']);
 
-        // p1 = 'l'
-        // p2 = 'l'
+        p1 = 'l'
+        p2 = 'l'
         let p = p1 + p2;
-        stimulus = getTestStimulus(rel, p);
-        id =  rel + '_' + p
+        id =  cond + '_' + p
+        stimulus = TestStimuli[cond][id];
       } else if(MODE === "train") {
-        let types = ["independent", "ac_1", "uncertain", "ramp", "ac_2"];
-        // types = ["ac_1"]
+        let types = ["independent", "ac1", "uncertain", "ramp", "ac2"];
         // types = ["independent"];
         // types = ["uncertain"]
-        // types = ["ac_2"];
-        rel = types[_.random(0, types.length-1)];
-        id = _.sample(_.keys(TrainStimuli.map_category[rel]));
+        // types = ["ac1"]
+        // types = ["ac2"];
+        cond = types[_.random(0, types.length-1)];
+        id = _.sample(_.keys(TrainStimuli.map_category[cond]));
         // id = 'ind0';
-        stimulus = TrainStimuli.map_category[rel][id];
+        stimulus = TrainStimuli.map_category[cond][id];
       } else if (MODE == "color-vision"){
         let ColorVisionStimuli = [];
         id = 1;

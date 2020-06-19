@@ -6,18 +6,18 @@ pseudoRandomTrainTrials = function(){
   let order23 = _.shuffle([2, 3])
   let order_iff = _.shuffle([0,1])
 
-  order[0] = TrainStimuli.map_category["ac_2"]["ac_2_" + order_iff[0]]
+  order[0] = TrainStimuli.map_category["ac2"]["ac2_" + order_iff[0]]
   order[1] = TrainStimuli.map_category["independent"]["independent_"+order23[0]]
   order[2] = TrainStimuli.map_category["uncertain"]["uncertain_"+order23[0]]
 
   order[3] = TrainStimuli.map_category[cats[0]][cats[0] + "_" + order01[0]]
   order[4] = TrainStimuli.map_category[cats[1]][cats[1] + "_" + order01[0]]
-  order[5] = TrainStimuli.map_category["ac_2"]["ac_2_" + order_iff[1]]
+  order[5] = TrainStimuli.map_category["ac2"]["ac2_" + order_iff[1]]
   order[6] = TrainStimuli.map_category[cats[0]][cats[0] + "_" + order01[1]]
   order[7] = TrainStimuli.map_category[cats[1]][cats[1] + "_" + order01[1]]
 
   order[8] = TrainStimuli.map_category["uncertain"]["uncertain_"+order23[1]]
-  order[9] = TrainStimuli.map_category["ac_1"]["ac_1_0"]
+  order[9] = TrainStimuli.map_category["ac1"]["ac1_0"]
   order[10] = TrainStimuli.map_category["independent"]["independent_"+order23[1]]
 
   return order
@@ -27,24 +27,24 @@ const SHUFFLED_TRAIN_STIMULI = TrainStimuli.list_all;
 // TEST TRIALS //
 sequencePriors = function(){
   return {
-    'ac_1': _.shuffle(['hh', 'uh', 'uu', 'lh']),
-    'ac_2': _.shuffle(['hl', 'hh', 'ul', 'uh', 'll']),
+    'ac1': _.shuffle(['hh', 'uh', 'uu', 'lh']),
+    'ac2': _.shuffle(['hl', 'hh', 'ul', 'uh', 'll']),
     'independent': _.shuffle(['hl', 'hh', 'ul', 'uh', 'll'])
   }
 }
 pseudoRandomTypes = function() {
-  let order = _.random(0, 1) == 0 ? ['independent', 'ac_1', 'ac_2'] :
-    ['ac_2', 'ac_1', 'independent'];
+  let order = _.random(0, 1) == 0 ? ['independent', 'ac1', 'ac2'] :
+    ['ac2', 'ac1', 'independent'];
   let trials = _.reduce(_.range(1,3), function(memo, val){
     return memo.concat(memo);
   }, order);
-  trials = trials.concat(_.without(order, 'ac_1'));
+  trials = trials.concat(_.without(order, 'ac1'));
   return trials
 }
 pseudoRandomTestTrials = function(){
   let trial_types = pseudoRandomTypes();
   let priors = sequencePriors();
-  Relations.forEach(function(rel){
+  TRIAL_TYPES.forEach(function(rel){
     let conditions = priors[rel]
     conditions.forEach(function(p, k){
       let i = _.indexOf(trial_types, rel)

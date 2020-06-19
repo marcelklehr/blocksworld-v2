@@ -5,15 +5,17 @@ const Bottom = wall(label='bottom', x=SCENE.w/2, y=SCENE.h - PROPS.bottom.h/2,
   w=SCENE.w, h=PROPS.bottom.h);
 
 // INDEPENDENT TRIALS
-makeRamp = function(dir, prior, increase, w1, label1="bottom", test=true, col_ball=COLORS_BALL.test) {
+makeRamp = function(dir, prior, increase, w1, label1="bottom", test=true,
+  col_ball=COLORS_BALL.test) {
+
   let angle = ANGLES.default;
   let overlap = OVERLAP_SHIFT["angle" + angle];
   let label2 = label1 === "bottom" ? "top" : "bottom";
 
-  let dat = increase && label1 === "top" ? {rx: "min", ry: "min", x: -1, y: 1, shift: 1} :
-            increase && label1 === "bottom" ? {rx: "max", ry: "max", x: 1, y: -1, shift: -1} :
-            label1 === "top" ? {rx: "max", ry: "min", x: 1, y: 1, shift: 1}
-                             : {rx: "min", ry: "max", x: -1, y: -1, shift: 1};
+  let dat = increase && label1 === "top" ? {rx: "min", ry: "min", x: -1, y: 1} :
+            increase && label1 === "bottom" ? {rx: "max", ry: "max", x: 1, y: -1} :
+            label1 === "top" ? {rx: "max", ry: "min", x: 1, y: 1}
+                             : {rx: "min", ry: "max", x: -1, y: -1};
   // 1. sin(angle) = h/w_tillted and 2. h² + w_low² = ramp²
   let r = increase ? radians(360 - angle) : radians(angle);
   let ramp_width = Math.sqrt(Math.pow(100, 2) / (1 - Math.pow(Math.sin(r), 2)))
@@ -25,7 +27,7 @@ makeRamp = function(dir, prior, increase, w1, label1="bottom", test=true, col_ba
   let x2 = dat.x == 1 ? "max" : "min";
   let y2 = dat.y == 1 ? "max" : "min";
   let w2 = wall(label = 'ramp_' + label2 + angle,
-    ramp.bounds[x2].x + dat.x * width_w2/2 - dat.x * overlap * dat.shift,
+    ramp.bounds[x2].x + dat.x * width_w2/2 - dat.x * overlap,
     ramp.bounds[y2].y - dat.y * PROPS.walls.h/2, width_w2);
   dat.walls = label1==="bottom" ? {'top': w2, 'bottom': w1} : {'top': w1, 'bottom': w2};
   dat.x_ball = increase ? dat.walls.top.bounds.min.x - PROPS.balls.move_to_roll : dat.walls.top.bounds.max.x + PROPS.balls.move_to_roll;
@@ -83,19 +85,11 @@ wallsIf1 = function(side, horiz, prior){
           dynamic: [ramp.ball, ssw.plank, ssw.constraint]}
 }
 
-Walls.test = {
-  'independent': [[wall('w_up1', 280, 100), wall('w_low1', 300, 250, w=100)],
-                  [wall('w_up2', 520, 100), wall('w_low2', 500, 250, w=100)]],
-  'ac_1': wallsIf1,
-  'ac_2': []
-};
-
-
-Walls.test.seesaw_ac2 = function(prior, side_ramp, offset=PROPS.seesaw.d_to_walls){
+seesawAC2 = function(prior, dir, side_ramp, offset=PROPS.seesaw.d_to_walls){
   let y_bases = 220;
   let data = side_ramp === "right" ?
-    {x0: 75, y0: y_bases, w0: 0.6 * PROPS.walls.w, y1: y_bases, w1: BASE_RAMP[prior]} :
-    {x0: 275, y0: y_bases, w0: BASE_RAMP[prior], y1: y_bases, w1: 0.6 * PROPS.walls.w};
+    {x0: 75, y0: y_bases, w0: 0.6 * PROPS.walls.w, y1: y_bases, w1: BASE_RAMP[dir][prior]} :
+    {x0: 275, y0: y_bases, w0: BASE_RAMP[dir][prior], y1: y_bases, w1: 0.6 * PROPS.walls.w};
   let base0 = wall('seesaw_base_left', data.x0, data.y0, data.w0);
   let pos = base0.bounds.max.x + PROPS.seesaw.plank.w/2 + offset;
   let objs = seesaw(pos);
@@ -105,6 +99,12 @@ Walls.test.seesaw_ac2 = function(prior, side_ramp, offset=PROPS.seesaw.d_to_wall
   return {'walls': walls, 'dynamic': [objs.plank, objs.constraint]}
 }
 
+Walls.test = {
+  'independent': [[wall('w_up1', 280, 100), wall('w_low1', 300, 250, w=100)],
+                  [wall('w_up2', 520, 100), wall('w_low2', 500, 250, w=100)]],
+  'ac1': wallsIf1,
+  'ac2': seesawAC2
+};
 
 //// Elements for TRAINING TRIALS //////
 Walls.train.uncertain = [
@@ -132,7 +132,7 @@ Walls.train.independent = [
   wall('ramp_top', 100, 125),
   wall('w_right', 750, 140, 90)
 ];
-Walls.train.ac_1 = wallsIf1
+Walls.train.ac1 = wallsIf1
 
 Walls.train.ssw = function(){
   let objs = seesaw(SCENE.w/2 - 30, SCENE.h - PROPS.bottom.h,

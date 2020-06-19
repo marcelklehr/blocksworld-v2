@@ -58,20 +58,6 @@ const NB_TRAIN_TRIALS = TrainStimuli.list_all.length;
 const TRAIN_BTTN_IDS = [BLOCK_COLS_SHORT.train.join(''), 'none'].concat(
   BLOCK_COLS_SHORT.train);
 
-// each letter represents one trial!
-// 3 blocks a 5 trials each (zz-yy-x) + 1 block a 3 trials (x-y-z)
-// --> 7z + 7y + 4x = 18 trials
-const TYPE_MAP = {x: 'ac_1', y: 'independent', z: 'ac_2'}
-
-//@arg pseudo_types List<str>
-getRealTypes = function(pseudo_types){
-  pseudo_types = pseudo_types.join(' ')
-  let type_seq = pseudo_types.replace(/x/g, TYPE_MAP.x);
-  type_seq = type_seq.replace(/y/g, TYPE_MAP.y);
-  type_seq = type_seq.replace(/z/g, TYPE_MAP.z);
-  return type_seq.split(' ');
-}
-
 // custom functions:
 toggleNextIfDone = function (button, condition) {
     if(condition){

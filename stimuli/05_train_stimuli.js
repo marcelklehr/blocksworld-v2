@@ -1,8 +1,8 @@
 // IMPORTANT: DYNAMIC BLOCKS HAVE TO BE ADDED BEFORE STATIC OBJECTS, OTHERWISE
 // THEY WILL FALL VERY ODD (JITTERING)
 let TrainStimuli = {
-  'map_category': {"independent": {}, "uncertain": {}, "ac_1": {},
-                   "ac_2": {}},
+  'map_category': {"independent": {}, "uncertain": {}, "ac1": {},
+                   "ac2": {}},
   'list_all': []
 };
 TrainExpectations = {};
@@ -126,7 +126,7 @@ trials_ac = function(){
                   'ac2': 'none', 'ac3': 'none'};
   let data = {};
   _.keys(priors).forEach(function(id, i){
-    let objs = Walls.train.ac_1("left", dir[id][1], priors[id][1]);
+    let objs = Walls.train.ac1("left", dir[id][1], priors[id][1]);
     let p1 = priors[id][0]
     let b1 = blockOnBase(objs.walls[0], PRIOR[dir[id][0]][priors[id][0]],
       colors[id][0], 'blockUp', dir[id][0] == 'horizontal');
@@ -202,9 +202,9 @@ trials_ssw = function(){
 if (MODE === "train" || MODE === "experiment") {
   TrainStimuli.map_category["ramp"] = trials_ramp();
   TrainStimuli.map_category["uncertain"] = trials_uncertain();
-  TrainStimuli.map_category["ac_2"] = trials_ssw();
+  TrainStimuli.map_category["ac2"] = trials_ssw();
   TrainStimuli.map_category["independent"] = trials_independent();
-  TrainStimuli.map_category["ac_1"] = trials_ac();
+  TrainStimuli.map_category["ac1"] = trials_ac();
   // put all train stimuli into array independent of kind
   let train_keys = _.keys(TrainStimuli.map_category);
   train_keys.forEach(function(kind){

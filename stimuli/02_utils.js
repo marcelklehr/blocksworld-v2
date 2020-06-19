@@ -49,7 +49,7 @@ radians = function(angle){
 sortConditions = function(conditions){
   let filtered = {};
   let iff = [];
-  Relations.forEach(function(rel){
+  TRIAL_TYPES.forEach(function(rel){
     filtered[rel] = [];
   })
   conditions.forEach(function(arr){
@@ -61,11 +61,11 @@ sortConditions = function(conditions){
 /**
 *@return Object with key-val pairs:
  independent: [[pa,pc,"independent"], ...]
- ac_2: [[pa,pc, "ac_2"], ...]
- ac_1: [[pa, pc, "ac_1"], ...]
+ ac2: [[pa,pc, "ac2"], ...]
+ ac1: [[pa, pc, "ac1"], ...]
 **/
 getConditions = function(){
-  let keys = _.keys(PRIOR['vertical']);
+  let keys = PRIOR.conditions;
   let probs = [];
   keys.forEach(function(p){
     let vals = new Array(keys.length).fill(p);
@@ -73,7 +73,7 @@ getConditions = function(){
   });
   let combis = [];
   probs.forEach(function(ps){
-    Relations.forEach(function(r){
+    TRIAL_TYPES.forEach(function(r){
       combis.push(ps.concat(r))
     })
   })
