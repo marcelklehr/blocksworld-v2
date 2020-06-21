@@ -22,7 +22,7 @@ $("document")
       instructions_train2,
       animation_view1,
       instructions_train3,
-      animation_view2,
+      // animation_view2,
       instructions_test,
       multiple_slider,
       post_test,
@@ -39,7 +39,7 @@ $("document")
         // Possible deployment methods are:
         // "debug" and "directLink"
         // As well as "MTurk", "MTurkSandbox" and "Prolific"
-        deployMethod: "Prolific",
+        deployMethod: "debug",
         contact_email: "britta.grusdt@uni-osnabrueck.de",
         prolificURL: "https://app.prolific.co/submissions/complete?cc=1A1C9196"
       },
