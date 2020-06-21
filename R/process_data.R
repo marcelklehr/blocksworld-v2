@@ -45,6 +45,7 @@ df <- standardize_color_groups(df)
 df <- df %>% group_by(prolific_id, id) %>% 
   mutate(n=sum(response), r_norm=response/n) %>% 
   rename(r_orig=response)
+<<<<<<< HEAD
 
 # save processed data -----------------------------------------------------
 path_target <- paste(result_dir, "exp1_tidy.rds", sep=.Platform$file.sep) 
@@ -54,15 +55,49 @@ saveRDS(dat.all, path_target)
 
 # Also save just Table means of normalized values as csv files
 means <- df %>% group_by(id, question) %>% summarise(mean=mean(r_norm))
+=======
+
+# also save version of data that only contains filtered values
+df_filtered <- df %>% filter_noticed_steepness()
+
+
+# save processed data -----------------------------------------------------
+# all processed data
+saveRDS(df, paste(result_dir, "exp1_test_trials_processed.rds", sep=.Platform$file.sep))
+saveRDS(df_filtered,
+        paste(result_dir, "exp1_test_trials_processed_steepness_noticed.rds", sep=.Platform$file.sep)
+)
+
+# Just Table means of normalized values
+means <- df %>% group_by(id, question) %>% summarise(mean=mean(r_norm))
+means_filtered <- df_filtered %>% group_by(id, question) %>% summarise(mean=mean(r_norm))
+>>>>>>> fridge-view
 
 write.table(means %>% pivot_wider(names_from = question, values_from = mean),
             file=paste(result_dir, "exp1_tables_mean.csv", sep=.Platform$file.sep),
             sep = ",", row.names=FALSE)
+write.table(means_filtered %>% pivot_wider(names_from = question, values_from = mean),
+            file=paste(result_dir, "exp1_prob_tables_mean_steepness_noticed.csv", sep=.Platform$file.sep),
+            sep = ",", row.names=FALSE)
 
 # All Tables (with normalized values)
 tables.all <- df %>% select(id, question, prolific_id, r_norm) %>%
+<<<<<<< HEAD
   group_by(id, question, prolific_id) %>%
   pivot_wider(names_from = question, values_from = r_norm)
 
 write.table(tables.all, file=paste(result_dir, "exp1_tables_all.csv", sep=.Platform$file.sep),
+=======
+  group_by(id, question, prolific_id) %>%
+  pivot_wider(names_from = question, values_from = r_norm)
+tables.all_filtered <- df_filtered %>% select(id, question, prolific_id, r_norm) %>%
+  group_by(id, question, prolific_id) %>%
+  pivot_wider(names_from = question, values_from = r_norm)
+
+write.table(tables.all_filtered, file=paste(result_dir, "exp1_prob_tables_all.csv",
+                                            sep=.Platform$file.sep),
+            sep = ",", row.names=FALSE)
+write.table(tables.all_filtered, file=paste(result_dir, "exp1_prob_tables_all_steepness_noticed.csv",
+                                   sep=.Platform$file.sep),
+>>>>>>> fridge-view
             sep = ",", row.names=FALSE)

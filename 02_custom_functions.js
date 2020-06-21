@@ -60,17 +60,19 @@ const TRAIN_BTTN_IDS = [BLOCK_COLS_SHORT.train.join(''), 'none'].concat(
 
 // custom functions:
 toggleNextIfDone = function (button, condition) {
-    if(condition){
-      button.removeClass("grid-button");
-    }
+  if (condition) {
+    button.removeClass("grid-button");
+  }
 };
 
-automaticallySelectAnswer = function(responseID, button2Toggle) {
-    document.getElementById(responseID).value = Math.floor(Math.random() * 101);
-    $("#" + responseID).addClass('replied');
+automaticallySelectAnswer = function (responseID, button2Toggle) {
+  document.getElementById(responseID)
+    .value = Math.floor(Math.random() * 101);
+  $("#" + responseID)
+    .addClass('replied');
 }
 
-addKeyToMoveSliders = function(button2Toggle){
+addKeyToMoveSliders = function (button2Toggle) {
   let counter = 0;
   document.addEventListener("keydown", event => {
     var keyName = event.key;
@@ -84,53 +86,66 @@ addKeyToMoveSliders = function(button2Toggle){
   });
 }
 
-repliedAll = function(){
-  return ($("#response1").hasClass('replied') &&
-          $("#response2").hasClass('replied') &&
-          $("#response3").hasClass('replied') &&
-          $("#response4").hasClass('replied'));
+repliedAll = function () {
+  return ($("#response1")
+    .hasClass('replied') &&
+    $("#response2")
+    .hasClass('replied') &&
+    $("#response3")
+    .hasClass('replied') &&
+    $("#response4")
+    .hasClass('replied'));
 }
 
-_checkSliderResponse = function(id, button2Toggle){
-  $("#" + id).on("change", function () {
-    $("#" + id).addClass('replied');
-    toggleNextIfDone(button2Toggle, repliedAll());
-  });
+_checkSliderResponse = function (id, button2Toggle) {
+  $("#" + id)
+    .on("change", function () {
+      $("#" + id)
+        .addClass('replied');
+      toggleNextIfDone(button2Toggle, repliedAll());
+    });
 }
 
-addCheckSliderResponse = function(button2Toggle) {
-  _.range(1,5).forEach(function(i){
-    _checkSliderResponse("response" + i, button2Toggle);
-  });
+addCheckSliderResponse = function (button2Toggle) {
+  _.range(1, 5)
+    .forEach(function (i) {
+      _checkSliderResponse("response" + i, button2Toggle);
+    });
 }
 
-abbreviateQuestion = function(question, symbols){
+abbreviateQuestion = function (question, symbols) {
   let q_words = [];
-  question.split(' ').forEach(function(w){
-    w = w.trim().replace('<b>', '');
-    w = w.replace('</b>', '');
-    if(w === "will" || w==="not"){
-      q_words.push(w)
-    }
-  });
+  question.split(' ')
+    .forEach(function (w) {
+      w = w.trim()
+        .replace('<b>', '');
+      w = w.replace('</b>', '');
+      if (w === "will" || w === "not") {
+        q_words.push(w)
+      }
+    });
   let w = q_words.join(' ')
   let q_short = w === 'will will' ? symbols.join('') :
-                w === 'will will not' ? symbols[0] :
-                w === 'will not will' ? symbols[1] : 'none';
+    w === 'will will not' ? symbols[0] :
+    w === 'will not will' ? symbols[1] : 'none';
   return q_short.toLowerCase();
 }
 
-iconHtml2Utterance = function(icon_html) {
-  let words = icon_html.trim().split('/');
+iconHtml2Utterance = function (icon_html) {
+  let words = icon_html.trim()
+    .split('/');
   let utt1 = words[3].split('.')[0]
   let utt2 = words[6].split('.')[0]
   let utt;
-  if(utt1.includes('not')){
+  if (utt1.includes('not')) {
     utt = utt2.includes('not') ? 'none' : utt2[0]; //'not-blue-red';
   } else {
     utt = utt2.includes('not') ? utt1[0] : utt1[0] + utt2[0] // blue-not-red : 'blue-red';
   }
-  return {short: utt, long: [utt1, utt2].join('-')};
+  return {
+    short: utt,
+    long: [utt1, utt2].join('-')
+  };
 }
 
 getButtonResponse = function() {
@@ -141,23 +156,29 @@ getButtonResponse = function() {
     trial_data['response' + (i+1)] = response
     responses.push(response)
   });
-  return Object.assign(trial_data, {'response': responses});
+  return Object.assign(trial_data, {
+    'response': responses
+  });
 }
 
-getSliderResponse = function(){
+getSliderResponse = function () {
   let responses = [];
   let trial_data = {}
-  _.range(1,5).forEach(function(i){
-    let response = $("#response" + i).val();
-    responses.push(response)
-    trial_data['response' + i] = response
+  _.range(1, 5)
+    .forEach(function (i) {
+      let response = $("#response" + i)
+        .val();
+      responses.push(response)
+      trial_data['response' + i] = response
+    });
+  trial_data = Object.assign(trial_data, {
+    'response': responses
   });
-  trial_data = Object.assign(trial_data, {'response': responses});
   return trial_data;
 }
 
 
-showAnimationInTrial = function(CT, html_answers, progress_bar=true){
+showAnimationInTrial = function (CT, html_answers, progress_bar = true) {
   let html_bar = progress_bar ? `<div class='progress-bar-container'>
        <div class='progress-bar'></div>
       </div>` : ``;
@@ -171,10 +192,11 @@ showAnimationInTrial = function(CT, html_answers, progress_bar=true){
     html_answers +
     htmlRunNextButtons();
 
-  $('#main').html(view_template);
+  $('#main')
+    .html(view_template);
 
   let stimulus = SHUFFLED_TRAIN_STIMULI[CT];
-  if(DEBUG){
+  if (DEBUG) {
     console.log(stimulus.id);
   }
 
@@ -186,5 +208,19 @@ showAnimationInTrial = function(CT, html_answers, progress_bar=true){
   show(engine, render);
   let startTime = Date.now();
 
-  return {engine, render, startTime}
+  return {
+    engine,
+    render,
+    startTime
+  }
+}
+
+
+// new for fridge views//MALIN FRIDGE
+_checkBuildSentence = function (sentenceArray, button2Toggle) {
+  if (sentenceArray.length >= 4) {
+    toggleNextIfDone(button2Toggle, true);
+  } else {
+    button2Toggle.addClass("grid-button");
+  }
 }

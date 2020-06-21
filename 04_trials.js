@@ -388,6 +388,7 @@ var slider_rating_trials = [
 // adapt path to pictures depending on colour group in each trial
 // add group and id separately
 let n = slider_rating_trials.length;
+// here I changed code to save changes into slider_rating_trials 22.5. Malin
 _.map(slider_rating_trials, function (trial) {
   let group = _.sample(["group1", "group2"]);
   trial.picture = trial.picture.replace("group", group);
@@ -395,6 +396,8 @@ _.map(slider_rating_trials, function (trial) {
   let id = trial.picture.split("/")
   trial.id = id[id.length - 1].slice(0, -4);
 });
+
+console.log(slider_rating_trials);
 
 // PRE-TEST for steepness / edge
 let pretest_trial = function(angle, dir){
@@ -411,7 +414,7 @@ let pretest_trial = function(angle, dir){
         };
 }
 var pretest_trials = [];
-PRETEST_ANGLES.forEach(function(angle){
+PRETEST_ANGLES.forEach(function (angle) {
   pretest_trials.push(pretest_trial(angle, "horiz"))
   pretest_trials.push(pretest_trial(angle, "vert"))
 })
@@ -475,3 +478,28 @@ train_ids
 // train_slider_trials = shuffleQuestionsAllTrials(icons_train, train_slider_trials);
 
 TRAIN_TRIALS = TRAIN_TRIALS.concat(train_slider_trials);
+
+
+// fridge trials take in input and thereby info of slider_rating_trials
+var fridge_trials = _.cloneDeep(slider_rating_trials)
+
+_.map(fridge_trials, function (trial, i) {
+  trial.sentence = [" "];
+  trial.QUD = "How would you describe the following scene?";
+});
+console.log(fridge_trials);
+for (var i = 0; i < fridge_trials.length; i++) {
+  fridge_trials[i] = _.omit(fridge_trials[i], ["icon1", "icon2", "icon3", "icon4", "question1", "question2", "question3", "question4"]);
+}
+console.log("hello");
+console.log(fridge_trials);
+
+//delete v.icon1;
+//delete v.icon2;
+
+
+//_.omit(fridge_trials, ["icon1", "icon2", "icon3", "icon4", "question1", "question2", "question3", "question4"]);
+//delete fridge_trials.icon1;
+
+
+console.log(fridge_trials);
