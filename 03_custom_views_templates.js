@@ -106,7 +106,7 @@ const animation_view1 = {
 const animation_view2 = {
   name: "animation",
   title: "title",
-  CT: NB_TRAIN_TRIALS - 1, //is this the start value?
+  CT: NB_TRAIN_TRIALS - 1,
   trials: 1,
   data: "",
   // The render function gets the magpie object as well as the current trial
@@ -139,6 +139,10 @@ const animation_view2 = {
                 .disabled = true;
             });
         }
+        let id = SHUFFLED_TRAIN_STIMULI[CT].id
+        id_button_correct = TrainExpectations[id]
+        $('#' + id_button_correct)
+          .addClass("correct");
       });
     $("#buttonNextAnimation")
       .on("click", function () {

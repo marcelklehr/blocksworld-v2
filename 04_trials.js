@@ -57,7 +57,7 @@ var slider_rating_trials = [
   //   question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
   //   question: '',
   //   optionLeft: "impossible",
-  //   optionRight: "certainly"
+  //   optionRight: "certain"
   // },
   // {
   //   picture: "stimuli/img/group/ac1_lu.jpg",
@@ -71,7 +71,7 @@ var slider_rating_trials = [
   //   question3: text_sliders.c,
   //   question4: text_sliders.none,
   //   optionLeft: "impossible",
-  //   optionRight: "certainly"
+  //   optionRight: "certain"
   // },
   {
     picture: "stimuli/img/group/ac1_lh.jpg",
@@ -86,7 +86,7 @@ var slider_rating_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certain"
   },
   // {
   //   picture: "stimuli/img/group/ac1_ul.jpg",
@@ -101,7 +101,7 @@ var slider_rating_trials = [
   //   question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
   //   question: '',
   //   optionLeft: "impossible",
-  //   optionRight: "certainly"
+  //   optionRight: "certain"
   // },
   {
     picture: "stimuli/img/group/ac1_uu.jpg",
@@ -116,7 +116,7 @@ var slider_rating_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certain"
   },
   {
     picture: "stimuli/img/group/ac1_uh.jpg",
@@ -131,7 +131,7 @@ var slider_rating_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certain"
   },
   // {
   //   picture: "stimuli/img/group/ac1_hl.jpg",
@@ -146,7 +146,7 @@ var slider_rating_trials = [
   //   question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
   //   question: '',
   //   optionLeft: "impossible",
-  //   optionRight: "certainly"
+  //   optionRight: "certain"
   // },
   // {
   //   picture: "stimuli/img/group/ac1_hu.jpg",
@@ -161,7 +161,7 @@ var slider_rating_trials = [
   // question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
   // question: '',
   //   optionLeft: "impossible",
-  //   optionRight: "certainly"
+  //   optionRight: "certain"
   // },
   {
     picture: "stimuli/img/group/ac1_hh.jpg",
@@ -176,7 +176,7 @@ var slider_rating_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certain"
   },
   {
     picture: "stimuli/img/group/ac2_ll.jpg",
@@ -191,7 +191,7 @@ var slider_rating_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certain"
   },
   {
     picture: "stimuli/img/group/ac2_ul.jpg",
@@ -206,7 +206,7 @@ var slider_rating_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certain"
   },
   {
     picture: "stimuli/img/group/ac2_hl.jpg",
@@ -221,7 +221,7 @@ var slider_rating_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certain"
   },
   // {
   //   picture: "stimuli/img/group/ac2_uu.jpg",
@@ -236,7 +236,7 @@ var slider_rating_trials = [
   //   question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
   //   question: '',
   //   optionLeft: "impossible",
-  //   optionRight: "certainly"
+  //   optionRight: "certain"
   // },
   {
     picture: "stimuli/img/group/ac2_uh.jpg",
@@ -251,7 +251,7 @@ var slider_rating_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certain"
   },
   {
     picture: "stimuli/img/group/ac2_hh.jpg",
@@ -266,7 +266,7 @@ var slider_rating_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certain"
   },
   {
     picture: "stimuli/img/group/independent_ll.jpg",
@@ -281,7 +281,7 @@ var slider_rating_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certain"
   },
   // {
   //   picture: "stimuli/img/group/independent_lu.jpg",
@@ -296,7 +296,7 @@ var slider_rating_trials = [
   // question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
   // question: '',
   //   optionLeft: "impossible",
-  //   optionRight: "certainly"
+  //   optionRight: "certain"
   // },
   // {
   //   picture: "stimuli/img/group/independent_lh.jpg",
@@ -311,7 +311,7 @@ var slider_rating_trials = [
   //   question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
   //   question: '',
   //   optionLeft: "impossible",
-  //   optionRight: "certainly"
+  //   optionRight: "certain"
   // },
   {
     picture: "stimuli/img/group/independent_ul.jpg",
@@ -326,7 +326,7 @@ var slider_rating_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certain"
   },
   // {
   //   picture: "stimuli/img/group/independent_uu.jpg",
@@ -341,7 +341,7 @@ var slider_rating_trials = [
   //   question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
   //   question: '',
   //   optionLeft: "impossible",
-  //   optionRight: "certainly"
+  //   optionRight: "certain"
   // },
   {
     picture: "stimuli/img/group/independent_uh.jpg",
@@ -356,7 +356,7 @@ var slider_rating_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certain"
   },
   {
     picture: "stimuli/img/group/independent_hl.jpg",
@@ -371,7 +371,7 @@ var slider_rating_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certain"
   },
   // {
   //   picture: "stimuli/img/group/independent_hu.jpg",
@@ -386,7 +386,7 @@ var slider_rating_trials = [
     // question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     // question: '',
   //   optionLeft: "impossible",
-  //   optionRight: "certainly"
+  //   optionRight: "certain"
   // },
   {
     picture: "stimuli/img/group/independent_hh.jpg",
@@ -401,7 +401,7 @@ var slider_rating_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly"
+    optionRight: "certain"
   }
 
 ];
@@ -424,7 +424,7 @@ let pretest_trial = function(angle, dir){
           picture: "stimuli/img/pretest/ramp-side/" + dir + "-" + angle.toString() + "-group.jpg",
           question: 'Do you think the <b>group</b> block will fall?',
           optionLeft: "impossible",
-          optionRight: "certainly",
+          optionRight: "certain",
           id: '', question1: '', question2: '', question3: '', question4: '',
           icon1: '', icon2: '', icon3: '', icon4: '',
           response1: '', response2: '', response3: '', response4: '',
@@ -467,7 +467,7 @@ let train_slider_trials = [
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.train),
     question: '',
     optionLeft: "impossible",
-    optionRight: "certainly",
+    optionRight: "certain",
     expected: ''
   }
 ];
@@ -489,7 +489,9 @@ train_ids
       question3: text_train_buttons.short.c,
       question4: text_train_buttons.short.none,
       question: '',
-      expected: ''
+      expected: '',
+      optionLeft: 'impossible',
+      optionRight: 'certain'
     };
     TRAIN_TRIALS.push(data);
   });

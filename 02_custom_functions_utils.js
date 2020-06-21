@@ -9,22 +9,22 @@ sliderTexts = function (cols) {
 
 sliderIcons = function (cols) {
   let id2Html = {}
-  id2Html['ac'] = `<div>` +
+  id2Html['ac'] = `<div id=` + cols[0] + cols[1] + ` class=div-border>` +
     `<img src=stimuli/img/icons/` + cols[0] + `.png>` +
     `<img src=stimuli/img/icons/` + cols[1] + `.png>` +
     `</div>`;
 
-  id2Html['a'] = `<div>` +
+  id2Html['a'] = `<div id=` + cols[0] + ` class=div-border>` +
     `<img src=stimuli/img/icons/` + cols[0] + `.png>` +
     `<img src=stimuli/img/icons/not-` + cols[1] + `.png>` +
     `</div>`;
 
-  id2Html['c'] = `<div>` +
+  id2Html['c'] = `<div id=` + cols[1] + ` class=div-border>` +
     `<img src=stimuli/img/icons/not-` + cols[0] + `.png>` +
     `<img src=stimuli/img/icons/` + cols[1] + `.png>` +
     `</div>`;
 
-  id2Html["none"] = `<div>` +
+  id2Html["none"] = `<div id=none class=div-border>` +
     `<img src=stimuli/img/icons/not-` + cols[0] + `.png>` +
     `<img src=stimuli/img/icons/not-` + cols[1] + `.png>` +
     `</div>`;

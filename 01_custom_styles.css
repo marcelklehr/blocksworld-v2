@@ -271,3 +271,7 @@ input[type="range"].replied::-webkit-slider-thumb {
 .img{
   width: 50%
 }
+
+.div-border {
+  display: inline-block;
+}
