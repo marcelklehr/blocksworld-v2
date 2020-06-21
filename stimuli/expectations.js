@@ -1,5 +1,5 @@
 let expected_utts = {};
-// TODO needs to be updated! 
+// TODO needs to be updated!
 expected_utts["low_low_independent"] = ["Neither A(left) nor C(right).", "not A(left)", "not C(right)"]
 expected_utts["low_low_ac1"] = ["Neither A(left) nor C(right).", "not A(left)", "not C(right)",
   "If A(left) fell, C(right) would fall.(german: falls/sollte A(left) ...)", "If C(right), A(left)."]

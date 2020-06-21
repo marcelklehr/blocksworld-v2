@@ -28,9 +28,9 @@ OPTS = {
 let TRIAL_TYPES = ['ac1', 'ac2', 'independent'];
 // Proportion of block that's ON TOP of its base wall beneath
 let PRIOR = {
-  'vertical': {'high': 0.35, 'uncertain': 0.51, 'low': 0.75,
+  'vertical': {'high': 0.35, 'uncertain': 0.51, 'low': 0.70,
                'uncertainL': 0.55, 'uncertainH': 0.5},
-  'horizontal': {'high': 0.35, 'uncertain': 0.50, 'low': 0.65,
+  'horizontal': {'high': 0.35, 'uncertain': 0.50, 'low': 0.67,
                  'uncertainH': 0.49, 'uncertainL': 0.55, 'lowL': 0.70},
   'impossible': 1,
   'conditions': ['high', 'uncertain', 'low']
@@ -53,8 +53,8 @@ let ANGLES = {
 let PRETEST_ANGLES = _.range(45);
 let BASE_RAMP = {
   'horizontal': {'high': 100, 'uncertainH': 115, 'uncertain': 150,
-                 'uncertainL': 175, 'low': 250},
-  'vertical': {'high': 150, 'uncertainH': 175, 'uncertain': 200,
+                 'uncertainL': 175, 'low': 270},
+  'vertical': {'high': 150, 'uncertainH': 175, 'uncertain': 210,
                'uncertainL': 225, 'low': 300},
   'default': 200
 };
@@ -64,7 +64,7 @@ let DIST_EDGE = 5;
 let SIMULATION = {'duration': 5000};
 
 
-let HORIZ_IFF = {
+let HORIZ_AC2 = {
   'll': ['horizontal', 'horizontal'], 'ul': ['vertical', 'horizontal'],
   'lu': ['vertical', 'horizontal'], 'uu': ['horizontal', 'horizontal'],
   'hu': ['vertical', 'horizontal'], 'uh': ['vertical', 'horizontal'],
@@ -80,9 +80,9 @@ let HORIZ_IND = {
   'lu': ['vertical', 'horizontal']
 }
 
-let HORIZ_AC = {
+let HORIZ_AC1 = {
   'll': ['vertical', 'horizontal'], 'ul': ['vertical', 'horizontal'],
-  'uu': ['horizontal', 'horizontal'], 'uh': ['horizontal', 'vertical'],
+  'uu': ['horizontal', 'vertical'], 'uh': ['horizontal', 'vertical'],
   'hh': ['vertical', 'vertical'], 'hl': ['horizontal', 'horizontal'],
   'lh': ['horizontal', 'vertical'], 'hu': ['horizontal', 'vertical'],
   'lu': ['vertical', 'horizontal']
