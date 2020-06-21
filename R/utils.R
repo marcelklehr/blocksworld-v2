@@ -2,14 +2,14 @@ library(tidyverse)
 
 test_data <- function(path_to_csv) {
   data <- read_csv(path_to_csv) %>%
-    mutate(prolific_id = str_trim(str_to_lower(prolific_id))) %>% 
+    mutate(prolific_id = str_trim(str_to_lower(prolific_id))) %>%
     filter(str_detect(prolific_id, "test-.*") | str_detect(prolific_id, "test "))
   return(data)
 }
 
 experimental_data <- function(path_to_csv){
   data <- read_csv(path_to_csv) %>%
-    mutate(prolific_id = str_trim(str_to_lower(prolific_id))) %>% 
+    mutate(prolific_id = str_trim(str_to_lower(prolific_id))) %>%
     filter(!str_detect(prolific_id, "test.*") & prolific_id != "" &
            !is.na(prolific_id))
   return(data)
@@ -18,7 +18,7 @@ experimental_data <- function(path_to_csv){
 anonymize_and_save <- function(data_dir, data_fn, result_dir, result_fn, test_run=FALSE){
   path_to_data <- paste(data_dir, data_fn, sep=.Platform$file.sep)
   data <- if(test_run) test_data(path_to_data) else experimental_data(path_to_data)
-    
+
   if(!test_run) {
     # filter test debug trials
     prolific_ids <- data %>% pull(prolific_id) %>% unique()
@@ -34,51 +34,51 @@ anonymize_and_save <- function(data_dir, data_fn, result_dir, result_fn, test_ru
 }
 
 tidy_test <- function(df){
-  dat.test <- df %>% filter(trial_name == "multiple_slider") %>% 
+  dat.test <- df %>% filter(trial_name == "multiple_slider") %>%
     select(prolific_id, RT, QUD, id, group, noticed_steepness,
            icon1, icon2, icon3, icon4,
-           response1, response2, response3, response4) %>% 
+           response1, response2, response3, response4) %>%
     pivot_longer(cols=c(contains("response")),
-                 names_to = "response_idx", names_prefix = "response", 
-                 values_to = "response") %>% 
+                 names_to = "response_idx", names_prefix = "response",
+                 values_to = "response") %>%
     pivot_longer(cols=c(contains("icon")),
                  names_to = "icon_idx", names_prefix = "icon",
-                 values_to = "icon") %>% 
-    filter(response_idx == icon_idx) %>% 
+                 values_to = "icon") %>%
+    filter(response_idx == icon_idx) %>%
     select(-response_idx, -icon_idx) %>%
     rename(question=icon)
-  
+
   dat.test <- dat.test %>%
     mutate(response = as.numeric(response),
-           response = response/100, 
+           response = response/100,
            prolific_id = factor(prolific_id),
            id = factor(id))
   return(dat.test)
 }
 
 tidy_train <- function(df){
-  dat.train <- df %>% filter(startsWith(trial_name, "animation")) %>% 
+  dat.train <- df %>% filter(startsWith(trial_name, "animation")) %>%
     select(prolific_id, RT, expected, QUD, id, trial_name,
            icon1, icon2, icon3, icon4,
            response1, response2, response3, response4,
-    ) %>% 
+    ) %>%
     pivot_longer(cols=c(contains("icon")),
                  names_to = "icon_idx", names_prefix = "icon",
-                 values_to = "icon") %>% 
+                 values_to = "icon") %>%
     pivot_longer(cols=c(contains("response")),
-                 names_to = "response_idx", names_prefix = "response", 
-                 values_to = "response") %>% 
-    filter(response_idx == icon_idx) %>% 
-    select(-response_idx) %>% 
+                 names_to = "response_idx", names_prefix = "response",
+                 values_to = "response") %>%
+    filter(response_idx == icon_idx) %>%
+    select(-response_idx) %>%
     mutate(prolific_id = factor(prolific_id),
            id = factor(id))
   return(dat.train)
 }
 
 tidy_pretest <- function(df){
-  dat.pre <- df %>% filter(trial_name == "pretest") %>% 
-    select(prolific_id, question, response, id, trial_name, trial_number) %>% 
-    mutate(prolific_id = factor(prolific_id), id=factor(id), 
+  dat.pre <- df %>% filter(trial_name == "pretest") %>%
+    select(prolific_id, question, response, id, trial_name, trial_number) %>%
+    mutate(prolific_id = factor(prolific_id), id=factor(id),
            response = as.numeric(response),
            trial_number = as.character(trial_number))
   return(dat.pre)
@@ -88,9 +88,9 @@ tidy_data <- function(data, N_test=20, N_train=11){
   # 1. Select only columns relevant for data analysis
   df <- data %>% select(prolific_id,
                         question, question1, question2, question3, question4,
-                        QUD, icon1, icon2, icon3, icon4, response, 
+                        QUD, icon1, icon2, icon3, icon4, response,
                         expected, response1, response2, response3, response4,
-                        id, trial_name, trial_number, group, 
+                        id, trial_name, trial_number, group,
                         timeSpent, RT,
                         noticed_steepness,
                         education, comments, gender, age)
@@ -102,23 +102,23 @@ tidy_data <- function(data, N_test=20, N_train=11){
   stopifnot(nrow(df) == N_participants * (N_test + N_train));
 
   dat.comments <- df %>%
-    select(prolific_id, noticed_steepness, comments) %>% 
-    mutate(comments = if_else(is.na(comments), "", comments)) %>% 
+    select(prolific_id, noticed_steepness, comments) %>%
+    mutate(comments = if_else(is.na(comments), "", comments)) %>%
     unique()
   dat.info <- df %>% select(prolific_id, education, gender, age, timeSpent) %>%
     unique()
-  # dat.color_vision <- df %>% 
-  #   filter(trial_name == "color-vision") %>% 
+  # dat.color_vision <- df %>%
+  #   filter(trial_name == "color-vision") %>%
   #   select(prolific_id, id, question, response, expected, picture1, picture2, QUD)
 
   dat.train <- tidy_train(df)
   dat.test <- tidy_test(df)
   dat.pretest <- tidy_pretest(df)
 
-  dat.all <- list(test=dat.test, train=dat.train, 
+  dat.all <- list(test=dat.test, train=dat.train,
                   # color=dat.color_vision,
                   info=dat.info, comments=dat.comments, pretest=dat.pretest)
-  
+
   return(dat.all)
 }
 
@@ -131,10 +131,10 @@ standardize_color_groups <- function(df){
                                  group == "group2" & question == "g" ~ "a",
                                  group == "group2" & question == "b" ~ "c"
                                 ),
-           group = "group1", 
+           group = "group1",
            question = case_when(question == "a" ~ "b",
-                                question == "c" ~ "g", 
-                                question == "ac" ~ "bg", 
+                                question == "c" ~ "g",
+                                question == "ac" ~ "bg",
                                 question == "none" ~ "none")
            )
   return(df)
@@ -156,7 +156,7 @@ add_probs <- function(df, keys){
            p_likely_na=p_na,
            p_likely_c = p_c,
            p_likely_nc=p_nc
-    ) 
+    )
   return(df)
 }
 
@@ -168,18 +168,18 @@ filter_noticed_steepness <- function(df){
 
 cluster_responses <- function(dat, quest){
   dat.kmeans <- dat %>% filter(question == quest) %>%
-    select(prolific_id, id, response) %>% add_column(y=1) %>% 
-    group_by(prolific_id, id) %>% 
-    unite("rowid", "prolific_id", "id", sep="--") %>% 
+    select(prolific_id, id, response) %>% add_column(y=1) %>%
+    group_by(prolific_id, id) %>%
+    unite("rowid", "prolific_id", "id", sep="--") %>%
     column_to_rownames(var = "rowid")
-  clusters <- kmeans(dat.kmeans, 2) 
-  
+  clusters <- kmeans(dat.kmeans, 2)
+
   dat.kmeans <- dat.kmeans %>%
     rownames_to_column(var = "rowid") %>%
-    as_tibble() %>% 
-    separate(col="rowid", sep="--", into=c("prolific_id", "id")) %>% 
+    as_tibble() %>%
+    separate(col="rowid", sep="--", into=c("prolific_id", "id")) %>%
     mutate(cluster=as.factor(clusters$cluster), id=as.factor(id),
-           prolific_id = as.factor(prolific_id)) %>% 
+           prolific_id = as.factor(prolific_id)) %>%
     select(prolific_id, id, cluster)
   df <- left_join(dat, dat.kmeans)
   return(df)
@@ -190,21 +190,21 @@ cluster_responses <- function(dat, quest){
 #     group_by(stimulus_id, participant_id) %>%
 #     pivot_wider(names_from = utterance, values_from = response) %>%
 #     mutate(none=sprintf("%3f", none), ac=sprintf("%3f", ac),
-#            a=sprintf("%3f", a), c=sprintf("%3f", c)) %>% 
-#     select(-n) %>% 
+#            a=sprintf("%3f", a), c=sprintf("%3f", c)) %>%
+#     select(-n) %>%
 #     mutate(none=floor(as.numeric(none)*1000)/1000,
 #            ac=floor(as.numeric(ac) * 1000)/1000,
 #            a=floor(as.numeric(a)*1000)/1000,
-#            c=floor(as.numeric(c)*1000)/1000) %>% 
+#            c=floor(as.numeric(c)*1000)/1000) %>%
 #     distinct()
-#   
+#
 #   tables_to_wppl <- tables_wide %>%
 #     add_column(vs=list(c("AC", "A-C", "-AC", "-A-C"))) %>%
 #     group_by(stimulus_id, participant_id) %>%
-#     mutate(ps=list(c(ac, a, c, none))) %>% 
+#     mutate(ps=list(c(ac, a, c, none))) %>%
 #     ungroup() %>%
 #     select(participant_id, stimulus_id, ps, vs)
-#   
+#
 #   return(tables_to_wppl)
 # }
 
@@ -215,4 +215,3 @@ cluster_responses <- function(dat, quest){
 # df <- df %>%
 #   separate(response, into=c("response1", "response2", "response3",
 #                             "response4"), sep="-")
-

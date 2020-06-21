@@ -41,22 +41,22 @@ plot_dir <- paste(result_dir, "plots", sep=.Platform$file.sep);
 dir.create(plot_dir, showWarnings = FALSE)
 ```
 
-Use normalized data and check how many all-or-none answers were given since we 
+Use normalized data and check how many all-or-none answers were given since we
 dont really want them, stimuli should have a little more uncertainty than that.
 
 ```{r, eval=FALSE}
-# Look for participants who gave all-or-none responses, if any, 
+# Look for participants who gave all-or-none responses, if any,
 # which stimuli were rated as all-or-none by how many participants?
-df <- data.norm %>% group_by(prolific_id, id) %>% 
-  summarise(n=max(response)) %>% 
+df <- data.norm %>% group_by(prolific_id, id) %>%
+  summarise(n=max(response)) %>%
   filter(n==1)
 
 N0 <- N_participants - df %>% pull(prolific_id) %>% unique() %>% length()
 df0 <- tibble(prolific_id=rep('--', N0), ratio_all_none=rep(0, N0))
-  
+
 df.participants_all_none <- df %>% group_by(prolific_id) %>%
   summarise(ratio_all_none = n() / length(stimuli)) %>%
-  mutate(prolific_id=as.character(prolific_id)) %>% 
+  mutate(prolific_id=as.character(prolific_id)) %>%
   bind_rows(df0)
 
 if (nrow(df.participants_all_none) != 0){
@@ -67,11 +67,11 @@ if (nrow(df.participants_all_none) != 0){
   print(df.participants_all_none)
 
   df.stimuli_all_none <- df %>%
-    ungroup() %>% group_by(id) %>% summarise(n_participants = n()) 
+    ungroup() %>% group_by(id) %>% summarise(n_participants = n())
 
   p <- df.stimuli_all_none %>%
-        ggplot(aes(x=id, y=n_participants)) + geom_bar(stat="identity") + 
-        theme(axis.text.x = element_text(angle=90, hjust=1)) + 
+        ggplot(aes(x=id, y=n_participants)) + geom_bar(stat="identity") +
+        theme(axis.text.x = element_text(angle=90, hjust=1)) +
         labs(y="#participants who gave all-none answer")
   print(p)
 } else {
@@ -83,33 +83,33 @@ if (nrow(df.participants_all_none) != 0){
 ## Experimental data: probability tables
 
 ```{r}
-dat <- data.plot %>% ungroup() %>% 
+dat <- data.plot %>% ungroup() %>%
   mutate(question = factor(question, levels = c("bg", "b", "g", "none")))
 
 labels <- c(bg="Blue and Green", b="Blue and ¬Green",
             g="¬Blue and Green", none="¬Blue and ¬Green")
 
-df <- cluster_responses(dat, "g") %>% 
+df <- cluster_responses(dat, "g") %>%
   group_by(question, id) %>% mutate(mu=mean(response), med=median(response));
 
 for (pa in seq(1, 10)){
-  p <- df  %>% 
+  p <- df  %>%
     ggplot(aes(x=response, y=factor(0))) +
     geom_jitter(height = 0.1, alpha=0.5, aes(colour = cluster)) +
     geom_point(mapping=aes(x=mu, y=factor(0)),  shape=24, color = "red") +
     geom_vline(aes(xintercept=med), color = "red", size=0.5) +
     scale_x_continuous(limits=c(-0.2, 1.2),
                        breaks=c(0, 0.25, 0.5, 0.75, 1)) +
-    labs(x="estimates probability", y="") + 
+    labs(x="estimates probability", y="") +
     theme_bw() +
     facet_grid_paginate(id~question, nrow=2, ncol = 4,
                         labeller = labeller(question=labels),
-                        page = pa) + 
+                        page = pa) +
     theme(axis.text.y=element_blank(),
           axis.ticks.y =element_blank(),
           text = element_text(size=14),
           axis.text.x=element_text(angle=45, vjust = 0.5),
-          legend.position = "none") 
+          legend.position = "none")
   print(p)
 }
 ```
@@ -121,14 +121,14 @@ Sort trials according to how they are expected to be interpreted
 
 
 ```{r}
-df <- data.norm %>% 
-  pivot_wider(names_from = question, values_from = response) %>% 
-  ungroup() %>% mutate(id=as.character(id)) %>% add_probs() %>% 
+df <- data.norm %>%
+  pivot_wider(names_from = question, values_from = response) %>%
+  ungroup() %>% mutate(id=as.character(id)) %>% add_probs() %>%
   select(-group, -QUD, -n)
 as_independent <- c('a_implies_c_ll', 'a_implies_c_lu', 'a_implies_c_lh',
                     'a_implies_c_uh', 'a_implies_c_hh',
                     'a_iff_c_ll', 'a_iff_c_hh')
-ind <- df %>% filter(startsWith(id, "independent") | id %in% as_independent) %>% 
+ind <- df %>% filter(startsWith(id, "independent") | id %in% as_independent) %>%
   add_column(kind = "independent")
 
 as_a_implies_c_cause <- c('a_iff_c_hl', 'a_implies_c_hl')
@@ -153,9 +153,9 @@ prepare the data
 ```{r, echo=FALSE}
 dataIndependent = function(data) {
   stimuli <- data %>% pull(id) %>% unique()
-  df <- data %>% mutate(prod_ac=p_a*p_c, p=bg-prod_ac, p_key = "diff_ac_prod_ac") %>% 
+  df <- data %>% mutate(prod_ac=p_a*p_c, p=bg-prod_ac, p_key = "diff_ac_prod_ac") %>%
     select(prolific_id, id, p, p_key)
-    
+
   labels <- c(diff_ac_prod_ac="P(B,G)-P(B)xP(G)")
               # , bg="P(Blue,Green)", prod_ac="P(Blue) * P(Green)")
   return(list(labels=labels, data=df, stimuli=stimuli))
@@ -175,9 +175,9 @@ dataOthers <- function(data){
   stimuli <- data %>% pull(id) %>% unique()
   df <- data %>%
     select(prolific_id, id, p_c, p_c_given_a, none) %>%
-    mutate(p_delta = p_c_given_a - p_c, p_delta_star = if_else(none==0, 1, p_delta/none)) %>% 
-    select(prolific_id, id, p_delta_star) %>% 
-    rename(p=p_delta_star) %>% 
+    mutate(p_delta = p_c_given_a - p_c, p_delta_star = if_else(none==0, 1, p_delta/none)) %>%
+    select(prolific_id, id, p_delta_star) %>%
+    rename(p=p_delta_star) %>%
     add_column(p_key=factor("delta_p_star"))
   labels <- c(delta_p_star="(P(C|A)-P(C))/P(¬A,¬C)")
 
@@ -192,23 +192,23 @@ plotProbs <- function(df, xlab, title, limits_x = c(-0.2, 1.2),
                       breaks_x = c(0, 0.25, 0.5, 0.75, 1)) {
   df_means <- df$data %>% as_tibble() %>% group_by(id, p_key) %>%
                 summarise(mu=mean(p), med=median(p))
-  dat <- left_join(df$data, df_means) 
+  dat <- left_join(df$data, df_means)
   n = 1; pa = 1;
   while(pa <= n) {
-    p <- dat %>% 
+    p <- dat %>%
       ggplot(aes(x=p, y=factor(0))) +
       geom_jitter(height = 0.1, alpha=0.5, aes(colour=factor(prolific_id))) +
       scale_x_continuous(limits=limits_x, breaks=breaks_x) +
-      labs(x=xlab, y="") + 
+      labs(x=xlab, y="") +
       theme_bw() +
-      facet_wrap_paginate(c("id"), nrow=2, ncol = 4, page = pa) + 
+      facet_wrap_paginate(c("id"), nrow=2, ncol = 4, page = pa) +
       geom_vline(aes(xintercept=med), color="orange", size=0.5) +
       geom_point(aes(x=mu, y=factor(0)), color="red", shape=24, size=0.75) +
       theme(legend.position = "none",
             axis.text.y=element_blank(),
             axis.ticks.y =element_blank(),
             axis.text = element_text(size=11, angle=45, hjust=1),
-            panel.spacing = unit(2, "lines")) + 
+            panel.spacing = unit(2, "lines")) +
       ggtitle(title)
     print(p)
     n <- n_pages(p)
@@ -229,7 +229,7 @@ plotProbs(df, "P(A,C)-P(A)xP(C)", "expected interpretation: independent",
           limits_x = c(-0.5, 0.5), breaks_x = seq(-0.5, 0.5, 0.25))
 ```
 
-## Trials that are expected to be A->C (cause). 
+## Trials that are expected to be A->C (cause).
 Check delta p = P(C|A) - P(C).
 
 ```{r}
@@ -256,7 +256,7 @@ plotProbs(df, "delta P* = (P(C|A)-P(C))/(P(¬A,¬C)", "other interpretations",
 
 ```{r, echo = FALSE, message=FALSE}
 fn <- paste(result_dir, "exp1_tables_mean.csv", sep=.Platform$file.sep)
-tables <- read_csv(fn) %>% add_probs() %>% 
+tables <- read_csv(fn) %>% add_probs() %>%
   pivot_longer(cols=starts_with("p_"), names_to = "key", values_to = "prob")
 ```
 
@@ -264,10 +264,10 @@ tables <- read_csv(fn) %>% add_probs() %>%
 ```{r, include=FALSE, eval=FALSE}
 PlotDensity <- function(dat, p1, p2, save_as){
   p <- dat %>%
-    filter(key==p1 | key == p2) %>% 
+    filter(key==p1 | key == p2) %>%
     ggplot(aes(prob, fill=key)) +
     geom_density(alpha=0.5)
-  
+
   # ggsave(paste(TARGET_DIR, save_as, sep=.Platform$file.sep), p, width=6, height=4)
   return(p)
 }
@@ -283,4 +283,3 @@ tables %>% PlotDensity("p_na_given_nc", "p_nc_given_na", "p-neg-conditionals.png
 tables %>% PlotDensity("p_na", "p_nc", "p-neg-marginals.png")
 
 ```
-

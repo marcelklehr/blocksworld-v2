@@ -31,7 +31,7 @@ print(paste('filtered due to RT:', nrow(filtered_rt)))
 # 3. All 0 or all 1 responses
 # One can't believe that all events will certainly (not) happen
 filtered_sum <- df %>%
-  group_by(prolific_id, id) %>% 
+  group_by(prolific_id, id) %>%
   filter(sum(response) == 0 | sum(response) == 4)
 
 df <- df %>% filter(sum(response) != 0 & sum(response) != 4)
@@ -41,13 +41,13 @@ print(paste('filtered due to sum=4 or sum=0:', nrow(filtered_sum)))
 # standardize colour groups -----------------------------------------------
 df <- standardize_color_groups(df)
 
-# normalize such that slider responses sum up to 1 but also keep original response 
-df <- df %>% group_by(prolific_id, id) %>% 
-  mutate(n=sum(response), r_norm=response/n) %>% 
+# normalize such that slider responses sum up to 1 but also keep original response
+df <- df %>% group_by(prolific_id, id) %>%
+  mutate(n=sum(response), r_norm=response/n) %>%
   rename(r_orig=response)
 
 # save processed data -----------------------------------------------------
-path_target <- paste(result_dir, "exp1_tidy.rds", sep=.Platform$file.sep) 
+path_target <- paste(result_dir, "exp1_tidy.rds", sep=.Platform$file.sep)
 print(paste('written processed anonymized tidy data to:', path_target))
 dat.all$test <- df
 saveRDS(dat.all, path_target)
@@ -57,6 +57,9 @@ means <- df %>% group_by(id, question) %>% summarise(mean=mean(r_norm))
 
 write.table(means %>% pivot_wider(names_from = question, values_from = mean),
             file=paste(result_dir, "exp1_tables_mean.csv", sep=.Platform$file.sep),
+            sep = ",", row.names=FALSE)
+write.table(means_filtered %>% pivot_wider(names_from = question, values_from = mean),
+            file=paste(result_dir, "exp1_prob_tables_mean_steepness_noticed.csv", sep=.Platform$file.sep),
             sep = ",", row.names=FALSE)
 
 # All Tables (with normalized values)
