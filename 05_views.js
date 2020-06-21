@@ -53,16 +53,23 @@ const instructions_general = magpieViews.view_generator("instructions", {
           blocks.
          <br />
          <br />
-         The experiment consists of two phases, a training and a testing phase.
-         In total, you will need about 15-20 minutes to finish it.
+         The experiment consists of two phases, a <b>training</b> and a <b>testing</b> phase.
+         In total, you will need about <b>15-20 minutes</b> to finish it.
+         <br/>
+         <br/>
+         We will start with the the training phase
+         which consists of <b>13</b> trials. You will see block arrangements similar
+         to those you will be shown later in the test phase, such that you are
+         able to develop intuitions about the physical properties and get
+         familiar with the stimuli.
          <br/>
          <br/>
          Please note:
          <br/>
-         Throughout the experiment, you may want to go into Full Screen Mode
+         Throughout the experiment, you may want to go into <b>Full Screen Mode</b>
          (usually switched on/off with F11), in order to minimize the need to
          scroll down to see all buttons.`,
-  buttonText: "START"
+  buttonText: "Go to Training instructions"
 });
 
 // We will start with the first part of the training phase which consists
@@ -77,16 +84,10 @@ const instructions_train2 = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_train2",
   title: "Instructions Training",
-  text: `We will start with the the training phase
-          which consists of 11 trials. You will see block arrangements similar
-          to those you will be shown later in the test phase, such that you are
-          able to develop intuitions about the physical properties and get
-          familiar with the stimuli.
-          <br/>
-          <br/>
-        For each presented scene you will be asked to indicate which of the
-         colored blocks you think will fall by clicking on the button with the
-         respective icons.
+  text: `For each presented scene you will be asked to indicate whether you think
+        that most likely both, none or respectively only one of the
+         colored blocks will fall. For this, we ask you to click on the button
+         with the respective icon.
          <br />
          A falling block is represented by a skewed rectangle
         and a resting block that <i>does not fall</i> is represented by a rectangle
@@ -100,19 +101,19 @@ const instructions_train2 = magpieViews.view_generator("instructions", {
         <img src='stimuli/img/icons/not-yellow.png' />
          <br/>
          <br/>
-         A block is considered to <b><i>fall</i></b> <b>as soon as it <i>topples
-         over</i> or <i>drops</i> from a platform or from another block.</b>
+         A block is considered to <b><i>fall</i></b> as soon as it <b>topples
+         over</b> or <b>drops</b> from a platform or from another block.</b>
          <br/>
-         The colored blocks represent common toy blocks, they <b>do not have</b> any
-         <i>special or unexpected</i> properties and they are only distinguishable by
-        their color.
+         The colored blocks represent common toy blocks <b>without</b> any
+         <i>special or unexpected</i> properties. The different colors do
+         <b>not have</b> any meaning, they are just used to distinguish them.
              <br />
              <br />
-         After you selected one of the four buttons (whose border will turn green),
-         you may click on RUN to see what actually happens. If you were wrong,
-         the selected button will turn red and the correct one will turn light
-         green.
-         Then, you can proceed to the next trial.`,
+         After you selected one of the four buttons (which will make their
+         border turn green), you have to click on RUN to see what will
+         actually happen. If you were wrong, the button you selected will turn
+         red and the correct one will appear in light green.
+         Then, you can proceed to the next trial by clicking on the NEXT button.`,
   buttonText: "CONTINUE"
 });
 
@@ -124,11 +125,12 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   will proceed now.
     <br />
   In this trial, we ask you to indicate <b>how likely</b> you think certain
-  blocks <b>will or will not fall</b> by moving the corresponding sliders.
+  blocks <b>will or will not fall</b> by moving the sliders below the respective
+  icons.
    <br />
   The larger your belief is that the event you are asked for <b>will</b> occur,
   the more you should position the corresponding slider towards its
-  right end (<i>certainly</i>/100%).
+  right end (<i>certain</i>/100%).
   <br />
   The larger your belief is that the event <b>will not</b> occur, the more you
   should position the corresponding slider towards its left (<i>impossible</i>/0%).
@@ -151,7 +153,8 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   After you have provided all four estimates (the circles of all four sliders
   have to be green), you will be able to run the animation and after that,
   proceed to the test phase of the experiment.
-  `
+  `,
+  buttonText: "Start Test Phase"
 });
 
 const instructions_test = magpieViews.view_generator("instructions", {
@@ -166,7 +169,8 @@ const instructions_test = magpieViews.view_generator("instructions", {
           <br />
           As in the previous trial, we will ask you to
           indicate <b>how likely</b> you think certain blocks <b>will or will
-          not fall</b>. The only difference is, that now you will <i>not</i> get
+          not fall</b> (left: impossible, right: certain).
+          The only difference is, that now <i>you will not</i> get
           feedback about what will actually happen since you will be shown
           static pictures only.
           <br />
@@ -193,7 +197,7 @@ const instructions_test = magpieViews.view_generator("instructions", {
           distinguishable by their color.
             </br>
             </br>
-          We will now start the experiment. There are <b>20</b> scenes in total.`,
+          We will now start the experiment. There are <b>14</b> scenes in total.`,
   buttonText: "start experiment"
 });
 
