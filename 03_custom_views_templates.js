@@ -413,7 +413,7 @@ const fridge_generator = {
           .trim();
         sentence_array.push(value)
 
-        update_clickables(value);
+        let poss_next = update_clickables(value);
 
         $(".selected-words")
           .append(" " + value)
@@ -424,7 +424,7 @@ const fridge_generator = {
         //sentence = sentence.replace(/,/, " ");
         // console.log(sentence.replace(/,/, " "));
 
-        checkBuildSentence(sentence_array, submitbutton)
+        checkBuildSentence(sentence_array, poss_next, submitbutton)
         //sentence = sentence.replace(/,/, " ");
         // console.log(sentence);
       });
@@ -443,10 +443,8 @@ const fridge_generator = {
         config.data[CT].sentence = sentence;
 
         let value = _.last(sentence_array)
-
-        update_clickables(value);
-
-        checkBuildSentence(sentence_array, submitbutton);
+        let poss_next = update_clickables(value);
+        checkBuildSentence(sentence_array, poss_next, submitbutton);
       });
 
 

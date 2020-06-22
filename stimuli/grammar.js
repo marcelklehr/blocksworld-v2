@@ -1,6 +1,6 @@
 // let _ = require('../node_modules/underscore/underscore.js')
 
-let placeholder = {
+let GRAMMAR_VAR = {
   'IF': ["if", "if and only if", "only if"],
   'DET_N': ['neither', 'nor'],
   'COL': ['green', 'blue'],
@@ -11,7 +11,10 @@ let placeholder = {
   'V_AUX_I': ['make', 'cause'],
   'V_AUX': ['makes', 'causes']
 }
-let rules = {
+// mapping from token or placeholder (refers to all tokens of the placeholder)
+// to list of words/placeholders that will be visible after the key token was
+// selected
+let GRAMMAR_RULE = {
   'S': ['MOD', 'IF', 'the', 'both', 'DET_N'], //start symbol
   'MOD': ['the', 'both', 'V_AUX', 'V_AUX_I', 'V', 'V_I'],
   'the': ['COL'],
@@ -66,16 +69,16 @@ let WORDS = _.flatten(_.map(_.values(word_groups), 'words'));
 // console.log(WORDS)
 
 let shownNext = function (last) {
-  let arr = Object.keys(rules)
-    .includes(last) ? rules[last] :
-    Object.keys(placeholder)
-    .includes(last) ? placeholder[last] :
-    rules[_.filter(Object.keys(placeholder), function (key) {
-      return placeholder[key].includes(last);
+  let arr = Object.keys(GRAMMAR_RULE)
+    .includes(last) ? GRAMMAR_RULE[last] :
+    Object.keys(GRAMMAR_VAR)
+    .includes(last) ? GRAMMAR_VAR[last] :
+    GRAMMAR_RULE[_.filter(Object.keys(GRAMMAR_VAR), function (key) {
+      return GRAMMAR_VAR[key].includes(last);
     })[0]];
   //   console.log(arr)
   let symbols = _.reduce(arr, function (acc, val) {
-    return acc.concat(val == val.toLowerCase() ? val : placeholder[val]);
+    return acc.concat(val == val.toLowerCase() ? val : GRAMMAR_VAR[val]);
   }, []);
   return symbols
 }

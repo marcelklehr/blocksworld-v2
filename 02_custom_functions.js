@@ -217,8 +217,13 @@ showAnimationInTrial = function (CT, html_answers, progress_bar = true) {
 
 
 // new for fridge views//MALIN FRIDGE
-checkBuildSentence = function (sentenceArray, button2Toggle) {
-  if (sentenceArray.length >= 5) {
+checkBuildSentence = function (sentenceArray, poss_next, button2Toggle) {
+  let verbs = GRAMMAR_VAR['V'].concat(GRAMMAR_VAR['V_I']);
+  let has_block = sentenceArray.some(item => ['block', 'blocks'].includes(item));
+  let has_verb = sentenceArray.some(item => verbs.includes(item));
+  let next_is_conj =  GRAMMAR_VAR["CONJ"].every(item => poss_next.includes(item));
+  // console.log('a: ' + a + ', b: ' + b  + ', c: ' + c);
+  if(has_block && has_verb && next_is_conj) {
     toggleNextIfDone(button2Toggle, true);
   } else {
     button2Toggle.addClass("grid-button");
@@ -235,5 +240,5 @@ update_clickables = function (lastSelected) {
     $("#" + word)
       .toggleClass('not-clickable');
   });
-
+return poss_words
 }
