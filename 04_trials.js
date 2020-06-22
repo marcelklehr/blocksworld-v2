@@ -397,8 +397,6 @@ _.map(slider_rating_trials, function (trial) {
   trial.id = id[id.length - 1].slice(0, -4);
 });
 
-console.log(slider_rating_trials);
-
 // PRE-TEST for steepness / edge
 let pretest_trial = function(angle, dir){
   return {QUD: "Please answer the question below by moving the slider.",
@@ -485,21 +483,20 @@ var fridge_trials = _.cloneDeep(slider_rating_trials)
 
 _.map(fridge_trials, function (trial, i) {
   trial.sentence = [" "];
-  trial.QUD = "How would you describe the following scene?";
+  trial.QUD = "How would you most naturally describe the following scene?";
 });
-console.log(fridge_trials);
 for (var i = 0; i < fridge_trials.length; i++) {
   fridge_trials[i] = _.omit(fridge_trials[i], ["icon1", "icon2", "icon3", "icon4", "question1", "question2", "question3", "question4"]);
 }
-console.log("hello");
-console.log(fridge_trials);
+
+// single fridge example trial
+let fridge_ex = Object.assign({sentence: [" "]}, fridge_trials[0])
+fridge_ex.picture = "stimuli/img/fridge_example.jpg";
+let fridge_example_trials = [fridge_ex];
+
 
 //delete v.icon1;
 //delete v.icon2;
-
-
 //_.omit(fridge_trials, ["icon1", "icon2", "icon3", "icon4", "question1", "question2", "question3", "question4"]);
 //delete fridge_trials.icon1;
-
-
-console.log(fridge_trials);
+// console.log(fridge_trials);

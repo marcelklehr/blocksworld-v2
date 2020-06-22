@@ -407,8 +407,26 @@ const fridge_view = magpieViews.view_generator(
     trials: 3, //TEST_TRIALS.length,
     // trials: 2,
     // name should be identical to the variable name
-    name: "fridge",
+    name: "fridge_view",
     data: fridge_trials //TEST_TRIALS
+  },
+  // you can add custom functions at different stages through a view's life cycle
+  {
+    stimulus_container_generator: fridge_generator.stimulus_container_gen,
+    answer_container_generator: fridge_generator.answer_container_gen,
+    handle_response_function: fridge_generator.handle_response_function
+  }
+);
+
+
+const fridge_example = magpieViews.view_generator(
+  "slider_rating", {
+    // This will use all trials specified in `data`, you can use a smaller value
+    // (for testing), but not a larger value
+    trials: 1,
+    // name should be identical to the variable name
+    name: "fridge_example",
+    data: fridge_example_trials //TEST_TRIALS
   },
   // you can add custom functions at different stages through a view's life cycle
   {

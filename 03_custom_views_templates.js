@@ -417,9 +417,7 @@ const fridge_generator = {
           $("#" + word.replace(/\s/g,'')).addClass('not-clickable');
         })
         let poss_words = shownNext(value);
-        console.log(poss_words);
         poss_words.forEach(function(word){
-          console.log(word)
           $("#" + word).toggleClass('not-clickable');
         });
         $(".selected-words")

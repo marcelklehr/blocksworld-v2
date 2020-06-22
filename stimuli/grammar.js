@@ -45,7 +45,7 @@ let word_groups = [
   {words: ["green", "blue"], col: 'black'}
 ];
 let WORDS = _.flatten(_.map(_.values(word_groups), 'words'));
-console.log(WORDS)
+// console.log(WORDS)
 
 let shownNext = function(last){
   let arr = Object.keys(rules).includes(last) ? rules[last] :
