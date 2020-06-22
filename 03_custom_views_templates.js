@@ -471,7 +471,7 @@ const fridge_generator = {
           if (textInput.val()
             .trim()
             .length > minChars) {
-            console.log(textInput.val());
+            // console.log(textInput.val());
             submitbutton.removeClass("grid-button");
           } else {
             submitbutton.addClass("grid-button");
@@ -479,7 +479,7 @@ const fridge_generator = {
         });
 
         custom_sentence = document.getElementById('custom-text');
-        console.log(custom_sentence);
+        // console.log(custom_sentence);
       });
 
 
@@ -498,7 +498,8 @@ const fridge_generator = {
       $("#customWords")
         .removeClass("magpie-nodisplay");
       toggleNextIfDone($("#customWords"), true);
-      buttonDelete
+      toggleNextIfDone($("#buttonNext"), true);
+      // buttonDelete
       submitbutton.addClass("magpie-nodisplay");
       $("#buttonDelete")
         .addClass("magpie-nodisplay");
