@@ -379,11 +379,7 @@ const fridge_generator = {
       </div>
       <div class = "buttons">
         <button id ='customWords' class="magpie-view-button custom-words magpie-nodisplay"> Use my own words </button>
-<<<<<<< HEAD
         <button id='buttonNext' class='magpie-view-button grid-button'>Next scene</button>
-=======
-        <button id='buttonNext' class='magpie-view-button magpie-nodisplay'>Next scenario</button>
->>>>>>> fridge-view
       </div>
       <br><br/>
 
@@ -416,20 +412,9 @@ const fridge_generator = {
           .replace(/(\r\n|\n|\r)/gm, " ")
           .trim();
         sentence_array.push(value)
-<<<<<<< HEAD
-        // console.log(sentence_array);
-        WORDS.forEach(function(word){
-          $("#" + word.replace(/\s/g,'')).addClass('not-clickable');
-        })
-        let poss_words = shownNext(value);
-        poss_words.forEach(function(word){
-          $("#" + word).toggleClass('not-clickable');
-        });
-=======
 
         update_clickables(value);
 
->>>>>>> fridge-view
         $(".selected-words")
           .append(" " + value)
         // console.log(sentence_array);

@@ -488,7 +488,6 @@ _.map(fridge_trials, function (trial, i) {
 for (var i = 0; i < fridge_trials.length; i++) {
   fridge_trials[i] = _.omit(fridge_trials[i], ["icon1", "icon2", "icon3", "icon4", "question1", "question2", "question3", "question4"]);
 }
-<<<<<<< HEAD
 
 // single fridge example trial
 let fridge_ex = Object.assign({sentence: [" "]}, fridge_trials[0])
@@ -501,5 +500,3 @@ let fridge_example_trials = [fridge_ex];
 //_.omit(fridge_trials, ["icon1", "icon2", "icon3", "icon4", "question1", "question2", "question3", "question4"]);
 //delete fridge_trials.icon1;
 // console.log(fridge_trials);
-=======
->>>>>>> fridge-view
