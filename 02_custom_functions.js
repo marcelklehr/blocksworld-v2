@@ -217,10 +217,23 @@ showAnimationInTrial = function (CT, html_answers, progress_bar = true) {
 
 
 // new for fridge views//MALIN FRIDGE
-_checkBuildSentence = function (sentenceArray, button2Toggle) {
-  if (sentenceArray.length >= 4) {
+checkBuildSentence = function (sentenceArray, button2Toggle) {
+  if (sentenceArray.length >= 5) {
     toggleNextIfDone(button2Toggle, true);
   } else {
     button2Toggle.addClass("grid-button");
   }
+}
+
+update_clickables = function (lastSelected) {
+  WORDS.forEach(function (word) {
+    $("#" + word.replace(/\s/g, ''))
+      .addClass('not-clickable');
+  })
+  let poss_words = shownNext(lastSelected);
+  poss_words.forEach(function (word) {
+    $("#" + word)
+      .toggleClass('not-clickable');
+  });
+
 }

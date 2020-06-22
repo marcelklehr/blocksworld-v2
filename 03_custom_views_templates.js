@@ -328,16 +328,16 @@ const fridge_generator = {
   },
 
 
-
   answer_container_gen: function (config, CT) {
 
     let start_words = _.flatten(shownNext('S'));
+
     function return_word_array(array, color) {
       return array.map((word, index) => {
-        let clickable = start_words.includes(word) ? ' ' : ' not-clickable ';
+          let clickable = start_words.includes(word) ? ' ' : ' not-clickable ';
           return (
-            `<div class="word ` + color +  clickable + `"id=` +
-            word.replace(/\s/g,'') +` >
+            `<div class="word ` + color + clickable + `"id=` +
+            word.replace(/\s/g, '') + ` >
             <p> ` +
             word +
             ` </p>
@@ -379,7 +379,11 @@ const fridge_generator = {
       </div>
       <div class = "buttons">
         <button id ='customWords' class="magpie-view-button custom-words magpie-nodisplay"> Use my own words </button>
+<<<<<<< HEAD
         <button id='buttonNext' class='magpie-view-button grid-button'>Next scene</button>
+=======
+        <button id='buttonNext' class='magpie-view-button magpie-nodisplay'>Next scenario</button>
+>>>>>>> fridge-view
       </div>
       <br><br/>
 
@@ -412,6 +416,7 @@ const fridge_generator = {
           .replace(/(\r\n|\n|\r)/gm, " ")
           .trim();
         sentence_array.push(value)
+<<<<<<< HEAD
         // console.log(sentence_array);
         WORDS.forEach(function(word){
           $("#" + word.replace(/\s/g,'')).addClass('not-clickable');
@@ -420,6 +425,11 @@ const fridge_generator = {
         poss_words.forEach(function(word){
           $("#" + word).toggleClass('not-clickable');
         });
+=======
+
+        update_clickables(value);
+
+>>>>>>> fridge-view
         $(".selected-words")
           .append(" " + value)
         // console.log(sentence_array);
@@ -429,7 +439,7 @@ const fridge_generator = {
         //sentence = sentence.replace(/,/, " ");
         // console.log(sentence.replace(/,/, " "));
 
-        _checkBuildSentence(sentence_array, submitbutton)
+        checkBuildSentence(sentence_array, submitbutton)
         //sentence = sentence.replace(/,/, " ");
         // console.log(sentence);
       });
@@ -445,16 +455,18 @@ const fridge_generator = {
         $(".selected-words")
           .append(sentence);
 
-        // dont remember if this is important
         config.data[CT].sentence = sentence;
 
-        _checkBuildSentence(sentence_array, submitbutton);
+        let value = _.last(sentence_array)
+
+        update_clickables(value);
+
+        checkBuildSentence(sentence_array, submitbutton);
       });
 
 
     $("#customWords")
       .on("click", function () {
-        console.log("komme ich in customWords an?");
 
         const minChars = config.data[CT].min_chars === undefined ? 10 : config.data[CT].min_chars;
 
@@ -496,7 +508,8 @@ const fridge_generator = {
     //addCheckResponseFunctionality(button);
 
     submitbutton.on("click", function () {
-      toggleNextIfDone($("#buttonNext"), true);
+      $("#buttonNext")
+        .removeClass("magpie-nodisplay")
       $("#customWords")
         .removeClass("magpie-nodisplay");
       toggleNextIfDone($("#customWords"), true);
@@ -507,11 +520,6 @@ const fridge_generator = {
       $(".selected1")
         .addClass("magpie-nodisplay");
     });
-
-    // $("#customWords")
-    //   .on("click", function () {
-    //     button.removeClass("magpie-nodisplay");
-    //   });
 
     button.on("click", function () {
       const RT = Date.now() - startingTime; // measure RT before anything else
