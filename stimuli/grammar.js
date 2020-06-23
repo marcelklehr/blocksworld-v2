@@ -25,7 +25,7 @@ let GRAMMAR_RULE = {
   'blocks': ['will', 'fall'],
   'block': ['to', 'will', 'nor', 'V', 'V_AUX', 'V_I'],
   'will': ['MOD', 'not', 'V_I', 'V_AUX_I'],
-  'not': ['V_I', 'V_AUX_I'],
+  'not': ['V_I', 'V_AUX_I', 'the'],
   'and': ['the', 'MOD'],
   'but': ['not', 'the'],
   'V_I': ['CONJ', 'the', 'also', 'nor'],
