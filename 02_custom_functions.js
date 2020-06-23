@@ -51,7 +51,7 @@ const time_limit = function (data, next) {
 //     });
 // };
 // custom parameters:
-const DURATION_ANIMATION = 10000; // in ms
+const DURATION_ANIMATION = 7000; // in ms
 const KEY2SELECTANSWER = "y";
 
 const NB_TRAIN_TRIALS = TrainStimuli.list_all.length;
@@ -198,6 +198,7 @@ showAnimationInTrial = function (CT, html_answers, progress_bar = true) {
   let stimulus = SHUFFLED_TRAIN_STIMULI[CT];
   if (DEBUG) {
     console.log(stimulus.id);
+    console.log(stimulus.meta)
   }
 
   let worldElems = createWorld();
@@ -231,6 +232,9 @@ checkBuildSentence = function (sentenceArray, poss_next, button2Toggle) {
 }
 
 update_clickables = function (lastSelected) {
+  if(!lastSelected) {
+    lastSelected = 'S'
+  }
   WORDS.forEach(function (word) {
     $("#" + word.replace(/\s/g, ''))
       .addClass('not-clickable');
