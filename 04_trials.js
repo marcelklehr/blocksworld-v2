@@ -430,28 +430,8 @@ _.map(pretest_trials, function (trial, i) {
 });
 // console.log(_.map(pretest_trials, 'id'))
 
-
-// TRAINING TRIALS (some with buttons some with sliders)
-let train_slider_trials = [
-  {
-    picture: "",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2IconTrain.ac,
-    icon2: id2IconTrain.a,
-    icon3: id2IconTrain.c,
-    icon4: id2IconTrain.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.train),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.train),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.train),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.train),
-    optionLeft: "impossible",
-    optionRight: "certain",
-    expected: ''
-  }
-];
-
-// the data of the training stimuli is always the same, buttons are always shown
-// in same order
+// the data of the training stimuli is always the same,
+// the 4 buttons are always shown in same order
 let TRAIN_TRIALS = [];
 let train_ids = _.map(TrainStimuli.list_all, 'id');
 train_ids
@@ -472,11 +452,23 @@ train_ids
     };
     TRAIN_TRIALS.push(data);
   });
-// let icons_train = Object.values(id2IconTrain)
-// train_slider_trials = shuffleQuestionsAllTrials(icons_train, train_slider_trials);
 
-TRAIN_TRIALS = TRAIN_TRIALS.concat(train_slider_trials);
-
+const TRAIN_SLIDER = [
+  {
+    picture: "stimuli/img/ind2.jpg",
+    QUD: "Please indicate how likely you think the represented events will occur.",
+    icon1: id2Icon.ac,
+    icon2: id2Icon.a,
+    icon3: id2Icon.c,
+    icon4: id2Icon.none,
+    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
+    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
+    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
+    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
+    optionLeft: "impossible",
+    optionRight: "certain"
+  }
+];
 
 // fridge trials take in input and thereby info of slider_rating_trials
 var fridge_trials = _.cloneDeep(slider_rating_trials)

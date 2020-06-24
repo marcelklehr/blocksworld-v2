@@ -19,15 +19,17 @@ trials_independent = function(){
              'ind2': ['horizontal', 'vertical']};
   let expected = {'ind0': BLOCK_COLS_SHORT.train[0],
                   'ind1': BLOCK_COLS_SHORT.train[1],
-                  'ind2': 'none'}
+                  'ind2': 'no-feedback'}
   let data = {}
   _.keys(dir).forEach(function(id, i) {
     let walls = Walls.train.independent;
     let ramp = makeRamp(dir[id][0], prior[id][0], false, walls[0], "top", false);
+
+    let color_blocks = id == "ind2" ? cols.test_blocks : cols.train_blocks;
     let b1 = blockOnBase(ramp.wall_bottom, PRIOR['impossible'],
-      cols.train_blocks[0], 'block1', dir[id][0] == 'horizontal');
+      color_blocks[0], 'block1', dir[id][0] == 'horizontal');
     let b2 = blockOnBase(walls[1], -PRIOR[dir[id][1]][prior[id][1]],
-      cols.train_blocks[1], 'block2', dir[id][1] == 'horizontal');
+      color_blocks[1], 'block2', dir[id][1] == 'horizontal');
 
     let ssw= seesaw(walls[1].bounds.min.x - 100);
     walls = walls.concat([ramp.tilted, ramp.wall_bottom, ssw.skeleton]);
@@ -213,10 +215,10 @@ trials_ssw = function(){
 // generate all train stimuli!
 if (MODE === "train" || MODE === "experiment") {
   TrainStimuli.map_category["ramp"] = trials_ramp();
-  // TrainStimuli.map_category["uncertain"] = trials_uncertain();
-  // TrainStimuli.map_category["ac2"] = trials_ssw();
-  // TrainStimuli.map_category["independent"] = trials_independent();
-  // TrainStimuli.map_category["ac1"] = trials_ac();
+  TrainStimuli.map_category["uncertain"] = trials_uncertain();
+  TrainStimuli.map_category["ac2"] = trials_ssw();
+  TrainStimuli.map_category["independent"] = trials_independent();
+  TrainStimuli.map_category["ac1"] = trials_ac();
   // put all train stimuli into array independent of kind
   let train_keys = _.keys(TrainStimuli.map_category);
   train_keys.forEach(function(kind){

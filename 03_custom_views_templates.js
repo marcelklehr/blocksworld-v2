@@ -106,81 +106,6 @@ const animation_view1 = {
   }
 };
 
-const animation_view2 = {
-  name: "animation",
-  title: "title",
-  CT: NB_TRAIN_TRIALS - 1,
-  trials: 1,
-  data: "",
-  // The render function gets the magpie object as well as the current trial
-  // in view counter as input
-  render: function (CT, magpie) {
-    let html_answers = htmlSliderAnswers(TRAIN_TRIALS[CT])
-    let animation = showAnimationInTrial(CT, html_answers, progress_bar = false);
-
-    let cleared = false;
-    Events.on(animation.engine, 'afterUpdate', function (event) {
-      if (!cleared && animation.engine.timing.timestamp >= DURATION_ANIMATION) {
-        clearWorld(animation.engine, animation.render, stop2Render = false);
-        cleared = true;
-      }
-    });
-    addCheckSliderResponse($('#runButton'));
-    DEBUG ? addKeyToMoveSliders($("#runButton")) : null;
-
-    let animationStarted = false;
-    $('#runButton')
-      .on('click', function (e) {
-        if (!animationStarted) {
-          animationStarted = true;
-          runAnimation(animation.engine);
-          toggleNextIfDone($("#buttonNextAnimation"), true);
-          //selected answers can't be changed anymore
-          _.range(1, 5)
-            .forEach(function (i) {
-              document.getElementById("response" + i)
-                .disabled = true;
-            });
-        }
-        let id = SHUFFLED_TRAIN_STIMULI[CT].id
-        id_button_correct = TrainExpectations[id]
-        $('#' + id_button_correct)
-          .addClass("correct");
-      });
-    $("#buttonNextAnimation")
-      .on("click", function () {
-        const RT = Date.now() - animation.startTime; // measure RT before anything else
-        if (!cleared) {
-          clearWorld(animation.engine, animation.render, stop2Render = false);
-        }
-        let data = getSliderResponse();
-        let trial_data = Object.assign(data, {
-          trial_name: 'animation_slider',
-          trial_number: CT + 1,
-          RT: RT,
-          id: SHUFFLED_TRAIN_STIMULI[CT].id
-        });
-        var copied = Object.assign({}, TRAIN_TRIALS[CT]);
-        copied.icon1 = iconHtml2Utterance(copied.icon1)
-          .short;
-        copied.icon2 = iconHtml2Utterance(copied.icon2)
-          .short;
-        copied.icon3 = iconHtml2Utterance(copied.icon3)
-          .short;
-        copied.icon4 = iconHtml2Utterance(copied.icon4)
-          .short;
-        copied.expected = TrainExpectations[trial_data.id];
-        trial_data = magpieUtils.view.save_config_trial_data(
-          copied,
-          trial_data
-        );
-        magpie.trial_data.push(trial_data);
-        magpie.findNextView();
-      });
-  }
-};
-
-
 // generate a new multi_slider
 const multi_slider_generator = {
   stimulus_container_gen: function (config, CT) {
@@ -454,7 +379,6 @@ const fridge_generator = {
         checkBuildSentence(sentence_array, poss_next, submitbutton);
       });
 
-
     $("#customWords")
       .on("click", function () {
 
@@ -486,9 +410,6 @@ const fridge_generator = {
         custom_sentence = document.getElementById('custom-text');
         // console.log(custom_sentence);
       });
-
-
-
 
     // function for debugging - if "y" is pressed, the slider will change
     // if (magpie.deploy.deployMethod === "debug") {
@@ -533,3 +454,79 @@ const fridge_generator = {
     });
   }
 };
+
+
+// view for train trial with sliders instead of buttons
+// const animation_view2 = {
+//   name: "animation",
+//   title: "title",
+//   CT: NB_TRAIN_TRIALS - 1,
+//   trials: 1,
+//   data: "",
+//   // The render function gets the magpie object as well as the current trial
+//   // in view counter as input
+//   render: function (CT, magpie) {
+//     let html_answers = htmlSliderAnswers(TRAIN_TRIALS[CT])
+//     let animation = showAnimationInTrial(CT, html_answers, progress_bar = false);
+//
+//     let cleared = false;
+//     Events.on(animation.engine, 'afterUpdate', function (event) {
+//       if (!cleared && animation.engine.timing.timestamp >= DURATION_ANIMATION) {
+//         clearWorld(animation.engine, animation.render, stop2Render = false);
+//         cleared = true;
+//       }
+//     });
+//     addCheckSliderResponse($('#runButton'));
+//     DEBUG ? addKeyToMoveSliders($("#runButton")) : null;
+//
+//     let animationStarted = false;
+//     $('#runButton')
+//       .on('click', function (e) {
+//         if (!animationStarted) {
+//           animationStarted = true;
+//           runAnimation(animation.engine);
+//           toggleNextIfDone($("#buttonNextAnimation"), true);
+//           //selected answers can't be changed anymore
+//           _.range(1, 5)
+//             .forEach(function (i) {
+//               document.getElementById("response" + i)
+//                 .disabled = true;
+//             });
+//         }
+//         let id = SHUFFLED_TRAIN_STIMULI[CT].id
+//         id_button_correct = TrainExpectations[id]
+//         $('#' + id_button_correct)
+//           .addClass("correct");
+//       });
+//     $("#buttonNextAnimation")
+//       .on("click", function () {
+//         const RT = Date.now() - animation.startTime; // measure RT before anything else
+//         if (!cleared) {
+//           clearWorld(animation.engine, animation.render, stop2Render = false);
+//         }
+//         let data = getSliderResponse();
+//         let trial_data = Object.assign(data, {
+//           trial_name: 'animation_slider',
+//           trial_number: CT + 1,
+//           RT: RT,
+//           id: SHUFFLED_TRAIN_STIMULI[CT].id
+//         });
+//         var copied = Object.assign({}, TRAIN_TRIALS[CT]);
+//         copied.icon1 = iconHtml2Utterance(copied.icon1)
+//           .short;
+//         copied.icon2 = iconHtml2Utterance(copied.icon2)
+//           .short;
+//         copied.icon3 = iconHtml2Utterance(copied.icon3)
+//           .short;
+//         copied.icon4 = iconHtml2Utterance(copied.icon4)
+//           .short;
+//         copied.expected = TrainExpectations[trial_data.id];
+//         trial_data = magpieUtils.view.save_config_trial_data(
+//           copied,
+//           trial_data
+//         );
+//         magpie.trial_data.push(trial_data);
+//         magpie.findNextView();
+//       });
+//   }
+// };

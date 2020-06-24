@@ -399,6 +399,19 @@ const multiple_slider = magpieViews.view_generator(
   }
 );
 
+const multiple_slider_train = magpieViews.view_generator(
+  "slider_rating", {
+    trials: 1,
+    name: "multiple_slider_train",
+    data: TRAIN_SLIDER
+  },
+  {
+    stimulus_container_generator: multi_slider_generator.stimulus_container_gen,
+    answer_container_generator: multi_slider_generator.answer_container_gen,
+    handle_response_function: multi_slider_generator.handle_response_function
+  }
+)
+
 const fridge_view = magpieViews.view_generator(
   "slider_rating", {
     trials: fridge_trials.length,
