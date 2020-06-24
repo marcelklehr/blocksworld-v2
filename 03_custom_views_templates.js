@@ -88,10 +88,14 @@ const animation_view1 = {
         });
 
         let copied = Object.assign({}, TRAIN_TRIALS[CT]);
-        copied.icon1 = iconHtml2Utterance(copied.icon1).short;
-        copied.icon2 = iconHtml2Utterance(copied.icon2).short;
-        copied.icon3 = iconHtml2Utterance(copied.icon3).short;
-        copied.icon4 = iconHtml2Utterance(copied.icon4).short;
+        copied.icon1 = iconHtml2Utterance(copied.icon1)
+          .short;
+        copied.icon2 = iconHtml2Utterance(copied.icon2)
+          .short;
+        copied.icon3 = iconHtml2Utterance(copied.icon3)
+          .short;
+        copied.icon4 = iconHtml2Utterance(copied.icon4)
+          .short;
         copied.expected = TrainExpectations[trial_data.id];
         trial_data = magpieUtils.view.save_config_trial_data(
           copied,
@@ -158,10 +162,14 @@ const animation_view2 = {
           id: SHUFFLED_TRAIN_STIMULI[CT].id
         });
         var copied = Object.assign({}, TRAIN_TRIALS[CT]);
-        copied.icon1 = iconHtml2Utterance(copied.icon1).short;
-        copied.icon2 = iconHtml2Utterance(copied.icon2).short;
-        copied.icon3 = iconHtml2Utterance(copied.icon3).short;
-        copied.icon4 = iconHtml2Utterance(copied.icon4).short;
+        copied.icon1 = iconHtml2Utterance(copied.icon1)
+          .short;
+        copied.icon2 = iconHtml2Utterance(copied.icon2)
+          .short;
+        copied.icon3 = iconHtml2Utterance(copied.icon3)
+          .short;
+        copied.icon4 = iconHtml2Utterance(copied.icon4)
+          .short;
         copied.expected = TrainExpectations[trial_data.id];
         trial_data = magpieUtils.view.save_config_trial_data(
           copied,
@@ -379,7 +387,7 @@ const fridge_generator = {
       </div>
       <div class = "buttons">
         <button id ='customWords' class="magpie-view-button custom-words magpie-nodisplay"> Use my own words </button>
-        <button id='buttonNext' class='magpie-view-button grid-button'>Next scene</button>
+        <button id='buttonNext' class='magpie-view-button magpie-nodisplay'>Next scene</button>
       </div>
       <br><br/>
 
