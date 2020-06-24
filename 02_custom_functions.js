@@ -231,18 +231,22 @@ checkBuildSentence = function (sentenceArray, poss_next, button2Toggle) {
   }
 }
 
-update_clickables = function (lastSelected) {
+update_clickables = function (lastSelected, submitted=false) {
+  WORDS.forEach(function (word) {
+    $("#" + word.replace(/\s/g, ''))
+    .addClass('not-clickable');
+  })
   if(!lastSelected) {
     lastSelected = 'S'
   }
-  WORDS.forEach(function (word) {
-    $("#" + word.replace(/\s/g, ''))
-      .addClass('not-clickable');
-  })
-  let poss_words = shownNext(lastSelected);
-  poss_words.forEach(function (word) {
-    $("#" + word)
+  if (submitted) {
+    return [];
+  } else {
+    let poss_words = shownNext(lastSelected);
+    poss_words.forEach(function (word) {
+      $("#" + word)
       .toggleClass('not-clickable');
-  });
-return poss_words
+    });
+    return poss_words
+  }
 }

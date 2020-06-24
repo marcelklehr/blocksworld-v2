@@ -18,7 +18,6 @@ const animation_view1 = {
   render: function (CT, magpie) {
     let html_answers = htmlButtonAnswers();
     let animation = showAnimationInTrial(CT, html_answers);
-
     let cleared = false;
     Events.on(animation.engine, 'afterUpdate', function (event) {
       if (!cleared && animation.engine.timing.timestamp >= DURATION_ANIMATION) {
@@ -505,7 +504,7 @@ const fridge_generator = {
         .removeClass("magpie-nodisplay");
       toggleNextIfDone($("#customWords"), true);
       toggleNextIfDone($("#buttonNext"), true);
-      // buttonDelete
+      update_clickables('', true);
       submitbutton.addClass("magpie-nodisplay");
       $("#buttonDelete")
         .addClass("magpie-nodisplay");
