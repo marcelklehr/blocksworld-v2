@@ -57,7 +57,7 @@ const instructions_general = magpieViews.view_generator("instructions", {
          In total, you will need about <b>15-20 minutes</b> to finish it.
          <br/>
          <br/>
-         We will start with the the training phase
+         We will start with the training phase
          which consists of <b>12</b> trials. You will see block arrangements similar
          to those you will be shown later in the test phase, such that you are
          able to develop intuitions about the physical properties and get
@@ -90,10 +90,10 @@ const instructions_train2 = magpieViews.view_generator("instructions", {
          <br />
          A falling block is represented by a skewed rectangle
         and a resting block that <i>does not fall</i> is represented by a rectangle
-        with a line below. Here is an exemplary icon for the event
+        with a line below. Here is an exemplary icon for the event:
         <br/>
         <i>The <b>green</b> block <b>falls</b>, but the <b>yellow</b> block
-        <b>does not fall</b></i>:
+        <b>does not fall</b></i>.
         <br/>
         <br/>
         <img src='stimuli/img/icons/green.png'/>
@@ -300,7 +300,7 @@ const instructions_train_pretest = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_train_pretest",
   title: "Instructions Train Phase",
-  text: `We will now start with the the training phase
+  text: `We will now start with the training phase
           which consists of 8 trials. You will see block arrangements such that
           you are able to develop intuitions about the physical properties and get
           familiar with the stimuli.
