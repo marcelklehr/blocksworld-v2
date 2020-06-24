@@ -58,7 +58,7 @@ const instructions_general = magpieViews.view_generator("instructions", {
          <br/>
          <br/>
          We will start with the the training phase
-         which consists of <b>13</b> trials. You will see block arrangements similar
+         which consists of <b>12</b> trials. You will see block arrangements similar
          to those you will be shown later in the test phase, such that you are
          able to develop intuitions about the physical properties and get
          familiar with the stimuli.
@@ -66,9 +66,8 @@ const instructions_general = magpieViews.view_generator("instructions", {
          <br/>
          <b>Please note</b>:
          <br/>
-         Throughout the experiment, you may want to go into <b>Full Screen Mode</b>
-         (usually switched on/off with F11), in order to minimize the need to
-         scroll down to see all buttons.`,
+         We recommend to use <b>Full Screen Mode</b> throughout the experiment
+         (usually switched on/off with F11). However, depending on your device and browser, you may still need to scroll down to see all buttons.`,
   buttonText: "Go to Training instructions"
 });
 
