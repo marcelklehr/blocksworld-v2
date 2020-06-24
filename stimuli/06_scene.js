@@ -6,7 +6,7 @@ createWorld = function(){
     timing: {
       timeScale: 1
     },
-    velocityIterations: 6,
+    velocityIterations: 4,
     positionIterations: 6
   });
 

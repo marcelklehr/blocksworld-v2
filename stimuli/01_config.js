@@ -1,4 +1,4 @@
-const DEBUG = false;
+const DEBUG = true;
 // var MODE = "color-vision"
 // var MODE = "train"
 var MODE = "test"
@@ -21,17 +21,19 @@ PROPS = {'blocks': {'w':40, 'h': 80},
 OPTS = {
   'walls': {isStatic: true, render: {fillStyle: cols.grey}},
   'balls': {isStatic: false, restitution: 0.02, friction: 0.0001, density: 0.002},
-  'blocks': {isStatic: false, density: 0.001, restitution: .02, friction: 0.0005},
+  'blocks': {isStatic: false, density: 0.001, restitution: .02, friction: 0.001},
   'plank': {isStatic: false, density: 0.001, restitution: .02, friction: 0.1}
 }
 
 let TRIAL_TYPES = ['ac1', 'ac2', 'independent'];
 // Proportion of block that's ON TOP of its base wall beneath
 let PRIOR = {
-  'vertical': {'high': 0.35, 'uncertain': 0.51, 'low': 0.70,
-               'uncertainL': 0.55, 'uncertainH': 0.5},
-  'horizontal': {'high': 0.35, 'uncertain': 0.50, 'low': 0.67,
-                 'uncertainH': 0.49, 'uncertainL': 0.55, 'lowL': 0.70},
+  'vertical': {'high': 0.45, 'uncertainH': 0.52, 'uncertain': 0.54,
+               'uncertainL': 0.55, 'lowH': 0.62, 'low': 0.70
+              },
+  'horizontal': {'high': 0.42, 'uncertainH': 0.5, 'uncertain': 0.51,
+                 'uncertainL': 0.53, 'lowH': 0.6, 'low': 0.67, 'lowL': 0.70,
+                },
   'impossible': 1,
   'conditions': ['high', 'uncertain', 'low']
 }
@@ -52,10 +54,10 @@ let ANGLES = {
 
 let PRETEST_ANGLES = _.range(45);
 let BASE_RAMP = {
-  'horizontal': {'high': 100, 'uncertainH': 115, 'uncertain': 150,
-                 'uncertainL': 175, 'low': 270},
-  'vertical': {'high': 150, 'uncertainH': 175, 'uncertain': 210,
-               'uncertainL': 225, 'low': 300},
+  'horizontal': {'high': 125, 'uncertainH': 140, 'uncertain': 155,
+                 'uncertainL': 200, 'low': 240},
+  'vertical': {'high': 200, 'uncertainH': 240, 'uncertain': 260,
+               'uncertainL': 280, 'low': 300},
   'default': 200
 };
 

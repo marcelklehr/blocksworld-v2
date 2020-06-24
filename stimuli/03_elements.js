@@ -18,7 +18,8 @@ makeRamp = function(dir, prior, increase, w1, label1="bottom", test=true,
                              : {rx: "min", ry: "max", x: -1, y: -1};
   // 1. sin(angle) = h/w_tillted and 2. h² + w_low² = ramp²
   let r = increase ? radians(360 - angle) : radians(angle);
-  let ramp_width = Math.sqrt(Math.pow(100, 2) / (1 - Math.pow(Math.sin(r), 2)))
+  let factor = dir == "horizontal" ? 1.5 : 1.2;
+  let ramp_width = factor * (Math.sqrt(Math.pow(100, 2) / (1 - Math.pow(Math.sin(r), 2))));
   let ramp = wall('ramp' + angle, w1.bounds[dat.rx].x + dat.x * ramp_width/2,
     w1.bounds[dat.ry].y + dat.y * PROPS.walls.h/2, ramp_width);
   Body.rotate(ramp, r, {x: w1.bounds[dat.rx].x, y: w1.bounds[dat.ry].y});
@@ -124,8 +125,8 @@ Walls.train.distance0 = [
 
 Walls.train.distance1 = [
   wall('w_top1', 150, 50),
-  wall('w_top2', 150, 175),
-  wall('w_top3', 150, 300)
+  wall('w_top2', 150, 160),
+  wall('w_top3', 150, 270)
 ];
 
 Walls.train.independent = [
