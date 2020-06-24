@@ -1,7 +1,7 @@
 // let _ = require('../node_modules/underscore/underscore.js')
 
 let GRAMMAR_VAR = {
-  'IF': ["if", "only if"],
+  'IF': ["if"],
   'DET_N': ['neither', 'nor'],
   'COL': ['green', 'blue'],
   'CONJ': ['and', 'but', 'because of'],
@@ -48,7 +48,7 @@ let word_groups = [
     col: 'red'
   },
   {
-    words: ["only if", "if", "and", "or",
+    words: ["if", "and", "or",
            "because of", "the"],
     col: 'blue'
   },
