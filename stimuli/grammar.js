@@ -1,11 +1,11 @@
 // let _ = require('../node_modules/underscore/underscore.js')
 
 let GRAMMAR_VAR = {
-  'IF': ["if", "if and only if", "only if"],
+  'IF': ["if", "only if"],
   'DET_N': ['neither', 'nor'],
   'COL': ['green', 'blue'],
   'CONJ': ['and', 'but', 'because of'],
-  'MOD': ['probably', 'likely', 'defenitely', 'maybe', 'also', 'only'],
+  'MOD': ['probably', 'might', 'defenitely', 'maybe', 'also', 'only'],
   'V_I': ['fall'],
   'V': ['falls'],
   'V_AUX_I': ['make', 'cause'],
@@ -16,14 +16,14 @@ let GRAMMAR_VAR = {
 // selected
 let GRAMMAR_RULE = {
   'S': ['MOD', 'IF', 'the', 'both', 'DET_N'], //start symbol
-  'MOD': ['the', 'both', 'V_AUX', 'V_AUX_I', 'V', 'V_I'],
+  'MOD': ['the', 'both', 'if', 'V_AUX', 'V_AUX_I', 'V', 'V_I'],
   'the': ['COL'],
-  'IF': ['the'],
+  'IF': ['the', 'and'],
   'DET_N': ['the'],
   'COL': ['block', 'nor', 'CONJ'],
   'both': ['blocks'],
   'blocks': ['will', 'fall'],
-  'block': ['to', 'will', 'nor', 'V', 'V_AUX', 'V_I'],
+  'block': ['to', 'will', 'nor', 'V', 'V_AUX', 'V_I', 'might'],
   'will': ['MOD', 'not', 'V_I', 'V_AUX_I'],
   'not': ['V_I', 'V_AUX_I', 'the'],
   'and': ['the', 'MOD'],
@@ -31,7 +31,8 @@ let GRAMMAR_RULE = {
   'V_I': ['CONJ', 'the', 'also', 'nor'],
   'V': ['CONJ', 'the', 'also'],
   'V_AUX_I': ['the'],
-  'V_AUX': ['the']
+  'V_AUX': ['the'],
+  'to': ['fall']
 }
 // rather ?
 // only without if?
@@ -39,7 +40,7 @@ let GRAMMAR_RULE = {
 // due to?
 let word_groups = [
   {
-    words: ["maybe", "likely", "probably", 'defenitely', 'also', 'only'],
+    words: ["maybe", "might", "probably", 'defenitely', 'also', 'only'],
     col: 'green'
   },
   {
@@ -47,7 +48,7 @@ let word_groups = [
     col: 'red'
   },
   {
-    words: ["if and only if", "only if", "if", "and", "or",
+    words: ["only if", "if", "and", "or",
            "because of", "the"],
     col: 'blue'
   },
@@ -57,7 +58,7 @@ let word_groups = [
   },
   {
     words: ["fall", "falls", "will", "cause", "causes", "make", "makes",
-                    "does"],
+                    "to"],
     col: 'orange'
   },
   {
