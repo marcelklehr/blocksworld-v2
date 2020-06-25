@@ -126,14 +126,13 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   icons.
    <br />
    <br />
-  The larger your belief is that the event you are asked for <b>will</b> occur,
-  the more you should position the corresponding slider towards its
-  right end (<i>certain</i>/100%).
+  The more certain you are that an event (e.g.both blocks fall) <b>will</b> occur,
+  the more you should position the corresponding slider towards the
+  <b>right end</b> (<i>certain</i>/100%) and the more certain you are that it
+  <b>will not</b> occur, the more you should position its slider towards the
+  <b>left end</b> (<i>impossible</i>/0%).
   <br />
-  The more you believe that the event <b>will not</b> occur, the more you
-  should position the corresponding slider towards its left (<i>impossible</i>/0%).
-  <br />
-  When you are rather <b>uncertain whether or not</b> the event will occur, you should position the corresponding slider around 50%. Here is an example:
+  When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider around 50%. Here is an example:
   <br />
   <br />
   <input type='range' id=ex_slider class='magpie-response-slider replied' min='0' max='100' value='60' oninput='ex_slider.value + "%"'/>
@@ -141,9 +140,10 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   <script>document.getElementById("ex_slider").disabled=true;</script>
   <br/>
   <br/>
-  If you positioned the slider like (or close to) this at 60%, you indicate that you
-  are rather <b>undecided</b> whether or not the event will occur, but you judge
-  it <b>a little bit more likely</b> that it <b>will</b> than that it will not occur.
+  The position of the slider in this example indicates that you
+  are rather <b>undecided</b> whether or not the corresponding event will occur,
+  but you judge it <b>a little bit more likely</b> that it <b>will</b> than that
+  it will not occur.
   <br />
   When you moved a slider and clicked to fix its new position, the circle of the slider will turn green as shown in the example above.
     <br />
@@ -151,7 +151,8 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   Note, that your estimates <b>may</b>, but <b>do not have to</b> sum up to 100%.
   <br />
   <br />
-  You will be able to run the animation and then proceed to the next trial only after you have moved all four sliders.`,
+  Only after you have moved all four sliders, you will be able to proceed to the
+  next trial.`,
   buttonText: "continue with example trial"
 });
 
@@ -200,7 +201,7 @@ const instructions_test = magpieViews.view_generator("instructions", {
           indicate <b>how likely</b> you think certain blocks <b>will or will
           not fall</b> (left: impossible, right: certain).
           <br />
-          The only difference is, that now <b>you will not get
+          As in the previous training trial, <b>you will not get
           feedback</b> about what will actually happen since you will be shown
           static pictures only.
           <br />
@@ -283,7 +284,7 @@ const instructions_pretest = magpieViews.view_generator("instructions", {
   a shown toy block <b>will or will not fall</b> by moving a slider.
    <br />
   The larger your belief is that the block <b>will</b> fall,
-  the more you should position the slider towards its right end (<i>certainly</i>/100%).
+  the more you should position the slider towards the right end (<i>certainly</i>/100%).
   <br />
   The larger your belief is that it <b>will not</b> fall, the more you
   should position the slider towards its left (<i>impossible</i>/0%).
