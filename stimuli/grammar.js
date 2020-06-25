@@ -23,7 +23,7 @@ let GRAMMAR_RULE = {
   'COL': ['block', 'nor', 'CONJ'],
   'both': ['blocks'],
   'blocks': ['will', 'fall'],
-  'block': ['to', 'will', 'nor', 'V', 'V_AUX', 'V_I', 'might'],
+  'block': ['to', 'will', 'nor', 'V', 'V_AUX', 'V_I', 'might', 'CONJ'],
   'will': ['MOD', 'not', 'V_I', 'V_AUX_I'],
   'not': ['V_I', 'V_AUX_I', 'the'],
   'and': ['the', 'MOD'],

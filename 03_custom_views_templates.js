@@ -310,7 +310,7 @@ const fridge_generator = {
         </p>
       </div>
       <div class = "buttons">
-        <button id ='customWords' class="magpie-view-button custom-words magpie-nodisplay"> Use my own words </button>
+        <button id ='customWords' class="magpie-view-button magpie-nodisplay"> Use my own words </button>
         <button id='buttonNext' class='magpie-view-button magpie-nodisplay'>Next scene</button>
       </div>
       <br><br/>
