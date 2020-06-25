@@ -32,6 +32,7 @@ sequencePriors = function(){
   }
 }
 pseudoRandomTypes = function() {
+  // 4 x ac1 trials - 5 x ac2 trials - 5 x independent trials
   let order = _.random(0, 1) == 0 ? ['independent', 'ac1', 'ac2'] :
     ['ac2', 'ac1', 'independent'];
   let trials = _.reduce(_.range(1,3), function(memo, val){
