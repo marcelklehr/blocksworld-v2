@@ -1,27 +1,26 @@
 // TRAINING TRIALS
 pseudoRandomTrainTrials = function(){
-  let order = Array(11).fill('');
-  let cats = _.shuffle(["uncertain", "independent"])
-  let order01 = _.shuffle([0, 1])
-  let order23 = _.shuffle([2, 3])
-  let order_iff = _.shuffle([0,1])
+  let trials = Array(15).fill('');
+  // dont start with unc3, ac2, ac3
+  let ids = _.shuffle(_.map(TrainStimuli.list_all, 'id'));
+  let unc = _.shuffle(_.values(TrainStimuli.map_category.uncertain));
+  let ramp = _.shuffle(_.values(TrainStimuli.map_category.ramp));
 
-  order[0] = TrainStimuli.map_category["ac2"]["ac2_" + order_iff[0]]
-  order[1] = TrainStimuli.map_category["independent"]["independent_"+order23[0]]
-  order[2] = TrainStimuli.map_category["uncertain"]["uncertain_"+order23[0]]
+  let ac2 = _.shuffle(_.values(TrainStimuli.map_category.ac2));
+  let ind_ac = _.shuffle([TrainStimuli.map_category.independent.ind0,
+                          TrainStimuli.map_category.independent.ind1,
+                          ac2[0]]);
+  let ac1 = _.shuffle(_.values(TrainStimuli.map_category.ac1));
 
-  order[3] = TrainStimuli.map_category[cats[0]][cats[0] + "_" + order01[0]]
-  order[4] = TrainStimuli.map_category[cats[1]][cats[1] + "_" + order01[0]]
-  order[5] = TrainStimuli.map_category["ac2"]["ac2_" + order_iff[1]]
-  order[6] = TrainStimuli.map_category[cats[0]][cats[0] + "_" + order01[1]]
-  order[7] = TrainStimuli.map_category[cats[1]][cats[1] + "_" + order01[1]]
-
-  order[8] = TrainStimuli.map_category["uncertain"]["uncertain_"+order23[1]]
-  order[9] = TrainStimuli.map_category["ac1"]["ac1_0"]
-  order[10] = TrainStimuli.map_category["independent"]["independent_"+order23[1]]
-
-  return order
+  [1, 5, 8, 11].forEach(function(idx, i){trials[idx] = ac1[i]});
+  [2, 6, 9, 12].forEach(function(idx, i){trials[idx] = unc[i]});
+  [3, 4].forEach(function(idx, i){trials[idx] = ramp[i]});
+  [0, 7, 10].forEach(function(idx, i){trials[idx] = ind_ac[i]})
+  trials[13] = ac2[1];
+  trials[14] = TrainStimuli.map_category.independent.ind2
+  return trials
 }
+
 // const SHUFFLED_TRAIN_STIMULI = pseudoRandomTrainTrials();
 const SHUFFLED_TRAIN_STIMULI = TrainStimuli.list_all;
 // TEST TRIALS //
@@ -41,6 +40,8 @@ pseudoRandomTypes = function() {
   trials = trials.concat(_.without(order, 'ac1'));
   return trials
 }
+
+
 pseudoRandomTestTrials = function(){
   let trial_types = pseudoRandomTypes();
   let priors = sequencePriors();

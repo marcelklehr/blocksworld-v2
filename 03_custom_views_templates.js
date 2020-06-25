@@ -11,7 +11,7 @@ const animation_view1 = {
   name: "animation",
   title: "title",
   CT: 0, //is this the start value?
-  trials: NB_TRAIN_TRIALS - 1,
+  trials: NB_TRAIN_TRIALS,
   data: "",
   // The render function gets the magpie object as well as the current trial
   // in view counter as input

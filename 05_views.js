@@ -58,7 +58,7 @@ const instructions_general = magpieViews.view_generator("instructions", {
          <br/>
          <br/>
          We will start with the training phase
-         which consists of <b>12</b> trials. You will see block arrangements similar
+         which consists of <b>15</b> trials. You will see block arrangements similar
          to those you will be shown later in the test phase, such that you are
          able to develop intuitions about the physical properties and get
          familiar with the stimuli.

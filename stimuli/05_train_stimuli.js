@@ -11,11 +11,11 @@ trials_independent = function(){
   let walls = Walls.train.independent;
   let prior = {
     "ind0": ["uncertainH", "lowH"],
-    "ind1": ["low", "uncertainH"],
+    "ind1": ["high", "uncertainH"],
     "ind2": ["uncertain", "uncertain"] // slider train trial (no feedback)
   };
   let dir = {'ind0': ['vertical', 'vertical'],
-             'ind1': ['horizontal', 'vertical'],
+             'ind1': ['vertical', 'vertical'],
              'ind2': ['horizontal', 'vertical']};
   let expected = {'ind0': BLOCK_COLS_SHORT.train[0],
                   'ind1': BLOCK_COLS_SHORT.train[1],
@@ -45,19 +45,17 @@ trials_independent = function(){
 
 trials_ramp = function(){
   let cs = BLOCK_COLS_SHORT.train;
-  let colors_str = {distance0: [cs[1], cs[0]],
-                    distance1: [cs[1], cs[0]]}
-  let colors = {distance0: [cols.train_blocks[1], cols.train_blocks[0]]
-                            .concat(cols.darkgrey),
-                distance1: ['darkgrey'].concat(
-                  [cols.train_blocks[1], cols.train_blocks[0]]),
+  let colors = {distance0: [cols.train_blocks[1],
+                            cols.train_blocks[0],
+                            cols.darkgrey],
+                distance1: ['darkgrey'].concat(cols.train_blocks),
                 balls: COLORS_BALL.train.slice(0,3)
                };
-  let priors = {distance0: ['uncertainH', 'uncertainL', 'low'],
+  let priors = {distance0: ['uncertainL', 'uncertainH', 'high'],
                 distance1: ['low', 'uncertainL', 'uncertainH']}
   let dir = {distance0: ['horizontal', 'horizontal', 'horizontal'],
              distance1: ['vertical', 'vertical', 'vertical']};
-  let expected = {distance0: cs.join(""), distance1: 'none'}
+  let expected = {distance0: cs[0], distance1: cs[1]}
 
   let data = {};
   _.keys(dir).forEach(function(id, i) {
@@ -125,7 +123,7 @@ trials_ac = function(){
   let priors = {
     'ac0': ["high", "high"],
     'ac1': ["high", "low"],
-    'ac2': ['uncertainL', 'uncertain'],
+    'ac2': ['uncertainL', 'uncertainL'],
     'ac3': ['uncertainL', 'high']
   };
   let dir = {'ac0': ['horizontal', 'horizontal'], 'ac1': ['vertical', 'vertical'],
@@ -156,18 +154,18 @@ trials_ac = function(){
 
 // TRIALS with seesaw (kickoff/dont kickoff block)
 trials_ssw = function(){
-  let color = {'ssw_0': [cols.train_blocks[1], cols.train_blocks[0]],
-               'ssw_1': cols.train_blocks}
+  let color = {'ssw0': [cols.train_blocks[1], cols.train_blocks[0]],
+               'ssw1': cols.train_blocks}
   let dir = {
-    'ssw_0': ['vertical', 'vertical'],
-    'ssw_1': ['horizontal', 'horizontal']
+    'ssw0': ['vertical', 'vertical'],
+    'ssw1': ['horizontal', 'horizontal']
   };
   let prior = {
-    'ssw_0': ["uncertainH", "uncertainL"],
-    'ssw_1': ["uncertainH", "lowH"]
+    'ssw0': ["uncertainH", "uncertainL"],
+    'ssw1': ["uncertainH", "lowH"]
   };
-  let expected = {'ssw_0': BLOCK_COLS_SHORT.train.join(""),
-                  'ssw_1': BLOCK_COLS_SHORT.train[0]}
+  let expected = {'ssw0': BLOCK_COLS_SHORT.train.join(""),
+                  'ssw1': BLOCK_COLS_SHORT.train[0]}
   data = {};
   _.keys(prior).forEach(function(id, i){
     let objs = Walls.train.ssw();
