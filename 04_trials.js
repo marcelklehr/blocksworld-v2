@@ -44,35 +44,6 @@ var color_vision_test = [
 
 
 var slider_rating_trials = [
-  // {
-  //   picture: "stimuli/img/group/ac1_ll.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   icon1: id2Icon.ac,
-  //   icon2: id2Icon.a,
-  //   icon3: id2Icon.c,
-  //   icon4: id2Icon.none,
-  //   question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-  //   question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-  //   question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-  //   question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-  //   question: '',
-  //   optionLeft: "impossible",
-  //   optionRight: "certain"
-  // },
-  // {
-  //   picture: "stimuli/img/group/ac1_lu.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   icon1: id2Icon.ac,
-  //   icon2: id2Icon.a,
-  //   icon3: id2Icon.c,
-  //   icon4: id2Icon.none,
-  //   question1: text_sliders.ac,
-  //   question2: text_sliders.a,
-  //   question3: text_sliders.c,
-  //   question4: text_sliders.none,
-  //   optionLeft: "impossible",
-  //   optionRight: "certain"
-  // },
   {
     picture: "stimuli/img/group/ac1_lh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
@@ -88,20 +59,6 @@ var slider_rating_trials = [
     optionLeft: "impossible",
     optionRight: "certain"
   },
-  // {
-  //   picture: "stimuli/img/group/ac1_ul.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   icon1: id2Icon.ac,
-  //   icon2: id2Icon.a,
-  //   icon3: id2Icon.c,
-  //   icon4: id2Icon.none,
-  //   question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-  //   question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-  //   question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-  //   question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-  //   optionLeft: "impossible",
-  //   optionRight: "certain"
-  // },
   {
     picture: "stimuli/img/group/ac1_uu.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
@@ -130,34 +87,6 @@ var slider_rating_trials = [
     optionLeft: "impossible",
     optionRight: "certain"
   },
-  // {
-  //   picture: "stimuli/img/group/ac1_hl.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   icon1: id2Icon.ac,
-  //   icon2: id2Icon.a,
-  //   icon3: id2Icon.c,
-  //   icon4: id2Icon.none,
-  //   question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-  //   question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-  //   question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-  //   question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-  //   optionLeft: "impossible",
-  //   optionRight: "certain"
-  // },
-  // {
-  //   picture: "stimuli/img/group/ac1_hu.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   icon1: id2Icon.ac,
-  //   icon2: id2Icon.a,
-  //   icon3: id2Icon.c,
-  //   icon4: id2Icon.none,
-  // question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-  // question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-  // question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-  // question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-  //   optionLeft: "impossible",
-  //   optionRight: "certain"
-  // },
   {
     picture: "stimuli/img/group/ac1_hh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
@@ -214,20 +143,6 @@ var slider_rating_trials = [
     optionLeft: "impossible",
     optionRight: "certain"
   },
-  // {
-  //   picture: "stimuli/img/group/ac2_uu.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   icon1: id2Icon.ac,
-  //   icon2: id2Icon.a,
-  //   icon3: id2Icon.c,
-  //   icon4: id2Icon.none,
-  //   question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-  //   question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-  //   question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-  //   question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-  //   optionLeft: "impossible",
-  //   optionRight: "certain"
-  // },
   {
     picture: "stimuli/img/group/ac2_uh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
@@ -270,34 +185,6 @@ var slider_rating_trials = [
     optionLeft: "impossible",
     optionRight: "certain"
   },
-  // {
-  //   picture: "stimuli/img/group/independent_lu.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   icon1: id2Icon.ac,
-  //   icon2: id2Icon.a,
-  //   icon3: id2Icon.c,
-  //   icon4: id2Icon.none,
-  // question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-  // question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-  // question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-  // question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-  //   optionLeft: "impossible",
-  //   optionRight: "certain"
-  // },
-  // {
-  //   picture: "stimuli/img/group/independent_lh.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   icon1: id2Icon.ac,
-  //   icon2: id2Icon.a,
-  //   icon3: id2Icon.c,
-  //   icon4: id2Icon.none,
-  //   question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-  //   question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-  //   question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-  //   question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-  //   optionLeft: "impossible",
-  //   optionRight: "certain"
-  // },
   {
     picture: "stimuli/img/group/independent_ul.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
@@ -312,20 +199,6 @@ var slider_rating_trials = [
     optionLeft: "impossible",
     optionRight: "certain"
   },
-  // {
-  //   picture: "stimuli/img/group/independent_uu.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur.",
-  //   icon1: id2Icon.ac,
-  //   icon2: id2Icon.a,
-  //   icon3: id2Icon.c,
-  //   icon4: id2Icon.none,
-  //   question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-  //   question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-  //   question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-  //   question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-  //   optionLeft: "impossible",
-  //   optionRight: "certain"
-  // },
   {
     picture: "stimuli/img/group/independent_uh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
@@ -354,20 +227,6 @@ var slider_rating_trials = [
     optionLeft: "impossible",
     optionRight: "certain"
   },
-  // {
-  //   picture: "stimuli/img/group/independent_hu.jpg",
-  //   QUD: "Please indicate how likely you think the represented events will occur.",
-    // icon1: id2Icon.ac,
-    // icon2: id2Icon.a,
-    // icon3: id2Icon.c,
-    // icon4: id2Icon.none,
-    // question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    // question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    // question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    // question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-  //   optionLeft: "impossible",
-  //   optionRight: "certain"
-  // },
   {
     picture: "stimuli/img/group/independent_hh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
@@ -428,7 +287,6 @@ _.map(pretest_trials, function (trial, i) {
   let id = trial.picture.split("/")
   trial.id = id[id.length - 1].slice(0, -4);
 });
-// console.log(_.map(pretest_trials, 'id'))
 
 // the data of the training stimuli is always the same,
 // the 4 buttons are always shown in same order
@@ -477,9 +335,9 @@ _.map(fridge_trials, function (trial, i) {
   trial.sentence = [" "];
   trial.QUD = "How would you most naturally describe the following scene?";
 });
-for (var i = 0; i < fridge_trials.length; i++) {
-  fridge_trials[i] = _.omit(fridge_trials[i], ["icon1", "icon2", "icon3", "icon4", "question1", "question2", "question3", "question4"]);
-}
+// for (var i = 0; i < fridge_trials.length; i++) {
+//   fridge_trials[i] = _.omit(fridge_trials[i], ["icon1", "icon2", "icon3", "icon4", "question1", "question2", "question3", "question4"]);
+// }
 
 // single fridge example trial
 let fridge_ex = Object.assign({sentence: [" "]}, fridge_trials[0])
