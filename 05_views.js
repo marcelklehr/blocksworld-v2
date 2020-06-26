@@ -110,8 +110,9 @@ const instructions_train2 = magpieViews.view_generator("instructions", {
              <br />
          After you selected one of the four buttons (which will make their
          border turn green), click on <b>RUN</b> to see what will
-         actually happen. If you were wrong, the button you selected will turn
-         red and the correct one will appear in light green.
+         actually happen. The button of the event that occurred will turn light
+         green and if you were wrong, the button you selected will turn
+         red.
          <br/>
          Then, you can proceed to the next trial by clicking on <b>NEXT</b>.`,
   buttonText: "CONTINUE"
@@ -128,9 +129,9 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
    <br />
   The more certain you are that an event (e.g.both blocks fall) <b>will</b> occur,
   the more you should position the corresponding slider towards the
-  <b>right end</b> (<i>certain</i>/100%) and the more certain you are that it
-  <b>will not</b> occur, the more you should position its slider towards the
-  <b>left end</b> (<i>impossible</i>/0%).
+  <b>right end</b> (<i>certain</i>/100%) and
+  <br />
+  the more certain you are that it <b>will not</b> occur, the more you should position its slider towards the <b>left end</b> (<i>impossible</i>/0%).
   <br />
   When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider around 50%. Here is an example:
   <br />
@@ -162,8 +163,8 @@ const instructions_fridge1 = magpieViews.view_generator("instructions", {
   title: "Instructions Test Phase",
   text: `Great - we'll now proceed to the test phase of the experiment.
           Again, you will be shown scenes of different block arrangements.
-          However, this time, we ask you to <b>build sentences</b> that, in your
-          eyes, <b>best describe</b> what you think will happen in the pictures.
+          However, this time, we ask you to <b>build a sentence</b> that, in your
+          eyes, <b>best describes</b> what you think will happen in the picture.
           <br />
           <br />
           <b>A few things to note</b>:
@@ -176,7 +177,7 @@ const instructions_fridge1 = magpieViews.view_generator("instructions", {
           <br/>
           <b>3</b>. Note that you always have the possibility to <b>make corrections</b> by clicking on <b>DELETE LAST WORD</b> in the lower right of the screen.
           <br />
-          <b>4</b>. After you have built a sentence by concatenation of the available
+          <b>4</b>. After you have built the sentence by concatenation of the available
           words (shown word by word in a box in the lower left corner of the screen), click on <b>SUBMIT SENTECE</b> to continue.
           <br />
           <b>5</b>. If you think that a different sentence, that you couldn't built with the available words, would describe the scene more naturally, click on <b>USE MY OWN WORDS</b> and type it into the box that will appear below the picture.
@@ -199,11 +200,10 @@ const instructions_test = magpieViews.view_generator("instructions", {
           <br />
           As in the previous trial, we will ask you to
           indicate <b>how likely</b> you think certain blocks <b>will or will
-          not fall</b> (left: impossible, right: certain).
+          not fall</b> (left: impossible event, right: certain event).
           <br />
           As in the previous training trial, <b>you will not get
-          feedback</b> about what will actually happen since you will be shown
-          static pictures only.
+          feedback</b> about what will actually happen.
           <br />
           After you have provided all four estimates (the circles of all four
           sliders have to be green), you will be able proceed to the next trial.
@@ -213,7 +213,7 @@ const instructions_test = magpieViews.view_generator("instructions", {
           <br />
           <b>1</b>. Your estimates <b>may</b>, but <b>do not have to</b> <i>sum to 100%</i>.
           <br />
-          <b>2</b>. A block is considered to <b><i>fall</i> as soon as it <i>drops</i> from a platform or from another block or simply <i>topples over</i></b> - that is, a block does not necessarily need to fall to the ground in order to count as falling.
+          <b>2</b>. A block is considered to <b><i>fall</i> as soon as it <i>drops</i> from a platform or from another block or when it simply <i>topples over</i></b> - that is, a block does not necessarily need to fall to the ground in order to count as falling.
           <br/>
           <b>3</b>. The colored blocks all have <b>the same properties</b>; the colors are only used to distinguish them.
             </br>
@@ -230,7 +230,7 @@ const instructions_fridge2 = magpieViews.view_generator("instructions", {
           <br/>
           <br/>
           <b>1</b>. A block is considered to <b><i>fall</i> as soon as it <i>drops</i> from a
-          platform or from another block or simply <i>topples over</i></b> -
+          platform or from another block or when it simply <i>topples over</i></b> -
           that is, a block does not necessarily need to fall to the ground in
           order to count as falling.
           <br/>

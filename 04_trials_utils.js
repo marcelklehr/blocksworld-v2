@@ -21,8 +21,9 @@ pseudoRandomTrainTrials = function(){
   return trials
 }
 
-// const SHUFFLED_TRAIN_STIMULI = pseudoRandomTrainTrials();
-const SHUFFLED_TRAIN_STIMULI = TrainStimuli.list_all;
+const SHUFFLED_TRAIN_STIMULI = pseudoRandomTrainTrials();
+// const SHUFFLED_TRAIN_STIMULI = TrainStimuli.list_all;
+
 // TEST TRIALS //
 sequencePriors = function(){
   return {
