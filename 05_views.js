@@ -241,103 +241,13 @@ const instructions_fridge2 = magpieViews.view_generator("instructions", {
   buttonText: "start test phase"
 });
 
-// In the post test questionnaire you can ask your participants addtional questions
 const post_test = magpieViews.view_generator("post_test", {
-  trials: 1,
-  name: "post_test",
-  title: "Additional information",
-  text: "Answering the following questions is optional, but your answers will help us analyze our results.",
-
-  // You can change much of what appears here, e.g., to present it in a different language, as follows:
-  // buttonText: 'Weiter',
-  // age_question: 'Alter',
-  // gender_question: 'Geschlecht',
-  // gender_male: 'männlich',
-  // gender_female: 'weiblich',
-  // gender_other: 'divers',
-  // edu_question: 'Höchster Bildungsabschluss',
-  // edu_graduated_high_school: 'Abitur',
-  // edu_graduated_college: 'Hochschulabschluss',
-  // edu_higher_degree: 'Universitärer Abschluss',
-  // languages_question: 'Muttersprache',
-  // languages_more: '(in der Regel die Sprache, die Sie als Kind zu Hause gesprochen haben)',
-  comments_question: 'Further comments <br/><small>(was there anything about the different stimuli you realized in particular?)</small>'
-}, {
-  answer_container_generator: custom_posttest_generator.answer_container_gen,
-  handle_response_function: custom_posttest_generator.handle_response_function
-});
-
-
-const post_test_simple = magpieViews.view_generator("post_test", {
   trials: 1,
   name: "post_test",
   title: "Additional information",
   text: "Answering the following questions is optional, but your answers will help us analyze our results.",
   comments_question: 'Further comments'
 });
-
-const instructions_pretest = magpieViews.view_generator("instructions", {
-  trials: 1,
-  name: "instructions_pretest",
-  title: "Instructions Test Phase",
-  text: `In this short experiment, we ask you to indicate <b>how likely</b> you think
-  a shown toy block <b>will or will not fall</b> by moving a slider.
-   <br />
-  The larger your belief is that the block <b>will</b> fall,
-  the more you should position the slider towards the right end (<i>certainly</i>/100%).
-  <br />
-  The larger your belief is that it <b>will not</b> fall, the more you
-  should position the slider towards its left (<i>impossible</i>/0%).
-  <br/>
-  If you are quite <b>undecided</b> whether or not the block will fall, but you judge
-  it <i>a bit <b>more</b> likely that it <b>won't</b></i> fall, you should for instance move the slider a bit to the left.
-    <br />
-    <br />
-  Click on the <b>NEXT</b> button, which will appear after you have given your estimate by changing the position of the slider, to proceed with the next trial.
-  `
-});
-
-const instructions_train_pretest = magpieViews.view_generator("instructions", {
-  trials: 1,
-  name: "instructions_train_pretest",
-  title: "Instructions Train Phase",
-  text: `We will now start with the training phase
-          which consists of 8 trials. You will see block arrangements such that
-          you are able to develop intuitions about the physical properties and get
-          familiar with the stimuli.
-          <br/>
-          <br/>
-        For each presented scene you will be asked to indicate which of the
-         colored blocks you think will fall by clicking on the button with the
-         respective icons.
-         A falling block is represented by a skewed rectangle
-        and a resting block that <i>does not fall</i> is represented by a rectangle
-        with a line below. Here is an exemplary icon for the event
-        <br/>
-        <i>The <b>green</b> block <b>falls</b>, but the <b>yellow</b> block
-        <b>does not fall</b></i>:
-        <br/>
-        <br/>
-        <img src='stimuli/img/icons/green.png'/>
-        <img src='stimuli/img/icons/not-yellow.png' />
-         <br/>
-         <br/>
-         A block is considered to <b><i>fall</i></b> <b>as soon as it <i>topples
-         over</i> or <i>drops</i> from a platform or from another block.</b>
-         <br/>
-         The colored blocks represent common toy blocks, they do not have any
-         special or unexpected properties and they are only distinguishable by
-         their color.
-             <br />
-             <br />
-         After you selected one of the four buttons (whose border will turn green),
-         you may click on RUN to see what actually happens. If you were wrong,
-         the selected button will turn red and the correct one will turn light
-         green.
-         Then, you can proceed to the next trial.`,
-  buttonText: "CONTINUE"
-});
-
 
 
 // The 'thanks' view is crucial; never delete it; it submits the results!
@@ -365,22 +275,6 @@ const sentence_choice_custom = magpieViews.view_generator("sentence_choice", {
   }
 });
 
-const slider_rating_pretest = magpieViews.view_generator("slider_rating", {
-  trials: pretest_trials.length,
-  name: "pretest",
-  data: pretest_trials
-}, {
-  stimulus_container_generator: function (config, CT) {
-    return `<div class='magpie-view'>
-        <h1 class='magpie-view-title'>${config.title}</h1>
-        <p class='magpie-view-question magpie-view-qud'>${config.data[CT].QUD}</p>
-        <div class='stimulus' id='stimulus-pic'>
-          <img src=${config.data[CT].picture}>
-        </div>
-      </div>`;
-  }
-});
-
 // experimental phase trials
 const multiple_slider = magpieViews.view_generator(
   "slider_rating", {
@@ -404,7 +298,7 @@ const multiple_slider_train = magpieViews.view_generator(
   "slider_rating", {
     trials: 1,
     name: "multiple_slider_train",
-    data: TRAIN_SLIDER
+    data: TRAIN_SLIDER_TRIALS
   },
   {
     stimulus_container_generator: multi_slider_generator.stimulus_container_gen,
@@ -415,9 +309,9 @@ const multiple_slider_train = magpieViews.view_generator(
 
 const fridge_view = magpieViews.view_generator(
   "slider_rating", {
-    trials: fridge_trials.length,
+    trials: FRIDGE_TRIALS.length,
     name: "fridge_view",
-    data: fridge_trials
+    data: FRIDGE_TRIALS
   }, {
     stimulus_container_generator: fridge_generator.stimulus_container_gen,
     answer_container_generator: fridge_generator.answer_container_gen,
@@ -428,12 +322,90 @@ const fridge_view = magpieViews.view_generator(
 
 const fridge_example = magpieViews.view_generator(
   "slider_rating", {
-    trials: 1,
+    trials: FRIDGE_EXAMPLE_TRIALS.length,
     name: "fridge_example",
-    data: fridge_example_trials
+    data: FRIDGE_EXAMPLE_TRIALS
   }, {
     stimulus_container_generator: fridge_generator.stimulus_container_gen,
     answer_container_generator: fridge_generator.answer_container_gen,
     handle_response_function: fridge_generator.handle_response_function
   }
 );
+
+// const instructions_pretest = magpieViews.view_generator("instructions", {
+//   trials: 1,
+//   name: "instructions_pretest",
+//   title: "Instructions Test Phase",
+//   text: `In this short experiment, we ask you to indicate <b>how likely</b> you think
+//   a shown toy block <b>will or will not fall</b> by moving a slider.
+//    <br />
+//   The larger your belief is that the block <b>will</b> fall,
+//   the more you should position the slider towards the right end (<i>certainly</i>/100%).
+//   <br />
+//   The larger your belief is that it <b>will not</b> fall, the more you
+//   should position the slider towards its left (<i>impossible</i>/0%).
+//   <br/>
+//   If you are quite <b>undecided</b> whether or not the block will fall, but you judge
+//   it <i>a bit <b>more</b> likely that it <b>won't</b></i> fall, you should for instance move the slider a bit to the left.
+//     <br />
+//     <br />
+//   Click on the <b>NEXT</b> button, which will appear after you have given your estimate by changing the position of the slider, to proceed with the next trial.
+//   `
+// });
+//
+// const instructions_train_pretest = magpieViews.view_generator("instructions", {
+//   trials: 1,
+//   name: "instructions_train_pretest",
+//   title: "Instructions Train Phase",
+//   text: `We will now start with the training phase
+//           which consists of 8 trials. You will see block arrangements such that
+//           you are able to develop intuitions about the physical properties and get
+//           familiar with the stimuli.
+//           <br/>
+//           <br/>
+//         For each presented scene you will be asked to indicate which of the
+//          colored blocks you think will fall by clicking on the button with the
+//          respective icons.
+//          A falling block is represented by a skewed rectangle
+//         and a resting block that <i>does not fall</i> is represented by a rectangle
+//         with a line below. Here is an exemplary icon for the event
+//         <br/>
+//         <i>The <b>green</b> block <b>falls</b>, but the <b>yellow</b> block
+//         <b>does not fall</b></i>:
+//         <br/>
+//         <br/>
+//         <img src='stimuli/img/icons/green.png'/>
+//         <img src='stimuli/img/icons/not-yellow.png' />
+//          <br/>
+//          <br/>
+//          A block is considered to <b><i>fall</i></b> <b>as soon as it <i>topples
+//          over</i> or <i>drops</i> from a platform or from another block.</b>
+//          <br/>
+//          The colored blocks represent common toy blocks, they do not have any
+//          special or unexpected properties and they are only distinguishable by
+//          their color.
+//              <br />
+//              <br />
+//          After you selected one of the four buttons (whose border will turn green),
+//          you may click on RUN to see what actually happens. If you were wrong,
+//          the selected button will turn red and the correct one will turn light
+//          green.
+//          Then, you can proceed to the next trial.`,
+//   buttonText: "CONTINUE"
+// });
+
+// const slider_rating_pretest = magpieViews.view_generator("slider_rating", {
+//   trials: pretest_trials.length,
+//   name: "pretest",
+//   data: pretest_trials
+// }, {
+//   stimulus_container_generator: function (config, CT) {
+//     return `<div class='magpie-view'>
+//         <h1 class='magpie-view-title'>${config.title}</h1>
+//         <p class='magpie-view-question magpie-view-qud'>${config.data[CT].QUD}</p>
+//         <div class='stimulus' id='stimulus-pic'>
+//           <img src=${config.data[CT].picture}>
+//         </div>
+//       </div>`;
+//   }
+// });

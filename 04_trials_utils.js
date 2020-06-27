@@ -1,5 +1,7 @@
 // TRAINING TRIALS
+// data for animations
 pseudoRandomTrainTrials = function(){
+  let stimuli = Array(15).fill('');
   let trials = Array(15).fill('');
   // dont start with unc3, ac2, ac3
   let ids = _.shuffle(_.map(TrainStimuli.list_all, 'id'));
@@ -12,16 +14,34 @@ pseudoRandomTrainTrials = function(){
                           ac2[0]]);
   let ac1 = _.shuffle(_.values(TrainStimuli.map_category.ac1));
 
-  [1, 5, 8, 11].forEach(function(idx, i){trials[idx] = ac1[i]});
-  [2, 6, 9, 12].forEach(function(idx, i){trials[idx] = unc[i]});
-  [3, 4].forEach(function(idx, i){trials[idx] = ramp[i]});
-  [0, 7, 10].forEach(function(idx, i){trials[idx] = ind_ac[i]})
-  trials[13] = ac2[1];
-  trials[14] = TrainStimuli.map_category.independent.ind2
-  return trials
+  [1, 5, 8, 11].forEach(function(idx, i){
+    stimuli[idx] = ac1[i];
+    trials[idx] = getTrialById(TRAIN_TRIALS, ac1[i].id);
+  });
+  [2, 6, 9, 12].forEach(function(idx, i){
+    stimuli[idx] = unc[i]
+    trials[idx] = getTrialById(TRAIN_TRIALS, unc[i].id);
+  });
+  [3, 4].forEach(function(idx, i){
+    stimuli[idx] = ramp[i];
+    trials[idx] = getTrialById(TRAIN_TRIALS, ramp[i].id);
+  });
+  [0, 7, 10].forEach(function(idx, i){
+    stimuli[idx] = ind_ac[i]
+    trials[idx] = getTrialById(TRAIN_TRIALS, ind_ac[i].id);
+  })
+  stimuli[13] = ac2[1];
+  trials[13] = getTrialById(TRAIN_TRIALS, ac2[1].id);
+
+  stimuli[14] = TrainStimuli.map_category.independent.ind2
+  trials[14] = getTrialById(TRAIN_TRIALS, "ind2");
+
+  return {stimuli_data: stimuli, trial_data: trials}
 }
 
-const SHUFFLED_TRAIN_STIMULI = pseudoRandomTrainTrials();
+let training = pseudoRandomTrainTrials()
+const SHUFFLED_TRAIN_STIMULI = training.stimuli_data;
+const SHUFFLED_TRAIN_TRIALS = training.trial_data;
 // const SHUFFLED_TRAIN_STIMULI = TrainStimuli.list_all;
 
 // TEST TRIALS //
@@ -66,11 +86,12 @@ shuffled_test_ids.forEach(function(id){
   if(idx === -1) {
     let kind = id.slice(0, _.lastIndexOf(id, "_"));
     let ps = id.slice(_.lastIndexOf(id, "_") + 1);
-      console.warn('Test trial with id: ' + id + ' not found.')
+    console.warn('Test trial with id: ' + id + ' not found.')
   }
   // console.log(id + ' ' + idx)
   TEST_TRIALS.push(slider_rating_trials[idx]);
 });
+
 
 if (DEBUG){
   let arr = _.map(TEST_TRIALS, 'id')

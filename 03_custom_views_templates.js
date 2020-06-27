@@ -11,7 +11,8 @@ const animation_view1 = {
   name: "animation",
   title: "title",
   CT: 0, //is this the start value?
-  trials: NB_TRAIN_TRIALS,
+  trials: NB_TRAIN_TRIALS - 1,
+  // trials: 1,
   data: "",
   // The render function gets the magpie object as well as the current trial
   // in view counter as input
@@ -62,7 +63,7 @@ const animation_view1 = {
           $(".unselected")
             .off("click");
 
-          let id = SHUFFLED_TRAIN_STIMULI[CT].id
+          let id = SHUFFLED_TRAIN_TRIALS[CT].id
           id_button_correct = TrainExpectations[id]
           $('#' + id_button_correct)
             .addClass("correct");
@@ -83,21 +84,10 @@ const animation_view1 = {
           trial_name: 'animation_buttons',
           trial_number: CT + 1,
           RT: RT,
-          id: SHUFFLED_TRAIN_STIMULI[CT].id
+          id: SHUFFLED_TRAIN_TRIALS[CT].id
         });
-
-        let copied = Object.assign({}, TRAIN_TRIALS[CT]);
-        copied.icon1 = iconHtml2Utterance(copied.icon1)
-          .short;
-        copied.icon2 = iconHtml2Utterance(copied.icon2)
-          .short;
-        copied.icon3 = iconHtml2Utterance(copied.icon3)
-          .short;
-        copied.icon4 = iconHtml2Utterance(copied.icon4)
-          .short;
-        copied.expected = TrainExpectations[trial_data.id];
         trial_data = magpieUtils.view.save_config_trial_data(
-          copied,
+          _.omit(SHUFFLED_TRAIN_TRIALS[CT], ['icon1', 'icon2', 'icon3', 'icon4']),
           trial_data
         );
         magpie.trial_data.push(trial_data);
@@ -146,103 +136,13 @@ const multi_slider_generator = {
         trial_number: CT + 1,
         RT: RT
       });
-
-      var copied = Object.assign({}, config.data[CT]);
-      copied.icon1 = iconHtml2Utterance(copied.icon1)
-        .short;
-      copied.icon2 = iconHtml2Utterance(copied.icon2)
-        .short;
-      copied.icon3 = iconHtml2Utterance(copied.icon3)
-        .short;
-      copied.icon4 = iconHtml2Utterance(copied.icon4)
-        .short;
-
       trial_data = magpieUtils.view.save_config_trial_data(
-        copied,
+        _.omit(config.data[CT], ['icon1', 'icon2', 'icon3', 'icon4']),
         trial_data
       );
       magpie.trial_data.push(trial_data);
       magpie.findNextView();
     });
-  }
-};
-
-
-const custom_posttest_generator = {
-  answer_container_gen: function (config, CT) {
-    const quest = magpieUtils.view.fill_defaults_post_test(config);
-    return `<form>
-                    <p class='magpie-view-text'>
-                        <label for="age">${quest.age.title}:</label>
-                        <input type="number" name="age" min="18" max="110" id="age" />
-                    </p>
-                    <p class='magpie-view-text'>
-                        <label for="gender">${quest.gender.title}:</label>
-                        <select id="gender" name="gender">
-                            <option></option>
-                            <option value="${quest.gender.male}">${quest.gender.male}</option>
-                            <option value="${quest.gender.female}">${quest.gender.female}</option>
-                            <option value="${quest.gender.other}">${quest.gender.other}</option>
-                        </select>
-                    </p>
-                    <p class='magpie-view-text'>
-                        <label for="education">${quest.edu.title}:</label>
-                        <select id="education" name="education">
-                            <option></option>
-                            <option value="${quest.edu.graduated_high_school}">${quest.edu.graduated_high_school}</option>
-                            <option value="${quest.edu.graduated_college}">${quest.edu.graduated_college}</option>
-                            <option value="${quest.edu.higher_degree}">${quest.edu.higher_degree}</option>
-                        </select>
-                    </p>
-                    <p class='magpie-view-text'>
-                        <label for="languages" name="languages">${quest.langs.title}:<br /><span>${quest.langs.text}</</span></label>
-                        <input type="text" id="languages"/>
-                    </p>
-                    <p class="magpie-view-text">
-                        <label for="ramp1">Did you notice that in those trials, where a ball was present, the incline of the ramp was not always identical, but in some trials lower than in other trials?</label>
-                        <textarea name="ramp1" id="ramp1" rows="1" cols="40"></textarea>
-                    </p>
-                    <p class="magpie-view-text">
-                        <label for="comments">${quest.comments.title}</label>
-                        <textarea name="comments" id="comments" rows="6" cols="40"></textarea>
-                    </p>
-
-                    <button id="next" class='magpie-view-button'>${config.button}</button>
-            </form>`
-  },
-
-  handle_response_function: function (config, CT, magpie, answer_container_generator, startingTime) {
-    $(".magpie-view")
-      .append(answer_container_generator(config, CT));
-
-    $("#next")
-      .on("click", function (e) {
-        // prevents the form from submitting
-        e.preventDefault();
-
-        // records the post test info
-        magpie.global_data.age = $("#age")
-          .val();
-        magpie.global_data.gender = $("#gender")
-          .val();
-        magpie.global_data.education = $("#education")
-          .val();
-        magpie.global_data.languages = $("#languages")
-          .val();
-        magpie.global_data.comments = $("#comments")
-          .val()
-          .trim();
-        magpie.global_data.noticed_steepness = $("#ramp1")
-          .val();
-        magpie.global_data.endTime = Date.now();
-        magpie.global_data.timeSpent =
-          (magpie.global_data.endTime -
-            magpie.global_data.startTime) /
-          60000;
-
-        // moves to the next view
-        magpie.findNextView();
-      });
   }
 };
 
@@ -263,7 +163,6 @@ const fridge_generator = {
   answer_container_gen: function (config, CT) {
 
     let start_words = _.flatten(shownNext('S'));
-
     function return_word_array(array, color) {
       return array.map((word, index) => {
           let clickable = start_words.includes(word) ? ' ' : ' not-clickable ';
@@ -283,7 +182,6 @@ const fridge_generator = {
     let wordArray3 = ["if", "and", "or", "to", "due to", "because of", "the"]
     let wordArray4 = ["block", "blocks", "green", "blue", "red", "yellow", "both"]
     let wordArray5 = ["fall", "falls", "will", "cause", "causes", "make", "makes", "do", "does"]
-
     return `<div class = "fix-box"> <div class="fridge">` +
       // return_word_array(wordArray1, "magpie-view-button green") +
       // return_word_array(wordArray2, "red") + return_word_array(wordArray3, "blue") + return_word_array(wordArray4, "purple") +
@@ -297,7 +195,7 @@ const fridge_generator = {
       `</div>
       <br><br/>
       <div class ="sentence selected1" style = "font-size: 20px"> Your sentence:
-        <span class = "selected-words" id ="sentence"> ${config.data[CT].sentence} </span>
+        <span class = "selected-words" id ="sentence">${config.data[CT].sentence}</span>
       </div>
       <button id='buttonDelete' class='magpie-view-button delete-word'> delete last word </button>
       <br><br/>
@@ -329,7 +227,6 @@ const fridge_generator = {
       .append(answer_container_generator(config, CT));
     let button = $("#buttonNext");
     let submitbutton = $("#buttonSubmit");
-
     let sentence_array = [];
     let sentence = "";
     let custom_sentence = "";
@@ -349,16 +246,11 @@ const fridge_generator = {
 
         $(".selected-words")
           .append(" " + value)
-        // console.log(sentence_array);
-        // console.log(config.data[CT].sentence);
+          // Important for displaying sentence built so far
         sentence = sentence_array.toString()
           .replace(/,/g, " ");
-        //sentence = sentence.replace(/,/, " ");
-        // console.log(sentence.replace(/,/, " "));
 
         checkBuildSentence(sentence_array, poss_next, submitbutton)
-        //sentence = sentence.replace(/,/, " ");
-        // console.log(sentence);
       });
 
     $(".delete-word")
@@ -371,9 +263,8 @@ const fridge_generator = {
 
         $(".selected-words")
           .append(sentence);
-
+        //update for synchronizing with what is shown in textbox
         config.data[CT].sentence = sentence;
-
         let value = _.last(sentence_array)
         let poss_next = update_clickables(value);
         checkBuildSentence(sentence_array, poss_next, submitbutton);
@@ -388,35 +279,20 @@ const fridge_generator = {
           .removeClass("magpie-nodisplay");
 
         submitbutton.addClass("grid-button");
-        // $("#customWords")
-        //   .addClass("magpie-nodisplay");
 
         // attaches an event listener to the textbox input
         textInput.on("keyup", function () {
-          //document.getElementById('custom-text').value = " ";
-          //textInput.value = ' ';
-          // if the text is longer than (in this case) 10 characters without the spaces
-          // the 'next' button appears
+        // if text is longer than 10 chars without spaces, 'next' button appears
           if (textInput.val()
             .trim()
             .length > minChars) {
-            // console.log(textInput.val());
             submitbutton.removeClass("grid-button");
           } else {
             submitbutton.addClass("grid-button");
           }
         });
-
         custom_sentence = document.getElementById('custom-text');
-        // console.log(custom_sentence);
       });
-
-    // function for debugging - if "y" is pressed, the slider will change
-    // if (magpie.deploy.deployMethod === "debug") {
-    //   addShortCut2SelectAnswers(sentence, button);
-    // }
-
-    //addCheckResponseFunctionality(button);
 
     submitbutton.on("click", function () {
       $("#buttonNext")
@@ -435,18 +311,18 @@ const fridge_generator = {
 
     button.on("click", function () {
       const RT = Date.now() - startingTime; // measure RT before anything else
-      // let responseData = saveTrialQA();
+      let response2 = custom_sentence == "" ? "" : custom_sentence.value;
       let trial_data = {
         trial_name: config.name,
         trial_number: CT + 1,
-        response: sentence, //config.sentence_array, //sentence, //sentence_array,
-        custom_response: custom_sentence.value,
-        // response: responseData.responses,
-        // utterances: responseData.questions,
+        response: [sentence, response2],
+        response1: sentence,
+        response2: response2,
         RT: RT
       };
+      console.log(config.data[CT].icon1)
       trial_data = magpieUtils.view.save_config_trial_data(
-        config.data[CT],
+        _.omit(config.data[CT], 'sentence'),
         trial_data
       );
       magpie.trial_data.push(trial_data);
@@ -454,6 +330,84 @@ const fridge_generator = {
     });
   }
 };
+
+// const custom_posttest_generator = {
+//   answer_container_gen: function (config, CT) {
+//     const quest = magpieUtils.view.fill_defaults_post_test(config);
+//     return `<form>
+//                     <p class='magpie-view-text'>
+//                         <label for="age">${quest.age.title}:</label>
+//                         <input type="number" name="age" min="18" max="110" id="age" />
+//                     </p>
+//                     <p class='magpie-view-text'>
+//                         <label for="gender">${quest.gender.title}:</label>
+//                         <select id="gender" name="gender">
+//                             <option></option>
+//                             <option value="${quest.gender.male}">${quest.gender.male}</option>
+//                             <option value="${quest.gender.female}">${quest.gender.female}</option>
+//                             <option value="${quest.gender.other}">${quest.gender.other}</option>
+//                         </select>
+//                     </p>
+//                     <p class='magpie-view-text'>
+//                         <label for="education">${quest.edu.title}:</label>
+//                         <select id="education" name="education">
+//                             <option></option>
+//                             <option value="${quest.edu.graduated_high_school}">${quest.edu.graduated_high_school}</option>
+//                             <option value="${quest.edu.graduated_college}">${quest.edu.graduated_college}</option>
+//                             <option value="${quest.edu.higher_degree}">${quest.edu.higher_degree}</option>
+//                         </select>
+//                     </p>
+//                     <p class='magpie-view-text'>
+//                         <label for="languages" name="languages">${quest.langs.title}:<br /><span>${quest.langs.text}</</span></label>
+//                         <input type="text" id="languages"/>
+//                     </p>
+//                     <p class="magpie-view-text">
+//                         <label for="ramp1">Did you notice that in those trials, where a ball was present, the incline of the ramp was not always identical, but in some trials lower than in other trials?</label>
+//                         <textarea name="ramp1" id="ramp1" rows="1" cols="40"></textarea>
+//                     </p>
+//                     <p class="magpie-view-text">
+//                         <label for="comments">${quest.comments.title}</label>
+//                         <textarea name="comments" id="comments" rows="6" cols="40"></textarea>
+//                     </p>
+//
+//                     <button id="next" class='magpie-view-button'>${config.button}</button>
+//             </form>`
+//   },
+//
+//   handle_response_function: function (config, CT, magpie, answer_container_generator, startingTime) {
+//     $(".magpie-view")
+//       .append(answer_container_generator(config, CT));
+//
+//     $("#next")
+//       .on("click", function (e) {
+//         // prevents the form from submitting
+//         e.preventDefault();
+//
+//         // records the post test info
+//         magpie.global_data.age = $("#age")
+//           .val();
+//         magpie.global_data.gender = $("#gender")
+//           .val();
+//         magpie.global_data.education = $("#education")
+//           .val();
+//         magpie.global_data.languages = $("#languages")
+//           .val();
+//         magpie.global_data.comments = $("#comments")
+//           .val()
+//           .trim();
+//         magpie.global_data.noticed_steepness = $("#ramp1")
+//           .val();
+//         magpie.global_data.endTime = Date.now();
+//         magpie.global_data.timeSpent =
+//           (magpie.global_data.endTime -
+//             magpie.global_data.startTime) /
+//           60000;
+//
+//         // moves to the next view
+//         magpie.findNextView();
+//       });
+//   }
+// };
 
 
 // view for train trial with sliders instead of buttons

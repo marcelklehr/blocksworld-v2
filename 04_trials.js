@@ -42,6 +42,7 @@ var color_vision_test = [
   }
 ]
 
+// ----- TEST TRIALS PROBABILITIES (ex.1)---- //
 
 var slider_rating_trials = [
   {
@@ -55,9 +56,9 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    question: '',
     optionLeft: "impossible",
-    optionRight: "certain"
+    optionRight: "certain",
+    expected: ''
   },
   {
     picture: "stimuli/img/group/ac1_uu.jpg",
@@ -71,7 +72,8 @@ var slider_rating_trials = [
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     optionLeft: "impossible",
-    optionRight: "certain"
+    optionRight: "certain",
+    expected: ''
   },
   {
     picture: "stimuli/img/group/ac1_uh.jpg",
@@ -85,7 +87,8 @@ var slider_rating_trials = [
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     optionLeft: "impossible",
-    optionRight: "certain"
+    optionRight: "certain",
+    expected: ''
   },
   {
     picture: "stimuli/img/group/ac1_hh.jpg",
@@ -99,7 +102,8 @@ var slider_rating_trials = [
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     optionLeft: "impossible",
-    optionRight: "certain"
+    optionRight: "certain",
+    expected: ''
   },
   {
     picture: "stimuli/img/group/ac2_ll.jpg",
@@ -113,7 +117,8 @@ var slider_rating_trials = [
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     optionLeft: "impossible",
-    optionRight: "certain"
+    optionRight: "certain",
+    expected: ''
   },
   {
     picture: "stimuli/img/group/ac2_ul.jpg",
@@ -127,7 +132,8 @@ var slider_rating_trials = [
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     optionLeft: "impossible",
-    optionRight: "certain"
+    optionRight: "certain",
+    expected: ''
   },
   {
     picture: "stimuli/img/group/ac2_hl.jpg",
@@ -141,7 +147,8 @@ var slider_rating_trials = [
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     optionLeft: "impossible",
-    optionRight: "certain"
+    optionRight: "certain",
+    expected: ''
   },
   {
     picture: "stimuli/img/group/ac2_uh.jpg",
@@ -155,7 +162,8 @@ var slider_rating_trials = [
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     optionLeft: "impossible",
-    optionRight: "certain"
+    optionRight: "certain",
+    expected: ''
   },
   {
     picture: "stimuli/img/group/ac2_hh.jpg",
@@ -169,7 +177,8 @@ var slider_rating_trials = [
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     optionLeft: "impossible",
-    optionRight: "certain"
+    optionRight: "certain",
+    expected: ''
   },
   {
     picture: "stimuli/img/group/independent_ll.jpg",
@@ -183,7 +192,8 @@ var slider_rating_trials = [
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     optionLeft: "impossible",
-    optionRight: "certain"
+    optionRight: "certain",
+    expected: ''
   },
   {
     picture: "stimuli/img/group/independent_ul.jpg",
@@ -197,7 +207,8 @@ var slider_rating_trials = [
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     optionLeft: "impossible",
-    optionRight: "certain"
+    optionRight: "certain",
+    expected: ''
   },
   {
     picture: "stimuli/img/group/independent_uh.jpg",
@@ -211,7 +222,8 @@ var slider_rating_trials = [
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     optionLeft: "impossible",
-    optionRight: "certain"
+    optionRight: "certain",
+    expected: ''
   },
   {
     picture: "stimuli/img/group/independent_hl.jpg",
@@ -225,7 +237,8 @@ var slider_rating_trials = [
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     optionLeft: "impossible",
-    optionRight: "certain"
+    optionRight: "certain",
+    expected: ''
   },
   {
     picture: "stimuli/img/group/independent_hh.jpg",
@@ -239,11 +252,11 @@ var slider_rating_trials = [
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
     optionLeft: "impossible",
-    optionRight: "certain"
+    optionRight: "certain",
+    expected: ''
   }
 
 ];
-
 // adapt path to pictures depending on colour group in each trial
 // add group and id separately
 let n = slider_rating_trials.length;
@@ -256,38 +269,7 @@ _.map(slider_rating_trials, function (trial) {
   trial.id = id[id.length - 1].slice(0, -4);
 });
 
-// PRE-TEST for steepness / edge
-let pretest_trial = function(angle, dir){
-  return {QUD: "Please answer the question below by moving the slider.",
-          picture: "stimuli/img/pretest/ramp-side/" + dir + "-" + angle.toString() + "-group.jpg",
-          question: 'Do you think the <b>group</b> block will fall?',
-          optionLeft: "impossible",
-          optionRight: "certain",
-          id: '', question1: '', question2: '', question3: '', question4: '',
-          icon1: '', icon2: '', icon3: '', icon4: '',
-          response1: '', response2: '', response3: '', response4: '',
-          expected: '', group: '',	picture1: '',	picture2: '',
-          noticed_steepness: '',	noticed_ball: ''
-        };
-}
-var pretest_trials = [];
-PRETEST_ANGLES.forEach(function (angle) {
-  pretest_trials.push(pretest_trial(angle, "horiz"))
-  pretest_trials.push(pretest_trial(angle, "vert"))
-})
-
-let sides = ["left", "right"];
-pretest_trials = _.shuffle(pretest_trials);
-_.map(pretest_trials, function (trial, i) {
-  let color = _.sample(BLOCK_COLS.test);
-  trial.picture = trial.picture.replace("group", color);
-  let side = i % 2 === 0 ? sides[0] : sides[1];
-  trial.picture = trial.picture.replace("side", side);
-  trial.question = trial.question.replace("group", color);
-  let id = trial.picture.split("/")
-  trial.id = id[id.length - 1].slice(0, -4);
-});
-
+// ----- TRAINING TRIALS (Buttons) for exp1 + exp2 ---- //
 // the data of the training stimuli is always the same,
 // the 4 buttons are always shown in same order
 let TRAIN_TRIALS = [];
@@ -296,6 +278,7 @@ train_ids
   .forEach(function (id) {
     let data = {
       QUD: 'Which block(s) do you think will fall? Click on RUN to see!',
+      id: id,
       icon1: id2IconTrain.ac,
       icon2: id2IconTrain.a,
       icon3: id2IconTrain.c,
@@ -304,49 +287,80 @@ train_ids
       question2: text_train_buttons.short.a,
       question3: text_train_buttons.short.c,
       question4: text_train_buttons.short.none,
-      expected: '',
-      optionLeft: 'impossible',
-      optionRight: 'certain'
+      question: '',
+      expected: TrainExpectations[id],
+      optionLeft: '',
+      optionRight: '',
+      group: '',
+      picture: ''
     };
     TRAIN_TRIALS.push(data);
   });
 
-const TRAIN_SLIDER = [
-  {
-    picture: "stimuli/img/ind2.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain"
-  }
-];
+// one of the training trials is used with sliders/fridge view as in test phase instead of buttons
+let id_slider = 'ind2';
+TRAIN_SLIDER_TRIALS = _.filter(TRAIN_TRIALS, function(trial){
+  return trial.id == id_slider
+})
+TRAIN_SLIDER_TRIALS[0].QUD =
+  "Please indicate how likely you think the represented events will occur.";
+TRAIN_SLIDER_TRIALS[0].picture = "stimuli/img/" + id_slider + ".jpg";
+TRAIN_SLIDER_TRIALS[0].optionLeft = 'impossible';
+TRAIN_SLIDER_TRIALS[0].optionRight = 'certain';
 
-// fridge trials take in input and thereby info of slider_rating_trials
-var fridge_trials = _.cloneDeep(slider_rating_trials)
-
-_.map(fridge_trials, function (trial, i) {
-  trial.sentence = [" "];
+// ----- FRIDGE TRIALS ---- //
+// fridge trials have the same input data slider_rating_trials
+let FRIDGE_TRIALS = _.cloneDeep(slider_rating_trials)
+FRIDGE_TRIALS = _.map(FRIDGE_TRIALS, function (trial, i) {
+  ['question1', 'question2', 'question3', 'question4',
+   'response3', 'response4',
+   'optionLeft', 'optionRight', 'expected'].forEach(function(key){
+    trial[key] = '';
+  });
   trial.QUD = "How would you most naturally describe the following scene?";
+  trial.sentence = "";
+  trial = _.omit(trial, ['icon1', 'icon2', 'icon3', 'icon4']);
+  return trial
 });
-// for (var i = 0; i < fridge_trials.length; i++) {
-//   fridge_trials[i] = _.omit(fridge_trials[i], ["icon1", "icon2", "icon3", "icon4", "question1", "question2", "question3", "question4"]);
-// }
 
-// single fridge example trial
-let fridge_ex = Object.assign({sentence: [" "]}, fridge_trials[0])
+
+let fridge_ex = Object.assign({}, FRIDGE_TRIALS[0])
 fridge_ex.picture = "stimuli/img/fridge_example.jpg";
-let fridge_example_trials = [fridge_ex];
+fridge_ex.id = id_slider
+const FRIDGE_EXAMPLE_TRIALS = [fridge_ex];
 
 
-//delete v.icon1;
-//delete v.icon2;
-//_.omit(fridge_trials, ["icon1", "icon2", "icon3", "icon4", "question1", "question2", "question3", "question4"]);
-//delete fridge_trials.icon1;
-// console.log(fridge_trials);
+
+
+
+// PRE-TEST for steepness / edge
+// let pretest_trial = function(angle, dir){
+//   return {QUD: "Please answer the question below by moving the slider.",
+//           picture: "stimuli/img/pretest/ramp-side/" + dir + "-" + angle.toString() + "-group.jpg",
+//           question: 'Do you think the <b>group</b> block will fall?',
+//           optionLeft: "impossible",
+//           optionRight: "certain",
+//           id: '', question1: '', question2: '', question3: '', question4: '',
+//           icon1: '', icon2: '', icon3: '', icon4: '',
+//           response1: '', response2: '', response3: '', response4: '',
+//           expected: '', group: '',	picture1: '',	picture2: '',
+//           noticed_steepness: '',	noticed_ball: ''
+//         };
+// }
+// var pretest_trials = [];
+// PRETEST_ANGLES.forEach(function (angle) {
+//   pretest_trials.push(pretest_trial(angle, "horiz"))
+//   pretest_trials.push(pretest_trial(angle, "vert"))
+// })
+//
+// let sides = ["left", "right"];
+// pretest_trials = _.shuffle(pretest_trials);
+// _.map(pretest_trials, function (trial, i) {
+//   let color = _.sample(BLOCK_COLS.test);
+//   trial.picture = trial.picture.replace("group", color);
+//   let side = i % 2 === 0 ? sides[0] : sides[1];
+//   trial.picture = trial.picture.replace("side", side);
+//   trial.question = trial.question.replace("group", color);
+//   let id = trial.picture.split("/")
+//   trial.id = id[id.length - 1].slice(0, -4);
+// });

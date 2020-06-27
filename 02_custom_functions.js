@@ -55,8 +55,8 @@ const DURATION_ANIMATION = 7000; // in ms
 const KEY2SELECTANSWER = "y";
 
 const NB_TRAIN_TRIALS = TrainStimuli.list_all.length;
-const TRAIN_BTTN_IDS = [BLOCK_COLS_SHORT.train.join(''), 'none'].concat(
-  BLOCK_COLS_SHORT.train);
+const TRAIN_BTTN_IDS = [BLOCK_COLS_SHORT.train.join('')].concat(
+  BLOCK_COLS_SHORT.train).concat(['none']);
 
 // custom functions:
 toggleNextIfDone = function (button, condition) {
@@ -249,4 +249,12 @@ update_clickables = function (lastSelected, submitted=false) {
     });
     return poss_words
   }
+}
+
+getTrialById = function(trials_all, id){
+  let trial = _.filter(trials_all, function(trial){
+    return trial.id == id
+  })
+  trial.length != 1 ? console.error('several trials with id ' + id) : null;
+  return trial[0];
 }

@@ -19,7 +19,7 @@ trials_independent = function(){
              'ind2': ['horizontal', 'vertical']};
   let expected = {'ind0': BLOCK_COLS_SHORT.train[0],
                   'ind1': BLOCK_COLS_SHORT.train[1],
-                  'ind2': 'no-feedback'}
+                  'ind2': ''}
   let data = {}
   _.keys(dir).forEach(function(id, i) {
     let walls = Walls.train.independent;
