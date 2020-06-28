@@ -182,8 +182,10 @@ const instructions_fridge1 = magpieViews.view_generator("instructions", {
           words (shown word by word in a box in the lower left corner of the screen), click on <b>SUBMIT SENTECE</b> to continue.
           <br />
           <b>5</b>. If you think that a different sentence, that you couldn't built with the available words, would describe the scene more naturally, click on <b>USE MY OWN WORDS</b> and type it into the box that will appear below the picture.
+          By clicking on <b>NEXT SCENE</b>, your sentence will be submitted and
+          you will get to the next trial.
           <br />
-          Otherwise, click on <b>NEXT SCENE</b> to directly continue with the next trial.
+          Otherwise, directly click on <b>NEXT SCENE</b> to continue straight with the next trial.
           <br />
           <br />
           Before the actual experiment starts, we will first show you an example next.`,
@@ -307,6 +309,18 @@ const multiple_slider_train = magpieViews.view_generator(
     handle_response_function: multi_slider_generator.handle_response_function
   }
 )
+
+const instruction_slider_example = magpieViews.view_generator(
+  "slider_rating", {
+    trials: 1,
+    name: "instruction_slider_example",
+    data: INSTRUCTION_SLIDER
+  }, {
+    stimulus_container_generator: multi_slider_generator.example_text_container_gen,
+    answer_container_generator: multi_slider_generator.example_answer_container_gen,
+    handle_response_function: multi_slider_generator.example_handle_response_function
+  }
+);
 
 const fridge_view = magpieViews.view_generator(
   "slider_rating", {

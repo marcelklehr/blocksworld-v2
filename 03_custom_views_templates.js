@@ -100,7 +100,7 @@ const animation_view1 = {
 const multi_slider_generator = {
   stimulus_container_gen: function (config, CT) {
     return `<div class='magpie-view'>
-        <h2 class='stimulus'>${config.data[CT].QUD}</h5>
+        <h2 class='stimulus'>${config.data[CT].QUD}</h2>
         <div class='stimulus'>
           <img src=${config.data[CT].picture} class ='picture'>
         </div>
@@ -136,6 +136,53 @@ const multi_slider_generator = {
         trial_number: CT + 1,
         RT: RT
       });
+      trial_data = magpieUtils.view.save_config_trial_data(
+        _.omit(config.data[CT], ['icon1', 'icon2', 'icon3', 'icon4']),
+        trial_data
+      );
+      magpie.trial_data.push(trial_data);
+      magpie.findNextView();
+    });
+  },
+
+  example_text_container_gen: function(config, CT){
+    return `<div class='magpie-view'>
+              <h1 class='magpie-view-title'>Slider Example</h1>
+              <section class="magpie-text-container">
+                  <p class="magpie-view-text">${config.data[CT].QUD}</p>
+              </section>
+            </div>`;
+  },
+  example_answer_container_gen: function (config, CT) {
+    return htmlSliderAnswers(config.data[CT], ["80", "75", "5", "5"]) +
+    `<div class='magpie-view'>
+              <section class="magpie-text-container">
+                  <p class="magpie-view-text">${config.data[CT].question}</p>
+              </section>
+      </div>
+      <button id='buttonNext' class='magpie-view-button'>Continue</button>`;
+  },
+  example_handle_response_function: function(
+    config,
+    CT,
+    magpie,
+    answer_container_generator,
+    startingTime
+  ) {
+    $(".magpie-view")
+      .append(answer_container_generator(config, CT));
+    [1,2,3,4].forEach(function(i){
+      $("#response" + i).addClass('replied');
+      document.getElementById("response" + i).disabled = true;
+    });
+
+    $("#buttonNext").on("click", function () {
+      const RT = Date.now() - startingTime; // measure RT before anything else
+      let trial_data = {
+        trial_name: config.name,
+        trial_number: CT + 1,
+        RT: RT
+      };
       trial_data = magpieUtils.view.save_config_trial_data(
         _.omit(config.data[CT], ['icon1', 'icon2', 'icon3', 'icon4']),
         trial_data
@@ -194,7 +241,7 @@ const fridge_generator = {
       return_word_array(word_groups[5].words, word_groups[5].col) +
       `</div>
       <br><br/>
-      <div class ="sentence selected1" style = "font-size: 20px"> Your sentence:
+      <div class ="sentence selected1" style = "font-size: 20px"> Built sentence:
         <span class = "selected-words" id ="sentence">${config.data[CT].sentence}</span>
       </div>
       <button id='buttonDelete' class='magpie-view-button delete-word'> delete last word </button>
@@ -273,8 +320,6 @@ const fridge_generator = {
     $("#customWords")
       .on("click", function () {
 
-        const minChars = config.data[CT].min_chars === undefined ? 10 : config.data[CT].min_chars;
-
         $(".custom-sentence")
           .removeClass("magpie-nodisplay");
 
@@ -282,10 +327,10 @@ const fridge_generator = {
 
         // attaches an event listener to the textbox input
         textInput.on("keyup", function () {
-        // if text is longer than 10 chars without spaces, 'next' button appears
+        // if any text is typed, 'next' button appears
           if (textInput.val()
             .trim()
-            .length > minChars) {
+            .length > 0) {
             submitbutton.removeClass("grid-button");
           } else {
             submitbutton.addClass("grid-button");

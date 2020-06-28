@@ -70,12 +70,13 @@ _htmlSliderQuestion = function (idx_question) {
   };
 }
 
-_htmlSlider = function (idxSlider, utterance, options) {
+_htmlSlider = function (idxSlider, utterance, options, value) {
   let sliderID = "slider" + idxSlider
   let responseID = "response" + idxSlider
   let answerID = "answer" + idxSlider
   let outputID = "output" + idxSlider
   let outputName = "outputSlider" + idxSlider
+  value = value == "" ? 50 : value;
 
   let start = "<s" + idxSlider + " class='magpie-grid-slider' id=" + sliderID + ">";
   let end = "</s" + idxSlider + ">";
@@ -85,28 +86,26 @@ _htmlSlider = function (idxSlider, utterance, options) {
   let html_slider = start +
     `<span class='magpie-response-slider-option optionWide'>` + options.left + `</span>
      <input type='range' id=` + responseID + ` name=` + answerID +
-    ` class='magpie-response-slider' min='0' max='100' value='50' oninput='` +
+    ` class='magpie-response-slider' min='0' max='100' value='` + value + `' oninput='` +
     outputID + `.value = ` + responseID + `.value + "%"'/>` +
     `<span class='magpie-response-slider-option optionWide'>` + options.right + `</span>
-    <output name="` + outputName + `" id=` + outputID + ` class="thick">50%</output>` +
+    <output name="` + outputName + `" id=` + outputID + ` class="thick">` + value + `%</output>` +
     end;
 
   return html_question + html_slider
 }
 
-htmlSliderAnswers = function (trial_data) {
+htmlSliderAnswers = function (trial_data, values=["", "", "", ""]) {
   let utterances = [trial_data.icon1, trial_data.icon2,
     trial_data.icon3, trial_data.icon4];
-  const option1 = trial_data.optionLeft;
-  const option2 = trial_data.optionRight;
 
   let html_str = `<div class='magpie-multi-slider-grid' id='answerSliders'>`;
   _.range(1, 5)
     .forEach(function (i) {
       let h = _htmlSlider(i, utterances[i - 1], {
-        left: option1,
-        right: option2
-      });
+        left: trial_data.optionLeft,
+        right: trial_data.optionRight
+      }, values[i-1]);
       html_str += h;
     });
   html_str += `</div>`

@@ -308,6 +308,34 @@ TRAIN_SLIDER_TRIALS[0].picture = "stimuli/img/train_slider_fridge/" + id_slider 
 TRAIN_SLIDER_TRIALS[0].optionLeft = 'impossible';
 TRAIN_SLIDER_TRIALS[0].optionRight = 'certain';
 
+let INSTRUCTION_SLIDER = [{
+  picture: '',
+  optionLeft: 'impossible',
+  optionRight: 'certain',
+  icon1: id2IconTrain.ac,
+  icon2: id2IconTrain.a,
+  icon3: id2IconTrain.c,
+  icon4: id2IconTrain.none,
+  question1: text_train_buttons.short.ac,
+  question2: text_train_buttons.short.a,
+  question3: text_train_buttons.short.c,
+  question4: text_train_buttons.short.none,
+  expected: '',
+  group: '',
+  question: `Alternatively, the <b>same beliefs</b> can also be represented by setting
+  <b>the upper two sliders to roughly 50%</b> and the <b>lower two sliders</b>
+  again to <b>small values near 0</b>.
+  Either way is fine - it just depends on your preferences.
+  <br />
+  Please click on <b>CONTINUE</b> to get to the last trial of the training phase.
+  `,
+  QUD: `Let us assume, that you are pretty <b>certain</b> that the <b>red
+  block</b> falls, but <b>rather uncertain whether or not</b> the <b>yellow
+  block</b> also falls.
+  <br />
+  The following slider positions are an example for representing these beliefs.
+  `
+}];
 // ----- FRIDGE TRIALS ---- //
 // fridge trials have the same input data slider_rating_trials
 let FRIDGE_TRIALS = _.cloneDeep(slider_rating_trials)
