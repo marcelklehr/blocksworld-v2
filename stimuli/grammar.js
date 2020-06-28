@@ -1,7 +1,6 @@
 // let _ = require('../node_modules/underscore/underscore.js')
 
 let GRAMMAR_VAR = {
-  'IF': ["if"],
   'DET_N': ['neither', 'nor'],
   'COL': ['green', 'blue'],
   'CONJ': ['and', 'but', 'because of'],
@@ -15,29 +14,26 @@ let GRAMMAR_VAR = {
 // to list of words/placeholders that will be visible after the key token was
 // selected
 let GRAMMAR_RULE = {
-  'S': ['MOD', 'IF', 'the', 'both', 'DET_N'], //start symbol
+  'S': ['MOD', 'if', 'the', 'both', 'DET_N'], //start symbol
   'MOD': ['the', 'both', 'if', 'V_AUX', 'V_AUX_I', 'V', 'V_I'],
   'the': ['COL'],
-  'IF': ['the', 'and'],
+  'if': ['the', 'and'],
   'DET_N': ['the'],
   'COL': ['block', 'nor', 'CONJ'],
   'both': ['blocks'],
   'blocks': ['will', 'fall'],
-  'block': ['to', 'will', 'nor', 'V', 'V_AUX', 'V_I', 'might', 'CONJ'],
+  'block': ['to', 'will', 'nor', 'V', 'V_AUX', 'V_I', 'MOD', 'CONJ'],
   'will': ['MOD', 'not', 'V_I', 'V_AUX_I'],
   'not': ['V_I', 'V_AUX_I', 'the'],
-  'and': ['the', 'MOD'],
+  'and': ['the', 'MOD', 'V_AUX'],
   'but': ['not', 'the'],
-  'V_I': ['CONJ', 'the', 'also', 'nor'],
-  'V': ['CONJ', 'the', 'also'],
+  'V_I': ['CONJ', 'the', 'also', 'nor', 'if'],
+  'V': ['CONJ', 'the', 'also', 'if'],
   'V_AUX_I': ['the'],
   'V_AUX': ['the'],
   'to': ['fall']
 }
-// rather ?
-// only without if?
-// no?
-// due to?
+
 let word_groups = [
   {
     words: ["maybe", "might", "probably", 'defenitely', 'also', 'only'],
