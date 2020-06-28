@@ -197,8 +197,7 @@ showAnimationInTrial = function (CT, html_answers, progress_bar = true) {
 
   let stimulus = SHUFFLED_TRAIN_STIMULI[CT];
   if (DEBUG) {
-    console.log(stimulus.id);
-    console.log(stimulus.meta)
+    console.log(stimulus.id + ': ' + stimulus.meta.join(" "));
   }
 
   let worldElems = createWorld();

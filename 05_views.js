@@ -152,8 +152,9 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   Note, that your estimates <b>may</b>, but <b>do not have to</b> sum up to 100%.
   <br />
   <br />
-  Only after you have moved all four sliders, you will be able to proceed to the
-  next trial.`,
+  From now on, you won't get feedback anymore about what will actually happen.
+  That means, after you have moved all four sliders, you will directly proceed
+  to the next trial by clicking on NEXT.`,
   buttonText: "continue with example trial"
 });
 
@@ -296,7 +297,7 @@ const multiple_slider = magpieViews.view_generator(
 
 const multiple_slider_train = magpieViews.view_generator(
   "slider_rating", {
-    trials: 1,
+    trials: TRAIN_SLIDER_TRIALS.length,
     name: "multiple_slider_train",
     data: TRAIN_SLIDER_TRIALS
   },
@@ -320,11 +321,11 @@ const fridge_view = magpieViews.view_generator(
 );
 
 
-const fridge_example = magpieViews.view_generator(
+const fridge_train = magpieViews.view_generator(
   "slider_rating", {
-    trials: FRIDGE_EXAMPLE_TRIALS.length,
-    name: "fridge_example",
-    data: FRIDGE_EXAMPLE_TRIALS
+    trials: TRAIN_FRIDGE_TRIALS.length,
+    name: "fridge_train",
+    data: TRAIN_FRIDGE_TRIALS
   }, {
     stimulus_container_generator: fridge_generator.stimulus_container_gen,
     answer_container_generator: fridge_generator.answer_container_gen,

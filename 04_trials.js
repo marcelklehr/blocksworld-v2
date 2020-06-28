@@ -46,7 +46,7 @@ var color_vision_test = [
 
 var slider_rating_trials = [
   {
-    picture: "stimuli/img/group/ac1_lh.jpg",
+    picture: "stimuli/img/group/if1_lh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -61,7 +61,7 @@ var slider_rating_trials = [
     expected: ''
   },
   {
-    picture: "stimuli/img/group/ac1_uu.jpg",
+    picture: "stimuli/img/group/if1_uu.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -76,7 +76,7 @@ var slider_rating_trials = [
     expected: ''
   },
   {
-    picture: "stimuli/img/group/ac1_uh.jpg",
+    picture: "stimuli/img/group/if1_uh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -91,7 +91,7 @@ var slider_rating_trials = [
     expected: ''
   },
   {
-    picture: "stimuli/img/group/ac1_hh.jpg",
+    picture: "stimuli/img/group/if1_hh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -106,7 +106,7 @@ var slider_rating_trials = [
     expected: ''
   },
   {
-    picture: "stimuli/img/group/ac2_ll.jpg",
+    picture: "stimuli/img/group/if2_ll.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -121,7 +121,7 @@ var slider_rating_trials = [
     expected: ''
   },
   {
-    picture: "stimuli/img/group/ac2_ul.jpg",
+    picture: "stimuli/img/group/if2_ul.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -136,7 +136,7 @@ var slider_rating_trials = [
     expected: ''
   },
   {
-    picture: "stimuli/img/group/ac2_hl.jpg",
+    picture: "stimuli/img/group/if2_hl.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -151,7 +151,7 @@ var slider_rating_trials = [
     expected: ''
   },
   {
-    picture: "stimuli/img/group/ac2_uh.jpg",
+    picture: "stimuli/img/group/if2_uh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -166,7 +166,7 @@ var slider_rating_trials = [
     expected: ''
   },
   {
-    picture: "stimuli/img/group/ac2_hh.jpg",
+    picture: "stimuli/img/group/if2_hh.jpg",
     QUD: "Please indicate how likely you think the represented events will occur.",
     icon1: id2Icon.ac,
     icon2: id2Icon.a,
@@ -304,7 +304,7 @@ TRAIN_SLIDER_TRIALS = _.filter(TRAIN_TRIALS, function(trial){
 })
 TRAIN_SLIDER_TRIALS[0].QUD =
   "Please indicate how likely you think the represented events will occur.";
-TRAIN_SLIDER_TRIALS[0].picture = "stimuli/img/" + id_slider + ".jpg";
+TRAIN_SLIDER_TRIALS[0].picture = "stimuli/img/train_slider_fridge/" + id_slider + ".jpg";
 TRAIN_SLIDER_TRIALS[0].optionLeft = 'impossible';
 TRAIN_SLIDER_TRIALS[0].optionRight = 'certain';
 
@@ -325,9 +325,9 @@ FRIDGE_TRIALS = _.map(FRIDGE_TRIALS, function (trial, i) {
 
 
 let fridge_ex = Object.assign({}, FRIDGE_TRIALS[0])
-fridge_ex.picture = "stimuli/img/fridge_example.jpg";
+fridge_ex.picture = "stimuli/img/train_slider_fridge/ind2_test_colors.jpg";
 fridge_ex.id = id_slider
-const FRIDGE_EXAMPLE_TRIALS = [fridge_ex];
+const TRAIN_FRIDGE_TRIALS = [fridge_ex];
 
 
 

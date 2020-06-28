@@ -1,7 +1,7 @@
-const DEBUG = true
+const DEBUG = false
 // var MODE = "color-vision"
-// var MODE = "train"
-var MODE = "test"
+var MODE = "train"
+// var MODE = "test"
 // var MODE = "pretest"
 // var MODE = "experiment"
 
@@ -14,8 +14,8 @@ PROPS = {'blocks': {'w':40, 'h': 80},
                     'stick': {'w': 20, 'h': 95},
                     'plank': {'w': 220, 'h': 10},
                     'link': {'w': 5, 'h': 10}},
-         'ac1_ssw': {'stick': {'w': 20, 'h': 25}, 'plank': {'w': 300, 'h': 10}},
-         'ac1_base_ssw': {w: 80, h: 12}
+         'if1_ssw': {'stick': {'w': 20, 'h': 25}, 'plank': {'w': 300, 'h': 10}},
+         'if1_base_ssw': {w: 80, h: 12}
        };
 
 OPTS = {
@@ -25,7 +25,7 @@ OPTS = {
   'plank': {isStatic: false, density: 0.001, restitution: .02, friction: 0.1}
 }
 
-let TRIAL_TYPES = ['ac1', 'ac2', 'independent'];
+let TRIAL_TYPES = ['if1', 'if2', 'independent'];
 // Proportion of block that's ON TOP of its base wall beneath
 let PRIOR = {
   'vertical': {'high': 0.45, 'uncertainH': 0.52, 'uncertain': 0.54,

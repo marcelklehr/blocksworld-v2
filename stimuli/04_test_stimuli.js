@@ -1,16 +1,16 @@
-let TestStimuli = {"independent": {}, "ac1": {}, "ac2": {}};
+let TestStimuli = {"independent": {}, "if1": {}, "if2": {}};
 
 // IMPORTANT: DYNAMIC BLOCKS HAVE TO BE ADDED BEFORE STATIC OBJECTS, OTHERWISE
 // THEY WILL FALL VERY ODD (JITTERING)
 
-testTrials_ac2 = function(priors){
+testTrials_if2 = function(priors){
   let pp = priors[0][0] + priors[1][0]
   let horiz = HORIZ_AC2[pp];
   let data = priors[0] !== priors[1] ?
     {side_ramp: "left", i_ramp: 0, b_sides: [1,1], prior: priors[0], 'increase': 0}:
     {side_ramp: "right", i_ramp: 1, b_sides: [-1,-1], prior: priors[1], 'increase': 1};
 
-  let seesaw = Walls.test.ac2(data.prior, horiz[data.i_ramp], data.side_ramp)
+  let seesaw = Walls.test.if2(data.prior, horiz[data.i_ramp], data.side_ramp)
   let ramp = makeRamp(horiz[data.i_ramp], priors[data.i_ramp], data.increase,
     seesaw.walls[data.i_ramp]);
   let objs = seesaw.dynamic.concat([ramp.ball]);
@@ -39,7 +39,7 @@ testTrials_ac2 = function(priors){
   return blocks.concat(xBlock).concat(objs);
 }
 
-testTrials_ac1 = function(priors){
+testTrials_if1 = function(priors){
   let colors = assignColors();
   let p1 = priors[0];
   let p2 = priors[1];
@@ -50,7 +50,7 @@ testTrials_ac1 = function(priors){
   {edge_blocks: -1, increase: true, idx_w: 0, moveBall: 1, side:"right"} :
   {edge_blocks: 1, increase: false, idx_w: 1, moveBall: -1, side:"left"};
 
-  let objs = Walls.test.ac1(data.side, horiz[1], p2)
+  let objs = Walls.test.if1(data.side, horiz[1], p2)
 
   let b1 = blockOnBase(objs.walls[0], PRIOR[horiz[0]][p1] * data.edge_blocks,
     cols.test_blocks[colors[0]], 'blockA', horiz[0] == 'horizontal');
@@ -93,9 +93,9 @@ makeTestStimuli = function(conditions, relations){
       let pb1 = priors[0]
       let pb2 = priors[1]
       let id = rel + '_' + pb1[0] + pb2[0];
-      let blocks = rel === "ac2" ?
-        testTrials_ac2(priors) : rel === "ac1" ?
-        testTrials_ac1(priors) : rel === "independent" ?
+      let blocks = rel === "if2" ?
+        testTrials_if2(priors) : rel === "if1" ?
+        testTrials_if1(priors) : rel === "independent" ?
         testTrials_independent(priors) : null;
       TestStimuli[rel][id] = {"objs": blocks, "meta": priors, "id": id};
     }

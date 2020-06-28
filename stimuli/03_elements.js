@@ -72,21 +72,21 @@ wallsIf1 = function(side, horiz, prior){
   let dat = side == "right" ?
     {w_up: wall('wall_ac_up', 600, 90, 150), move_x: 1, increase: true} :
     {w_up:  wall('wall_ac_up', 150, 90, 150), move_x: -1, increase: false};
-  let base_ssw = wall('base_seesaw', 375, 185, PROPS.ac1_base_ssw.w,
-                      PROPS.ac1_base_ssw.h);
+  let base_ssw = wall('base_seesaw', 375, 185, PROPS.if1_base_ssw.w,
+                      PROPS.if1_base_ssw.h);
   let x = base_ssw.position.x + dat.move_x * 40 + dat.move_x * PROPS.walls.w/2
   let y = base_ssw.position.y + 67;
   let ramp_top = wall('ramp_top', x, y);
   let ramp = makeRamp(horiz, prior, dat.increase, ramp_top, "top")
   Body.setPosition(ramp.ball, {x: ramp.ball.position.x + 40 * dat.move_x,
     y: ramp.ball.position.y});
-  let ssw = seesaw(base_ssw.position.x, base_ssw.bounds.min.y, PROPS.ac1_ssw);
+  let ssw = seesaw(base_ssw.position.x, base_ssw.bounds.min.y, PROPS.if1_ssw);
   return {walls: [dat.w_up, ramp.wall_bottom, ramp_top, ramp.tilted,
                   base_ssw, ssw.skeleton],
           dynamic: [ramp.ball, ssw.plank, ssw.constraint]}
 }
 
-seesawAC2 = function(prior, dir, side_ramp, offset=PROPS.seesaw.d_to_walls){
+seesawIf2 = function(prior, dir, side_ramp, offset=PROPS.seesaw.d_to_walls){
   let y_bases = 220;
   let data = side_ramp === "right" ?
     {x0: 75, y0: y_bases, w0: 0.6 * PROPS.walls.w, y1: y_bases, w1: BASE_RAMP[dir][prior]} :
@@ -103,8 +103,8 @@ seesawAC2 = function(prior, dir, side_ramp, offset=PROPS.seesaw.d_to_walls){
 Walls.test = {
   'independent': [[wall('w_up1', 280, 100), wall('w_low1', 320, 250, w=100)],
                   [wall('w_up2', 520, 100), wall('w_low2', 480, 250, w=100)]],
-  'ac1': wallsIf1,
-  'ac2': seesawAC2
+  'if1': wallsIf1,
+  'if2': seesawIf2
 };
 
 //// Elements for TRAINING TRIALS //////
@@ -133,7 +133,7 @@ Walls.train.independent = [
   wall('ramp_top', 100, 125),
   wall('w_right', 750, 140, 90)
 ];
-Walls.train.ac1 = wallsIf1
+Walls.train.if1 = wallsIf1
 
 Walls.train.ssw = function(){
   let objs = seesaw(SCENE.w/2 - 30, SCENE.h - PROPS.bottom.h,
