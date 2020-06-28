@@ -2,43 +2,39 @@
 var color_vision_test = [
   {
     QUD: "Please click on the button with the correct answer.",
-    question: "Is the BLUE block on the right picture?",
-    picture1: "stimuli/img/color_vision_test0.jpg",
-    picture2: "stimuli/img/color_vision_test1.jpg",
-    option1: "no",
-    option2: "yes",
-    expected: "yes",
-    id: 'color-vision-test-test-blue'
-  },
-  {
-    QUD: "Please click on the button with the correct answer.",
-    question: "Is the GREEN block on the right picture?",
-    picture1: "stimuli/img/color_vision_test1.jpg",
-    picture2: "stimuli/img/color_vision_test0.jpg",
-    option1: "no",
-    option2: "yes",
-    expected: "yes",
-    id: 'color-vision-test-test-green'
-  },
-  {
-    QUD: "Please click on the button with the correct answer.",
-    picture1: "stimuli/img/color_vision_train0.jpg",
-    picture2: "stimuli/img/color_vision_train1.jpg",
-    option1: "no",
-    option2: "yes",
-    question: "Is the RED block on the left picture?",
-    expected: "yes",
-    id: 'color-vision-train-train-red'
-  },
-  {
-    QUD: "Please click on the button with the correct answer.",
-    picture1: "stimuli/img/color_vision_train0.jpg",
-    picture2: "stimuli/img/color_vision_train1.jpg",
-    option1: "no",
-    option2: "yes",
-    question: "Is the YELLOW block on the left picture?",
+    question: "Is the <b>BLUE</b> block on the <b>upper</b> picture?",
+    picture: "stimuli/img/color_vision_green_blue.png",
+    option1: "yes",
+    option2: "no",
     expected: "no",
-    id: 'color-vision-train-train-yellow'
+    id: 'color-vision-green-blue'
+  },
+  {
+    QUD: "Please click on the button with the correct answer.",
+    question: "Is the <b>GREEN</b> block on the <b>upper</b> picture?",
+    picture: "stimuli/img/color_vision_blue_green.png",
+    option1: "yes",
+    option2: "no",
+    expected: "no",
+    id: 'color-vision-blue-green'
+  },
+  {
+    QUD: "Please click on the button with the correct answer.",
+    question: "Is the <b>BLUE</b> block on the <b>lower</b> picture?",
+    picture: "stimuli/img/color_vision_green_blue.png",
+    option1: "yes",
+    option2: "no",
+    expected: "yes",
+    id: 'color-vision-green-blue'
+  },
+  {
+    QUD: "Please click on the button with the correct answer.",
+    question: "Is the <b>GREEN</b> block on the <b>lower</b> picture?",
+    picture: "stimuli/img/color_vision_blue_green.png",
+    option1: "yes",
+    option2: "no",
+    expected: "yes",
+    id: 'color-vision-blue-green'
   }
 ]
 

@@ -261,11 +261,10 @@ const sentence_choice_custom = magpieViews.view_generator("sentence_choice", {
     return `<div class='magpie-view'>
     <h1 class='magpie-view-title'>${config.title}</h1>
     <p class='magpie-view-question magpie-view-qud'>${config.data[CT].QUD}</p>
-                        <div class='magpie-view-stimulus-container'>
-                          <img src="${config.data[CT].picture1}" class = "img" >
-                          <img src="${config.data[CT].picture2}" class = "img">
-                        </div>
-                      </div>`;
+    <div class='magpie-view-stimulus-container'>
+      <img src="${config.data[CT].picture}" class = "img"/>
+    </div>
+  </div>`;
   }
 });
 

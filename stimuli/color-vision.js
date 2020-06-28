@@ -2,10 +2,10 @@ makeColorVisionStimuli = function(){
   let stimuli = [];
   let base = wall('w_center', SCENE.w/2, SCENE.h/2, PROPS.walls.w,
     PROPS.walls.h, {'render': {'fillStyle': cols.grey}})
-  let cols_blocks = cols.train_blocks.concat(cols.test_blocks);
-  let cols_distractors = [cols.grey, cols.darkgrey, cols.darkgrey, cols.grey]
+  let cols_blocks = cols.test_blocks;
+  let cols_distractors = [cols.darkgrey, cols.darkgrey]
 
-  for(var trial=0; trial<4; trial++) {
+  for(var trial=0; trial<cols_blocks.length; trial++) {
     let id = 'color' + trial;
     let col_block = cols_blocks[trial];
     let col_dist = cols_distractors[trial];
