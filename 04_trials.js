@@ -322,18 +322,17 @@ let INSTRUCTION_SLIDER = [{
   question4: text_train_buttons.short.none,
   expected: '',
   group: '',
-  question: `Alternatively, the <b>same beliefs</b> can also be represented by setting
-  <b>the upper two sliders to roughly 50%</b> and the <b>lower two sliders</b>
-  again to <b>small values near 0</b>.
-  Either way is fine - it just depends on your preferences.
-  <br />
-  Please click on <b>CONTINUE</b> to get to the last trial of the training phase.
-  `,
   QUD: `Let us assume, that you are pretty <b>certain</b> that the <b>red
   block</b> falls, but <b>rather uncertain whether or not</b> the <b>yellow
   block</b> also falls.
   <br />
-  The following slider positions are an example for representing these beliefs.
+  The following slider positions are an example for representing these beliefs.`,
+  question: `Alternatively, the <b>same beliefs</b> can also be represented by setting
+  <b>the upper two sliders to roughly 50%</b> and the <b>lower two sliders</b>
+  again to <b>small values near 0</b>.
+  Either way is fine - it only depends on your preferences.
+  <br />
+  Please click on <b>CONTINUE</b> to get to the last trial of the training phase.
   `
 }];
 // ----- FRIDGE TRIALS ---- //

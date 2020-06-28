@@ -127,35 +127,26 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   icons.
    <br />
    <br />
-  The more certain you are that an event (e.g.both blocks fall) <b>will</b> occur,
+  The more certain you are that an event (e.g. both blocks fall) <b>will</b> occur,
   the more you should position the corresponding slider towards the
-  <b>right end</b> (<i>certain</i>/100%) and
+  <b>right end</b> (<i>certain</i>/100%) and the more certain you are that it
+  <b>will not</b> occur, the more you should position its slider towards the
+  <b>left end</b> (<i>impossible</i>/0%).
   <br />
-  the more certain you are that it <b>will not</b> occur, the more you should position its slider towards the <b>left end</b> (<i>impossible</i>/0%).
-  <br />
-  When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider around 50%. Here is an example:
+  When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider around 50%.
   <br />
   <br />
-  <input type='range' id=ex_slider class='magpie-response-slider replied' min='0' max='100' value='60' oninput='ex_slider.value + "%"'/>
-  <output name=ex_slider_out id=out_ex class="thick">60%</output>
-  <script>document.getElementById("ex_slider").disabled=true;</script>
-  <br/>
-  <br/>
-  The position of the slider in this example indicates that you
-  are rather <b>undecided</b> whether or not the corresponding event will occur,
-  but you judge it <b>a little bit more likely</b> that it <b>will</b> than that
-  it will not occur.
-  <br />
-  When you moved a slider and clicked to fix its new position, the circle of the slider will turn green as shown in the example above.
-    <br />
-    <br />
   Note, that your estimates <b>may</b>, but <b>do not have to</b> sum up to 100%.
   <br />
   <br />
   From now on, you won't get feedback anymore about what will actually happen.
-  That means, after you have moved all four sliders, you will directly proceed
-  to the next trial by clicking on NEXT.`,
-  buttonText: "continue with example trial"
+  That means, after you have moved all four sliders (they turn green when moved
+  and clicked to fix its new position), you will directly proceed
+  to the next trial by clicking on <b>NEXT</b>.
+  <br />
+  Please click on <b>CONTINUE</b> to see an example.
+  `,
+  buttonText: "continue"
 });
 
 const instructions_fridge1 = magpieViews.view_generator("instructions", {

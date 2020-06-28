@@ -20,22 +20,22 @@ $("document")
       instructions_general,
       // sentence_choice_custom,
       instructions_train2,
-      // animation_view1,
+      animation_view1,
       instructions_train3,
-      // animation_view2,
+      animation_view2,
+      instruction_slider_example,
       multiple_slider_train,
       instructions_fridge1,
-      fridge_example,
+      fridge_train,
       instructions_fridge2,
-      // fridge_view,
+      fridge_view,
       instructions_test,
-      // multiple_slider,
+      multiple_slider,
       post_test,
+      thanks
+      // slider_rating_pretest,
       // instructions_pretest,
       // instructions_train_pretest,
-      // slider_rating_pretest,
-      // post_test_simple,
-      thanks
     ],
       // Here, you can specify all information for the deployment
       deploy: {
@@ -55,7 +55,6 @@ $("document")
         fridge_view.name,
         animation_view1.name,
         multiple_slider.name,
-        slider_rating_pretest.name
       ],
         // Possible styles are "default", "separate" and "chunks"
         style: "separate",

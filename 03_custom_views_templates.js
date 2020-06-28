@@ -177,17 +177,6 @@ const multi_slider_generator = {
     });
 
     $("#buttonNext").on("click", function () {
-      const RT = Date.now() - startingTime; // measure RT before anything else
-      let trial_data = {
-        trial_name: config.name,
-        trial_number: CT + 1,
-        RT: RT
-      };
-      trial_data = magpieUtils.view.save_config_trial_data(
-        _.omit(config.data[CT], ['icon1', 'icon2', 'icon3', 'icon4']),
-        trial_data
-      );
-      magpie.trial_data.push(trial_data);
       magpie.findNextView();
     });
   }
