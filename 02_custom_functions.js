@@ -197,7 +197,7 @@ showAnimationInTrial = function (CT, html_answers, progress_bar = true) {
 
   let stimulus = SHUFFLED_TRAIN_STIMULI[CT];
   if (DEBUG) {
-    console.log(stimulus.id + ': ' + stimulus.meta.join(" "));
+    console.log(stimulus.id)
   }
 
   let worldElems = createWorld();
@@ -222,8 +222,9 @@ checkBuildSentence = function (sentenceArray, poss_next, button2Toggle) {
   let has_block = sentenceArray.some(item => ['block', 'blocks'].includes(item));
   let has_verb = sentenceArray.some(item => verbs.includes(item));
   let next_is_conj =  GRAMMAR_VAR["CONJ"].every(item => poss_next.includes(item));
+  let last_is_either = _.last(sentenceArray) == "either";
   // console.log('a: ' + a + ', b: ' + b  + ', c: ' + c);
-  if(has_block && has_verb && next_is_conj) {
+  if(has_block && has_verb && (next_is_conj || last_is_either)) {
     toggleNextIfDone(button2Toggle, true);
   } else {
     button2Toggle.addClass("grid-button");

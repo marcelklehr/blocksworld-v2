@@ -3,34 +3,42 @@
 pseudoRandomTrainTrials = function(){
   let stimuli = Array(15).fill('');
   let trials = Array(15).fill('');
+  let dict = TrainStimuli.map_category;
   // dont start with uncertain3, ac2, ac3
-  let unc = _.shuffle(_.values(TrainStimuli.map_category.uncertain));
+  let unc = _.shuffle(_.values(dict.uncertain));
   let unc012 = _.filter(unc, function(obj){
     return obj.id != "uncertain3"
   });
-  let unc3 = TrainStimuli.map_category.uncertain.uncertain3;
+  let unc3 = dict.uncertain.uncertain3;
 
-  let ramp = _.shuffle(_.values(TrainStimuli.map_category.ramp));
+  let ramp = _.shuffle(_.values(dict.ramp));
 
-  let if2 = _.shuffle(_.values(TrainStimuli.map_category.if2));
-  let ind_ac = _.shuffle([TrainStimuli.map_category.independent.ind0,
-                          TrainStimuli.map_category.independent.ind1,
+  let if2 = _.shuffle(_.values(dict.if2));
+  let ind_ac = _.shuffle([dict.independent.ind0,
+                          dict.independent.ind1,
                           if2[0]]);
-  let if1 = _.shuffle(_.values(TrainStimuli.map_category.if1));
-
-  // uncertain3 shall not be directely after ac2 or ac3 (in these trials nothing
-  // happens)
+  // don't put ac2 and ac3 in "consequent" if1-trials (here nothing happens)
+  let ac01 = _.shuffle([dict.if1.ac0, dict.if1.ac1]);
+  let ac23 = _.shuffle([dict.if1.ac2, dict.if1.ac3]);
+  let if1 = _.shuffle([ac01, ac23]);
   let i_ac23 = [];
-  [1, 5, 8, 11].forEach(function(idx, i){
-    stimuli[idx] = if1[i];
-    trials[idx] = getTrialById(TRAIN_TRIALS, if1[i].id);
-    (if1[i].id == "ac2" || if1[i].id == "ac3") ? i_ac23.push(idx) : null;
+  [1, 8].forEach(function(idx, i){
+    stimuli[idx] = if1[0][i];
+    trials[idx] = getTrialById(TRAIN_TRIALS, if1[0][i].id);
+    (if1[0][i].id == "ac2" || if1[0][i].id == "ac3") ? i_ac23.push(idx) : null;
   });
+  [5, 11].forEach(function(idx, i){
+    stimuli[idx] = if1[1][i];
+    trials[idx] = getTrialById(TRAIN_TRIALS, if1[1][i].id);
+    (if1[1][i].id == "ac2" || if1[1][i].id == "ac3") ? i_ac23.push(idx) : null;
+  });
+
+  // uncertain3 shall not be directely after ac2 or ac3 (here nothing happens)
   let indices = _.without([2, 6, 9, 12], i_ac23[0] + 1, i_ac23[1] + 1);
   stimuli[indices[0]] = unc3;
   trials[indices[0]] = getTrialById(TRAIN_TRIALS, 'uncertain3');
 
-  i_ac23.concat([indices[1]]).forEach(function(idx, i){
+  [indices[1], i_ac23[0]+1, i_ac23[1]+1].forEach(function(idx, i){
     stimuli[idx] = unc012[i]
     trials[idx] = getTrialById(TRAIN_TRIALS, unc012[i].id);
   });
@@ -46,7 +54,7 @@ pseudoRandomTrainTrials = function(){
   stimuli[13] = if2[1];
   trials[13] = getTrialById(TRAIN_TRIALS, if2[1].id);
 
-  stimuli[14] = TrainStimuli.map_category.independent.ind2
+  stimuli[14] = dict.independent.ind2
   trials[14] = getTrialById(TRAIN_TRIALS, "ind2");
 
   return {stimuli_data: stimuli, trial_data: trials}

@@ -71,12 +71,6 @@ const instructions_general = magpieViews.view_generator("instructions", {
   buttonText: "Go to Training instructions"
 });
 
-// We will start with the first part of the training phase which consists
-// of 8 trials. You will see block arrangements similar to those you will
-// be shown later in the test phase, such that you are able to develop
-// intuitions about the physical properties and get familiar with the
-// stimuli.`,
-
 
 // For most tasks, you need instructions views
 const instructions_train2 = magpieViews.view_generator("instructions", {
@@ -122,7 +116,7 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_train3",
   title: "Instructions Training",
-  text: `In the next trial, the last trial of the training phase, we ask you to indicate <b>how likely</b> you think certain
+  text: `In the next training trial, we ask you to indicate <b>how likely</b> you think certain
   blocks <b>will or will not fall</b> by moving the sliders below the respective
   icons.
    <br />
@@ -170,16 +164,16 @@ const instructions_fridge1 = magpieViews.view_generator("instructions", {
           <b>3</b>. Note that you always have the possibility to <b>make corrections</b> by clicking on <b>DELETE LAST WORD</b> in the lower right of the screen.
           <br />
           <b>4</b>. After you have built the sentence by concatenation of the available
-          words (shown word by word in a box in the lower left corner of the screen), click on <b>SUBMIT SENTECE</b> to continue.
+          words (shown word by word in a box in the lower left), click on <b>SUBMIT SENTECE</b> to continue.
           <br />
           <b>5</b>. If you think that a different sentence, that you couldn't built with the available words, would describe the scene more naturally, click on <b>USE MY OWN WORDS</b> and type it into the box that will appear below the picture.
           By clicking on <b>NEXT SCENE</b>, your sentence will be submitted and
-          you will get to the next trial.
+          you will directly get to the next trial.
           <br />
-          Otherwise, directly click on <b>NEXT SCENE</b> to continue straight with the next trial.
+          Otherwise, click on <b>NEXT SCENE</b> right away to continue straight with the next trial.
           <br />
           <br />
-          Before the actual experiment starts, we will first show you an example next.`,
+          Before we start with the test phase, we will first show you an example next.`,
   buttonText: "continue with example trial"
 });
 
@@ -189,31 +183,34 @@ const instructions_test = magpieViews.view_generator("instructions", {
   name: "instructions_test",
   title: "Instructions Test Phase",
   text: `Great -  we'll now proceed to the test phase of the experiment.
-          <br />
-          Again, you will be shown scenes of different block arrangements.
-          <br />
-          As in the previous trial, we will ask you to
-          indicate <b>how likely</b> you think certain blocks <b>will or will
-          not fall</b> (left: impossible event, right: certain event).
-          <br />
-          As in the previous training trial, <b>you will not get
-          feedback</b> about what will actually happen.
-          <br />
-          After you have provided all four estimates (the circles of all four
-          sliders have to be green), you will be able proceed to the next trial.
-            <br />
-            <br />
-          <b>Please note and keep in mind</b>:
-          <br />
-          <b>1</b>. Your estimates <b>may</b>, but <b>do not have to</b> <i>sum to 100%</i>.
-          <br />
-          <b>2</b>. A block is considered to <b><i>fall</i> as soon as it <i>drops</i> from a platform or from another block or when it simply <i>topples over</i></b> - that is, a block does not necessarily need to fall to the ground in order to count as falling.
-          <br/>
-          <b>3</b>. The colored blocks all have <b>the same properties</b>; the colors are only used to distinguish them.
-            </br>
-            </br>
-          We will now start the experiment. You will see <b>14</b> scenes in total.`,
-  buttonText: "start experiment"
+    <br />
+    Again, you will be shown scenes of different block arrangements.
+    <br />
+    As in the previous trial, we will ask you to indicate <b>how likely</b> you
+    think certain blocks <b>will or will not fall</b> (left: impossible event,
+    right: certain event).
+    <br />
+    Also, <b>you will not get feedback</b> about what will actually happen.
+    <br />
+    After you have provided all four estimates (the circles of all four sliders
+    have to be green), you will be able proceed to the next trial.
+    <br />
+    <br />
+    <b>Please note and keep in mind</b>:
+    <br />
+    <b>1</b>. Your estimates <b>may</b>, but <b>do not have to</b> <i>sum to 100%</i>.
+    <br />
+    <b>2</b>. A block is considered to <b><i>fall</i> as soon as it <i>drops</i>
+    from a platform or from another block or when it simply <i>topples over</i></b> -
+    that is, a block does not necessarily need to fall <i>to the ground</i> in order to
+    count as falling.
+    <br/>
+    <b>3</b>. The colored blocks all have <b>the same properties</b>; the colors
+    are only used to distinguish them.
+      </br>
+      </br>
+    We will now start with the test phase which comprises <b>14</b> scenes in total.`,
+  buttonText: "start test phase"
 });
 
 const instructions_fridge2 = magpieViews.view_generator("instructions", {
@@ -221,17 +218,18 @@ const instructions_fridge2 = magpieViews.view_generator("instructions", {
   name: "instructions_fridge2",
   title: "Instructions Test Phase",
   text: `<b>Two little reminders before we finally start</b>:
-          <br/>
-          <br/>
-          <b>1</b>. A block is considered to <b><i>fall</i> as soon as it <i>drops</i> from a
-          platform or from another block or when it simply <i>topples over</i></b> -
-          that is, a block does not necessarily need to fall to the ground in
-          order to count as falling.
-          <br/>
-          <b>2</b>. The colored blocks all have <b>the same properties</b>; the colors are only used to distinguish them.
-          </br>
-          </br>
-          We will now start with the actual experiment. You will see <b>14</b> scenes in total.`,
+    <br/>
+    <br/>
+    <b>1</b>. A block is considered to <b><i>fall</i> as soon as it <i>drops</i>
+    from a platform or from another block or when it simply <i>topples over</i></b> -
+    that is, a block does not necessarily need to fall <i>to the ground</i> in
+    order to count as falling.
+    <br/>
+    <b>2</b>. The colored blocks all have <b>the same properties</b>; the colors
+    are only used to distinguish them.
+    </br>
+    </br>
+    We will now start with the test phase which comprises <b>14</b> scenes in total.`,
   buttonText: "start test phase"
 });
 

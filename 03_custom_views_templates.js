@@ -354,7 +354,6 @@ const fridge_generator = {
         response2: response2,
         RT: RT
       };
-      console.log(config.data[CT].icon1)
       trial_data = magpieUtils.view.save_config_trial_data(
         _.omit(config.data[CT], 'sentence'),
         trial_data

@@ -1,33 +1,34 @@
 // let _ = require('../node_modules/underscore/underscore.js')
 
 let GRAMMAR_VAR = {
-  'DET_N': ['neither', 'nor'],
+  'DET_N': ['neither', 'nor', 'either'],
   'COL': ['green', 'blue'],
   'CONJ': ['and', 'but', 'because of'],
   'MOD': ['probably', 'might', 'defenitely', 'maybe', 'also', 'only'],
   'V_I': ['fall'],
   'V': ['falls'],
   'V_AUX_I': ['make', 'cause'],
-  'V_AUX': ['makes', 'causes']
+  'V_AUX': ['makes', 'causes'],
+  'AUX': ['will', 'does']
 }
 // mapping from token or placeholder (refers to all tokens of the placeholder)
 // to list of words/placeholders that will be visible after the key token was
 // selected
 let GRAMMAR_RULE = {
   'S': ['MOD', 'if', 'the', 'both', 'DET_N'], //start symbol
-  'MOD': ['the', 'both', 'if', 'V_AUX', 'V_AUX_I', 'V', 'V_I'],
+  'MOD': ['the', 'both', 'if', 'V_AUX', 'V_AUX_I', 'V', 'V_I', 'MOD', 'not', 'AUX'],
   'the': ['COL'],
   'if': ['the', 'and'],
   'DET_N': ['the'],
   'COL': ['block', 'nor', 'CONJ'],
   'both': ['blocks'],
   'blocks': ['will', 'fall'],
-  'block': ['to', 'will', 'nor', 'V', 'V_AUX', 'V_I', 'MOD', 'CONJ'],
-  'will': ['MOD', 'not', 'V_I', 'V_AUX_I'],
+  'block': ['to', 'AUX', 'nor', 'V', 'V_AUX', 'V_I', 'MOD', 'CONJ'],
+  'AUX': ['MOD', 'not', 'V_I', 'V_AUX_I', 'both'],
   'not': ['V_I', 'V_AUX_I', 'the'],
   'and': ['the', 'MOD', 'V_AUX'],
   'but': ['not', 'the'],
-  'V_I': ['CONJ', 'the', 'also', 'nor', 'if'],
+  'V_I': ['CONJ', 'the', 'also', 'nor', 'if', 'either'],
   'V': ['CONJ', 'the', 'also', 'if'],
   'V_AUX_I': ['the'],
   'V_AUX': ['the'],
@@ -40,7 +41,7 @@ let word_groups = [
     col: 'green'
   },
   {
-    words: ["not", "neither", "nor", "but"],
+    words: ["not", "neither", "nor", "but", "either"],
     col: 'red'
   },
   {
@@ -53,8 +54,8 @@ let word_groups = [
     col: 'purple'
   },
   {
-    words: ["fall", "falls", "will", "cause", "causes", "make", "makes",
-                    "to"],
+    words: ["fall", "falls", "will", "cause", "causes", "make", "makes", "does",
+            "to"],
     col: 'orange'
   },
   {
