@@ -18,7 +18,7 @@ trials_independent = function(){
              'ind1': ['vertical', 'vertical'],
              'ind2': ['horizontal', 'vertical']};
   let expected = {'ind0': BLOCK_COLS_SHORT.train[0],
-                  'ind1': BLOCK_COLS_SHORT.train.join(" "),
+                  'ind1': BLOCK_COLS_SHORT.train.join(""),
                   'ind2': ''}
   let data = {}
   _.keys(dir).forEach(function(id, i) {
