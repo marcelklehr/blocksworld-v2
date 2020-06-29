@@ -232,13 +232,13 @@ plotProbs(df, "P(A,C)-P(A)xP(C)", "expected interpretation: independent",
 Check delta p = P(C|A) - P(C).
 
 ```{r}
-df_ac <- bind_rows(ac_cause, ac_diagnostic)
-df <- dataImplies(df_ac)
+df_ifs <- bind_rows(ac_cause, ac_diagnostic)
+df <- dataImplies(df_ifs)
 min <- df$data$p %>% min() - 0.1
 max <-  df$data$p %>% max() + 0.1
-plotProbs(df, "delta p: P(C|A)-P(C)", "expected interpretation: A->C",
+plotProbs(df, "delta p", " P(C|A)-P(C)",
           limits_x = c(min, max),
-          breaks_x = c(seq(round(min, 1), round(max, 1) + 0.05, 0.25)))
+          breaks_x = c(seq(round(min, 1), round(max, 1) + 0.05, 0.3)))
 ```
 
 Other trials
@@ -247,7 +247,7 @@ Other trials
 df <- dataOthers(others)
 min <- df$data$p %>% min() - 0.1
 max <-  df$data$p %>% max() + 0.1
-plotProbs(df, "delta P* = (P(C|A)-P(C))/(P(¬A,¬C)", "other interpretations",
+plotProbs(df, "delta P*", "delta P* = (P(C|A)-P(C))/(P(¬A,¬C)",
           limits_x = c(min, max),
           breaks_x = c(seq(round(min, 1), round(max, 1) + 0.05, 1)))
 ```

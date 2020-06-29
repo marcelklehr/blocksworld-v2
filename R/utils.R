@@ -164,6 +164,7 @@ add_probs <- function(df, keys){
 #   return(df %>% filter(str_detect(noticed_steepness, "yes")))
 # }
 
+# @arg quest: question which is used to generate the clusters, e.g. 'b'
 cluster_responses <- function(dat, quest){
   dat.kmeans <- dat %>% filter(question == quest) %>%
     select(prolific_id, id, response) %>% add_column(y=1) %>%
@@ -172,14 +173,15 @@ cluster_responses <- function(dat, quest){
     column_to_rownames(var = "rowid")
   clusters <- kmeans(dat.kmeans, 2)
 
-  dat.kmeans <- dat.kmeans %>%
+  df <- dat.kmeans %>%
     rownames_to_column(var = "rowid") %>%
     as_tibble() %>%
     separate(col="rowid", sep="--", into=c("prolific_id", "id")) %>%
     mutate(cluster=as.factor(clusters$cluster), id=as.factor(id),
            prolific_id = as.factor(prolific_id)) %>%
     select(prolific_id, id, cluster)
-  df <- left_join(dat, dat.kmeans)
+  df <- left_join(dat, df) 
+  df <- df %>% mutate(cluster = fct_explicit_na(df$cluster, na_level = 'not-clustered'))
   return(df)
 }
 
