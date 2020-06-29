@@ -154,7 +154,7 @@ const multi_slider_generator = {
             </div>`;
   },
   example_answer_container_gen: function (config, CT) {
-    return htmlSliderAnswers(config.data[CT], ["80", "75", "5", "5"]) +
+    return htmlSliderAnswers(config.data[CT], ["55", "50", "5", "5"]) +
     `<div class='magpie-view'>
               <section class="magpie-text-container">
                   <p class="magpie-view-text">${config.data[CT].question}</p>

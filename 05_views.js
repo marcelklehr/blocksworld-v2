@@ -123,17 +123,18 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
    <br />
   The more certain you are that an event (e.g. both blocks fall) <b>will</b> occur,
   the more you should position the corresponding slider towards the
-  <b>right end</b> (<i>certain</i>/100%) and the more certain you are that it
+  <b>right end</b> (<i>certain</i>/1) and the more certain you are that it
   <b>will not</b> occur, the more you should position its slider towards the
-  <b>left end</b> (<i>impossible</i>/0%).
+  <b>left end</b> (<i>impossible</i>/0).
   <br />
-  When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider around 50%.
+  When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider in the center, around 0.50.
   <br />
   <br />
-  Note, that your estimates <b>may</b>, but <b>do not have to</b> sum up to 100%.
+  Note, that your estimates <b>may</b>, but <b>do not have to</b> sum up to 1.
   <br />
   <br />
   From now on, you won't get feedback anymore about what will actually happen.
+  <br />
   That means, after you have moved all four sliders (they turn green when moved
   and clicked to fix its new position), you will directly proceed
   to the next trial by clicking on <b>NEXT</b>.
@@ -185,20 +186,18 @@ const instructions_test = magpieViews.view_generator("instructions", {
   text: `Great -  we'll now proceed to the test phase of the experiment.
     <br />
     Again, you will be shown scenes of different block arrangements.
-    <br />
     As in the previous trial, we will ask you to indicate <b>how likely</b> you
-    think certain blocks <b>will or will not fall</b> (left: impossible event,
-    right: certain event).
+    think certain blocks <b>will or will not fall</b> (<i>left: impossible event,
+    right: certain event</i>). Also, <b>you will not get feedback</b> anymore about
+    what will actually happen.
     <br />
-    Also, <b>you will not get feedback</b> about what will actually happen.
-    <br />
-    After you have provided all four estimates (the circles of all four sliders
-    have to be green), you will be able proceed to the next trial.
+    Only after you have given your estimate for all four sliders by moving them
+    (all circles have to be green), you will be able proceed to the next trial.
     <br />
     <br />
     <b>Please note and keep in mind</b>:
     <br />
-    <b>1</b>. Your estimates <b>may</b>, but <b>do not have to</b> <i>sum to 100%</i>.
+    <b>1</b>. Your estimates <b>may</b>, but <b>do not have to</b> <i>sum to 1</i>.
     <br />
     <b>2</b>. A block is considered to <b><i>fall</i> as soon as it <i>drops</i>
     from a platform or from another block or when it simply <i>topples over</i></b> -

@@ -87,9 +87,9 @@ _htmlSlider = function (idxSlider, utterance, options, value) {
     `<span class='magpie-response-slider-option optionWide'>` + options.left + `</span>
      <input type='range' id=` + responseID + ` name=` + answerID +
     ` class='magpie-response-slider' min='0' max='100' value='` + value + `' oninput='` +
-    outputID + `.value = ` + responseID + `.value + "%"'/>` +
+    outputID + `.value=` + responseID + `.value/100'>` +
     `<span class='magpie-response-slider-option optionWide'>` + options.right + `</span>
-    <output name="` + outputName + `" id=` + outputID + ` class="thick">` + value + `%</output>` +
+    <output name="` + outputName + `" id=` + outputID + ` class="thick">` + (value/100) + `</output>` +
     end;
 
   return html_question + html_slider

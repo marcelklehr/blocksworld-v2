@@ -318,18 +318,39 @@ let INSTRUCTION_SLIDER = [{
   question4: text_train_buttons.short.none,
   expected: '',
   group: '',
-  QUD: `Let us assume, that you are pretty <b>certain</b> that the <b>red
-  block</b> falls, but <b>rather uncertain whether or not</b> the <b>yellow
-  block</b> also falls.
+  // QUD: `Let us assume, that you are pretty <b>certain</b> that the <b>red
+  // block</b> falls, but <b>rather uncertain whether or not</b> the <b>yellow
+  // block</b> also falls.
+  // <br />
+  // The following slider positions are an example for representing these beliefs.`,
+  QUD: `In the next training trial, we ask you to indicate <b>how likely</b> you think certain
+  blocks <b>will or will not fall</b> by moving the sliders below the respective
+  icons.
+   <br />
+   <br />
+  The more certain you are that an event (e.g. both blocks fall) <b>will</b> occur,
+  the more you should position the corresponding slider towards the
+  <b>right end</b> (<i>certain</i>/1) and the more certain you are that it
+  <b>will not</b> occur, the more you should position its slider towards the
+  <b>left end</b> (<i>impossible</i>/0).
   <br />
-  The following slider positions are an example for representing these beliefs.`,
-  question: `Alternatively, the <b>same beliefs</b> can also be represented by setting
-  <b>the upper two sliders to roughly 50%</b> and the <b>lower two sliders</b>
-  again to <b>small values near 0</b>.
-  Either way is fine - it only depends on your preferences.
+  When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider in the center, around 0.50. Here is an example:
+  `,
+
+  question: `The position of these sliders indicate that you are pretty <b>certain</b> that the <b>red
+  block falls</b>, but <b>rather uncertain whether or not</b> the <b>yellow
+  block also falls</b>:
+  <br/>
+  Both events were the <i>red block does not fall</i> are rated as being <i>very unlikely</i> (lower sliders) whereas one event were the <i>yellow block falls</i> was rated with a <i>moderate value</i> (upper left, 55) but also an event were the <i>yellow block does not fall</i> got a <i>similar high rating</i> (upper right, 50).
   <br />
-  Please click on <b>CONTINUE</b> to get to the last trial of the training phase.
+  Note, that your estimates <b>do not necessarily</b> have to <i>sum to 1</i>.
   `
+  // question: `Alternatively, the <b>same beliefs</b> can also be represented by setting
+  // <b>the upper two sliders to roughly 0.50</b> and the <b>lower two sliders</b>
+  // again to <b>small values near 0</b>.
+  // Either way is fine - it only depends on your preferences.
+  // <br />
+  // Please click on <b>CONTINUE</b> to get to the last trial of the training phase.`
 }];
 // ----- FRIDGE TRIALS ---- //
 // fridge trials have the same input data slider_rating_trials
