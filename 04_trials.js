@@ -301,8 +301,8 @@ TRAIN_SLIDER_TRIALS = _.filter(TRAIN_TRIALS, function(trial){
 TRAIN_SLIDER_TRIALS[0].QUD =
   "Please indicate how likely you think the represented events will occur.";
 TRAIN_SLIDER_TRIALS[0].picture = "stimuli/img/train_slider_fridge/" + id_slider + ".jpg";
-TRAIN_SLIDER_TRIALS[0].optionLeft = 'impossible';
-TRAIN_SLIDER_TRIALS[0].optionRight = 'certain';
+TRAIN_SLIDER_TRIALS[0].optionLeft = 'will not happen';
+TRAIN_SLIDER_TRIALS[0].optionRight = 'will happen';
 
 let INSTRUCTION_SLIDER = [{
   picture: '',
@@ -330,9 +330,9 @@ let INSTRUCTION_SLIDER = [{
    <br />
   The more certain you are that an event <b>will</b> occur (e.g. both blocks
     will fall), the more you should position the corresponding slider towards the
-  <b>right end</b> (<i>certain</i>) and the more certain you are that it
+  <b>right end</b> (<i>will happen</i>) and the more certain you are that it
   <b>will not</b> occur, the more you should position its slider towards the
-  <b>left end</b> (<i>impossible</i>).
+  <b>left end</b> (<i>will not happen</i>).
   <br />
   When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider in the center, around 0.5. Here is an example:
   `,
