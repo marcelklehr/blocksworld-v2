@@ -19,7 +19,7 @@ $("document")
       intro,
       instructions_general,
       // sentence_choice_custom,
-      instructions_train2,
+      instructions_train,
       animation_view1,
       instruction_slider_example,
       // animation_view2,

@@ -73,9 +73,9 @@ const instructions_general = magpieViews.view_generator("instructions", {
 
 
 // For most tasks, you need instructions views
-const instructions_train2 = magpieViews.view_generator("instructions", {
+const instructions_train = magpieViews.view_generator("instructions", {
   trials: 1,
-  name: "instructions_train2",
+  name: "instructions_train",
   title: "Instructions Training",
   text: `For each presented scene you will be asked to <b>indicate whether you think
         that most likely both, none or respectively only one of the
