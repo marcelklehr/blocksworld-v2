@@ -52,8 +52,8 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain",
+    optionLeft: "will not happen",
+    optionRight: "will happen",
     expected: ''
   },
   {
@@ -67,8 +67,8 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain",
+    optionLeft: "will not happen",
+    optionRight: "will happen",
     expected: ''
   },
   {
@@ -82,8 +82,8 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain",
+    optionLeft: "will not happen",
+    optionRight: "will happen",
     expected: ''
   },
   {
@@ -97,8 +97,8 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain",
+    optionLeft: "will not happen",
+    optionRight: "will happen",
     expected: ''
   },
   {
@@ -112,8 +112,8 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain",
+    optionLeft: "will not happen",
+    optionRight: "will happen",
     expected: ''
   },
   {
@@ -127,8 +127,8 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain",
+    optionLeft: "will not happen",
+    optionRight: "will happen",
     expected: ''
   },
   {
@@ -142,8 +142,8 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain",
+    optionLeft: "will not happen",
+    optionRight: "will happen",
     expected: ''
   },
   {
@@ -157,8 +157,8 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain",
+    optionLeft: "will not happen",
+    optionRight: "will happen",
     expected: ''
   },
   {
@@ -172,8 +172,8 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain",
+    optionLeft: "will not happen",
+    optionRight: "will happen",
     expected: ''
   },
   {
@@ -187,8 +187,8 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain",
+    optionLeft: "will not happen",
+    optionRight: "will happen",
     expected: ''
   },
   {
@@ -202,8 +202,8 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain",
+    optionLeft: "will not happen",
+    optionRight: "will happen",
     expected: ''
   },
   {
@@ -217,8 +217,8 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain",
+    optionLeft: "will not happen",
+    optionRight: "will happen",
     expected: ''
   },
   {
@@ -232,8 +232,8 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain",
+    optionLeft: "will not happen",
+    optionRight: "will happen",
     expected: ''
   },
   {
@@ -247,8 +247,8 @@ var slider_rating_trials = [
     question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
     question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
     question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "impossible",
-    optionRight: "certain",
+    optionLeft: "will not happen",
+    optionRight: "will happen",
     expected: ''
   }
 
@@ -306,8 +306,8 @@ TRAIN_SLIDER_TRIALS[0].optionRight = 'certain';
 
 let INSTRUCTION_SLIDER = [{
   picture: '',
-  optionLeft: 'impossible',
-  optionRight: 'certain',
+  optionLeft: "will not happen",
+  optionRight: "will happen",
   icon1: id2IconTrain.ac,
   icon2: id2IconTrain.a,
   icon3: id2IconTrain.c,
@@ -328,13 +328,13 @@ let INSTRUCTION_SLIDER = [{
   icons.
    <br />
    <br />
-  The more certain you are that an event (e.g. both blocks fall) <b>will</b> occur,
-  the more you should position the corresponding slider towards the
-  <b>right end</b> (<i>certain</i>/1) and the more certain you are that it
+  The more certain you are that an event <b>will</b> occur (e.g. both blocks
+    will fall), the more you should position the corresponding slider towards the
+  <b>right end</b> (<i>certain</i>) and the more certain you are that it
   <b>will not</b> occur, the more you should position its slider towards the
-  <b>left end</b> (<i>impossible</i>/0).
+  <b>left end</b> (<i>impossible</i>).
   <br />
-  When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider in the center, around 0.50. Here is an example:
+  When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider in the center, around 0.5. Here is an example:
   `,
 
   question: `The position of these sliders indicate that you are pretty <b>certain</b> that the <b>red
@@ -382,8 +382,8 @@ const TRAIN_FRIDGE_TRIALS = [fridge_ex];
 //   return {QUD: "Please answer the question below by moving the slider.",
 //           picture: "stimuli/img/pretest/ramp-side/" + dir + "-" + angle.toString() + "-group.jpg",
 //           question: 'Do you think the <b>group</b> block will fall?',
-//           optionLeft: "impossible",
-//           optionRight: "certain",
+//           optionLeft: "will not happen",
+//           optionRight: "will happen",
 //           id: '', question1: '', question2: '', question3: '', question4: '',
 //           icon1: '', icon2: '', icon3: '', icon4: '',
 //           response1: '', response2: '', response3: '', response4: '',
