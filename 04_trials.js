@@ -341,7 +341,7 @@ let INSTRUCTION_SLIDER = [{
   block falls</b>, but <b>rather uncertain whether or not</b> the <b>yellow
   block also falls</b>:
   <br/>
-  Both events were the <i>red block does not fall</i> are rated as being <i>very unlikely</i> (lower sliders) whereas one event were the <i>yellow block falls</i> was rated with a <i>moderate value</i> (upper left, 55) but also an event were the <i>yellow block does not fall</i> got a <i>similar high rating</i> (upper right, 50).
+  Both events were the <i>red block does not fall</i> are rated as being <i>very unlikely</i> (lower sliders) whereas one event were the <i>yellow block falls</i> was rated with a <i>moderate value</i> (upper left, 0.55) but also an event were the <i>yellow block does not fall</i> got a <i>similar high rating</i> (upper right, 0.5).
   <br />
   Note, that your estimates <b>do not necessarily</b> have to <i>sum to 1</i>.
   `
