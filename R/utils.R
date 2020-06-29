@@ -35,18 +35,17 @@ anonymize_and_save <- function(data_dir, data_fn, result_dir, result_fn, test_ru
 
 tidy_test <- function(df){
   dat.test <- df %>% filter(trial_name == "multiple_slider") %>%
-    select(prolific_id, RT, QUD, id, group, noticed_steepness,
-           icon1, icon2, icon3, icon4,
+    select(prolific_id, RT, QUD, id, group,
+           question1, question2, question3, question4,
            response1, response2, response3, response4) %>%
     pivot_longer(cols=c(contains("response")),
                  names_to = "response_idx", names_prefix = "response",
                  values_to = "response") %>%
-    pivot_longer(cols=c(contains("icon")),
-                 names_to = "icon_idx", names_prefix = "icon",
-                 values_to = "icon") %>%
-    filter(response_idx == icon_idx) %>%
-    select(-response_idx, -icon_idx) %>%
-    rename(question=icon)
+    pivot_longer(cols=c(contains("question")),
+                 names_to = "question_idx", names_prefix = "question",
+                 values_to = "question") %>%
+    filter(response_idx == question_idx) %>%
+    select(-response_idx, -question_idx)
 
   dat.test <- dat.test %>%
     mutate(response = as.numeric(response),
@@ -59,17 +58,17 @@ tidy_test <- function(df){
 tidy_train <- function(df){
   dat.train <- df %>% filter(startsWith(trial_name, "animation")) %>%
     select(prolific_id, RT, expected, QUD, id, trial_name,
-           icon1, icon2, icon3, icon4,
-           response1, response2, response3, response4,
+           question1, question2, question3, question4,
+           response1, response2, response3, response4
     ) %>%
-    pivot_longer(cols=c(contains("icon")),
-                 names_to = "icon_idx", names_prefix = "icon",
-                 values_to = "icon") %>%
     pivot_longer(cols=c(contains("response")),
                  names_to = "response_idx", names_prefix = "response",
                  values_to = "response") %>%
-    filter(response_idx == icon_idx) %>%
-    select(-response_idx) %>%
+    pivot_longer(cols=c(contains("question")),
+                 names_to = "question_idx", names_prefix = "question",
+                 values_to = "question") %>%
+    filter(response_idx == question_idx) %>%
+    select(-response_idx, -question_idx) %>%
     mutate(prolific_id = factor(prolific_id),
            id = factor(id))
   return(dat.train)
@@ -84,15 +83,14 @@ tidy_pretest <- function(df){
   return(dat.pre)
 }
 
-tidy_data <- function(data, N_test=20, N_train=11){
+tidy_data <- function(data, N_test=14, N_train=15){
   # 1. Select only columns relevant for data analysis
   df <- data %>% select(prolific_id,
                         question, question1, question2, question3, question4,
-                        QUD, icon1, icon2, icon3, icon4, response,
+                        QUD, response,
                         expected, response1, response2, response3, response4,
                         id, trial_name, trial_number, group,
                         timeSpent, RT,
-                        noticed_steepness,
                         education, comments, gender, age)
   # always use the same abbreviation
   df <- df %>% mutate(question1 = case_when(question1 == "gb" ~ "bg",
@@ -102,7 +100,7 @@ tidy_data <- function(data, N_test=20, N_train=11){
   stopifnot(nrow(df) == N_participants * (N_test + N_train));
 
   dat.comments <- df %>%
-    select(prolific_id, noticed_steepness, comments) %>%
+    select(prolific_id, comments) %>%
     mutate(comments = if_else(is.na(comments), "", comments)) %>%
     unique()
   dat.info <- df %>% select(prolific_id, education, gender, age, timeSpent) %>%
@@ -160,11 +158,11 @@ add_probs <- function(df, keys){
   return(df)
 }
 
-filter_noticed_steepness <- function(df){
-  df$noticed_steepness %>% unique()
-  df <- df %>% mutate(noticed_steepness = str_to_lower(noticed_steepness))
-  return(df %>% filter(str_detect(noticed_steepness, "yes")))
-}
+# filter_noticed_steepness <- function(df){
+#   df$noticed_steepness %>% unique()
+#   df <- df %>% mutate(noticed_steepness = str_to_lower(noticed_steepness))
+#   return(df %>% filter(str_detect(noticed_steepness, "yes")))
+# }
 
 cluster_responses <- function(dat, quest){
   dat.kmeans <- dat %>% filter(question == quest) %>%

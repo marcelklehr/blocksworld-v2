@@ -13,7 +13,7 @@ library(tidyverse)
 source(here("R", "utils.R"));
 
 # result_dir <-  here("data", "test-runs");
-result_dir <- here("data", "prolific", "results", "experiment1")
+result_dir <- here("data", "prolific", "results", "experiment1-v2")
 data_fn <- "exp1_tidy.rds"
 path_data <- paste(result_dir, data_fn, sep=.Platform$file.sep)
 
@@ -26,8 +26,9 @@ data <- readRDS(path_data)
 df <- data$info %>% group_by(prolific_id) %>% distinct()
 
 p <- df %>%
-  ggplot(aes(x=factor(0), y=timeSpent)) + geom_boxplot() +
-  geom_jitter(shape=16) +
+  ggplot(aes(x=factor(0), y=timeSpent)) + 
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(shape=16, width=0.2) +
   geom_hline(aes(yintercept = mean(df$timeSpent) + sd(df$timeSpent),
                  color="yellow")) +
   geom_hline(aes(yintercept = mean(df$timeSpent) + 2 * sd(df$timeSpent),
@@ -55,18 +56,16 @@ df %>%
 ## Train Trials
 
 ```{r}
-df <- data$train %>% group_by(prolific_id, id)
-df.slider <- df %>% filter(trial_name == "animation_slider")
-df.buttons_correct = df %>%
-  filter(case_when(expected == "response1" ~ icon_idx == 1,
-                   expected == "response2" ~ icon_idx == 2,
-                   expected == "response3" ~ icon_idx == 3,
-                   expected == "response4" ~ icon_idx == 4,
-                   ))
-# not everyone saw the same trial as slider - trial, therefore sums will not
-# always be exactly the number of participants.
-df.buttons_correct %>%
-  ggplot(aes(x=id)) + geom_bar(position="dodge", aes(fill=response)) +
+df <- data$train %>% group_by(prolific_id, id) %>% 
+  mutate(response = case_when(response == "true" ~ TRUE, 
+                              response == "false" ~ FALSE))
+df.results = df %>%
+  filter(expected == question) %>% 
+  mutate(correct=response==TRUE) %>% 
+  group_by(id, prolific_id) %>% select(id, prolific_id, correct)
+
+df.results %>% 
+  ggplot(aes(x=id)) + geom_bar(position="dodge", aes(fill=correct)) +
   theme(axis.text.x=element_text(angle=90, hjust=1), legend.position = "top") +
   guides(fill = guide_legend(title = "correct"))
 
@@ -83,10 +82,10 @@ dat.RT = df %>% group_by(id) %>% summarise(mu=mean(RT), sd=sd(RT))
 df <- left_join(df, dat.RT, by="id")
 for(pa in seq(1,2)) {
   p <- df %>%  
-    ggplot(aes(y=RT)) + geom_boxplot() +
+    ggplot(aes(y=RT)) + geom_boxplot(outlier.shape = NA) +
     geom_jitter(aes(x=0, color=prolific_id), width = 0.1, alpha = 0.5) +
     geom_hline(aes(yintercept = mu), color="green", linetype="dashed") +
-    theme(legend.position="none", axis.ticks.x = element_blank(), axis.text.x = element_blank()) +
+    theme(legend.position="right", axis.ticks.x = element_blank(), axis.text.x = element_blank()) +
     labs(x="", y="RT in ms", title="Reaction Times per stimulus") +
     facet_wrap_paginate(~id, nrow=2, ncol=5, page=pa) +
     scale_y_continuous(trans = log2_trans(),
@@ -138,7 +137,8 @@ stats_all <- df %>% group_by(question, id) %>% mutate(mu=mean(m), sd=sd(m)) %>%
   mutate(limit_up = mu + sd, limit_low = mu - sd)
 
 df <- left_join(df, stats_all) %>% group_by(question, id)
-for(pa in seq(1, 10)) {
+n_pages <- 14/2; # 2 test trials per page!
+for(pa in seq(1, n_pages)) {
   p <- df %>%
      ggplot(aes(y=m, x=factor(0))) +
      geom_boxplot() +
@@ -152,7 +152,7 @@ for(pa in seq(1, 10)) {
                          page = pa) +
      ggtitle("Quality of responses per stimulus") +
      theme(axis.ticks.x = element_blank(), axis.text.x = element_blank(),
-           legend.position="none") +
+           legend.position="right") +
      labs(y="average difference to other participants' responses", x="")
   print(p)
 }
@@ -165,7 +165,6 @@ General comments
 ```{r}
 data$comments
 data$comments$comments
-data$comments$noticed_steepness
 ```
 
 # Postprocessing
@@ -173,10 +172,10 @@ data$comments$noticed_steepness
 ```{r}
 filter_prolific_id <- function(df){
   df <- df %>%
-    filter(prolific_id != "participant2" & prolific_id != "participant3" &
-           prolific_id != "participant11" & prolific_id != "participant13" &
-           prolific_id != "participant14")
-  message(paste('# filtered out because of not noticing steepness:', "5"))
+    # filter(prolific_id != "participant2" & prolific_id != "participant3" &
+    #        prolific_id != "participant11" & prolific_id != "participant13" &
+    #        prolific_id != "participant14")
+  message(paste('# filtered out because of...:', "add nb"))
   return(df)
 }
 
@@ -216,7 +215,7 @@ update_data <- function(result_dir, func_filter, fn_filtered){
   #             file=paste(result_dir, "exp1_prob_tables_mean_steepness_noticed.csv", sep=.Platform$file.sep),
   #             sep = ",", row.names=FALSE)
 
-df1 <- update_data(result_dir, filter_prolific_id, "steepness_noticed");
+# df1 <- update_data(result_dir, filter_prolific_id, "steepness_noticed");
 df2 <- update_data(result_dir, filter_quality, "quality");
 
 ```

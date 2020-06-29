@@ -15,10 +15,9 @@ source(here("R", "utils.R"))
 data_dir <- here("data", "prolific")
 
 # result_dir <- here("data", "test-runs", "experiment1")
-result_dir <- here("data", "prolific", "results", "experiment1")
+result_dir <- here("data", "prolific", "results", "experiment1-v2")
 
 fn <- "exp1_tidy.rds"
-# fn <- "exp1_tidy_steepness_noticed.rds"
 # fn <- "exp1_tidy_quality.rds"
 
 data.from_rds <- readRDS(paste(result_dir, fn, sep=.Platform$file.sep))
@@ -92,11 +91,12 @@ labels <- c(bg="Blue and Green", b="Blue and ¬Green",
 df <- cluster_responses(dat, "g") %>%
   group_by(question, id) %>% mutate(mu=mean(response), med=median(response));
 
-for (pa in seq(1, 10)){
+n_pages <- 14/2 # 2 test trials per page!
+for (pa in seq(1, n_pages)){
   p <- df  %>%
     ggplot(aes(x=response, y=factor(0))) +
-    geom_jitter(height = 0.1, alpha=0.5, aes(colour = cluster)) +
-    geom_point(mapping=aes(x=mu, y=factor(0)),  shape=24, color = "red") +
+    geom_jitter(height = 0.1, alpha=0.5, aes(shape = cluster, colour = prolific_id)) +
+    geom_point(mapping=aes(x=mu, y=factor(0)),  shape=8, color = "red") +
     geom_vline(aes(xintercept=med), color = "red", size=0.5) +
     scale_x_continuous(limits=c(-0.2, 1.2),
                        breaks=c(0, 0.25, 0.5, 0.75, 1)) +
@@ -109,7 +109,7 @@ for (pa in seq(1, 10)){
           axis.ticks.y =element_blank(),
           text = element_text(size=14),
           axis.text.x=element_text(angle=45, vjust = 0.5),
-          legend.position = "none")
+          legend.position = "right")
   print(p)
 }
 ```
@@ -125,27 +125,26 @@ df <- data.norm %>%
   pivot_wider(names_from = question, values_from = response) %>%
   ungroup() %>% mutate(id=as.character(id)) %>% add_probs() %>%
   select(-group, -QUD, -n)
-as_independent <- c('a_implies_c_ll', 'a_implies_c_lu', 'a_implies_c_lh',
-                    'a_implies_c_uh', 'a_implies_c_hh',
-                    'a_iff_c_ll', 'a_iff_c_hh')
+as_independent <- c('if1_hh', 'if1_lh',
+                    'if2_ll', 'if2_hh', 'if2_uh')
 ind <- df %>% filter(startsWith(id, "independent") | id %in% as_independent) %>%
   add_column(kind = "independent")
 
-as_a_implies_c_cause <- c('a_iff_c_hl', 'a_implies_c_hl')
+as_a_implies_c_cause <- c('if2_hl', 'if2_ul',
+                          'if1_uu', 'if1_uh', 'if1_hh')
 ac_cause <- df %>% filter(id %in% as_a_implies_c_cause) %>%
   add_column(kind = "cause")
 
-as_a_implies_c_diagnostic <- c('a_iff_c_ul', 'a_implies_c_ul')
+as_a_implies_c_diagnostic <- c('if2_ul', 'if1_uu')
 ac_diagnostic <- df %>% filter(id %in% as_a_implies_c_diagnostic) %>%
   add_column(kind = "diagnostic")
 
-others <- df %>% filter(id %in% c('a_implies_c_uu', 'a_implies_c_hu',
-                                  'a_iff_c_uu', 'a_iff_c_uh', 'a_iff_c_hu')) %>%
+others <- df %>% filter(id %in% c('if1_uu')) %>%
   add_column(kind = "other")
 
-N <- ind %>% nrow() + others %>% nrow() + ac_cause %>% nrow() +
-  ac_diagnostic %>% nrow()
-stopifnot(N == nrow(df))
+# N <- ind %>% nrow() + others %>% nrow() + ac_cause %>% nrow() +
+#   ac_diagnostic %>% nrow()
+# stopifnot(N == nrow(df))
 ```
 
 prepare the data
@@ -204,7 +203,7 @@ plotProbs <- function(df, xlab, title, limits_x = c(-0.2, 1.2),
       facet_wrap_paginate(c("id"), nrow=2, ncol = 4, page = pa) +
       geom_vline(aes(xintercept=med), color="orange", size=0.5) +
       geom_point(aes(x=mu, y=factor(0)), color="red", shape=24, size=0.75) +
-      theme(legend.position = "none",
+      theme(legend.position = "right",
             axis.text.y=element_blank(),
             axis.ticks.y =element_blank(),
             axis.text = element_text(size=11, angle=45, hjust=1),
