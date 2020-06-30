@@ -177,8 +177,8 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
           words (shown word by word in a box in the lower left), click on <b>SUBMIT SENTECE</b> to continue.
           <br />
           <b>5</b>. If you think that a different sentence, that you couldn't built with the available words, would describe the scene more naturally, click on <b>USE MY OWN WORDS</b> and type it into the box that will appear below the picture.
-          By clicking on <b>NEXT SCENE</b>, your sentence will be submitted and
-          you will directly get to the next trial.
+          By clicking on <b>NEXT SCENE</b>, your sentence <b>will be submitted and</b>
+          you will directly <b>get to the next trial</b>.
           <br />
           Otherwise, click on <b>NEXT SCENE</b> right away to continue straight with the next trial.
           <br />

@@ -20,7 +20,7 @@ let GRAMMAR_RULE = {
   'the': ['COL'],
   'if': ['the', 'and'],
   'DET_N': ['the', 'both'],
-  'COL': ['block', 'nor', 'CONJ'],
+  'COL': ['block', 'nor', 'CONJ', 'or'],
   'both': ['blocks', 'the'],
   'blocks': ['will', 'fall', 'MOD'],
   'block': ['to', 'AUX', 'nor', 'V', 'V_AUX', 'V_I', 'MOD', 'CONJ', 'or'],
