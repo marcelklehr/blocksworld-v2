@@ -30,7 +30,7 @@ if(str_split(fn, "_")[[1]] %>% length() == 2) {
 data.orig <- data %>% mutate(response=r_orig) %>% select(-r_norm, -r_orig)
 data.norm <- data %>% mutate(response=r_norm) %>% select(-r_norm, -r_orig)
 # choose wether normalized or unnormalized values shall be plotted
-data.plot <- data.orig
+data.plot <- data.norm
 
 
 stimuli <- data.orig %>% pull(id) %>% unique()
@@ -85,8 +85,8 @@ if (nrow(df.participants_all_none) != 0){
 dat <- data.plot %>% ungroup() %>%
   mutate(question = factor(question, levels = c("bg", "b", "g", "none")))
 
-labels <- c(bg="Blue and Green", b="Blue and ¬Green",
-            g="¬Blue and Green", none="¬Blue and ¬Green")
+labels <- c(bg="Blue, Green", b="Blue, ¬Green",
+            g="¬Blue, Green", none="¬Blue, ¬Green")
 
 df <- cluster_responses(dat, "g") %>%
   group_by(question, id) %>% mutate(mu=mean(response), med=median(response));
@@ -97,7 +97,12 @@ for (pa in seq(1, n_pages)){
     ggplot(aes(x=response, y=factor(0))) +
     geom_jitter(height = 0.1, alpha=0.5, aes(shape = cluster, colour = prolific_id)) +
     geom_point(mapping=aes(x=mu, y=factor(0)),  shape=8, color = "red") +
-    geom_vline(aes(xintercept=med), color = "red", size=0.5) +
+    # geom_vline(aes(xintercept=med), color = "red", size=0.5) +
+    geom_vline(aes(xintercept=0), color = "grey", size=0.2, linetype='dashed') +
+    geom_vline(aes(xintercept=0.25), color = "grey", size=0.2, linetype='dashed') +
+    geom_vline(aes(xintercept=0.5), color = "gray45", size=0.5, linetype='dashed') +
+    geom_vline(aes(xintercept=0.75), color = "grey", size=0.2, linetype='dashed') +
+    geom_vline(aes(xintercept=1), color = "grey", size=0.2, linetype='dashed') +
     scale_x_continuous(limits=c(-0.2, 1.2),
                        breaks=c(0, 0.25, 0.5, 0.75, 1)) +
     labs(x="estimates probability", y="") +

@@ -141,7 +141,7 @@ n_pages <- 14/2; # 2 test trials per page!
 for(pa in seq(1, n_pages)) {
   p <- df %>%
      ggplot(aes(y=m, x=factor(0))) +
-     geom_boxplot() +
+     geom_boxplot(outlier.shape = NA) +
      geom_jitter(aes(color=comparator), width = 0.1, alpha = 0.5) +
      geom_hline(aes(yintercept=mu), linetype="dashed", color = "orange", size=.5) +
      # geom_hline(aes(yintercept=limit_up), color = "black", size=.25) +
