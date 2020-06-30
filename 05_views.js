@@ -144,9 +144,9 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   buttonText: "continue"
 });
 
-const instructions_fridge1 = magpieViews.view_generator("instructions", {
+const instructions_fridge = magpieViews.view_generator("instructions", {
   trials: 1,
-  name: "instructions_fridge1",
+  name: "instructions_fridge",
   title: "Instructions Test Phase",
   text: `Great - we'll now proceed to the test phase of the experiment.
           Again, you will be shown scenes of different block arrangements.
@@ -212,9 +212,9 @@ const instructions_test = magpieViews.view_generator("instructions", {
   buttonText: "start test phase"
 });
 
-const instructions_fridge2 = magpieViews.view_generator("instructions", {
+const instructions_fridge_reminder = magpieViews.view_generator("instructions", {
   trials: 1,
-  name: "instructions_fridge2",
+  name: "instructions_fridge_reminder",
   title: "Instructions Test Phase",
   text: `<b>Two little reminders before we finally start</b>:
     <br/>
