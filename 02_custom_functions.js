@@ -231,22 +231,31 @@ checkBuildSentence = function (sentenceArray, poss_next, button2Toggle) {
   }
 }
 
-update_clickables = function (lastSelected, submitted=false) {
+update_clickables = function (last_selected, all_selected, submitted=false) {
   WORDS.forEach(function (word) {
     $("#" + word.replace(/\s/g, ''))
     .addClass('not-clickable');
   })
-  if(!lastSelected) {
-    lastSelected = 'S'
+  if(!last_selected) {
+    last_selected = 'S'
   }
   if (submitted) {
     return [];
   } else {
-    let poss_words = shownNext(lastSelected);
+    let poss_words = shownNext(last_selected);
     poss_words.forEach(function (word) {
+      word = word.replace(/\s/g, '');
       $("#" + word)
       .toggleClass('not-clickable');
     });
+    let c1 = BLOCK_COLS.test[0];
+    let c2 = BLOCK_COLS.test[1];
+    let col_unclickable = poss_words.includes(c1) && poss_words.includes(c2) ?
+      (all_selected.includes(c1) ? c1 : (all_selected.includes(c2) ? c2 : '')) : '';
+    if(col_unclickable != '') {
+      $("#" + col_unclickable).toggleClass('not-clickable');
+    }
+    poss_words = _.without(poss_words, col_unclickable);
     return poss_words
   }
 }

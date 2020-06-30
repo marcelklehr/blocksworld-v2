@@ -213,11 +213,6 @@ const fridge_generator = {
         })
         .join('')
     }
-    let wordArray1 = ["maybe", "likely", "probably", "only", "rather"]
-    let wordArray2 = ["not", "neither", "nor", "no", "won't", "but"]
-    let wordArray3 = ["if", "and", "or", "to", "due to", "because of", "the"]
-    let wordArray4 = ["block", "blocks", "green", "blue", "red", "yellow", "both"]
-    let wordArray5 = ["fall", "falls", "will", "cause", "causes", "make", "makes", "do", "does"]
     return `<div class = "fix-box"> <div class="fridge">` +
       // return_word_array(wordArray1, "magpie-view-button green") +
       // return_word_array(wordArray2, "red") + return_word_array(wordArray3, "blue") + return_word_array(wordArray4, "purple") +
@@ -278,8 +273,7 @@ const fridge_generator = {
           .trim();
         sentence_array.push(value)
 
-        let poss_next = update_clickables(value);
-
+        let poss_next = update_clickables(value, sentence_array);
         $(".selected-words")
           .append(" " + value)
           // Important for displaying sentence built so far
@@ -302,7 +296,7 @@ const fridge_generator = {
         //update for synchronizing with what is shown in textbox
         config.data[CT].sentence = sentence;
         let value = _.last(sentence_array)
-        let poss_next = update_clickables(value);
+        let poss_next = update_clickables(value, sentence_array);
         checkBuildSentence(sentence_array, poss_next, submitbutton);
       });
 
@@ -335,7 +329,7 @@ const fridge_generator = {
         .removeClass("magpie-nodisplay");
       toggleNextIfDone($("#customWords"), true);
       toggleNextIfDone($("#buttonNext"), true);
-      update_clickables('', true);
+      update_clickables('', sentence_array, true);
       submitbutton.addClass("magpie-nodisplay");
       $("#buttonDelete")
         .addClass("magpie-nodisplay");

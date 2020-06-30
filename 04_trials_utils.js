@@ -99,19 +99,24 @@ pseudoRandomTestTrials = function(){
 }
 
 // save trial data to make it accessible in magpie experiment
-const shuffled_test_ids = pseudoRandomTestTrials();
-let test_ids = _.map(slider_rating_trials, 'id');
-let TEST_TRIALS = [];
-shuffled_test_ids.forEach(function(id){
-  let idx = _.lastIndexOf(test_ids, id)
-  if(idx === -1) {
-    let kind = id.slice(0, _.lastIndexOf(id, "_"));
-    let ps = id.slice(_.lastIndexOf(id, "_") + 1);
-    console.warn('Test trial with id: ' + id + ' not found.')
-  }
-  // console.log(id + ' ' + idx)
-  TEST_TRIALS.push(slider_rating_trials[idx]);
-});
+let shuffleTestTrials = function(trial_data){
+  let shuffled_trials = [];
+  let test_ids = _.map(trial_data, 'id');
+  const shuffled_test_ids = pseudoRandomTestTrials();
+  shuffled_test_ids.forEach(function(id){
+    let idx = _.lastIndexOf(test_ids, id)
+    if(idx === -1) {
+      let kind = id.slice(0, _.lastIndexOf(id, "_"));
+      let ps = id.slice(_.lastIndexOf(id, "_") + 1);
+      console.warn('Test trial with id: ' + id + ' not found.')
+    }
+    // console.log(id + ' ' + idx)
+    shuffled_trials.push(trial_data[idx]);
+  });
+  return shuffled_trials;
+}
+const TEST_TRIALS = shuffleTestTrials(slider_rating_trials);
+const FRIDGE_TRIALS = shuffleTestTrials(fridge_trials);
 
 
 if (DEBUG){

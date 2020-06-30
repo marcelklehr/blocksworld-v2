@@ -19,20 +19,22 @@ let GRAMMAR_RULE = {
   'MOD': ['the', 'both', 'if', 'V_AUX', 'V_AUX_I', 'V', 'V_I', 'MOD', 'not', 'AUX'],
   'the': ['COL'],
   'if': ['the', 'and'],
-  'DET_N': ['the'],
+  'DET_N': ['the', 'both'],
   'COL': ['block', 'nor', 'CONJ'],
-  'both': ['blocks'],
-  'blocks': ['will', 'fall'],
-  'block': ['to', 'AUX', 'nor', 'V', 'V_AUX', 'V_I', 'MOD', 'CONJ'],
+  'both': ['blocks', 'the'],
+  'blocks': ['will', 'fall', 'MOD'],
+  'block': ['to', 'AUX', 'nor', 'V', 'V_AUX', 'V_I', 'MOD', 'CONJ', 'or'],
   'AUX': ['MOD', 'not', 'V_I', 'V_AUX_I', 'both'],
   'not': ['V_I', 'V_AUX_I', 'the'],
-  'and': ['the', 'MOD', 'V_AUX'],
+  'and': ['the', 'MOD', 'V_AUX', 'V_AUX_I'],
   'but': ['not', 'the'],
-  'V_I': ['CONJ', 'the', 'also', 'nor', 'if', 'either'],
-  'V': ['CONJ', 'the', 'also', 'if'],
+  'V_I': ['CONJ', 'the', 'also', 'nor', 'if', 'either', 'or'],
+  'V': ['CONJ', 'the', 'also', 'if', 'or'],
   'V_AUX_I': ['the'],
   'V_AUX': ['the'],
-  'to': ['fall']
+  'or': ['the', 'both'],
+  'to': ['fall'],
+  'because of': ['the']
 }
 
 let word_groups = [

@@ -78,7 +78,7 @@ trials_ramp = function(){
       walls.push(base);
       let width = dir[id][idx] == 'horizontal' ? PROPS.blocks.h : PROPS.blocks.w
       let horiz = dir[id][idx] == 'horizontal';
-      let pr = priors[id][idx] != "low" ? "default" : horiz ? "low" : "default";
+      let pr = !(priors[id][idx].startsWith("low")) ? "default" : horiz ? "low" : "default";
       let prop_on_base = (width + DIST_EDGE[pr]) / width;
       let block = blockOnBase(base, prop_on_base, colors[id][idx],
                               "block"+idx, horiz);
@@ -172,12 +172,12 @@ trials_ssw = function(){
                   'ssw1': BLOCK_COLS_SHORT.train[0]}
   data = {};
 
-  let objs = Walls.train.ssw();
-  let xblock = blockOnBase(objs.walls[1], -PRIOR.horizontal.uncertainL,
-    cols.sienna, "Xblock", true);
-  let xblock2 = blockOnBase(objs.walls[0], -PRIOR.vertical.uncertainL,
-    cols.sienna, "Xblock2", false);
   _.keys(prior).forEach(function(id, i){
+    let objs = Walls.train.ssw();
+    let xblock = blockOnBase(objs.walls[1], -PRIOR.horizontal.uncertainL,
+      cols.sienna, "Xblock", true);
+    let xblock2 = blockOnBase(objs.walls[0], -PRIOR.vertical.uncertainL,
+      cols.sienna, "Xblock2", false);
     let b1 = blockOnBase(objs.walls[0], PRIOR[dir[id][0]][prior[id][0]],
       color[id][0], 'blockC', dir[id][0] == 'horizontal');
 

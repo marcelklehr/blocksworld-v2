@@ -45,9 +45,9 @@ const intro = magpieViews.view_generator("intro", {
   buttonText: "begin the experiment"
 });
 
-const instructions_general = magpieViews.view_generator("instructions", {
+const instructions_color_vision = magpieViews.view_generator("instructions", {
   trials: 1,
-  name: "instructions_general",
+  name: "instructions_color_vision",
   title: "General Instructions",
   text: `In this experiment you are shown pictures of different arrangements of
           blocks.
@@ -57,11 +57,20 @@ const instructions_general = magpieViews.view_generator("instructions", {
          In total, you will need about <b>15-20 minutes</b> to finish it.
          <br/>
          <br/>
-         We will start with the training phase
-         which consists of <b>15</b> trials. You will see block arrangements similar
-         to those you will be shown later in the test phase, such that you are
-         able to develop intuitions about the physical properties and get
-         familiar with the stimuli.
+         We will start the training phase with four simple questions concerning
+         the color of the blocks we will show you. Please click on <b>CONITINUE</b>
+         to proceed with the questions.`,
+  buttonText: "continue"
+});
+
+const instructions_general = magpieViews.view_generator("instructions", {
+  trials: 1,
+  name: "instructions_general",
+  title: "General Instructions",
+  text: `We will now start the actual training phase which consists of <b>15</b>
+         trials. You will see block arrangements similar to those you will be
+         shown later in the test phase, such that you are able to develop
+         intuitions about the physical properties and get familiar with the stimuli.
          <br/>
          <br/>
          <b>Please note</b>:

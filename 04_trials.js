@@ -354,8 +354,8 @@ let INSTRUCTION_SLIDER = [{
 }];
 // ----- FRIDGE TRIALS ---- //
 // fridge trials have the same input data slider_rating_trials
-let FRIDGE_TRIALS = _.cloneDeep(slider_rating_trials)
-FRIDGE_TRIALS = _.map(FRIDGE_TRIALS, function (trial, i) {
+let fridge_trials = _.cloneDeep(slider_rating_trials)
+fridge_trials = _.map(fridge_trials, function (trial, i) {
   ['question1', 'question2', 'question3', 'question4',
    'response3', 'response4',
    'optionLeft', 'optionRight', 'expected'].forEach(function(key){
@@ -368,7 +368,7 @@ FRIDGE_TRIALS = _.map(FRIDGE_TRIALS, function (trial, i) {
 });
 
 
-let fridge_ex = Object.assign({}, FRIDGE_TRIALS[0])
+let fridge_ex = Object.assign({}, fridge_trials[0])
 fridge_ex.picture = "stimuli/img/train_slider_fridge/ind2_test_colors.jpg";
 fridge_ex.id = id_slider
 const TRAIN_FRIDGE_TRIALS = [fridge_ex];
