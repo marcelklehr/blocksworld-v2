@@ -28,7 +28,8 @@ cols = {
       'bordeaux': '#D81159',
       'darkyellow': '#FFBC42',
       'darkgreen': '#119533',
-      'darkred': '#8F2D56'
+      'darkred': '#8F2D56',
+      'sienna': '#A0522D'
     };
 cols.plank = cols.blue
 cols.test_blocks = [cols.royal, cols.green];

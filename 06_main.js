@@ -20,7 +20,7 @@ $("document")
       instructions_general,
       // sentence_choice_custom,
       instructions_train,
-      animation_view1,
+      animation_view,
       instruction_slider_example,
       // animation_view2,
       multiple_slider_train,
@@ -52,7 +52,7 @@ $("document")
         in: [
         // list the view-names of the views for which you want a progress bar
         fridge_view.name,
-        animation_view1.name,
+        animation_view.name,
         multiple_slider.name,
       ],
         // Possible styles are "default", "separate" and "chunks"

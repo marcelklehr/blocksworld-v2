@@ -19,7 +19,7 @@ testTrials_if2 = function(priors){
   // let w_x = w_no_ramp.bounds[data.i_ramp === 0 ? "min" : "max"].x
   // let w_width = w_no_ramp.bounds.max.x - w_no_ramp.bounds.min.x;
   let xBlock = blockOnBase(w_no_ramp, -1 * data.b_sides[0] * 0.52,
-    cols.darkgrey, "Xblock", true);
+    cols.sienna, "Xblock", true);
   let bases = [xBlock];
   let w_ramp = seesaw.walls[data.i_ramp];
   data.i_ramp === 0 ? bases.unshift(w_ramp) : bases.push(w_ramp);
@@ -30,8 +30,9 @@ testTrials_if2 = function(priors){
 
   let dir = horiz[data.i_ramp]
   let w = dir == 'horizontal' ? PROPS.blocks.h : PROPS.blocks.w;
-  let ps = [data.i_ramp === 0 ? (w + DIST_EDGE) / w : PRIOR[dir][priors[0]],
-            data.i_ramp === 1 ? (w + DIST_EDGE) / w : PRIOR[dir][priors[1]]];
+  let pr = data.prior != "low" ? "default" : "low";
+  let ps = [data.i_ramp === 0 ? (w + DIST_EDGE[pr]) / w : PRIOR[dir][priors[0]],
+            data.i_ramp === 1 ? (w + DIST_EDGE[pr]) / w : PRIOR[dir][priors[1]]];
   let b1 = blockOnBase(bases[0], data.b_sides[0]*ps[0], c1, 'blockA', horiz[0]=='horizontal');
   let b2 = blockOnBase(bases[1], data.b_sides[1]*ps[1], c2, 'blockC', horiz[1]=='horizontal');
   let twoBlocks = [b1, b2];
@@ -54,7 +55,8 @@ testTrials_if1 = function(priors){
 
   let b1 = blockOnBase(objs.walls[0], PRIOR[horiz[0]][p1] * data.edge_blocks,
     cols.test_blocks[colors[0]], 'blockA', horiz[0] == 'horizontal');
-  let b2 = blockOnBase(objs.walls[1], data.edge_blocks * (b2_w + DIST_EDGE) / b2_w,
+  let pr = p2 != "low" ? "default" : "low";
+  let b2 = blockOnBase(objs.walls[1], data.edge_blocks * (b2_w + DIST_EDGE[pr]) / b2_w,
     cols.test_blocks[colors[1]], 'blockC', horiz[1] == 'horizontal');
 
   let blocks = [b1, b2].concat(objs.dynamic);
@@ -74,7 +76,8 @@ testTrials_independent = function(priors){
   let b1 = blockOnBase(data.walls[0], data.sides[0] * PRIOR[horiz[0]][priors[0]],
     cols.test_blocks[colors[0]], "blockA", horiz[0] == 'horizontal')
   let w2 = horiz[1] == 'horizontal' ? PROPS.blocks.h : PROPS.blocks.w;
-  let b2 = blockOnBase(ramp.wall_bottom, data.sides[1] * (w2 + DIST_EDGE) / w2,
+  let pr = priors[1] != "low" ? "default" : "low";
+  let b2 = blockOnBase(ramp.wall_bottom, data.sides[1] * (w2 + DIST_EDGE[pr]) / w2,
     cols.test_blocks[colors[1]], "blockC", horiz[1] == 'horizontal')
 
   // add seesaw as distractor

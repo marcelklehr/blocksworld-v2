@@ -7,7 +7,7 @@
 // and a render function, the render function gets CT and the magpie-object as input
 // and has to call magpie.findNextView() eventually to proceed to the next view (or the next trial in this view),
 // if it is an trial view it also makes sense to call magpie.trial_data.push(trial_data) to save the trial information
-const animation_view1 = {
+const animation_view = {
   name: "animation",
   title: "title",
   CT: 0, //is this the start value?

@@ -12,7 +12,7 @@
     <script src="../node_modules/matter-js/build/matter.js"></script>
     <script src="../node_modules/underscore/underscore.js"></script>
 
-    <link type="text/css" href="styles.css" rel="stylesheet" />
+    <link type="text/css" href="../01_custom_styles.css" rel="stylesheet" />
 
     <script src="00_globals.js"></script>
     <script src="01_config.js"></script>
@@ -29,6 +29,7 @@
       if(MODE === "test") {
         let types = TRIAL_TYPES;
         types = ['if2']
+        // types = ['independent']
         cond = types[_.random(0, types.length-1)];
         let p1 = _.sample(['u', 'h', 'l']);
         let p2 = _.sample(['l', 'h', 'u']);

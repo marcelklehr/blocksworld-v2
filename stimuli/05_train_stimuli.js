@@ -48,8 +48,8 @@ trials_ramp = function(){
   let cs = BLOCK_COLS_SHORT.train;
   let colors = {distance0: [cols.train_blocks[1],
                             cols.train_blocks[0],
-                            cols.darkgrey],
-                distance1: ['darkgrey'].concat(cols.train_blocks),
+                            cols.sienna],
+                distance1: [cols.sienna].concat(cols.train_blocks),
                 balls: COLORS_BALL.train.slice(0,3)
                };
   let priors = {distance0: ['uncertainL', 'uncertainH', 'high'],
@@ -77,9 +77,11 @@ trials_ramp = function(){
                       ramp.wall_bottom.position.y, width_base);
       walls.push(base);
       let width = dir[id][idx] == 'horizontal' ? PROPS.blocks.h : PROPS.blocks.w
-      let prop_on_base = (width + DIST_EDGE) / width;
+      let horiz = dir[id][idx] == 'horizontal';
+      let pr = priors[id][idx] != "low" ? "default" : horiz ? "low" : "default";
+      let prop_on_base = (width + DIST_EDGE[pr]) / width;
       let block = blockOnBase(base, prop_on_base, colors[id][idx],
-                              "block"+idx, dir[id][idx] == 'horizontal');
+                              "block"+idx, horiz);
       objs_dyn.push(block);
     });
     data[id] = {'objs': objs_dyn.concat(walls), 'meta': priors[id], id}
@@ -159,25 +161,35 @@ trials_ssw = function(){
   let color = {'ssw0': [cols.train_blocks[1], cols.train_blocks[0]],
                'ssw1': cols.train_blocks}
   let dir = {
-    'ssw0': ['vertical', 'vertical'],
+    'ssw0': ['vertical', 'horizontal'],
     'ssw1': ['horizontal', 'horizontal']
   };
   let prior = {
-    'ssw0': ["uncertainH", "uncertainL"],
+    'ssw0': ["uncertainH", "low"],
     'ssw1': ["uncertainH", "lowH"]
   };
   let expected = {'ssw0': BLOCK_COLS_SHORT.train.join(""),
                   'ssw1': BLOCK_COLS_SHORT.train[0]}
   data = {};
+
+  let objs = Walls.train.ssw();
+  let xblock = blockOnBase(objs.walls[1], -PRIOR.horizontal.uncertainL,
+    cols.sienna, "Xblock", true);
+  let xblock2 = blockOnBase(objs.walls[0], -PRIOR.vertical.uncertainL,
+    cols.sienna, "Xblock2", false);
   _.keys(prior).forEach(function(id, i){
-    let objs = Walls.train.ssw();
     let b1 = blockOnBase(objs.walls[0], PRIOR[dir[id][0]][prior[id][0]],
       color[id][0], 'blockC', dir[id][0] == 'horizontal');
-    let b2 = blockOnBase(objs.walls[1], -PRIOR[dir[id][1]][prior[id][1]],
+
+    let data_b2 = id == "ssw0" ? {base: xblock, side: 1, xblocks: [xblock, xblock2]}
+                               : {base: objs.walls[1], side: -1, xblocks: []};
+    let b2 = blockOnBase(data_b2.base, data_b2.side * PRIOR[dir[id][1]][prior[id][1]],
       color[id][1], 'blockC', dir[id][1] == 'horizontal');
-    data[id] = {objs: [b1, b2].concat(objs.dynamic).concat(objs.walls),
-                meta: prior[id],
-                id}
+
+    data[id] = {
+      objs: [b1, b2].concat(data_b2.xblocks).concat(objs.dynamic).concat(objs.walls),
+      meta: prior[id],
+      id}
     TrainExpectations[id] = expected[id];
   });
   return data

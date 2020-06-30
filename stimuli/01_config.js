@@ -56,13 +56,13 @@ let PRETEST_ANGLES = _.range(45);
 let BASE_RAMP = {
   'horizontal': {'high': 125, 'uncertainH': 160, 'uncertain': 180,
                  'uncertainL': 200, 'low': 240},
-  'vertical': {'high': 160, 'uncertainH': 190, 'uncertain': 220,
-               'uncertainL': 250, 'low': 280},
+  'vertical': {'high': 140, 'uncertainH': 210, 'uncertain': 225,
+               'uncertainL': 250, 'low': 290},
   'default': 200
 };
 
 // when uncertainty comes from balls, this dist is left towards the edge of platform
-let DIST_EDGE = 5;
+let DIST_EDGE = {'default': 5, 'low': 50};
 let SIMULATION = {'duration': 5000};
 
 
@@ -70,14 +70,14 @@ let HORIZ_AC2 = {
   'll': ['horizontal', 'horizontal'], 'ul': ['vertical', 'horizontal'],
   'lu': ['vertical', 'horizontal'], 'uu': ['horizontal', 'horizontal'],
   'hu': ['vertical', 'horizontal'], 'uh': ['vertical', 'horizontal'],
-  'hh': ['vertical', 'horizontal'], 'hl': ['horizontal', 'horizontal'],
+  'hh': ['vertical', 'vertical'], 'hl': ['vertical', 'horizontal'],
   'lh': ['horizontal', 'vertical']
 }
 
 let HORIZ_IND = {
   'll': ['vertical', 'horizontal'], 'ul': ['vertical', 'horizontal'],
   'uu': ['horizontal', 'vertical'], 'uh': ['horizontal', 'vertical'],
-  'hh': ['vertical', 'horizontal'], 'hl': ['horizontal', 'vertical'],
+  'hh': ['vertical', 'vertical'], 'hl': ['horizontal', 'vertical'],
   'lh': ['horizontal', 'vertical'], 'hu': ['horizontal', 'vertical'],
   'lu': ['vertical', 'horizontal']
 }

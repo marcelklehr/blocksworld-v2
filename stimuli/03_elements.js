@@ -87,10 +87,11 @@ wallsIf1 = function(side, horiz, prior){
 }
 
 seesawIf2 = function(prior, dir, side_ramp, offset=PROPS.seesaw.d_to_walls){
-  let y_bases = 220;
+  let y_low = 220;
+  let y_high = 170;
   let data = side_ramp === "right" ?
-    {x0: 75, y0: y_bases, w0: 0.6 * PROPS.walls.w, y1: y_bases, w1: BASE_RAMP[dir][prior]} :
-    {x0: 275, y0: y_bases, w0: BASE_RAMP[dir][prior], y1: y_bases, w1: 0.6 * PROPS.walls.w};
+    {x0: 75, y0: y_low, w0: 0.6 * PROPS.walls.w, y1: y_high, w1: BASE_RAMP[dir][prior]} :
+    {x0: 300, y0: y_high, w0: BASE_RAMP[dir][prior], y1: y_low, w1: 0.6 * PROPS.walls.w};
   let base0 = wall('seesaw_base_left', data.x0, data.y0, data.w0);
   let pos = base0.bounds.max.x + PROPS.seesaw.plank.w/2 + offset;
   let objs = seesaw(pos);
@@ -138,7 +139,7 @@ Walls.train.if1 = wallsIf1
 Walls.train.ssw = function(){
   let objs = seesaw(SCENE.w/2 - 30, SCENE.h - PROPS.bottom.h,
     props={'plank': {'w': 280, 'h': 10}});
-  let walls = [wall('wallTopLeft', 150, 155, 100),
+  let walls = [wall('wallTopLeft', 150, 155, 140),
                wall('wall_seesaw_right', 600, 240, 175)].concat([objs.skeleton]);
   return {'walls': walls, 'dynamic': [objs.plank, objs.constraint]}
 }
