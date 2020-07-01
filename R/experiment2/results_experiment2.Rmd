@@ -1,0 +1,67 @@
+---
+title: "results experiment 1"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r, warning=FALSE, message=FALSE}
+library(ggforce)
+library(here)
+library(tidyverse)
+source(here("R", "utils.R"))
+
+# data_dir <-  here("data", "test-runs")
+data_dir <- here("data", "prolific")
+
+# result_dir <- here("data", "test-runs", "experiment2")
+result_dir <- here("data", "prolific", "results", "experiment2")
+
+fn <- "exp2_tidy.rds"
+
+data.from_rds <- readRDS(paste(result_dir, fn, sep=.Platform$file.sep))
+if(str_split(fn, "_")[[1]] %>% length() == 2) {
+  data <- data.from_rds$test
+} else {
+  data <- data.from_rds
+}
+
+stimuli <- data %>% pull(id) %>% unique()
+N_participants <- data %>% pull(prolific_id) %>% unique() %>% length()
+
+plot_dir <- paste(result_dir, "plots", sep=.Platform$file.sep);
+dir.create(plot_dir, showWarnings = FALSE)
+```
+
+## Experimental data: Produced sentences
+
+```{r}
+dat <- data %>% mutate(response = as.factor(response),
+                       custom_response = as.factor(custom_response)) %>% 
+  group_by(id)
+
+n_pages <- 14/2 # 2 test trials per page!
+makePlot <- function(color_group){
+  for (pa in seq(1, n_pages)){
+    p <- dat  %>% filter(group == color_group) %>% 
+      ggplot(aes(x=response)) +
+      geom_bar() +
+      facet_wrap_paginate(~id, nrow=2, ncol=1, page=pa, scales="free") + 
+      theme(text = element_text(size=14),
+            axis.text.x=element_text(angle=45, vjust = 0.5)) +
+      labs(y="#participants") +
+      coord_flip() +
+      theme_bw()
+      print(p)
+  }
+}
+```
+
+```{r sentences-group1}
+makePlot("group1")
+```
+
+```{r sentences-group2}
+makePlot("group2")
+```
+

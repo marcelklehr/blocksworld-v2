@@ -161,24 +161,25 @@ standardize_color_groups <- function(df){
   return(df)
 }
 
+# todo: check this again!!! make sure that all occurences of one color get replaced, not only the first
 standardize_color_groups_exp2 <- function(df){
   df <- df %>%
     mutate(response = case_when(group == "group2" ~ str_replace(response, "blue", "G"),
                                 TRUE ~ str_replace(response, "blue", "B")),
            custom_response = case_when(group == "group2" ~ str_replace(custom_response, "blue", "G"),
-                                TRUE ~ str_replace(custom_response, "blue", "B"))) %>% 
-    
-    mutate(response = case_when(group == "group2" ~ str_replace(response, "green", "B"), 
+                                TRUE ~ str_replace(custom_response, "blue", "B"))) %>%
+
+    mutate(response = case_when(group == "group2" ~ str_replace(response, "green", "B"),
                                 TRUE ~ str_replace(response, "green", "G")),
-           custom_response = case_when(group == "group2" ~ str_replace(custom_response, "green", "B"), 
-                                TRUE ~ str_replace(custom_response, "green", "G"))) %>% 
+           custom_response = case_when(group == "group2" ~ str_replace(custom_response, "green", "B"),
+                                TRUE ~ str_replace(custom_response, "green", "G"))) %>%
     mutate(response = str_replace(response, "G", "green"),
-           custom_response = str_replace(custom_response, "G", "green")) %>% 
+           custom_response = str_replace(custom_response, "G", "green")) %>%
     mutate(response = str_replace(response, "B", "blue"),
-           custom_response = str_replace(custom_response, "G", "green"
+           custom_response = str_replace(custom_response, "B", "blue"
            ));
   df <- df %>% mutate(group = "group1");
-             
+
   return(df)
 }
 
@@ -298,7 +299,7 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run, N_
     df <- standardize_color_groups(df)
     save_prob_tables(df, result_dir, result_fn);
   } else {
-    df <- standardize_color_groups_exp2(df)
+    # df <- standardize_color_groups_exp2(df)
   }
   
   # save processed data -----------------------------------------------------

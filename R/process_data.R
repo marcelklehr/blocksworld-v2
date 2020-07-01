@@ -36,10 +36,6 @@ dat.exp2 <- process_data(data_dir, data_fn, result_dir, result_fn, debug_run,
 
 
 
-
-
-
-
 # # Anonymize and save raw ------------------------------------------------------
 # dat.anonym <- anonymize_and_save(data_dir, data_fn, result_dir, result_fn, test_run)
 # dat.tidy <- tidy_data(dat.anonym)
