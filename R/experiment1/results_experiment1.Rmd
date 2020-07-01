@@ -5,7 +5,7 @@ output:
     df_print: paged
 ---
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE}
 library(ggforce)
 library(here)
 library(tidyverse)
@@ -43,7 +43,7 @@ dir.create(plot_dir, showWarnings = FALSE)
 Use normalized data and check how many all-or-none answers were given since we
 dont really want them, stimuli should have a little more uncertainty than that.
 
-```{r, eval=FALSE}
+```{r}
 # Look for participants who gave all-or-none responses, if any,
 # which stimuli were rated as all-or-none by how many participants?
 df <- data.norm %>% group_by(prolific_id, id) %>%
