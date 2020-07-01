@@ -15,11 +15,11 @@ experimental_data <- function(path_to_csv){
   return(data)
 }
 
-anonymize_and_save <- function(data_dir, data_fn, result_dir, result_fn, test_run=FALSE){
+anonymize_and_save <- function(data_dir, data_fn, result_dir, result_fn, debug_run=FALSE){
   path_to_data <- paste(data_dir, data_fn, sep=.Platform$file.sep)
-  data <- if(test_run) test_data(path_to_data) else experimental_data(path_to_data)
+  data <- if(debug_run) test_data(path_to_data) else experimental_data(path_to_data)
 
-  if(!test_run) {
+  if(!debug_run) {
     # filter test debug trials
     prolific_ids <- data %>% pull(prolific_id) %>% unique()
     new_ids <- paste("participant", seq(1,  length(prolific_ids)), sep="")
@@ -33,7 +33,7 @@ anonymize_and_save <- function(data_dir, data_fn, result_dir, result_fn, test_ru
   return(data)
 }
 
-tidy_test <- function(df){
+tidy_test_exp1 <- function(df){
   dat.test <- df %>% filter(trial_name == "multiple_slider") %>%
     select(prolific_id, RT, QUD, id, group,
            question1, question2, question3, question4,
@@ -51,6 +51,18 @@ tidy_test <- function(df){
     mutate(response = as.numeric(response),
            response = response/100,
            prolific_id = factor(prolific_id),
+           id = factor(id))
+  return(dat.test)
+}
+
+tidy_test_exp2 <- function(df){
+  dat.test <- df %>% filter(trial_name == "fridge_view" | trial_name == "fridge_train") %>%
+    select(prolific_id, RT, QUD, id, group,
+           response1, response2) %>%
+    rename(custom_response=response2, response=response1)
+  
+  dat.test <- dat.test %>%
+    mutate(prolific_id = factor(prolific_id),
            id = factor(id))
   return(dat.test)
 }
@@ -83,7 +95,7 @@ tidy_pretest <- function(df){
   return(dat.pre)
 }
 
-tidy_data <- function(data, N_test=14, N_train=15){
+tidy_data <- function(data, N_trials, test_trial_name){
   # 1. Select only columns relevant for data analysis
   df <- data %>% select(prolific_id,
                         question, question1, question2, question3, question4,
@@ -95,26 +107,37 @@ tidy_data <- function(data, N_test=14, N_train=15){
   # always use the same abbreviation
   df <- df %>% mutate(question1 = case_when(question1 == "gb" ~ "bg",
                                             question1 == "yr" ~ "ry",
-                                           TRUE ~ question1));
+                                           TRUE ~ question1),
+                      response3 = as.character(response3),
+                      response4 = as.character(response4));
+  dat.color_vision <- tibble();
+  if(N_trials$color_vision != 0) {
+    dat.color_vision <- df %>%
+      filter(trial_name == "color-vision") %>%
+      select(prolific_id, id, question, response, expected, QUD)
+    df <- df %>% filter(trial_name != "color-vision");
+  }
   N_participants <- df %>% select(prolific_id) %>% unique() %>% nrow()
-  stopifnot(nrow(df) == N_participants * (N_test + N_train));
+  stopifnot(nrow(df) == N_participants * (N_trials$test + N_trials$train));
 
   dat.comments <- df %>%
     select(prolific_id, comments) %>%
-    mutate(comments = if_else(is.na(comments), "", comments)) %>%
+    mutate(comments = as.character(comments),
+           comments = if_else(is.na(comments), "", comments)) %>%
     unique()
   dat.info <- df %>% select(prolific_id, education, gender, age, timeSpent) %>%
     unique()
-  # dat.color_vision <- df %>%
-  #   filter(trial_name == "color-vision") %>%
-  #   select(prolific_id, id, question, response, expected, picture1, picture2, QUD)
 
   dat.train <- tidy_train(df)
-  dat.test <- tidy_test(df)
+  if(test_trial_name == "multiple_slider") {
+    dat.test <- tidy_test_exp1(df)
+  } else {
+    dat.test <- tidy_test_exp2(df)
+  }
   dat.pretest <- tidy_pretest(df)
 
   dat.all <- list(test=dat.test, train=dat.train,
-                  # color=dat.color_vision,
+                  color=dat.color_vision,
                   info=dat.info, comments=dat.comments, pretest=dat.pretest)
 
   return(dat.all)
@@ -135,6 +158,27 @@ standardize_color_groups <- function(df){
                                 question == "ac" ~ "bg",
                                 question == "none" ~ "none")
            )
+  return(df)
+}
+
+standardize_color_groups_exp2 <- function(df){
+  df <- df %>%
+    mutate(response = case_when(group == "group2" ~ str_replace(response, "blue", "G"),
+                                TRUE ~ str_replace(response, "blue", "B")),
+           custom_response = case_when(group == "group2" ~ str_replace(custom_response, "blue", "G"),
+                                TRUE ~ str_replace(custom_response, "blue", "B"))) %>% 
+    
+    mutate(response = case_when(group == "group2" ~ str_replace(response, "green", "B"), 
+                                TRUE ~ str_replace(response, "green", "G")),
+           custom_response = case_when(group == "group2" ~ str_replace(custom_response, "green", "B"), 
+                                TRUE ~ str_replace(custom_response, "green", "G"))) %>% 
+    mutate(response = str_replace(response, "G", "green"),
+           custom_response = str_replace(custom_response, "G", "green")) %>% 
+    mutate(response = str_replace(response, "B", "blue"),
+           custom_response = str_replace(custom_response, "G", "green"
+           ));
+  df <- df %>% mutate(group = "group1");
+             
   return(df)
 }
 
@@ -184,6 +228,89 @@ cluster_responses <- function(dat, quest){
   df <- df %>% mutate(cluster = fct_explicit_na(df$cluster, na_level = 'not-clustered'))
   return(df)
 }
+
+filter_exp1 <- function(df){
+  # All 0 or all 1 responses
+  # One can't believe that all events will certainly (not) happen
+  filtered_sum <- df %>%
+    group_by(prolific_id, id) %>%
+    filter(sum(response) == 0 | sum(response) == 4)
+  
+  df_filltered <- df %>% filter(sum(response) != 0 & sum(response) != 4)
+  print(paste('filtered due to sum=4 or sum=0:', nrow(filtered_sum)))
+  return(df_filtered)
+}
+
+add_normed_exp1 <- function(df){
+  # normalize such that slider responses sum up to 1 but also keep original response
+  df <- df %>% group_by(prolific_id, id) %>%
+    mutate(n=sum(response), r_norm=response/n) %>%
+    rename(r_orig=response)  
+  return(df)
+}
+
+save_prob_tables <- function(df, result_dir, result_fn){
+  # Also save just Table means of normalized values as csv files
+  means <- df %>% group_by(id, question) %>% summarise(mean=mean(r_norm))
+  
+  fn_table_means <- paste(result_fn, "_tables_mean.csv", sep="");
+  path_table_means <- paste(result_dir, fn_table_means, sep=.Platform$file.sep);
+  write.table(means %>% pivot_wider(names_from = question, values_from = mean),
+              file=path_table_means, sep = ",", row.names=FALSE)
+  
+  print(paste('written means of normalized probability tables to:', path_table_means))
+  
+  # All Tables (with normalized values)
+  tables.all <- df %>% select(id, question, prolific_id, r_norm) %>%
+    group_by(id, question, prolific_id) %>%
+    pivot_wider(names_from = question, values_from = r_norm)
+  
+  fn_tables_all <- paste(result_fn, "_tables_all.csv", sep="");
+  path_tables_all <- paste(result_dir, fn_tables_all, sep=.Platform$file.sep);
+  write.table(tables.all, file=path_tables_all, sep = ",", row.names=FALSE)
+  print(paste('written means of normalized probability tables to:', path_tables_all))
+}
+
+process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run, N_trials, test_trial_name){
+  # Anonymize and save raw ------------------------------------------------------
+  dat.anonym <- anonymize_and_save(data_dir, data_fn, result_dir, result_fn, debug_run)
+  dat.tidy <- tidy_data(dat.anonym, N_trials, test_trial_name);
+  dat.all <- list(train=dat.tidy$train, info=dat.tidy$info, comments=dat.tidy$comments,
+                  color=dat.tidy$color)
+  
+  # Process TEST data -----------------------------------------------------------
+  data <- dat.tidy$test
+  # filter
+  # 1. Reaction time
+  filtered_rt_small <- data %>% filter(RT < 4 * 1000)
+  filtered_rt_large <- data %>% filter(RT > 3 * 60  * 1000)
+  #TODO: (un-)comment filtering for RTs?
+  # df <- data %>% filter(RT >= 4000 & RT <= 3 * 60 * 1000)
+  df <- data
+  # print(paste('filtered due to too long RT:', nrow(filtered_rt_large)))
+  # print(paste('filtered due to too small RT:', nrow(filtered_rt_small)))
+  # 2. Comments
+  # potentially filter trials/participants due to their comments, add here
+  
+  if(test_trial_name == "multiple_slider"){
+    # process exp1
+    df <- add_normed_exp1(df);
+    df <- standardize_color_groups(df)
+    save_prob_tables(df, result_dir, result_fn);
+  } else {
+    df <- standardize_color_groups_exp2(df)
+  }
+  
+  # save processed data -----------------------------------------------------
+  fn_tidy <- paste(result_fn, "_tidy.rds", sep="");
+  path_target <- paste(result_dir, fn_tidy, sep=.Platform$file.sep)
+  print(paste('written processed anonymized tidy data to:', path_target))
+  dat.all$test <- df
+  saveRDS(dat.all, path_target)
+  
+  return(dat.all)
+}
+
 
 # prepare_tables <- function(tables, N_test = 25){
 #   tables_wide <- tables %>%
