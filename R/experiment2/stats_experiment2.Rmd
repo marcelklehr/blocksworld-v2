@@ -1,0 +1,131 @@
+---
+title: "stats Experiment 2"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(ggforce)
+library(here)
+library(scales)
+library(tidyverse)
+source(here("R", "utils.R"));
+
+# result_dir <-  here("data", "test-runs");
+result_dir <- here("data", "prolific", "results", "experiment2")
+data_fn <- "exp2_tidy.rds"
+path_data <- paste(result_dir, data_fn, sep=.Platform$file.sep)
+
+data <- readRDS(path_data)
+```
+
+## Duration
+
+```{r duration}
+df <- data$info %>% group_by(prolific_id) %>% distinct()
+
+p <- df %>%
+  ggplot(aes(x=factor(0), y=timeSpent)) + 
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(shape=16, width=0.2) +
+  geom_hline(aes(yintercept = mean(df$timeSpent) + sd(df$timeSpent),
+                 color="yellow")) +
+  geom_hline(aes(yintercept = mean(df$timeSpent) + 2 * sd(df$timeSpent),
+                 color="red")) +
+  theme(legend.position="none") +
+  labs(x = "", y="timeSpent in min.")
+p
+
+df %>% ungroup() %>%  group_by(prolific_id) %>%  summary()
+```
+
+
+```{r color-vision}
+## Train Trials Color Vision
+
+df <- data$color %>% group_by(prolific_id, id) %>%
+  mutate(correct = expected == response)
+
+df %>%
+  ggplot(aes(x=id)) + geom_bar(position="dodge", aes(fill=correct)) +
+  theme(axis.text.x = element_text(angle=90, hjust=1), legend.position = "top")
+
+```
+
+## Train Trials
+
+```{r}
+df <- data$train %>% group_by(prolific_id, id) %>% 
+  mutate(response = case_when(tolower(response) == "true" ~ TRUE, 
+                              tolower(response) == "false" ~ FALSE));
+df.results = df %>%
+  filter(expected == question) %>% 
+  mutate(correct=response==TRUE) %>% 
+  group_by(id, prolific_id) %>% select(id, prolific_id, correct)
+
+df.results %>% 
+  ggplot(aes(x=id)) + geom_bar(position="dodge", aes(fill=correct)) +
+  theme(axis.text.x=element_text(angle=90, hjust=1), legend.position = "top") +
+  guides(fill = guide_legend(title = "correct"))
+
+
+```
+
+
+## Reaction times (per experimental trial)
+
+```{r RT}
+df <- data$test %>% select(prolific_id, id, RT) %>% group_by(id) %>% distinct()
+
+dat.RT = df %>% group_by(id) %>% summarise(mu=mean(RT), sd=sd(RT))
+df <- left_join(df, dat.RT, by="id")
+for(pa in seq(1,2)) {
+  p <- df %>%  
+    ggplot(aes(y=RT)) + geom_boxplot(outlier.shape = NA) +
+    geom_jitter(aes(x=0, color=prolific_id), width = 0.1, alpha = 0.5) +
+    geom_hline(aes(yintercept = mu), color="green", linetype="dashed") +
+    theme(legend.position="right", axis.ticks.x = element_blank(), axis.text.x = element_blank()) +
+    labs(x="", y="RT in ms", title="Reaction Times per stimulus") +
+    facet_wrap_paginate(~id, nrow=2, ncol=5, page=pa) +
+    scale_y_continuous(trans = log2_trans(),
+                       breaks = trans_breaks("log2", function(x) 2^x),
+                       labels = trans_format("log2", math_format(2^.x)))
+  print(p)
+}
+```
+
+# General comments
+
+```{r comments}
+data$comments
+data$comments$comments
+```
+
+# Postprocessing
+
+```{r, include=FALSE}
+filter_prolific_id <- function(df){
+  df <- df %>%
+    # filter(prolific_id != "participant2" & prolific_id != "participant3" &
+    #        prolific_id != "participant11" & prolific_id != "participant13" &
+    #        prolific_id != "participant14")
+  message(paste('# filtered out because of...:', "add nb"))
+  return(df)
+}
+```
+
+##Filter out participants according to certain criteria
+todo: criteria
+
+```{r, include=FALSE}
+update_data <- function(result_dir, func_filter, fn_filtered){
+  target_fn <-"exp1_tidy.rds";
+  target_path <- paste(result_dir, target_fn, sep=.Platform$file.sep);
+
+  updated_fn <- paste("exp1_tidy_", fn_filtered, ".rds", sep="")
+  df <- readRDS(target_path)$test %>% func_filter();
+  saveRDS(df, paste(result_dir, updated_fn, sep=.Platform$file.sep))
+  return(df)
+}
+```
