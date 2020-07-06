@@ -213,16 +213,12 @@ const fridge_generator = {
         })
         .join('')
     }
+    let word_array = '';
+    WORD_GROUPS.forEach(function(group_obj, i){
+      word_array = word_array + return_word_array(group_obj.words, group_obj.col)
+    })
     return `<div class = "fix-box"> <div class="fridge">` +
-      // return_word_array(wordArray1, "magpie-view-button green") +
-      // return_word_array(wordArray2, "red") + return_word_array(wordArray3, "blue") + return_word_array(wordArray4, "purple") +
-      // return_word_array(wordArray5, "orange") +
-      return_word_array(word_groups[0].words, "magpie-view-button green") +
-      return_word_array(word_groups[1].words, word_groups[1].col) +
-      return_word_array(word_groups[2].words, word_groups[2].col) +
-      return_word_array(word_groups[3].words, word_groups[3].col) +
-      return_word_array(word_groups[4].words, word_groups[4].col) +
-      return_word_array(word_groups[5].words, word_groups[5].col) +
+      word_array +
       `</div>
       <br><br/>
       <div class ="sentence selected1" style = "font-size: 20px"> Built sentence:

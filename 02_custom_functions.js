@@ -219,7 +219,7 @@ showAnimationInTrial = function (CT, html_answers, progress_bar = true) {
 // new for fridge views//MALIN FRIDGE
 checkBuildSentence = function (sentenceArray, poss_next, button2Toggle) {
   let verbs = GRAMMAR_VAR['V'].concat(GRAMMAR_VAR['V_I']);
-  let has_block = sentenceArray.some(item => ['block', 'blocks'].includes(item));
+  let has_block = sentenceArray.some(item => item.includes('block'));
   let has_verb = sentenceArray.some(item => verbs.includes(item));
   let next_is_conj =  GRAMMAR_VAR["CONJ"].every(item => poss_next.includes(item));
   let last_is_either = _.last(sentenceArray) == "either";
@@ -242,18 +242,27 @@ update_clickables = function (last_selected, all_selected, submitted=false) {
   if (submitted) {
     return [];
   } else {
-    let poss_words = shownNext(last_selected);
-    poss_words.forEach(function (word) {
+    let poss_words = shownNext(last_selected, all_selected.join(" "));
+    let c1 = BLOCK_COLS.test[0];
+    let c2 = BLOCK_COLS.test[1];
+    let idx_c1 = -1; let idx_c2 = -1;
+    poss_words.forEach(function (word, i) {
       word = word.replace(/\s/g, '');
       $("#" + word)
       .toggleClass('not-clickable');
+      if(word.includes(c1)) {
+        idx_c1 = i
+      }
+      if(word.includes(c2)){
+        idx_c2 = i
+      }
     });
-    let c1 = BLOCK_COLS.test[0];
-    let c2 = BLOCK_COLS.test[1];
-    let col_unclickable = poss_words.includes(c1) && poss_words.includes(c2) ?
-      (all_selected.includes(c1) ? c1 : (all_selected.includes(c2) ? c2 : '')) : '';
+    let col_unclickable = idx_c1 != -1 && idx_c2 != -1 ?
+      (_.some(all_selected, function(words){return words.includes(c1)}) ? poss_words[idx_c1] :
+      (_.some(all_selected, function(words){return words.includes(c2)}) ? poss_words[idx_c2] : '')) : '';
     if(col_unclickable != '') {
-      $("#" + col_unclickable).toggleClass('not-clickable');
+      let id = col_unclickable.replace(/\s/g, '');
+      $("#" + id).toggleClass('not-clickable');
     }
     poss_words = _.without(poss_words, col_unclickable);
     return poss_words

@@ -1,74 +1,50 @@
 // let _ = require('../node_modules/underscore/underscore.js')
 
-let GRAMMAR_VAR = {
-  'DET_N': ['neither', 'nor', 'either'],
-  'COL': ['green', 'blue'],
-  'CONJ': ['and', 'but', 'because of'],
-  'MOD': ['probably', 'might', 'defenitely', 'maybe', 'also', 'only'],
-  'V_I': ['fall'],
-  'V': ['falls'],
-  'V_AUX_I': ['make', 'cause'],
-  'V_AUX': ['makes', 'causes'],
-  'AUX': ['will', 'does']
-}
-// mapping from token or placeholder (refers to all tokens of the placeholder)
-// to list of words/placeholders that will be visible after the key token was
-// selected
-let GRAMMAR_RULE = {
-  'S': ['MOD', 'if', 'the', 'both', 'DET_N'], //start symbol
-  'MOD': ['the', 'both', 'if', 'V_AUX', 'V_AUX_I', 'V', 'V_I', 'MOD', 'not', 'AUX'],
-  'the': ['COL'],
-  'if': ['the', 'and'],
-  'DET_N': ['the', 'both'],
-  'COL': ['block', 'nor', 'CONJ', 'or'],
-  'both': ['blocks', 'the'],
-  'blocks': ['will', 'fall', 'MOD'],
-  'block': ['to', 'AUX', 'nor', 'V', 'V_AUX', 'V_I', 'MOD', 'CONJ', 'or'],
-  'AUX': ['MOD', 'not', 'V_I', 'V_AUX_I', 'both'],
-  'not': ['V_I', 'V_AUX_I', 'the'],
-  'and': ['the', 'MOD', 'V_AUX', 'V_AUX_I'],
-  'but': ['not', 'the'],
-  'V_I': ['CONJ', 'the', 'also', 'nor', 'if', 'either', 'or'],
-  'V': ['CONJ', 'the', 'also', 'if', 'or'],
-  'V_AUX_I': ['the'],
-  'V_AUX': ['the'],
-  'or': ['the', 'both'],
-  'to': ['fall'],
-  'because of': ['the']
+const GRAMMAR_VAR = {
+  "SUBJ": ["the green block", "the blue block"],
+  "V": ["falls", "will fall", "will not fall", "might fall", "might not fall"],
+  'CONJ': ["but", "or", "if", "and", "only"], // recursive + non-recursive
+  'NEG': ["neither", "nor"],
+  'ADV': ["as well"]
 }
 
-let word_groups = [
+const GRAMMAR_RULE = {
+  'S': ["if", "only", "SUBJ", "neither"],
+  'SUBJ': ['CONJ', 'NEG', 'V'],
+  'V': ['CONJ', 'NEG', 'SUBJ', 'ADV'],
+  'CONJ': ['SUBJ', 'CONJ'],
+  'NEG': ['SUBJ']
+}
+// "to fall"
+// "will make"
+// "will cause"
+// "because of"
+
+let WORD_GROUPS = [
+  {words: GRAMMAR_VAR.SUBJ,
+   col: 'black'
+ },
   {
-    words: ["maybe", "might", "probably", 'defenitely', 'also', 'only'],
-    col: 'green'
-  },
-  {
-    words: ["not", "neither", "nor", "but", "either"],
-    col: 'red'
-  },
-  {
-    words: ["if", "and", "or",
-           "because of", "the"],
-    col: 'blue'
-  },
-  {
-    words: ["block", "blocks", "both"],
-    col: 'purple'
-  },
-  {
-    words: ["fall", "falls", "will", "cause", "causes", "make", "makes", "does",
-            "to"],
+    words: GRAMMAR_VAR.V,
     col: 'orange'
   },
   {
-    words: ["green", "blue"],
-    col: 'black'
+    words: GRAMMAR_VAR.CONJ,
+    col: 'blue'
+  },
+  {
+    words: GRAMMAR_VAR.NEG,
+    col: 'red'
+  },
+  {
+    words: GRAMMAR_VAR.ADV,
+    col: 'purple'
   }
 ];
-let WORDS = _.flatten(_.map(_.values(word_groups), 'words'));
+let WORDS = _.flatten(_.map(_.values(WORD_GROUPS), 'words'));
 // console.log(WORDS)
 
-let shownNext = function (last) {
+let shownNext = function (last, sentence='') {
   let arr = Object.keys(GRAMMAR_RULE)
     .includes(last) ? GRAMMAR_RULE[last] :
     Object.keys(GRAMMAR_VAR)
@@ -80,11 +56,15 @@ let shownNext = function (last) {
   let symbols = _.reduce(arr, function (acc, val) {
     return acc.concat(val == val.toLowerCase() ? val : GRAMMAR_VAR[val]);
   }, []);
+  // nor only possible if neither had been selected +
+  // neither/nor only selectable once!
+  symbols = !sentence.includes('neither') ? _.without(symbols, 'nor') :
+    _.without(symbols, 'neither');
+  symbols = sentence.includes('nor') ? _.without(symbols, 'nor') : symbols;
+  // neither only at beginning
+  symbols = sentence != '' ? _.without(symbols, 'neither') : symbols;
   return symbols
 }
 // let symbols = shownNext('S')
-// console.log(_.flatten(symbols))
 // let i = _.random(0, symbols.length - 1)
 // let selected = typeof(symbols[i]) == 'string' ? symbols[i] : _.sample(symbols[i]);
-// console.log('selected: ' + selected)
-// console.log(shownNext(selected))
