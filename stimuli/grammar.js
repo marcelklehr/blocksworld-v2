@@ -13,7 +13,8 @@ const GRAMMAR_RULE = {
   'SUBJ': ['CONJ', 'NEG', 'V'],
   'V': ['CONJ', 'NEG', 'SUBJ', 'ADV'],
   'CONJ': ['SUBJ', 'CONJ'],
-  'NEG': ['SUBJ']
+  'NEG': ['SUBJ'],
+  'ADV': ['CONJ']
 }
 // "to fall"
 // "will make"

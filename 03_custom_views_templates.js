@@ -275,6 +275,7 @@ const fridge_generator = {
           // Important for displaying sentence built so far
         sentence = sentence_array.toString()
           .replace(/,/g, " ");
+        config.data[CT].cost = sentence_array.length;
 
         checkBuildSentence(sentence_array, poss_next, submitbutton)
       });
@@ -291,6 +292,7 @@ const fridge_generator = {
           .append(sentence);
         //update for synchronizing with what is shown in textbox
         config.data[CT].sentence = sentence;
+        config.data[CT].cost = sentence_array.length;
         let value = _.last(sentence_array)
         let poss_next = update_clickables(value, sentence_array);
         checkBuildSentence(sentence_array, poss_next, submitbutton);
@@ -342,10 +344,13 @@ const fridge_generator = {
         response: [sentence, response2],
         response1: sentence,
         response2: response2,
+        response3: config.data[CT].cost,
+        response4: response2.split(" ").length,
         RT: RT
       };
+      console.log(trial_data.response3);
       trial_data = magpieUtils.view.save_config_trial_data(
-        _.omit(config.data[CT], 'sentence'),
+        _.omit(config.data[CT], 'sentence', 'cost'),
         trial_data
       );
       magpie.trial_data.push(trial_data);

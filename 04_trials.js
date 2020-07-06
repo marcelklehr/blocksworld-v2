@@ -357,7 +357,6 @@ let INSTRUCTION_SLIDER = [{
 let fridge_trials = _.cloneDeep(slider_rating_trials)
 fridge_trials = _.map(fridge_trials, function (trial, i) {
   ['question1', 'question2', 'question3', 'question4',
-   'response3', 'response4',
    'optionLeft', 'optionRight', 'expected'].forEach(function(key){
     trial[key] = '';
   });

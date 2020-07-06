@@ -222,9 +222,9 @@ checkBuildSentence = function (sentenceArray, poss_next, button2Toggle) {
   let has_block = sentenceArray.some(item => item.includes('block'));
   let has_verb = sentenceArray.some(item => verbs.includes(item));
   let next_is_conj =  GRAMMAR_VAR["CONJ"].every(item => poss_next.includes(item));
-  let last_is_either = _.last(sentenceArray) == "either";
+  let last_word = _.last(sentenceArray) == "as well";
   // console.log('a: ' + a + ', b: ' + b  + ', c: ' + c);
-  if(has_block && has_verb && (next_is_conj || last_is_either)) {
+  if(has_block && has_verb && (next_is_conj || last_word)) {
     toggleNextIfDone(button2Toggle, true);
   } else {
     button2Toggle.addClass("grid-button");
