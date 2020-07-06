@@ -10,7 +10,7 @@ const GRAMMAR_VAR = {
 
 const GRAMMAR_RULE = {
   'S': ["if", "only", "SUBJ", "neither"],
-  'SUBJ': ['CONJ', 'NEG', 'V'],
+  'SUBJ': ['NEG', 'V'],
   'V': ['CONJ', 'NEG', 'SUBJ', 'ADV'],
   'CONJ': ['SUBJ', 'CONJ'],
   'NEG': ['SUBJ'],
