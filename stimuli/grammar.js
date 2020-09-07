@@ -2,24 +2,20 @@
 
 const GRAMMAR_VAR = {
   "SUBJ": ["the green block", "the blue block"],
-  "V": ["falls", "will fall", "will not fall", "might fall", "might not fall"],
-  'CONJ': ["but", "or", "if", "and", "only"], // recursive + non-recursive
+  "V": ["falls", "does not fall", "fall"],
+  'CONJ': ["but", "if", "and"],
   'NEG': ["neither", "nor"],
-  'ADV': ["as well"]
+  'ADV': ["as well", "probably"]
 }
 
 const GRAMMAR_RULE = {
-  'S': ["if", "only", "SUBJ", "neither"],
-  'SUBJ': ['NEG', 'V'],
-  'V': ['CONJ', 'NEG', 'SUBJ', 'ADV'],
-  'CONJ': ['SUBJ', 'CONJ'],
+  'S': ["SUBJ", "neither", "if", "probably"],
+  'SUBJ': ['NEG', 'V', 'CONJ', "probably"],
+  'V': ['SUBJ', 'CONJ', 'NEG', 'ADV'],
+  'CONJ': ['SUBJ'],
   'NEG': ['SUBJ'],
-  'ADV': ['CONJ']
+  'ADV': ['SUBJ', 'V']
 }
-// "to fall"
-// "will make"
-// "will cause"
-// "because of"
 
 let WORD_GROUPS = [
   {words: GRAMMAR_VAR.SUBJ,
@@ -57,14 +53,28 @@ let shownNext = function (last, sentence='') {
   let symbols = _.reduce(arr, function (acc, val) {
     return acc.concat(val == val.toLowerCase() ? val : GRAMMAR_VAR[val]);
   }, []);
+  // special rules
+
   // nor only possible if neither had been selected +
   // neither/nor only selectable once!
   symbols = !sentence.includes('neither') ? _.without(symbols, 'nor') :
     _.without(symbols, 'neither');
   symbols = sentence.includes('nor') ? _.without(symbols, 'nor') : symbols;
+
   // neither only at beginning
   symbols = sentence != '' ? _.without(symbols, 'neither') : symbols;
+
+  // probably not after conjunctions
+  symbols = _.every(GRAMMAR_VAR.CONJ.concat(GRAMMAR_VAR.NEG), function(conj) {
+    return !sentence.includes(conj)
+  }) ? symbols : _.without(symbols, 'probably')
+
+  // conjunctions not after 'probably'
+  symbols = sentence.includes('probably') ? _.without(symbols, 'and', 'but', 'if') : symbols;
+
   return symbols
+
+
 }
 // let symbols = shownNext('S')
 // let i = _.random(0, symbols.length - 1)
