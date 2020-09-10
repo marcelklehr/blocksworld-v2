@@ -38,6 +38,59 @@ var color_vision_test = [
   }
 ]
 
+const color_vision_trials = [
+    {
+        picture: 'stimuli/img/color_vision_green_blue.png',
+        QUD: "What's the color of the block on the <b>lower</b> picture?",
+        option1: 'black',
+        option2: 'blue',
+        option3: 'green',
+        option4: 'grey',
+        option5: 'purple',
+        option6: 'red',
+        option7: 'yellow',
+        expected: 'blue'
+    },
+    {
+        picture: "stimuli/img/color_vision_green_blue.png",
+        QUD: "What's the color of the block on the <b>upper</b> picture?",
+        option1: 'black',
+        option2: 'blue',
+        option3: 'green',
+        option4: 'grey',
+        option5: 'purple',
+        option6: 'red',
+        option7: 'yellow',
+        expected: 'green'
+    },
+    {
+        picture: 'stimuli/img/color_vision_blue_green.png',
+        QUD: "What's the color of the block on the <b>lower</b> picture?",
+        option1: 'black',
+        option2: 'blue',
+        option3: 'green',
+        option4: 'grey',
+        option5: 'purple',
+        option6: 'red',
+        option7: 'yellow',
+        expected: 'green'
+    },
+    {
+        picture: "stimuli/img/color_vision_blue_green.png",
+        QUD: "What's the color of the block on the <b>upper</b> picture?",
+        option1: 'black',
+        option2: 'blue',
+        option3: 'green',
+        option4: 'grey',
+        option5: 'purple',
+        option6: 'red',
+        option7: 'yellow',
+        expected: 'blue'
+    }
+];
+
+
+
 // ----- TEST TRIALS PROBABILITIES (ex.1)---- //
 
 var slider_rating_trials = [

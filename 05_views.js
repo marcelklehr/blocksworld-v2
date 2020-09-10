@@ -258,6 +258,17 @@ const thanks = magpieViews.view_generator("thanks", {
   prolificConfirmText: "Press the button"
 });
 
+
+const dropdown_choice_custom = magpieViews.view_generator('dropdown_choice', {
+  trials: color_vision_trials.length,
+  name: "color-vision",
+  data: _.shuffle(color_vision_trials)
+}, {
+  stimulus_container_generator: dropdown_choice_generator.stimulus_container_gen,
+  answer_container_generator: dropdown_choice_generator.answer_container_gen,
+  handle_response_function: dropdown_choice_generator.handle_response_function
+});
+
 const sentence_choice_custom = magpieViews.view_generator("sentence_choice", {
   trials: color_vision_test.length,
   name: "color-vision",
