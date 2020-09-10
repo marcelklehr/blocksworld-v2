@@ -218,13 +218,13 @@ showAnimationInTrial = function (CT, html_answers, progress_bar = true) {
 
 // new for fridge views//MALIN FRIDGE
 checkBuildSentence = function (sentenceArray, poss_next, button2Toggle) {
-  let verbs = GRAMMAR_VAR['V'].concat(GRAMMAR_VAR['V_I']);
   let has_block = sentenceArray.some(item => item.includes('block'));
-  let has_verb = sentenceArray.some(item => verbs.includes(item));
-  let next_is_conj =  GRAMMAR_VAR["CONJ"].every(item => poss_next.includes(item));
-  let last_word = _.last(sentenceArray) == "as well";
+  let has_verb = sentenceArray.some(item => GRAMMAR_VAR['V'].includes(item));
+  // let next_is_conj =  GRAMMAR_VAR["CONJ"].every(item => poss_next.includes(item));
+  let last_word = _.last(sentenceArray);
   // console.log('a: ' + a + ', b: ' + b  + ', c: ' + c);
-  if(has_block && has_verb && (next_is_conj || last_word)) {
+  if(has_block && has_verb && !GRAMMAR_VAR['CONJ'].includes(last_word) &&
+      !GRAMMAR_VAR['SUBJ'].includes(last_word)) {
     toggleNextIfDone(button2Toggle, true);
   } else {
     button2Toggle.addClass("grid-button");

@@ -1,22 +1,27 @@
 // let _ = require('../node_modules/underscore/underscore.js')
 
+// map from type of words to actual words
 const GRAMMAR_VAR = {
   "SUBJ": ["the green block", "the blue block"],
-  "V": ["falls", "does not fall", "fall"],
+  "V": ["falls", "fall"],
   'CONJ': ["but", "if", "and"],
   'NEG': ["neither", "nor"],
-  'ADV': ["as well", "probably"]
+  'NOT': ["does not"],
+  'ADV1': ["as well"],
+  'ADV2': ["probably"]
 }
-
+// which words are clickable after which type of words
 const GRAMMAR_RULE = {
-  'S': ["SUBJ", "neither", "if", "probably"],
-  'SUBJ': ['NEG', 'V', 'CONJ', "probably"],
-  'V': ['SUBJ', 'CONJ', 'NEG', 'ADV'],
+  'S': ["SUBJ", "neither", "if", "ADV2"],
+  'SUBJ': ['NEG', 'V', 'CONJ', "ADV2", 'NOT'],
+  'V': ['SUBJ', 'CONJ', 'NEG', 'ADV1'],
   'CONJ': ['SUBJ'],
   'NEG': ['SUBJ'],
-  'ADV': ['SUBJ', 'V']
+  'NOT': ['fall'],
+  'ADV1': [],
+  'ADV2': ['SUBJ', 'V']
 }
-
+// each word must appear in this array to get a color
 let WORD_GROUPS = [
   {words: GRAMMAR_VAR.SUBJ,
    col: 'black'
@@ -30,11 +35,15 @@ let WORD_GROUPS = [
     col: 'blue'
   },
   {
-    words: GRAMMAR_VAR.NEG,
+    words: GRAMMAR_VAR.NEG.concat(GRAMMAR_VAR.NOT),
     col: 'red'
   },
   {
-    words: GRAMMAR_VAR.ADV,
+    words: GRAMMAR_VAR.ADV1,
+    col: 'light-blue'
+  },
+  {
+    words: GRAMMAR_VAR.ADV2,
     col: 'purple'
   }
 ];
@@ -49,7 +58,6 @@ let shownNext = function (last, sentence='') {
     GRAMMAR_RULE[_.filter(Object.keys(GRAMMAR_VAR), function (key) {
       return GRAMMAR_VAR[key].includes(last);
     })[0]];
-  //   console.log(arr)
   let symbols = _.reduce(arr, function (acc, val) {
     return acc.concat(val == val.toLowerCase() ? val : GRAMMAR_VAR[val]);
   }, []);

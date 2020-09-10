@@ -213,10 +213,11 @@ const fridge_generator = {
         })
         .join('')
     }
-    let word_array = '';
-    WORD_GROUPS.forEach(function(group_obj, i){
-      word_array = word_array + return_word_array(group_obj.words, group_obj.col)
-    })
+    // let word_array = '';
+    // WORD_GROUPS.forEach(function(group_obj, i){
+    //   word_array = word_array + return_word_array(group_obj.words, group_obj.col)
+    // })
+    let word_array = return_word_array(WORDS, 'light-blue')
     return `<div class = "fix-box"> <div class="fridge">` +
       word_array +
       `</div>

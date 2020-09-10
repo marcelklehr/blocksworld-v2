@@ -370,13 +370,13 @@ input[type="range"].replied::-webkit-slider-thumb {
     border-radius: 15px;
 }
 
-.purple{
+.light-blue{
   color: black;
   border: 3px solid #6B9AC4;
     border-radius: 15px;
 }
 
-.purple:hover {
+.light-blue:hover {
   background-color: #6B9AC4;
   color: white;
     border-radius: 15px;
