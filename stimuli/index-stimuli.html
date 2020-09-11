@@ -51,8 +51,8 @@
         stimulus = TrainStimuli.map_category[cond][id];
       } else if (MODE == "color-vision"){
         let ColorVisionStimuli = [];
-        id = _.sample([0, 1]);
         let stimuli = makeColorVisionStimuli();
+        id = _.sample(_.range(0, stimuli.length));
         stimulus = stimuli[id]
       } else if (MODE === "pretest"){
         let stimuli = pretestTrials();

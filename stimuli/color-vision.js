@@ -2,18 +2,19 @@ makeColorVisionStimuli = function(){
   let stimuli = [];
   let base = wall('w_center', SCENE.w/2, SCENE.h/2, PROPS.walls.w,
     PROPS.walls.h, {'render': {'fillStyle': cols.grey}})
-  let cols_blocks = cols.test_blocks;
-  let cols_distractors = [cols.darkgrey, cols.darkgrey]
+  let cols_blocks = cols.test_blocks.concat(cols.train_blocks);
 
   for(var trial=0; trial<cols_blocks.length; trial++) {
     let id = 'color' + trial;
     let col_block = cols_blocks[trial];
-    let col_dist = cols_distractors[trial];
+    let b = block(base.position.x, base.bounds.min.y, col_block,
+      'b' + trial, true)
 
-    let xBlock = block(base.position.x, base.bounds.min.y, col_dist,
-      'xb' + trial, true)
-    let b = blockOnBase(xBlock, -0.7, col_block, 'b' + trial, true)
-    stimuli.push({'objs': [base, xBlock, b], 'meta': ['', '', ''], id});
+    // second block
+    col_b2 = col_block == "#FFBC42" ? "#D81159" : col_block == "#D81159" ? "#FFBC42" : col_block;
+    let b2 = blockOnBase(b, 0.75, col_b2, 'b2' + trial, true)
+
+    stimuli.push({'objs': [base, b, b2], 'meta': ['', '', ''], id});
   }
   return stimuli
 }

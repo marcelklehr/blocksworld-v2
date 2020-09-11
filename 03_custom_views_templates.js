@@ -383,6 +383,7 @@ const dropdown_choice_generator = {
                    <option value=${config.data[CT].option4}>${config.data[CT].option4}</option>
                    <option value=${config.data[CT].option5}>${config.data[CT].option5}</option>
                    <option value=${config.data[CT].option6}>${config.data[CT].option6}</option>
+                   <option value=${config.data[CT].option7}>${config.data[CT].option7}</option>
                </select>
                ${question_right_part}
                </p>

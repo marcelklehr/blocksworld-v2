@@ -41,7 +41,7 @@ var color_vision_test = [
 const color_vision_trials = [
     {
         picture: 'stimuli/img/color_vision_green_blue.png',
-        QUD: "What's the color of the block on the <b>lower</b> picture?",
+        QUD: "What's the color of the <b>upper</b> block on the <b>lower</b> picture?",
         option1: 'black',
         option2: 'blue',
         option3: 'green',
@@ -53,7 +53,7 @@ const color_vision_trials = [
     },
     {
         picture: "stimuli/img/color_vision_green_blue.png",
-        QUD: "What's the color of the block on the <b>upper</b> picture?",
+        QUD: "What's the color of the <b>upper</b> block on the <b>upper</b> picture?",
         option1: 'black',
         option2: 'blue',
         option3: 'green',
@@ -65,7 +65,7 @@ const color_vision_trials = [
     },
     {
         picture: 'stimuli/img/color_vision_blue_green.png',
-        QUD: "What's the color of the block on the <b>lower</b> picture?",
+        QUD: "What's the color of the <b>upper</b> block on the <b>lower</b> picture?",
         option1: 'black',
         option2: 'blue',
         option3: 'green',
@@ -77,7 +77,7 @@ const color_vision_trials = [
     },
     {
         picture: "stimuli/img/color_vision_blue_green.png",
-        QUD: "What's the color of the block on the <b>upper</b> picture?",
+        QUD: "What's the color of the <b>upper</b> block on the <b>upper</b> picture?",
         option1: 'black',
         option2: 'blue',
         option3: 'green',
@@ -86,6 +86,78 @@ const color_vision_trials = [
         option6: 'red',
         option7: 'yellow',
         expected: 'blue'
+    },
+    {
+        picture: "stimuli/img/color_vision_blue.png",
+        QUD: "What's the color of the block on the picture?",
+        option1: 'black',
+        option2: 'blue',
+        option3: 'green',
+        option4: 'grey',
+        option5: 'purple',
+        option6: 'red',
+        option7: 'yellow',
+        expected: 'blue'
+    },
+    {
+        picture: "stimuli/img/color_vision_red.png",
+        QUD: "What's the color of the block on the picture?",
+        option1: 'black',
+        option2: 'blue',
+        option3: 'green',
+        option4: 'grey',
+        option5: 'purple',
+        option6: 'red',
+        option7: 'yellow',
+        expected: 'red'
+    },
+    {
+        picture: "stimuli/img/color_vision_green.png",
+        QUD: "What's the color of the block on the picture?",
+        option1: 'black',
+        option2: 'blue',
+        option3: 'green',
+        option4: 'grey',
+        option5: 'purple',
+        option6: 'red',
+        option7: 'yellow',
+        expected: 'green'
+    },
+    {
+        picture: "stimuli/img/color_vision_yellow.png",
+        QUD: "What's the color of the block on the picture?",
+        option1: 'black',
+        option2: 'blue',
+        option3: 'green',
+        option4: 'grey',
+        option5: 'purple',
+        option6: 'red',
+        option7: 'yellow',
+        expected: 'yellow'
+    },
+    {
+        picture: "stimuli/img/color_vision_red_yellow.png",
+        QUD: "What's the color of the <b>upper</b> block on the picture?",
+        option1: 'black',
+        option2: 'blue',
+        option3: 'green',
+        option4: 'grey',
+        option5: 'purple',
+        option6: 'red',
+        option7: 'yellow',
+        expected: 'red'
+    },
+    {
+        picture: "stimuli/img/color_vision_yellow_red.png",
+        QUD: "What's the color of the <b>upper</b> block on the picture?",
+        option1: 'black',
+        option2: 'blue',
+        option3: 'green',
+        option4: 'grey',
+        option5: 'purple',
+        option6: 'red',
+        option7: 'yellow',
+        expected: 'yellow'
     }
 ];
 
