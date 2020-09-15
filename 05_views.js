@@ -163,8 +163,7 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
   title: "Instructions Test Phase",
   text: `Great - we'll now proceed to the test phase of the experiment.
           Again, you will be shown scenes of different block arrangements.
-          However, this time, we ask you to <b>build a sentence</b> that, in your
-          eyes, <b>best describes</b> what you think will happen in the picture.
+          However, this time, we ask you to <b>build a sentence</b> that you think is the <b>most natural</b> and <b>most informative</b> utterance to describe what you think happens in the scene.
           <br />
           <br />
           <b>A few things to note</b>:

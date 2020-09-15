@@ -46,6 +46,6 @@ const BLOCK_COLS_SHORT = {
 
 const COLORS_BALL = {
   'test': cols.darkred,
-  'train': [cols.turquois, cols.blue, cols.red, cols.yellow, cols.pinkish,
+  'train': [cols.turquois, cols.royal, cols.blue, cols.yellow, cols.pinkish,
     cols.orange, cols.purple]
   };

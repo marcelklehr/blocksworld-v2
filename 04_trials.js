@@ -391,7 +391,7 @@ train_ids
   .forEach(function (id) {
     let comment = ''
     if(id == 'ssw0') {comment = 'Note: the red block falls off another block.'}
-    else if(id == 'ssw1') {comment = 'Note: the yellow block neither falls off a platform nor off another block.'}
+    else if(id == 'ssw1') {comment = 'Note: the yellow block neither topples over nor does it fall off a platform/another block.'}
     let data = {
       QUD: 'Which block(s) do you think will fall? Click on RUN to see!',
       id: id,
@@ -482,7 +482,7 @@ fridge_trials = _.map(fridge_trials, function (trial, i) {
    'optionLeft', 'optionRight', 'expected'].forEach(function(key){
     trial[key] = '';
   });
-  trial.QUD = "How would you most naturally describe the following scene?";
+  trial.QUD = "What do you think is the most natural and informative description <br/> of the following scene?";
   trial.sentence = "";
   trial = _.omit(trial, ['icon1', 'icon2', 'icon3', 'icon4']);
   return trial
