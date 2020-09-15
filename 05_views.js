@@ -54,7 +54,7 @@ const instructions_color_vision = magpieViews.view_generator("instructions", {
          <br />
          <br />
          The experiment consists of two phases, a <b>training</b> and a <b>testing</b> phase.
-         In total, you will need about <b>15-20 minutes</b> to finish it.
+         In total, you will need about <b>15 minutes</b> to finish it.
          <br/>
          <br/>
          We will start the training phase with a few simple questions concerning
