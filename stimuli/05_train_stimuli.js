@@ -92,7 +92,7 @@ trials_ramp = function(){
 
 trials_uncertain = function(){
   let priors = {'uncertain0': ["uncertainL", "uncertainH"],
-                'uncertain1': ["uncertainH", "uncertainL"],
+                'uncertain1': ["uncertainL", "uncertainH"],
                 'uncertain2': ['uncertainH', 'uncertainH'],
                 'uncertain3': ['uncertainL', 'uncertainL']};
   let dir = {'uncertain0': ['horizontal', 'vertical'],

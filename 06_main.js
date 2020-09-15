@@ -18,23 +18,25 @@ $("document")
       views_seq: [
       intro,
       instructions_color_vision,
-      sentence_choice_custom,
+      dropdown_choice_custom,
       instructions_general,
       instructions_train,
       animation_view,
+
+      // // Experiment 1
       // instruction_slider_example,
       // multiple_slider_train,
+      // instructions_test,
+      // multiple_slider,
+
+      // Experiment 2
       instructions_fridge,
       fridge_train,
       instructions_fridge_reminder,
-      // instructions_test,
       fridge_view,
-      // multiple_slider,
+
       post_test,
       thanks
-      // slider_rating_pretest,
-      // instructions_pretest,
-      // instructions_train_pretest,
     ],
       // Here, you can specify all information for the deployment
       deploy: {

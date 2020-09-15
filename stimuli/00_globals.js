@@ -7,8 +7,8 @@ var Engine = Matter.Engine,
     Events = Matter.Events;
 
 cols = {
-      'red': '#E74C3C',
-      'strong_red': '#ff0000',
+      'pink_red': '#E74C3C',
+      'red': '#ff0000',
       'turquois': '#00c9cc',
       'blue': '#2471A3',
       'royal': '#0496FF',
@@ -24,28 +24,28 @@ cols = {
       'black': '#191817',
       'olive': '#53553B',
       'orange': '#FF9B52',
-      'yellow': '#FFC966',
+      'lightyellow': '#FFC966',
       'bordeaux': '#D81159',
-      'darkyellow': '#FFBC42',
+      'yellow': '#FFBC42',
       'darkgreen': '#119533',
       'darkred': '#8F2D56',
       'sienna': '#A0522D'
     };
 cols.plank = cols.blue
 cols.test_blocks = [cols.royal, cols.green];
-cols.train_blocks = [cols.bordeaux, cols.darkyellow];
+cols.train_blocks = [cols.red, cols.yellow];
+
+const BLOCK_COLS = {
+  test: ['blue', 'green'],
+  train: ['red', 'yellow']
+}
+const BLOCK_COLS_SHORT = {
+  test: [BLOCK_COLS.test[0][0], BLOCK_COLS.test[1][0]],
+  train: [BLOCK_COLS.train[0][0], BLOCK_COLS.train[1][0]]
+}
 
 const COLORS_BALL = {
   'test': cols.darkred,
   'train': [cols.turquois, cols.blue, cols.red, cols.yellow, cols.pinkish,
-            cols.orange, cols.purple]
+    cols.orange, cols.purple]
   };
-
-let BLOCK_COLS = {
-  test: ['blue', 'green'],
-  train: ['red', 'yellow']
-}
-let BLOCK_COLS_SHORT = {
-  test: [BLOCK_COLS.test[0][0], BLOCK_COLS.test[1][0]],
-  train: [BLOCK_COLS.train[0][0], BLOCK_COLS.train[1][0]]
-}

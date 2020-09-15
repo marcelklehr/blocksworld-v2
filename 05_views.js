@@ -57,9 +57,9 @@ const instructions_color_vision = magpieViews.view_generator("instructions", {
          In total, you will need about <b>15-20 minutes</b> to finish it.
          <br/>
          <br/>
-         We will start the training phase with four simple questions concerning
-         the color of the blocks we will show you. Please click on <b>CONITINUE</b>
-         to proceed with the questions.`,
+         We will start the training phase with a few simple questions concerning
+         the color of the blocks that we will show you in the experiment.
+         Please click on <b>CONITINUE</b> to proceed with the questions.`,
   buttonText: "continue"
 });
 
@@ -69,8 +69,9 @@ const instructions_general = magpieViews.view_generator("instructions", {
   title: "General Instructions",
   text: `We will now start the actual training phase which consists of <b>15</b>
          trials. You will see block arrangements similar to those you will be
-         shown later in the test phase, such that you are able to develop
-         intuitions about the physical properties and get familiar with the stimuli.
+         shown later in the test phase, such that you are able to <b>develop
+         intuitions</b> about the <b>physical properties</b> and get familiar
+         with the stimuli.
          <br/>
          <br/>
          <b>Please note</b>:
@@ -86,38 +87,41 @@ const instructions_train = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_train",
   title: "Instructions Training",
-  text: `For each presented scene you will be asked to <b>indicate whether you think
-        that most likely both, none or respectively only one of the
-         colored blocks will fall</b>. For this, we ask you to click on the button
-         with the respective icon.
-         <br />
-         A falling block is represented by a skewed rectangle
-        and a resting block that <i>does not fall</i> is represented by a rectangle
-        with a line below. Here is an exemplary icon for the event:
-        <br/>
-        <i>The <b>green</b> block <b>falls</b>, but the <b>yellow</b> block
-        <b>does not fall</b></i>.
-        <br/>
-        <br/>
-        <img src='stimuli/img/icons/green.png'/>
-        <img src='stimuli/img/icons/not-yellow.png' />
-         <br/>
-         <br/>
-         A block is considered to <b><i>fall</i></b> as soon as it <b>topples
-         over</b> or <b>drops</b> from a platform or from another block.</b>
-         <br/>
-         The colored blocks represent common toy blocks <b>without</b> any
-         <i>special or unexpected</i> properties. The different colors do
-         <b>not have</b> any meaning, they are just used to distinguish them.
-             <br />
-             <br />
-         After you selected one of the four buttons (which will make their
-         border turn green), click on <b>RUN</b> to see what will
-         actually happen. The button of the event that occurred will turn light
-         green and if you were wrong, the button you selected will turn
-         red.
-         <br/>
-         Then, you can proceed to the next trial by clicking on <b>NEXT</b>.`,
+  text: `For each presented scene of block arrangements, imagine someone is
+  putting the colored blocks at the positions where you see them and releases
+  his or her hand. We will ask you to <b>indicate whether you think that most
+  likely both, none or respectively only one of two colored blocks will fall</b>
+  (there may be other blocks with different colors than the two colored blocks
+  asked for).
+  To indicate your beliefs, please click on the button with the respective icon.
+  <br />
+  A falling block is represented by a skewed rectangle and a resting block that
+  <i>does not fall</i> is represented by a rectangle with a line below.
+  Here is an exemplary icon for the event:
+  <br/>
+  <i>The <b>green</b> block <b>falls</b>, but the <b>yellow</b> block
+  <b>does not fall</b></i>.
+  <br/>
+  <br/>
+  <img src='stimuli/img/icons/green.png'/>
+  <img src='stimuli/img/icons/not-yellow.png' />
+  <br/>
+  <br/>
+  A block is considered to <b><i>fall</i></b> as soon as it <b>topples
+  over</b> or <b>drops</b> from a platform or from another block.</b>
+  <br/>
+  The colored blocks represent common toy blocks <b>without</b> any
+  <i>special or unexpected</i> properties. The different colors do
+  <b>not have</b> any meaning, they are just used to distinguish them.
+     <br />
+     <br />
+  After you selected one of the four buttons (which will make their
+  border turn green), click on <b>RUN</b> to see what will
+  actually happen. The button of the event that occurred will turn light
+  green and if you were wrong, the button you selected will turn
+  red.
+  <br/>
+  After that, you will be able to proceed to the next trial by clicking on <b>NEXT</b>.`,
   buttonText: "CONTINUE"
 });
 
@@ -134,9 +138,9 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   the more you should position the corresponding slider towards the
   <b>right end</b> (<i>certain</i>/1) and the more certain you are that it
   <b>will not</b> occur, the more you should position its slider towards the
-  <b>left end</b> (<i>impossible</i>/0).
+  <b>left end</b> (<i>will not happen</i>).
   <br />
-  When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider in the center, around 0.50.
+  When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider somewhere close to the center around 0.50.
   <br />
   <br />
   Note, that your estimates <b>may</b>, but <b>do not have to</b> sum up to 1.
@@ -174,7 +178,7 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
           <b>3</b>. Note that you always have the possibility to <b>make corrections</b> by clicking on <b>DELETE LAST WORD</b> in the lower right of the screen.
           <br />
           <b>4</b>. After you have built the sentence by concatenation of the available
-          words (shown word by word in a box in the lower left), click on <b>SUBMIT SENTECE</b> to continue.
+          words (shown word by word in a box in the lower left), click on <b>SUBMIT SENTECE</b> to continue (not clickable if sentence isn't grammatical).
           <br />
           <b>5</b>. If you think that a different sentence, that you couldn't built with the available words, would describe the scene more naturally, click on <b>USE MY OWN WORDS</b> and type it into the box that will appear below the picture.
           By clicking on <b>NEXT SCENE</b>, your sentence <b>will be submitted and</b>
@@ -183,7 +187,7 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
           Otherwise, click on <b>NEXT SCENE</b> right away to continue straight with the next trial.
           <br />
           <br />
-          Before we start with the test phase, we will first show you an example next.`,
+          There will be one example trial next before we start with the actual test phase.`,
   buttonText: "continue with example trial"
 });
 
@@ -224,17 +228,17 @@ const instructions_test = magpieViews.view_generator("instructions", {
 const instructions_fridge_reminder = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_fridge_reminder",
-  title: "Instructions Test Phase",
-  text: `<b>Two little reminders before we finally start</b>:
-    <br/>
-    <br/>
-    <b>1</b>. A block is considered to <b><i>fall</i> as soon as it <i>drops</i>
+  title: "Please Remember",
+  text: `<b>1</b>. A block is considered to <b><i>fall</i> as soon as it <i>drops</i>
     from a platform or from another block or when it simply <i>topples over</i></b> -
     that is, a block does not necessarily need to fall <i>to the ground</i> in
     order to count as falling.
     <br/>
     <b>2</b>. The colored blocks all have <b>the same properties</b>; the colors
     are only used to distinguish them.
+    <br/>
+    <b>3</b>. The blocks represent common toy blocks <b>without</b> any
+    <i>special or unexpected</i> properties.
     </br>
     </br>
     We will now start with the test phase which comprises <b>14</b> scenes in total.`,

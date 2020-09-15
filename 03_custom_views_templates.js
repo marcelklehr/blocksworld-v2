@@ -70,6 +70,8 @@ const animation_view = {
           id_bttn_selected !== id_button_correct ?
             $('#' + id_bttn_selected)
             .addClass('incorrect') : null;
+
+          $('#comment').append(SHUFFLED_TRAIN_TRIALS[CT].comment)
         }
       });
 
@@ -109,7 +111,7 @@ const multi_slider_generator = {
 
   answer_container_gen: function (config, CT) {
     return htmlSliderAnswers(config.data[CT]) +
-      `<button id='buttonNext' class='grid-button magpie-view-button'>Next scene</button>`;
+      `<button id='smallMarginNextButton' class='grid-button magpie-view-button'>Next scene</button>`;
   },
 
   handle_response_function: function (
@@ -121,7 +123,7 @@ const multi_slider_generator = {
   ) {
     $(".magpie-view")
       .append(answer_container_generator(config, CT));
-    let button = $("#buttonNext");
+    let button = $("#smallMarginNextButton");
     // function for debugging - if "y" is pressed, the slider will change
     if (DEBUG) {
       addKeyToMoveSliders(button);
@@ -146,7 +148,7 @@ const multi_slider_generator = {
   },
 
   example_text_container_gen: function(config, CT){
-    return `<div class='magpie-view'>
+    return `<div class='magpie-view smallMarginDiv'>
               <h1 class='magpie-view-title'>Slider Example</h1>
               <section class="magpie-text-container">
                   <p class="magpie-view-text">${config.data[CT].QUD}</p>
@@ -155,12 +157,12 @@ const multi_slider_generator = {
   },
   example_answer_container_gen: function (config, CT) {
     return htmlSliderAnswers(config.data[CT], ["55", "50", "5", "5"]) +
-    `<div class='magpie-view'>
+    `<div class='magpie-view smallMarginDiv'>
               <section class="magpie-text-container">
                   <p class="magpie-view-text">${config.data[CT].question}</p>
               </section>
       </div>
-      <button id='buttonNext' class='magpie-view-button'>Continue</button>`;
+      <button id='smallMarginNextButton' class=magpie-view-button small-margin-button>Continue</button>`;
   },
   example_handle_response_function: function(
     config,
@@ -176,7 +178,7 @@ const multi_slider_generator = {
       document.getElementById("response" + i).disabled = true;
     });
 
-    $("#buttonNext").on("click", function () {
+    $("#smallMarginNextButton").on("click", function () {
       magpie.findNextView();
     });
   }
@@ -199,11 +201,11 @@ const fridge_generator = {
   answer_container_gen: function (config, CT) {
 
     let start_words = _.flatten(shownNext('S'));
-    function return_word_array(array, color) {
+    function return_word_array(array, class_btn) {
       return array.map((word, index) => {
           let clickable = start_words.includes(word) ? ' ' : ' not-clickable ';
           return (
-            `<div class="word ` + color + clickable + `"id=` +
+            `<div class="word ` + class_btn + clickable + `"id=` +
             word.replace(/\s/g, '') + ` >
             <p> ` +
             word +
@@ -217,7 +219,7 @@ const fridge_generator = {
     // WORD_GROUPS.forEach(function(group_obj, i){
     //   word_array = word_array + return_word_array(group_obj.words, group_obj.col)
     // })
-    let word_array = return_word_array(WORDS, 'light-blue')
+    let word_array = return_word_array(WORDS, 'word-button')
     return `<div class = "fix-box"> <div class="fridge">` +
       word_array +
       `</div>

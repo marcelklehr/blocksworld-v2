@@ -42,6 +42,8 @@ const color_vision_trials = [
     {
         picture: 'stimuli/img/color_vision_green_blue.png',
         QUD: "What's the color of the <b>upper</b> block on the picture?",
+        question_left_part: "The upper block is ",
+        question_right_part: ".",
         option1: 'black',
         option2: 'blue',
         option3: 'green',
@@ -54,6 +56,8 @@ const color_vision_trials = [
     {
         picture: "stimuli/img/color_vision_blue_green.png",
         QUD: "What's the color of the <b>upper</b> block on the picture?",
+        question_left_part: "The upper block is ",
+        question_right_part: ".",
         option1: 'black',
         option2: 'blue',
         option3: 'green',
@@ -66,6 +70,8 @@ const color_vision_trials = [
     {
         picture: "stimuli/img/color_vision_blue.png",
         QUD: "What's the color of the block on the picture?",
+        question_left_part: "The block is ",
+        question_right_part: ".",
         option1: 'black',
         option2: 'blue',
         option3: 'green',
@@ -78,6 +84,8 @@ const color_vision_trials = [
     {
         picture: "stimuli/img/color_vision_red.png",
         QUD: "What's the color of the block on the picture?",
+        question_left_part: "The block is ",
+        question_right_part: ".",
         option1: 'black',
         option2: 'blue',
         option3: 'green',
@@ -90,6 +98,8 @@ const color_vision_trials = [
     {
         picture: "stimuli/img/color_vision_green.png",
         QUD: "What's the color of the block on the picture?",
+        question_left_part: "The block is ",
+        question_right_part: ".",
         option1: 'black',
         option2: 'blue',
         option3: 'green',
@@ -102,6 +112,8 @@ const color_vision_trials = [
     {
         picture: "stimuli/img/color_vision_yellow.png",
         QUD: "What's the color of the block on the picture?",
+        question_left_part: "The block is ",
+        question_right_part: ".",
         option1: 'black',
         option2: 'blue',
         option3: 'green',
@@ -114,6 +126,8 @@ const color_vision_trials = [
     {
         picture: "stimuli/img/color_vision_red_yellow.png",
         QUD: "What's the color of the <b>upper</b> block on the picture?",
+        question_left_part: "The upper block is ",
+        question_right_part: ".",
         option1: 'black',
         option2: 'blue',
         option3: 'green',
@@ -126,6 +140,8 @@ const color_vision_trials = [
     {
         picture: "stimuli/img/color_vision_yellow_red.png",
         QUD: "What's the color of the <b>upper</b> block on the picture?",
+        question_left_part: "The upper block is ",
+        question_right_part: ".",
         option1: 'black',
         option2: 'blue',
         option3: 'green',
@@ -373,6 +389,9 @@ let TRAIN_TRIALS = [];
 let train_ids = _.map(TrainStimuli.list_all, 'id');
 train_ids
   .forEach(function (id) {
+    let comment = ''
+    if(id == 'ssw0') {comment = 'Note: the red block falls off another block.'}
+    else if(id == 'ssw1') {comment = 'Note: the yellow block neither falls off a platform nor off another block.'}
     let data = {
       QUD: 'Which block(s) do you think will fall? Click on RUN to see!',
       id: id,
@@ -389,12 +408,16 @@ train_ids
       optionLeft: '',
       optionRight: '',
       group: '',
-      picture: ''
+      picture: '',
+      comment: comment
     };
     TRAIN_TRIALS.push(data);
   });
 
-// one of the training trials is used with sliders/fridge view as in test phase instead of buttons
+
+
+// one of the training trials is used with sliders/fridge view as in test phase
+// instead of buttons
 let id_slider = 'ind2';
 TRAIN_SLIDER_TRIALS = _.filter(TRAIN_TRIALS, function(trial){
   return trial.id == id_slider
@@ -434,18 +457,16 @@ let INSTRUCTION_SLIDER = [{
   <b>right end</b> (<i>will happen</i>) and the more certain you are that it
   <b>will not</b> occur, the more you should position its slider towards the
   <b>left end</b> (<i>will not happen</i>).
-  <br />
-  When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider in the center, around 0.5. Here is an example:
-  `,
-
-  question: `The position of these sliders indicate that you are pretty <b>certain</b> that the <b>red
-  block falls</b>, but <b>rather uncertain whether or not</b> the <b>yellow
-  block also falls</b>:
+  When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider in the center, around 0.5.
   <br/>
-  Both events were the <i>red block does not fall</i> are rated as being <i>very unlikely</i> (lower sliders) whereas one event were the <i>yellow block falls</i> was rated with a <i>moderate value</i> (upper left, 0.55) but also an event were the <i>yellow block does not fall</i> got a <i>similar high rating</i> (upper right, 0.5).
   <br />
-  Note, that your estimates <b>do not necessarily</b> have to <i>sum to 1</i>.
-  `
+  Here is an example which indicates that you are quite <b>certain</b> that the <b>red</b>
+  block <b>will fall</b> (2 lower sliders where <i>red does not fall</i> rated <i>unlikely</i>), but <b>uncertain</b> whether or not the <b>yellow</b> block falls (2 upper sliders where red falls and yellow falls/does not fall have a <i>similar, moderate value</i>).
+  <br />
+  `,
+  question: `Note that your estimates <b>do not necessarily</b> have to <i>sum to 1</i>
+  as we are interested in your ratings relative to each other. Also note that you
+  will <b>not</b> get feedback about what happens anymore.`
   // question: `Alternatively, the <b>same beliefs</b> can also be represented by setting
   // <b>the upper two sliders to roughly 0.50</b> and the <b>lower two sliders</b>
   // again to <b>small values near 0</b>.

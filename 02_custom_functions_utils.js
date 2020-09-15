@@ -124,7 +124,8 @@ htmlButtonAnswers = function () {
     `" class="unselected styled-button">` + id2IconTrain.c + `</button>
     <div class="divider"/>
     <button id="none" class="unselected styled-button">` + id2IconTrain.none + `</button>
-  </bttns>`;
+  </bttns>
+  <p id=comment class=comment></p>`;
 }
 
 htmlRunNextButtons = function () {

@@ -10,10 +10,16 @@ makeColorVisionStimuli = function(){
       'b' + trial, true)
 
     // second block
-    // col_b2 = col_block == "#FFBC42" ? "#D81159" : col_block == "#D81159" ? "#FFBC42" : col_block;
-    // col_b2 = col_block == "#0496FF" ? "#28B463" : col_block == "#28B463" ? "#0496FF" : col_block;
-    // let b2 = blockOnBase(b, 0.75, col_b2, 'b2' + trial, true)
-    stimuli.push({'objs': [base, b], 'meta': ['', '', ''], id});
+    let cb = col_block
+    let col_b2 = cb == cols.train_blocks[0] ? cols.train_blocks[1] :
+      cb == cols.train_blocks[1] ? cols.train_blocks[0] :
+      cb == cols.test_blocks[0] ? cols.test_blocks[1] :
+      cb == cols.test_blocks[1] ? cols.test_blocks[0] : cols.black;
+    let b2 = blockOnBase(b, 0.75, col_b2, 'b2' + trial, true)
+
+    // stimuli.push({'objs': [base, b], 'meta': ['', '', ''], id});
+    stimuli.push({'objs': [base, b, b2], 'meta': ['', '', ''], id});
+
   }
   return stimuli
 }
