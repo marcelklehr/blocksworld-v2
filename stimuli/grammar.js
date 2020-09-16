@@ -19,7 +19,7 @@ const GRAMMAR_RULE = {
   'NEG': ['SUBJ'],
   'NOT': ['fall'],
   'ADV1': [],
-  'ADV2': ['SUBJ', 'V']
+  'ADV2': ['SUBJ', 'V', 'NOT']
 }
 // each word must appear in this array to get a color
 let WORD_GROUPS = [

@@ -198,7 +198,7 @@ train_ids
   .forEach(function (id) {
     let comment = ''
     if(id == 'ssw0') {comment = 'Note: the red block falls off another block.'}
-    else if(id == 'ssw1') {comment = 'Note: the yellow block neither topples over nor does it fall off a platform/another block.'}
+    else if(id == 'ssw1') {comment = 'Note: the yellow block neither topples over nor does it fall off a platform or another block.'}
     let data = {
       QUD: 'Which block(s) do you think will fall? Click on RUN to see!',
       id: id,

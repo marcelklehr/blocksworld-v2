@@ -87,9 +87,9 @@ const instructions_train = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_train",
   title: "Instructions Training",
-  text: `For each presented scene of block arrangements, imagine someone is
-  putting the colored blocks at the positions where you see them and releases
-  his or her hand. We will ask you to <b>indicate whether you think that most
+  text: `Imagine each scene of block arrangements to capture the moment just after the
+  colored blocks were put at their positions.
+  We will ask you to <b>indicate whether you think that most
   likely both, none or respectively only one of two colored blocks will fall</b>
   (there may be other blocks with different colors than the two colored blocks
   asked for).
@@ -171,13 +171,12 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
           <b>1</b>. We ask you to concatenate words into a <b>grammatical sentence</b>
           by clicking on their corresponding buttons.
           <br />
-          <b>2</b>. At each position in the sentence, you can only select those words
-          whose buttons are <b>not greyed out</b>.
+          <b>2</b>. At each position in the sentence, you can only select words
+          on buttons that are highlighted in <b>orange</b>.
           <br/>
-          <b>3</b>. Note that you always have the possibility to <b>make corrections</b> by clicking on <b>DELETE LAST WORD</b> in the lower right of the screen.
+          <b>3</b>. You always have the possibility to <b>make corrections</b> by clicking on <b>DELETE LAST WORD</b> in the lower right of the screen.
           <br />
-          <b>4</b>. After you have built the sentence by concatenation of the available
-          words (shown word by word in a box in the lower left), click on <b>SUBMIT SENTECE</b> to continue (not clickable if sentence isn't grammatical).
+          <b>4</b>. After you have built the sentence (shown word by word in a box in the lower left), click on <b>SUBMIT SENTECE</b> to continue (not clickable if sentence isn't grammatical).
           <br />
           <b>5</b>. If you think that a different sentence, that you couldn't built with the available words, would describe the scene more naturally, click on <b>USE MY OWN WORDS</b> and type it into the box that will appear below the picture.
           By clicking on <b>NEXT SCENE</b>, your sentence <b>will be submitted and</b>
@@ -220,7 +219,7 @@ const instructions_test = magpieViews.view_generator("instructions", {
     are only used to distinguish them.
       </br>
       </br>
-    We will now start with the test phase which comprises <b>14</b> scenes in total.`,
+    We will now start with the test phase which comprises <b>18</b> scenes in total.`,
   buttonText: "start test phase"
 });
 
@@ -240,7 +239,7 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
     <i>special or unexpected</i> properties.
     </br>
     </br>
-    We will now start with the test phase which comprises <b>14</b> scenes in total.`,
+    We will now start with the test phase which comprises <b>18</b> scenes in total.`,
   buttonText: "start test phase"
 });
 
