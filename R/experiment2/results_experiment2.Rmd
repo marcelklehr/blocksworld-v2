@@ -11,11 +11,11 @@ library(here)
 library(tidyverse)
 source(here("R", "utils.R"))
 
-# data_dir <-  here("data", "test-runs")
-data_dir <- here("data", "prolific")
+data_dir <-  here("data", "test-runs")
+# data_dir <- here("data", "prolific")
 
-# result_dir <- here("data", "test-runs", "experiment2")
-result_dir <- here("data", "prolific", "results", "experiment2")
+result_dir <- here("data", "test-runs", "results", "experiment2")
+# result_dir <- here("data", "prolific", "results", "experiment2")
 
 fn <- "exp2_tidy.rds"
 
@@ -40,10 +40,12 @@ dat <- data %>% mutate(response = as.factor(response),
                        custom_response = as.factor(custom_response)) %>% 
   group_by(id)
 
-n_pages <- 14/2 # 2 test trials per page!
+n_pages <- 18/2 # 2 test trials per page!
 makePlot <- function(color_group){
+  df <-  dat  %>% filter(group == color_group) 
+  n_pages <- ceiling((df %>% nrow())/2)
   for (pa in seq(1, n_pages)){
-    p <- dat  %>% filter(group == color_group) %>% 
+    p <- df %>% 
       ggplot(aes(x=response)) +
       geom_bar() +
       facet_wrap_paginate(~id, nrow=2, ncol=1, page=pa, scales="free") + 
@@ -52,7 +54,8 @@ makePlot <- function(color_group){
       labs(y="#participants") +
       coord_flip() +
       theme_bw()
-      print(p)
+    # p
+    print(p)
   }
 }
 ```

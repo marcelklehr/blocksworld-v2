@@ -51,7 +51,8 @@ const color_vision_trials = [
         option5: 'purple',
         option6: 'red',
         option7: 'yellow',
-        expected: 'green'
+        expected: 'green',
+        id: 'green-blue'
     },
     {
         picture: "stimuli/img/color_vision_blue_green.png",
@@ -65,7 +66,8 @@ const color_vision_trials = [
         option5: 'purple',
         option6: 'red',
         option7: 'yellow',
-        expected: 'blue'
+        expected: 'blue',
+        id: 'blue-green'
     },
     {
         picture: "stimuli/img/color_vision_blue.png",
@@ -79,7 +81,8 @@ const color_vision_trials = [
         option5: 'purple',
         option6: 'red',
         option7: 'yellow',
-        expected: 'blue'
+        expected: 'blue',
+        id: 'blue'
     },
     {
         picture: "stimuli/img/color_vision_red.png",
@@ -93,7 +96,8 @@ const color_vision_trials = [
         option5: 'purple',
         option6: 'red',
         option7: 'yellow',
-        expected: 'red'
+        expected: 'red',
+        id: 'red'
     },
     {
         picture: "stimuli/img/color_vision_green.png",
@@ -107,7 +111,8 @@ const color_vision_trials = [
         option5: 'purple',
         option6: 'red',
         option7: 'yellow',
-        expected: 'green'
+        expected: 'green',
+        id: 'green'
     },
     {
         picture: "stimuli/img/color_vision_yellow.png",
@@ -121,7 +126,8 @@ const color_vision_trials = [
         option5: 'purple',
         option6: 'red',
         option7: 'yellow',
-        expected: 'yellow'
+        expected: 'yellow',
+        id: 'yellow'
     },
     {
         picture: "stimuli/img/color_vision_red_yellow.png",
@@ -135,7 +141,8 @@ const color_vision_trials = [
         option5: 'purple',
         option6: 'red',
         option7: 'yellow',
-        expected: 'red'
+        expected: 'red',
+        id: 'red-yellow'
     },
     {
         picture: "stimuli/img/color_vision_yellow_red.png",
@@ -149,7 +156,8 @@ const color_vision_trials = [
         option5: 'purple',
         option6: 'red',
         option7: 'yellow',
-        expected: 'yellow'
+        expected: 'yellow',
+        id: 'yellow-red'
     }
 ];
 
