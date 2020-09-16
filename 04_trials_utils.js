@@ -66,51 +66,36 @@ const SHUFFLED_TRAIN_TRIALS = training.trial_data;
 // const SHUFFLED_TRAIN_STIMULI = TrainStimuli.list_all;
 
 // TEST TRIALS //
-sequencePriors = function(){
-  return {
-    'if1': _.shuffle(['hh', 'uh', 'uu', 'lh']),
-    'if2': _.shuffle(['hl', 'hh', 'ul', 'uh', 'll']),
-    'independent': _.shuffle(['hl', 'hh', 'ul', 'uh', 'll'])
-  }
-}
-pseudoRandomTypes = function() {
-  // 4 x if1 trials - 5 x if2 trials - 5 x independent trials
-  let order = _.random(0, 1) == 0 ? ['independent', 'if1', 'if2'] :
-    ['if2', 'if1', 'independent'];
-  let trials = _.reduce(_.range(1,3), function(memo, val){
-    return memo.concat(memo);
-  }, order);
-  trials = trials.concat(_.without(order, 'if1'));
-  return trials
-}
-
-
+// generates sequence of test trial ids specified in PRIORS_IDS; if these
+// change, order needs to be adapted here!
 pseudoRandomTestTrials = function(){
-  let trial_types = pseudoRandomTypes();
-  let priors = sequencePriors();
-  TRIAL_TYPES.forEach(function(rel){
-    let conditions = priors[rel]
-    conditions.forEach(function(p, k){
-      let i = _.indexOf(trial_types, rel)
-      trial_types[i] = trial_types[i] + '_' + p
-    })
-  })
-  return trial_types
+  let trials = [];
+  _.map(PRIORS_IDS, function(arr, key){
+    arr = arr.slice(0,5); // take minimum nb of trials per type
+    trials.push(_.map(arr, function(p){return(key + "_" + p)}));
+  });
+  let order = _.shuffle(trials);
+  let ids = _.flatten(_.zip(order[0], order[1], order[2]));
+  // add missing trials
+  ids.push.apply(ids, ['if2_' + PRIORS_IDS.if2[5], 'if1_' + PRIORS_IDS.if1[5],
+                       'if2_' + PRIORS_IDS.if2[6]]);
+  return ids
 }
 
-// save trial data to make it accessible in magpie experiment
+// save trial data in specified pseudorandom order s.t. accessible in experiment
 let shuffleTestTrials = function(trial_data){
   let shuffled_trials = [];
-  let test_ids = _.map(trial_data, 'id');
-  const shuffled_test_ids = pseudoRandomTestTrials();
-  shuffled_test_ids.forEach(function(id){
-    let idx = _.lastIndexOf(test_ids, id)
+  let trial_ids = _.map(trial_data, 'id'); // data for all to be used test-ids
+  const ids_sequence = pseudoRandomTestTrials();
+
+  ids_sequence.forEach(function(id){
+    let idx = _.indexOf(trial_ids, id)
+    // let idx = _.lastIndexOf(test_ids, id)
     if(idx === -1) {
       let kind = id.slice(0, _.lastIndexOf(id, "_"));
       let ps = id.slice(_.lastIndexOf(id, "_") + 1);
-      console.warn('Test trial with id: ' + id + ' not found.')
+      console.warn('Test trial with id: ' + id + ' not found. All test-ids to be used must be specified in PRIORS_IDS and considered in function *pseudoRandomTestTrials*!')
     }
-    // console.log(id + ' ' + idx)
     shuffled_trials.push(trial_data[idx]);
   });
   return shuffled_trials;

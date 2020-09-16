@@ -28,16 +28,15 @@
       let cond, stimulus, id;
       if(MODE === "test") {
         let types = TRIAL_TYPES;
-        types = ['if2']
+        types = ['if1']
         // types = ['independent']
         cond = types[_.random(0, types.length-1)];
         let p1 = _.sample(['u', 'h', 'l']);
         let p2 = _.sample(['l', 'h', 'u']);
 
-        p1 = 'l'
-        p2 = 'l'
-        let p = p1 + p2;
-        id =  cond + '_' + p
+        p1 = 'u-L'
+        p2 = 'h'
+        id =  cond + '_' + p1 + p2;
         stimulus = TestStimuli[cond][id];
       } else if(MODE === "train") {
         let types = ["independent", "if1", "uncertain", "ramp", "if2"];

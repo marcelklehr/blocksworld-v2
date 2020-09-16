@@ -224,17 +224,15 @@ trials_ssw = function(){
 //   return data
 // }
 
-// generate all train stimuli!
-if (MODE === "train" || MODE === "experiment") {
-  TrainStimuli.map_category["ramp"] = trials_ramp();
-  TrainStimuli.map_category["uncertain"] = trials_uncertain();
-  TrainStimuli.map_category["if2"] = trials_ssw();
-  TrainStimuli.map_category["independent"] = trials_independent();
-  TrainStimuli.map_category["if1"] = trials_ac();
-  // put all train stimuli into array independent of kind
-  let train_keys = _.keys(TrainStimuli.map_category);
-  train_keys.forEach(function(kind){
-    let arr = _.values(TrainStimuli.map_category[kind]);
-    TrainStimuli.list_all = TrainStimuli.list_all.concat(arr);
-  });
-}
+// generate all train stimuli
+TrainStimuli.map_category["ramp"] = trials_ramp();
+TrainStimuli.map_category["uncertain"] = trials_uncertain();
+TrainStimuli.map_category["if2"] = trials_ssw();
+TrainStimuli.map_category["independent"] = trials_independent();
+TrainStimuli.map_category["if1"] = trials_ac();
+// put all train stimuli into array independent of kind
+let train_keys = _.keys(TrainStimuli.map_category);
+train_keys.forEach(function(kind){
+  let arr = _.values(TrainStimuli.map_category[kind]);
+  TrainStimuli.list_all = TrainStimuli.list_all.concat(arr);
+});

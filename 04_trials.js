@@ -37,7 +37,7 @@ var color_vision_test = [
     id: 'color-vision-blue-green'
   }
 ]
-
+// color vision with dropdown choice
 const color_vision_trials = [
     {
         picture: 'stimuli/img/color_vision_green_blue.png',
@@ -153,223 +153,32 @@ const color_vision_trials = [
     }
 ];
 
-
-
 // ----- TEST TRIALS PROBABILITIES (ex.1)---- //
+let test_ids = [];
+_.map(PRIORS_IDS, function(ids, key){
+    ids = ids.map(function(val){return key + "_" + val});
+    test_ids = test_ids.concat(ids)
+});
 
-var slider_rating_trials = [
-  {
-    picture: "stimuli/img/group/if1_lh.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "will not happen",
-    optionRight: "will happen",
-    expected: ''
-  },
-  {
-    picture: "stimuli/img/group/if1_uu.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "will not happen",
-    optionRight: "will happen",
-    expected: ''
-  },
-  {
-    picture: "stimuli/img/group/if1_uh.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "will not happen",
-    optionRight: "will happen",
-    expected: ''
-  },
-  {
-    picture: "stimuli/img/group/if1_hh.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "will not happen",
-    optionRight: "will happen",
-    expected: ''
-  },
-  {
-    picture: "stimuli/img/group/if2_ll.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "will not happen",
-    optionRight: "will happen",
-    expected: ''
-  },
-  {
-    picture: "stimuli/img/group/if2_ul.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "will not happen",
-    optionRight: "will happen",
-    expected: ''
-  },
-  {
-    picture: "stimuli/img/group/if2_hl.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "will not happen",
-    optionRight: "will happen",
-    expected: ''
-  },
-  {
-    picture: "stimuli/img/group/if2_uh.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "will not happen",
-    optionRight: "will happen",
-    expected: ''
-  },
-  {
-    picture: "stimuli/img/group/if2_hh.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "will not happen",
-    optionRight: "will happen",
-    expected: ''
-  },
-  {
-    picture: "stimuli/img/group/independent_ll.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "will not happen",
-    optionRight: "will happen",
-    expected: ''
-  },
-  {
-    picture: "stimuli/img/group/independent_ul.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "will not happen",
-    optionRight: "will happen",
-    expected: ''
-  },
-  {
-    picture: "stimuli/img/group/independent_uh.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "will not happen",
-    optionRight: "will happen",
-    expected: ''
-  },
-  {
-    picture: "stimuli/img/group/independent_hl.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "will not happen",
-    optionRight: "will happen",
-    expected: ''
-  },
-  {
-    picture: "stimuli/img/group/independent_hh.jpg",
-    QUD: "Please indicate how likely you think the represented events will occur.",
-    icon1: id2Icon.ac,
-    icon2: id2Icon.a,
-    icon3: id2Icon.c,
-    icon4: id2Icon.none,
-    question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-    question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-    question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-    question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-    optionLeft: "will not happen",
-    optionRight: "will happen",
-    expected: ''
-  }
-
-];
+var slider_rating_trials = [];
+test_ids.forEach(function(id) {
+    slider_rating_trials.push({
+      id: id,
+      picture: "stimuli/img/group/" + id + ".jpg",
+      QUD: "Please indicate how likely you think the represented events will occur.",
+      icon1: id2Icon.ac,
+      icon2: id2Icon.a,
+      icon3: id2Icon.c,
+      icon4: id2Icon.none,
+      question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
+      question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
+      question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
+      question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
+      optionLeft: "will not happen",
+      optionRight: "will happen",
+      expected: ''
+    });
+});
 // adapt path to pictures depending on colour group in each trial
 // add group and id separately
 let n = slider_rating_trials.length;
@@ -378,8 +187,6 @@ _.map(slider_rating_trials, function (trial) {
   let group = _.sample(["group1", "group2"]);
   trial.picture = trial.picture.replace("group", group);
   trial.group = group;
-  let id = trial.picture.split("/")
-  trial.id = id[id.length - 1].slice(0, -4);
 });
 
 // ----- TRAINING TRIALS (Buttons) for exp1 + exp2 ---- //
@@ -482,7 +289,7 @@ fridge_trials = _.map(fridge_trials, function (trial, i) {
    'optionLeft', 'optionRight', 'expected'].forEach(function(key){
     trial[key] = '';
   });
-  trial.QUD = "What do you think is the most natural and informative description <br/> of the following scene?";
+  trial.QUD = "Please build the utterance that for you is the most natural and informative <br/> description of the scene below.";
   trial.sentence = "";
   trial = _.omit(trial, ['icon1', 'icon2', 'icon3', 'icon4']);
   return trial

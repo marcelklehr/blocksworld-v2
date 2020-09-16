@@ -1,9 +1,9 @@
-const DEBUG = true;
+const DEBUG = false;
 // var MODE = "color-vision"
 // var MODE = "train"
-// var MODE = "test"
+var MODE = "test"
 // var MODE = "pretest"
-var MODE = "experiment"
+// var MODE = "experiment"
 
 const SCENE = {w: 800, h: 400};
 PROPS = {'blocks': {'w':40, 'h': 80},
@@ -35,9 +35,9 @@ let PRIOR = {
                  'uncertainL': 0.53, 'lowH': 0.6, 'low': 0.67, 'lowL': 0.70,
                 },
   'impossible': 1,
-  'conditions': ['high', 'uncertain', 'low']
+  'conditions': ['high', 'uncertain', 'low'],
+  'conditions_if': ['uncertainH', 'uncertainL']
 }
-
 
 // shift of ramp walls such that there is no edge
 let OVERLAP_SHIFT = {
@@ -65,7 +65,8 @@ let BASE_RAMP = {
 let DIST_EDGE = {'default': 5, 'low': 50};
 let SIMULATION = {'duration': 5000};
 
-
+// fine-grained uncertain priors, e.g. u-Ll/u-Hl do not need extra entry, they
+// shall be treated as their corresponding trial with a simple uncertain prior.
 let HORIZ_AC2 = {
   'll': ['horizontal', 'horizontal'], 'ul': ['vertical', 'horizontal'],
   'lu': ['vertical', 'horizontal'], 'uu': ['horizontal', 'horizontal'],
@@ -89,3 +90,12 @@ let HORIZ_AC1 = {
   'lh': ['horizontal', 'vertical'], 'hu': ['horizontal', 'vertical'],
   'lu': ['vertical', 'horizontal']
 }
+
+// ! These are all included test trial ids! TYPE: PRIORS //
+// If test trial ids are changed, updated pseudoRandomTestTrials function, to
+// get a reasonable sequence of trials (always dependent on exact trials used)
+const PRIORS_IDS = {
+  'if1': _.shuffle(['hh', 'uh', 'uu', 'lh', 'u-Lh', 'u-Hh']),
+  'if2': _.shuffle(['hl', 'hh', 'ul', 'uh', 'll', 'u-Ll', 'u-Hl']),
+  'independent': _.shuffle(['hl', 'hh', 'ul', 'uh', 'll'])
+};

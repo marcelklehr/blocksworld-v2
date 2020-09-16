@@ -94,17 +94,27 @@ makeTestStimuli = function(conditions, relations){
     for(var i=0; i<priors_all.length; i++){
       let priors = priors_all[i];
       let pb1 = priors[0]
-      let pb2 = priors[1]
-      let id = rel + '_' + pb1[0] + pb2[0];
+      pb1 = (pb1.endsWith("L") || pb1.endsWith("H")) ?
+        (pb1[0] + "-" + pb1[pb1.length-1]) : pb1[0];
+      let pb2 = priors[1][0]
+      let id = rel + '_' + pb1 + pb2;
       let blocks = rel === "if2" ?
         testTrials_if2(priors) : rel === "if1" ?
         testTrials_if1(priors) : rel === "independent" ?
         testTrials_independent(priors) : null;
       TestStimuli[rel][id] = {"objs": blocks, "meta": priors, "id": id};
     }
-  })
+  });
+  return TestStimuli
 }
 
 if (MODE === "test") {
-  makeTestStimuli(getConditions(), TRIAL_TYPES);
+  let prior_conditions = getConditions();
+  let if1 = prior_conditions["if1"];
+  if1.push.apply(if1, [["uncertainL", "high", "if1"],
+                       ["uncertainH", "high", "if1"]]);
+  if2 = prior_conditions["if2"];
+  if2.push.apply(if2, [["uncertainL", "low", "if2"],
+                       ["uncertainH", "low", "if2"]]);
+  makeTestStimuli(prior_conditions, TRIAL_TYPES);
 }

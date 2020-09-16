@@ -220,6 +220,7 @@ const fridge_generator = {
     //   word_array = word_array + return_word_array(group_obj.words, group_obj.col)
     // })
     let word_array = return_word_array(WORDS, 'word-button')
+    if(DEBUG) {console.log(config.data[CT].id)}
     return `<div class = "fix-box"> <div class="fridge">` +
       word_array +
       `</div>
@@ -351,7 +352,7 @@ const fridge_generator = {
         response4: response2.split(" ").length,
         RT: RT
       };
-      console.log(trial_data.response3);
+      // console.log(trial_data.response3);
       trial_data = magpieUtils.view.save_config_trial_data(
         _.omit(config.data[CT], 'sentence', 'cost'),
         trial_data
