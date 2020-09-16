@@ -197,7 +197,7 @@ let train_ids = _.map(TrainStimuli.list_all, 'id');
 train_ids
   .forEach(function (id) {
     let comment = ''
-    if(id == 'ssw0') {comment = 'Note: the red block falls off another block.'}
+    if(id == 'ssw0') {comment = 'Note: the red block fell off another block.'}
     else if(id == 'ssw1') {comment = 'Note: the yellow block neither topples over nor does it fall off a platform or another block.'}
     let data = {
       QUD: 'Which block(s) do you think will fall? Click on RUN to see!',
@@ -221,14 +221,14 @@ train_ids
     TRAIN_TRIALS.push(data);
   });
 
-
-
 // one of the training trials is used with sliders/fridge view as in test phase
 // instead of buttons
 let id_slider = 'ind2';
-TRAIN_SLIDER_TRIALS = _.filter(TRAIN_TRIALS, function(trial){
+let train_trials_cloned = _.cloneDeep(TRAIN_TRIALS)
+TRAIN_SLIDER_TRIALS = _.filter(train_trials_cloned, function(trial){
   return trial.id == id_slider
 })
+
 TRAIN_SLIDER_TRIALS[0].QUD =
   "Please indicate how likely you think the represented events will occur.";
 TRAIN_SLIDER_TRIALS[0].picture = "stimuli/img/train_slider_fridge/" + id_slider + ".jpg";

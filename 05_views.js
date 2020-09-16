@@ -163,7 +163,7 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
   title: "Instructions Test Phase",
   text: `Great - we'll now proceed to the test phase of the experiment.
           Again, you will be shown scenes of different block arrangements.
-          However, this time, we ask you to <b>build a sentence</b> that you think is the <b>most natural</b> and <b>most informative</b> utterance to describe what you think happens in the scene.
+          However, this time, we ask you to <b>build a sentence</b> that you think is the <b>most natural</b> and <b>most informative utterance</b> to describe what you think happens in the scene.
           <br />
           <br />
           <b>A few things to note</b>:
@@ -176,9 +176,9 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
           <br/>
           <b>3</b>. You always have the possibility to <b>make corrections</b> by clicking on <b>DELETE LAST WORD</b> in the lower right of the screen.
           <br />
-          <b>4</b>. After you have built the sentence (shown word by word in a box in the lower left), click on <b>SUBMIT SENTECE</b> to continue (not clickable if sentence isn't grammatical).
+          <b>4</b>. After you have built the sentence (shown word by word in a box in the lower left), click on <b>SUBMIT SENTECE</b> to continue (not clickable for all combinations, e.g. if ungrammatical).
           <br />
-          <b>5</b>. If you think that a different sentence, that you couldn't built with the available words, would describe the scene more naturally, click on <b>USE MY OWN WORDS</b> and type it into the box that will appear below the picture.
+          <b>5</b>. If you think that a different sentence, that you couldn't built with the available words, would describe the scene more naturally, click on <b>USE MY OWN WORDS</b> and type it into the box that will appear in the lower left corner.
           By clicking on <b>NEXT SCENE</b>, your sentence <b>will be submitted and</b>
           you will directly <b>get to the next trial</b>.
           <br />
