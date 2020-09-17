@@ -235,7 +235,10 @@ input[type="range"].replied::-webkit-slider-thumb {
   align-items: center;
   justify-content: center;
   margin: 2px auto 0px auto;
+}
 
+#qud {
+  max-width: 85%;
 }
 
 .picture{

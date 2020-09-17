@@ -53,6 +53,7 @@ $("document")
       progress_bar: {
         in: [
         // list the view-names of the views for which you want a progress bar
+        dropdown_choice_custom.name,
         fridge_view.name,
         animation_view.name,
         multiple_slider.name,

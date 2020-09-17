@@ -172,7 +172,7 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
           by clicking on their corresponding buttons.
           <br />
           <b>2</b>. At each position in the sentence, you can only select words
-          on buttons that are highlighted in <b>orange</b>.
+          on buttons that are highlighted (<b>orange</b> frame).
           <br/>
           <b>3</b>. You always have the possibility to <b>make corrections</b> by clicking on <b>DELETE LAST WORD</b> in the lower right of the screen.
           <br />
@@ -212,7 +212,7 @@ const instructions_test = magpieViews.view_generator("instructions", {
     <br />
     <b>2</b>. A block is considered to <b>fall</b> as soon as it <b>topples over</b>
     or <b>drops</b> from a platform or from another block  -
-    that is, a block does not necessarily need to fall <i>to the ground</i> in order to
+    that is, a block does not necessarily need to fall to the ground in order to
     count as falling.
     <br/>
     <b>3</b>. The colored blocks all have <b>the same properties</b>; the colors
@@ -229,7 +229,7 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
   title: "Please Remember",
   text: `<b>1</b>. A block is considered to <b>fall</b> as soon as it <b>drops</b>
     from a platform or from another block or when it simply <b>topples over</b> -
-    that is, a block does not necessarily need to fall <i>to the ground</i> in
+    that is, a block does not necessarily need to fall to the ground in
     order to count as falling.
     <br/>
     <b>2</b>. The colored blocks all have <b>the same properties</b>; the colors

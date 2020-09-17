@@ -102,7 +102,7 @@ const animation_view = {
 const multi_slider_generator = {
   stimulus_container_gen: function (config, CT) {
     return `<div class='magpie-view'>
-        <h2 class='stimulus'>${config.data[CT].QUD}</h2>
+        <h2 id='qud' class='stimulus'>${config.data[CT].QUD}</h2>
         <div class='stimulus'>
           <img src=${config.data[CT].picture} class ='picture'>
         </div>
@@ -188,7 +188,7 @@ const multi_slider_generator = {
 const fridge_generator = {
   stimulus_container_gen: function (config, CT) {
     return `<div class='magpie-view'>
-      <h1 class='stimulus'>
+      <h1 id='qud' class='stimulus'>
       ${config.data[CT].QUD}
       </h1>
       <div class='stimulus'>
@@ -224,8 +224,8 @@ const fridge_generator = {
     return `<div class = "fix-box"> <div class="fridge">` +
       word_array +
       `</div>
-      <br><br/>
-      <div class ="sentence selected1" style = "font-size: 20px"> Built sentence:
+      <br>
+      <div class ="sentence selected1" style = "font-size: 20px"> Your sentence:
         <span class = "selected-words" id ="sentence">${config.data[CT].sentence}</span>
       </div>
       <div align="right">
