@@ -280,9 +280,10 @@ input[type="range"].replied::-webkit-slider-thumb {
 /* code for fridge box */
 .fix-box {
   width: 90%;
-  display: run-in;
-  align-items: center;
-  align-content: center;
+  display: block;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  font-size: 30px;
   padding-left: 5%;
   padding-right: 5%;
 }
@@ -422,15 +423,12 @@ input[type="range"].replied::-webkit-slider-thumb {
     padding: 16px 32px;
 }
 
-#buttonDelete{
-  margin: 0px;
-  position: absolute;
-  right: 10%;
+ #buttonDelete{
   background-color: #D74C30;
 }
 
-.submit-sentence{
-  margin: 0px;
+.fridge-buttons {
+  margin:5px;
   position: absolute;
   right: 10%;
 }
@@ -438,6 +436,10 @@ input[type="range"].replied::-webkit-slider-thumb {
 #buttonNext {
   margin-top: 40px;
   margin-bottom: 20px;
+}
+
+#customWords {
+  margin-right: 150px;
 }
 
 .buttons{

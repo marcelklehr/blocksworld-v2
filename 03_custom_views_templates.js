@@ -228,22 +228,22 @@ const fridge_generator = {
       <div class ="sentence selected1" style = "font-size: 20px"> Built sentence:
         <span class = "selected-words" id ="sentence">${config.data[CT].sentence}</span>
       </div>
-      <button id='buttonDelete' class='magpie-view-button delete-word'> delete last word </button>
-      <br><br/>
-      <br><br/>
-      <button id='buttonSubmit' class='magpie-view-button grid-button submit-sentence '> submit sentence</button>
-      <div class = "magpie-nodisplay custom-sentence sentence" >
+      <div align="right">
+        <button id='buttonDelete' class='magpie-view-button fridge-buttons'> delete last word </button>
+        </br>
+        <button id='buttonSubmit' class='magpie-view-button grid-button fridge-buttons'> submit sentence</button>
+      </div>
+      <div id="container">
+      <div id="custom-sentence" class = "magpie-nodisplay sentence" >
         <p class="magpie-view-text">
           <label for="custom-text" style = "font-size: 20px"> Your custom sentence: </label>
           <input type="text" id="custom-text" name="textbox-input" cols = 50 class='magpie-response-text selected-words'>
         </p>
       </div>
-      <div class = "buttons">
-        <button id ='customWords' class="magpie-view-button magpie-nodisplay"> Use my own words </button>
-        <button id='buttonNext' class='magpie-view-button magpie-nodisplay'>Next scene</button>
+      <div align="right">
+        <button id ='customWords' class="magpie-view-button magpie-nodisplay fridge-buttons"> Use my own words </button>
+        <button id='buttonNextFridge' class='magpie-view-button magpie-nodisplay fridge-buttons'>Next scene</button>
       </div>
-      <br><br/>
-
     </div>`;
   },
 
@@ -256,7 +256,7 @@ const fridge_generator = {
   ) {
     $(".magpie-view")
       .append(answer_container_generator(config, CT));
-    let button = $("#buttonNext");
+    let button = $("#buttonNextFridge");
     let submitbutton = $("#buttonSubmit");
     let sentence_array = [];
     let sentence = "";
@@ -284,7 +284,7 @@ const fridge_generator = {
         checkBuildSentence(sentence_array, poss_next, submitbutton)
       });
 
-    $(".delete-word")
+    $("#buttonDelete")
       .click(function () {
         sentence_array.pop();
         var sentence = sentence_array.join(" ")
@@ -305,7 +305,7 @@ const fridge_generator = {
     $("#customWords")
       .on("click", function () {
 
-        $(".custom-sentence")
+        $("#custom-sentence")
           .removeClass("magpie-nodisplay");
 
         submitbutton.addClass("grid-button");
@@ -325,12 +325,12 @@ const fridge_generator = {
       });
 
     submitbutton.on("click", function () {
-      $("#buttonNext")
+      $("#buttonNextFridge")
         .removeClass("magpie-nodisplay")
       $("#customWords")
         .removeClass("magpie-nodisplay");
       toggleNextIfDone($("#customWords"), true);
-      toggleNextIfDone($("#buttonNext"), true);
+      toggleNextIfDone($("#buttonNextFridge"), true);
       update_clickables('', sentence_array, true);
       submitbutton.addClass("magpie-nodisplay");
       $("#buttonDelete")
