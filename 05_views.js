@@ -96,7 +96,7 @@ const instructions_train = magpieViews.view_generator("instructions", {
   To indicate your beliefs, please click on the button with the respective icon.
   <br />
   A falling block is represented by a skewed rectangle and a resting block that
-  <i>does not fall</i> is represented by a rectangle with a line below.
+  does not fall is represented by a rectangle with a line below.
   Here is an exemplary icon for the event:
   <br/>
   <i>The <b>green</b> block <b>falls</b>, but the <b>yellow</b> block
@@ -107,11 +107,11 @@ const instructions_train = magpieViews.view_generator("instructions", {
   <img src='stimuli/img/icons/not-yellow.png' />
   <br/>
   <br/>
-  A block is considered to <b><i>fall</i></b> as soon as it <b>topples
+  A block is considered to <b>fall</b> as soon as it <b>topples
   over</b> or <b>drops</b> from a platform or from another block.</b>
   <br/>
   The colored blocks represent common toy blocks <b>without</b> any
-  <i>special or unexpected</i> properties. The different colors do
+  special or unexpected properties. The different colors do
   <b>not have</b> any meaning, they are just used to distinguish them.
      <br />
      <br />
@@ -210,8 +210,8 @@ const instructions_test = magpieViews.view_generator("instructions", {
     <br />
     <b>1</b>. Your estimates <b>may</b>, but <b>do not have to</b> <i>sum to 1</i>.
     <br />
-    <b>2</b>. A block is considered to <b><i>fall</i> as soon as it <i>drops</i>
-    from a platform or from another block or when it simply <i>topples over</i></b> -
+    <b>2</b>. A block is considered to <b>fall</b> as soon as it <b>topples over</b>
+    or <b>drops</b> from a platform or from another block  -
     that is, a block does not necessarily need to fall <i>to the ground</i> in order to
     count as falling.
     <br/>
@@ -227,8 +227,8 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
   trials: 1,
   name: "instructions_fridge_reminder",
   title: "Please Remember",
-  text: `<b>1</b>. A block is considered to <b><i>fall</i> as soon as it <i>drops</i>
-    from a platform or from another block or when it simply <i>topples over</i></b> -
+  text: `<b>1</b>. A block is considered to <b>fall</b> as soon as it <b>drops</b>
+    from a platform or from another block or when it simply <b>topples over</b> -
     that is, a block does not necessarily need to fall <i>to the ground</i> in
     order to count as falling.
     <br/>
@@ -236,7 +236,7 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
     are only used to distinguish them.
     <br/>
     <b>3</b>. The blocks represent common toy blocks <b>without</b> any
-    <i>special or unexpected</i> properties.
+    special or unexpected properties.
     </br>
     </br>
     We will now start with the test phase which comprises <b>18</b> scenes in total.`,
