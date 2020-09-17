@@ -172,7 +172,7 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
           by clicking on their corresponding buttons.
           <br />
           <b>2</b>. At each position in the sentence, you can only select words
-          on buttons that are highlighted (<b>orange</b> frame).
+          on buttons that are highlighted (by an orange frame).
           <br/>
           <b>3</b>. You always have the possibility to <b>make corrections</b> by clicking on <b>DELETE LAST WORD</b> in the lower right of the screen.
           <br />
