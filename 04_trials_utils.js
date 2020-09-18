@@ -13,7 +13,7 @@ pseudoRandomTrainTrials = function(){
 
   let ramp = _.shuffle(_.values(dict.ramp));
 
-  let if2 = ['ssw0', 'ssw1'];
+  let if2 = [dict.if2.ssw0, dict.if2.ssw1];
   let ind_ac = _.shuffle([dict.independent.ind0,
                           dict.independent.ind1,
                           if2[0]]);
