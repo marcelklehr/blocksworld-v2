@@ -388,7 +388,7 @@ color_vision_view = function(boundaries){
 }
 
 let color_vision_views = [];
-_.map([[0,2], [2, 4], [4, 6], [6, 8], [8, 10], [10, 12], [12, 14], [14, 16], [16, 18]], function(arr){
+_.map([[0,2], [2, 4], [4, 6], [6, 8]], function(arr){
   color_vision_views.push(color_vision_view(arr));
 });
 
