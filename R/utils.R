@@ -19,14 +19,14 @@ anonymize_and_save <- function(data_dir, data_fn, result_dir, result_fn, debug_r
   path_to_data <- paste(data_dir, data_fn, sep=.Platform$file.sep)
   data <- if(debug_run) test_data(path_to_data) else experimental_data(path_to_data)
 
-  if(!debug_run) {
-    # filter test debug trials
-    prolific_ids <- data %>% pull(prolific_id) %>% unique()
-    new_ids <- paste("participant", seq(1,  length(prolific_ids)), sep="")
-    n_trials <- data %>% group_by(prolific_id) %>% summarize(n=n()) %>% pull(n) %>%
-      unique()
-    data <- data %>% mutate(prolific_id = rep(new_ids, each = n_trials))
-  }
+  # if(!debug_run) {
+  #   # anonymize
+  #   prolific_ids <- data %>% pull(prolific_id) %>% unique()
+  #   new_ids <- paste("participant", seq(1,  length(prolific_ids)), sep="")
+  #   n_trials <- data %>% group_by(prolific_id) %>% summarize(n=n()) %>% pull(n) %>%
+  #     unique()
+  #   data <- data %>% mutate(prolific_id = rep(new_ids, each = n_trials))
+  # }
   path_target <- paste(result_dir, paste(result_fn, "raw.csv", sep="_"), sep = .Platform$file.sep)
   write_excel_csv(data, path = path_target, delim = ",", append = FALSE, col_names=TRUE)
   print(paste('written anonymized version to:', path_target))
@@ -56,7 +56,7 @@ tidy_test_exp1 <- function(df){
 }
 
 tidy_test_exp2 <- function(df){
-  dat.test <- df %>% filter(trial_name == "fridge_view" | trial_name == "fridge_train") %>%
+  dat.test <- df %>% filter(startsWith(trial_name, "fridge_view") | trial_name == "fridge_train") %>%
     select(prolific_id, RT, QUD, id, group,
            response1, response2) %>%
     rename(custom_response=response2, response=response1)
@@ -113,9 +113,9 @@ tidy_data <- function(data, N_trials, test_trial_name){
   dat.color_vision <- tibble();
   if(N_trials$color_vision != 0) {
     dat.color_vision <- df %>%
-      filter(trial_name == "color-vision") %>%
+      filter(startsWith(trial_name, "color-vision")) %>%
       select(prolific_id, id, question, response, expected, QUD)
-    df <- df %>% filter(trial_name != "color-vision");
+    df <- df %>% filter(!startsWith(trial_name, "color-vision"));
   }
   N_participants <- df %>% select(prolific_id) %>% unique() %>% nrow()
   stopifnot(nrow(df) == N_participants * (N_trials$test + N_trials$train));
