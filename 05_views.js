@@ -95,12 +95,10 @@ const instructions_train = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_train",
   title: "Instructions Training",
-  text: `Imagine each scene of block arrangements to capture the moment just after the
-  colored blocks were put at their positions.
-  We will ask you to <b>indicate whether you think that most
-  likely both, none or respectively only one of two colored blocks will fall</b>
-  (there may be other blocks with different colors than the two colored blocks
-  asked for).
+  text: `For each presented scene you will be asked to <b>indicate whether you
+  think that most likely both, none or respectively only one of two colored
+  blocks will fall</b> (there may be other blocks with different colors than the
+  two colored blocks asked for).
   To indicate your beliefs, please click on the button with the respective icon.
   <br />
   A falling block is represented by a skewed rectangle and a resting block that
