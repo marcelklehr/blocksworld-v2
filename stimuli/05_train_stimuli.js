@@ -162,14 +162,14 @@ trials_ssw = function(){
                'ssw1': cols.train_blocks}
   let dir = {
     'ssw0': ['vertical', 'horizontal'],
-    'ssw1': ['horizontal', 'horizontal']
+    'ssw1': ['vertical', 'horizontal']
   };
   let prior = {
     'ssw0': ["uncertainH", "low"],
-    'ssw1': ["uncertainH", "lowH"]
+    'ssw1': ["uncertainL", "low"]
   };
   let expected = {'ssw0': BLOCK_COLS_SHORT.train.join(""),
-                  'ssw1': BLOCK_COLS_SHORT.train[0]}
+                  'ssw1': 'none'}
   data = {};
 
   _.keys(prior).forEach(function(id, i){
@@ -181,8 +181,7 @@ trials_ssw = function(){
     let b1 = blockOnBase(objs.walls[0], PRIOR[dir[id][0]][prior[id][0]],
       color[id][0], 'blockC', dir[id][0] == 'horizontal');
 
-    let data_b2 = id == "ssw0" ? {base: xblock, side: 1, xblocks: [xblock, xblock2]}
-                               : {base: objs.walls[1], side: -1, xblocks: []};
+    let data_b2 = {base: xblock, side: 1, xblocks: [xblock, xblock2]};
     let b2 = blockOnBase(data_b2.base, data_b2.side * PRIOR[dir[id][1]][prior[id][1]],
       color[id][1], 'blockC', dir[id][1] == 'horizontal');
 
