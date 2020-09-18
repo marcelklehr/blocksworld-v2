@@ -35,7 +35,7 @@ dir.create(plot_dir, showWarnings = FALSE)
 ```{r}
 dat <- data$test %>% mutate(response = as.factor(response),
                             custom_response = as.factor(custom_response))
-df <- dat %>% standardize_color_groups_exp2();
+dat.standardized <- dat %>% standardize_color_groups_exp2();
 ```
 
 ```{r all-trials}
@@ -55,9 +55,30 @@ plotTrials <- function(dat, n_pages){
     print(p)
   }
 }
-# +1 for example test-trial (ind2)
-df %>% group_by(id) %>% plotTrials(N_trials$test/2 + 1)
 ```
+
+Plot responses per trial
+
+```{r}
+# +1 for example test-trial (ind2)
+dat.standardized %>% group_by(id) %>% plotTrials(N_trials$test/2 + 1)
+```
+
+Plot specific trials seperately
+```{r}
+trial = "independent_ll"
+data.specific = dat %>% filter(id==trial) %>% group_by(id)
+data.specific %>%
+  ggplot(aes(x=response)) + geom_bar() +
+  facet_wrap(~group) +  
+  theme(text = element_text(size=14),
+        axis.text.x=element_text(angle=45, vjust = 0.5)) +
+  labs(y="#participants", title=trial) +
+  coord_flip() +
+  theme_bw()
+```
+
+Plot set of generated utterances
 
 ```{r all-sentences}
 plotSentences <- function(dat){ 
@@ -71,8 +92,7 @@ plotSentences <- function(dat){
     theme_bw()
   return(p)
 }
-# df.sentences <- df %>% group_by(response, id) %>% summarize(n=n(), .groups="keep")
-p <- df %>% plotSentences()
+p <- dat.standardized %>% plotSentences()
 p
 ```
 
