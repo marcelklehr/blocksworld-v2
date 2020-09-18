@@ -4,7 +4,7 @@ pseudoRandomTrainTrials = function(){
   let stimuli = Array(15).fill('');
   let trials = Array(15).fill('');
   let dict = TrainStimuli.map_category;
-  // dont start with uncertain3, ac2, ac3
+  // dont start with uncertain3, ac2, ac3, 'ssw1'
   let unc = _.shuffle(_.values(dict.uncertain));
   let unc012 = _.filter(unc, function(obj){
     return obj.id != "uncertain3"
@@ -13,7 +13,7 @@ pseudoRandomTrainTrials = function(){
 
   let ramp = _.shuffle(_.values(dict.ramp));
 
-  let if2 = _.shuffle(_.values(dict.if2));
+  let if2 = ['ssw0', 'ssw1'];
   let ind_ac = _.shuffle([dict.independent.ind0,
                           dict.independent.ind1,
                           if2[0]]);
