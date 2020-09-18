@@ -54,40 +54,25 @@ let WORDS = _.flatten(_.map(_.values(WORD_GROUPS), 'words'));
 // console.log(WORDS)
 
 let shownNext = function (last, sentence='') {
-  let arr = Object.keys(GRAMMAR_RULE)
-    .includes(last) ? GRAMMAR_RULE[last] :
-    Object.keys(GRAMMAR_VAR)
-    .includes(last) ? GRAMMAR_VAR[last] :
-    GRAMMAR_RULE[_.filter(Object.keys(GRAMMAR_VAR), function (key) {
-      return GRAMMAR_VAR[key].includes(last);
-    })[0]];
-  let symbols = _.reduce(arr, function (acc, val) {
-    return acc.concat(val == val.toLowerCase() ? val : GRAMMAR_VAR[val]);
-  }, []);
-  // special rules
-
-  // nor only possible if neither had been selected +
-  // neither/nor only selectable once!
-  symbols = !sentence.includes('neither') ? _.without(symbols, 'nor') :
-    _.without(symbols, 'neither');
-  symbols = sentence.includes('nor') ? _.without(symbols, 'nor') : symbols;
-
-  // neither only at beginning
-  symbols = sentence != '' ? _.without(symbols, 'neither') : symbols;
-
-  // probably not after conjunctions
-  symbols = _.every(GRAMMAR_VAR.CONJ.concat(GRAMMAR_VAR.NEG), function(conj) {
-    return !sentence.includes(conj)
-  }) ? symbols : _.without(symbols, 'probably')
-
-  // conjunctions not after 'probably'
-  symbols = sentence.includes('probably') ? _.without(symbols, 'and', 'but', 'if') : symbols;
-
   // can the currently built sentence be extended further to an utterance?
   let poss_utts = _.filter(UTTERANCES, function(utt){
     return utt.startsWith(sentence.trim()) && sentence !== utt;
   });
-  symbols = poss_utts.length == 0 ? [] : symbols;
+  let symbols = poss_utts.length == 0 ? [] : WORDS;
+  symbols = _.filter(symbols, function(word){
+    return _.some(poss_utts, function(utt){
+      let s = (sentence + ' ' + word).trim()
+      let holds = utt.startsWith(s);
+      // make sure that fall and falls are used correctly
+      holds =
+       (sentence=="the green block" || sentence=="probably the green block" ||
+        sentence=="the green block probably" || sentence=="the blue block" ||
+        sentence=="probably the blue block" || sentence=="the blue block probably" ||
+        (sentence.includes('if') && last !== "does not")) && word.startsWith('fall') ?
+        holds && word.endsWith('falls') : holds;
+      return holds;
+    });
+  });
   return symbols
 }
 
@@ -110,7 +95,12 @@ let templates = [
   "if the COL1 block falls the COL2 block falls [as well]",
   "if the COL1 block does not fall the COL2 block falls",
   "if the COL1 block does not fall the COL2 block does not fall",
-  "if the COL1 block falls the COL2 block does not fall"
+  "if the COL1 block falls the COL2 block does not fall",
+
+  "the COL1 block falls if the COL2 block falls",
+  "the COL1 block does not fall if the COL2 block falls",
+  "the COL1 block does not fall if the COL2 block does not fall",
+  "the COL1 block falls if the COL2 block does not fall"
 ]
 
 let UTTERANCES = [];
