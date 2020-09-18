@@ -216,10 +216,9 @@ const instructions_test = magpieViews.view_generator("instructions", {
     <br />
     <b>1</b>. Your estimates <b>may</b>, but <b>do not have to</b> <i>sum to 1</i>.
     <br />
-    <b>2</b>. A block is considered to <b>fall</b> as soon as it <b>topples over</b>
-    or <b>drops</b> from a platform or from another block  -
-    that is, a block does not necessarily need to fall to the ground in order to
-    count as falling.
+    <b>2</b>. A block is considered to <b>fall</b> as soon as it <b>drops</b> from
+    a platform or from another block - that is, a block does not necessarily need
+    to fall to the ground in order to count as falling.
     <br/>
     <b>3</b>. The colored blocks all have <b>the same properties</b>; the colors
     are only used to distinguish them.
@@ -234,9 +233,8 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
   name: "instructions_fridge_reminder",
   title: "Please remember",
   text: `<b>1</b>. A block is considered to <b>fall</b> as soon as it <b>drops</b>
-    from a platform or from another block or when it simply <b>topples over</b> -
-    that is, a block does not necessarily need to fall to the ground in
-    order to count as falling.
+    from a platform or from another block - that is, a block does not necessarily
+    need to fall to the ground in order to count as falling.
     <br/>
     <b>2</b>. The colored blocks all have <b>the same properties</b>; the colors
     are only used to distinguish them.
