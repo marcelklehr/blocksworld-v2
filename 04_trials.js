@@ -205,7 +205,7 @@ let train_ids = _.map(TrainStimuli.list_all, 'id');
 train_ids
   .forEach(function (id) {
     let comment = ''
-    if(id == 'ssw0') {comment = 'Note: the red block fell off another block.'}
+    // if(id == 'ssw0') {comment = 'Note: the red block fell off another block.'}
     let data = {
       QUD: 'Which block(s) do you think will fall? Click on RUN to see!',
       id: id,
