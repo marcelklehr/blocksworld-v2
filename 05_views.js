@@ -374,11 +374,11 @@ _.map([[0,2], [2, 4], [4, 6], [6, 8], [8, 10], [10, 12], [12, 14], [14, 16], [16
 });
 
 
-color_vision_view = function(boundaries){
+color_vision_view = function(idx){
   let dropdown_choice_custom = magpieViews.view_generator('dropdown_choice', {
-    trials: boundaries[1]-boundaries[0],
-    name: "color-vision" + boundaries.join(""),
-    data: COLOR_VISION_TRIALS.slice(boundaries[0], boundaries[1])
+    trials: 1,
+    name: "color-vision" + idx,
+    data: [COLOR_VISION_TRIALS[idx]]
   }, {
     stimulus_container_generator: dropdown_choice_generator.stimulus_container_gen,
     answer_container_generator: dropdown_choice_generator.answer_container_gen,
@@ -388,8 +388,8 @@ color_vision_view = function(boundaries){
 }
 
 let color_vision_views = [];
-_.map([[0,2], [2, 4], [4, 6], [6, 8]], function(arr){
-  color_vision_views.push(color_vision_view(arr));
+_.map(_.range(0,8), function(idx){
+  color_vision_views.push(color_vision_view(idx));
 });
 
 const fridge_train = magpieViews.view_generator(
