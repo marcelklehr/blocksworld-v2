@@ -33,8 +33,23 @@ $("document")
       instructions_fridge,
       fridge_train,
       instructions_fridge_reminder,
-      fridge_view,
-
+      fridge_views[0],
+      color_vision_views[0],
+      fridge_views[1],
+      color_vision_views[1],
+      fridge_views[2],
+      color_vision_views[2],
+      fridge_views[3],
+      color_vision_views[3],
+      fridge_views[4],
+      color_vision_views[4],
+      fridge_views[5],
+      color_vision_views[5],
+      fridge_views[6],
+      color_vision_views[6],
+      fridge_views[7],
+      color_vision_views[7],
+      fridge_views[8],
       post_test,
       thanks
     ],
@@ -53,8 +68,8 @@ $("document")
       progress_bar: {
         in: [
         // list the view-names of the views for which you want a progress bar
-        dropdown_choice_custom.name,
-        fridge_view.name,
+        // dropdown_choice_custom.name,
+        // fridge_view.name,
         animation_view.name,
         multiple_slider.name,
       ],
