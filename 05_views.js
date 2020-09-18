@@ -357,7 +357,7 @@ fridge_view = function(boundaries){
   let view = magpieViews.view_generator(
     "slider_rating", {
       trials: boundaries[1] - boundaries[0],
-      name: "fridge_view",
+      name: "fridge_view" + boundaries.join(""),
       data: FRIDGE_TRIALS.slice(boundaries[0], boundaries[1])
     }, {
       stimulus_container_generator: fridge_generator.stimulus_container_gen,
@@ -377,7 +377,7 @@ _.map([[0,2], [2, 4], [4, 6], [6, 8], [8, 10], [10, 12], [12, 14], [14, 16], [16
 color_vision_view = function(boundaries){
   let dropdown_choice_custom = magpieViews.view_generator('dropdown_choice', {
     trials: boundaries[1]-boundaries[0],
-    name: "color-vision",
+    name: "color-vision" + boundaries.join(""),
     data: COLOR_VISION_TRIALS.slice(boundaries[0], boundaries[1])
   }, {
     stimulus_container_generator: dropdown_choice_generator.stimulus_container_gen,

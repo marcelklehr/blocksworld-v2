@@ -64,15 +64,12 @@ $("document")
       },
       // Here, you can specify how the progress bar should look like
       progress_bar: {
-        in: [
         // list the view-names of the views for which you want a progress bar
-        // dropdown_choice_custom.name,
-        // fridge_view.name,
-        animation_view.name,
-        multiple_slider.name,
-      ],
-        // Possible styles are "default", "separate" and "chunks"
-        style: "separate",
+        // multiple_slider.name,
+        in: [animation_view.name].concat(_.map(color_vision_views, 'name').concat(
+          _.map(fridge_views, 'name'))),
+      // Possible styles are "default", "separate" and "chunks"
+        style: "default",
         width: 100
       }
     });
