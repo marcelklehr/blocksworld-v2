@@ -10,6 +10,9 @@ const GRAMMAR_VAR = {
   'ADV1': ["as well"],
   'ADV2': ["probably"]
 }
+
+const CONSTITUENTS = _.values(GRAMMAR_VAR);
+
 // which words are clickable after which type of words
 const GRAMMAR_RULE = {
   'S': ["SUBJ", "neither", "if", "ADV2"],
@@ -80,10 +83,51 @@ let shownNext = function (last, sentence='') {
   // conjunctions not after 'probably'
   symbols = sentence.includes('probably') ? _.without(symbols, 'and', 'but', 'if') : symbols;
 
+  // can the currently built sentence be extended further to an utterance?
+  let poss_utts = _.filter(UTTERANCES, function(utt){
+    return utt.startsWith(sentence.trim()) && sentence !== utt;
+  });
+  symbols = poss_utts.length == 0 ? [] : symbols;
   return symbols
-
-
 }
+
+
+
+let templates = [
+  "the COL1 block [probably] falls",
+  "the COL1 block [probably] does not fall",
+  "probably the COL1 block falls",
+  "probably the COL1 block does not fall",
+
+  "the COL1 block and the COL2 block fall",
+  "the COL1 block falls and the COL2 block falls [as well]",
+  "the COL1 block falls but the COL2 block does not fall",
+  "the COL1 block falls and the COL2 block does not fall",
+  "neither the COL1 block nor the COL2 block fall",
+  "neither the COL1 block nor the COL2 block falls",
+  "neither the COL1 block falls nor the COL2 block falls",
+
+  "if the COL1 block falls the COL2 block falls [as well]",
+  "if the COL1 block does not fall the COL2 block falls",
+  "if the COL1 block does not fall the COL2 block does not fall",
+  "if the COL1 block falls the COL2 block does not fall"
+]
+
+let UTTERANCES = [];
+_.map(templates, function(u){
+    let gb = u.replace("COL1", "green").replace("COL2", "blue");
+    let bg = u.replace("COL1", "blue").replace("COL2", "green");
+
+    let u1 = gb.replace("[", "").replace("]", "").trim();
+    let u2 = gb.replace(/\[[^\]]*\] */g, "").trim() // replace what is inside []-brackets
+    let u3 = bg.replace("[", "").replace("]", "").trim();
+    let u4 = bg.replace(/\[[^\]]*\] */g, "").trim() // replace what is inside []-brackets
+
+    UTTERANCES.push.apply(UTTERANCES, [u1, u2, u3, u4]);
+});
+
+UTTERANCES = Array.from(new Set(UTTERANCES));
+
 // let symbols = shownNext('S')
 // let i = _.random(0, symbols.length - 1)
 // let selected = typeof(symbols[i]) == 'string' ? symbols[i] : _.sample(symbols[i]);
