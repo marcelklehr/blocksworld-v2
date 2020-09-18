@@ -1,5 +1,5 @@
 ---
-title: "results experiment 1"
+title: "results experiment 2"
 output:
   html_document:
     df_print: paged
@@ -11,23 +11,20 @@ library(here)
 library(tidyverse)
 source(here("R", "utils.R"))
 
-data_dir <-  here("data", "test-runs")
-# data_dir <- here("data", "prolific")
+N_trials <- list(train=15, test=18, color_vision=8);
 
-result_dir <- here("data", "test-runs", "results", "experiment2")
-# result_dir <- here("data", "prolific", "results", "experiment2")
+# data_dir <-  here("data", "test-runs")
+data_dir <- here("data", "prolific")
+
+# result_dir <- here("data", "test-runs", "results", "experiment2")
+result_dir <- here("data", "prolific", "results", "experiment2")
 
 fn <- "exp2_tidy.rds"
 
-data.from_rds <- readRDS(paste(result_dir, fn, sep=.Platform$file.sep))
-if(str_split(fn, "_")[[1]] %>% length() == 2) {
-  data <- data.from_rds$test
-} else {
-  data <- data.from_rds
-}
+data <- readRDS(paste(result_dir, fn, sep=.Platform$file.sep))
 
-stimuli <- data %>% pull(id) %>% unique()
-N_participants <- data %>% pull(prolific_id) %>% unique() %>% length()
+stimuli <- data$test %>% pull(id) %>% unique()
+N_participants <- data$test %>% pull(prolific_id) %>% unique() %>% length()
 
 plot_dir <- paste(result_dir, "plots", sep=.Platform$file.sep);
 dir.create(plot_dir, showWarnings = FALSE)
@@ -36,16 +33,16 @@ dir.create(plot_dir, showWarnings = FALSE)
 ## Experimental data: Produced sentences
 
 ```{r}
-dat <- data %>% mutate(response = as.factor(response),
-                       custom_response = as.factor(custom_response)) %>% 
-  group_by(id)
+dat <- data$test %>% mutate(response = as.factor(response),
+                            custom_response = as.factor(custom_response))
+df <- dat %>% standardize_color_groups_exp2();
+```
 
-n_pages <- 18/2 # 2 test trials per page!
-makePlot <- function(color_group){
-  df <-  dat  %>% filter(group == color_group) 
-  n_pages <- ceiling((df %>% nrow())/2)
+```{r all-trials}
+plotTrials <- function(dat, n_pages){
   for (pa in seq(1, n_pages)){
-    p <- df %>% 
+    # print(pa)
+    p <- dat %>% 
       ggplot(aes(x=response)) +
       geom_bar() +
       facet_wrap_paginate(~id, nrow=2, ncol=1, page=pa, scales="free") + 
@@ -58,13 +55,24 @@ makePlot <- function(color_group){
     print(p)
   }
 }
+# +1 for example test-trial (ind2)
+df %>% group_by(id) %>% plotTrials(N_trials$test/2 + 1)
 ```
 
-```{r sentences-group1}
-makePlot("group1")
-```
-
-```{r sentences-group2}
-makePlot("group2")
+```{r all-sentences}
+plotSentences <- function(dat){ 
+  df.sum = dat %>% group_by(response) %>% summarize(N=n(), .groups="keep")
+  max <- df.sum %>% ungroup() %>% select(N) %>% max()
+  p <- dat %>% 
+    ggplot(aes(y=fct_rev(fct_infreq(response)))) +
+    geom_bar(aes(fill=id), stat="count") + #   hier weiter machen!
+    theme(text = element_text(size=14)) +
+    scale_x_discrete(name="# generations", breaks = seq(1, max), labels = sprintf("%s", seq(1, max)), limits=sprintf("%s", seq(1, max))) +
+    theme_bw()
+  return(p)
+}
+# df.sentences <- df %>% group_by(response, id) %>% summarize(n=n(), .groups="keep")
+p <- df %>% plotSentences()
+p
 ```
 

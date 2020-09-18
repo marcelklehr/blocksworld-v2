@@ -161,24 +161,26 @@ standardize_color_groups <- function(df){
   return(df)
 }
 
-# todo: check this again!!! make sure that all occurences of one color get replaced, not only the first
 standardize_color_groups_exp2 <- function(df){
   df <- df %>%
-    mutate(response = case_when(group == "group2" ~ str_replace(response, "blue", "G"),
-                                TRUE ~ str_replace(response, "blue", "B")),
-           custom_response = case_when(group == "group2" ~ str_replace(custom_response, "blue", "G"),
-                                TRUE ~ str_replace(custom_response, "blue", "B"))) %>%
+    mutate(response = case_when(group == "group2" ~ str_replace_all(response, "blue", "G"),
+                                TRUE ~ str_replace_all(response, "blue", "B")),
+           custom_response = case_when(group == "group2" ~ str_replace_all(custom_response, "blue", "-G-"),
+                                TRUE ~ str_replace_all(custom_response, "blue", "-B-"))) %>%
 
-    mutate(response = case_when(group == "group2" ~ str_replace(response, "green", "B"),
-                                TRUE ~ str_replace(response, "green", "G")),
-           custom_response = case_when(group == "group2" ~ str_replace(custom_response, "green", "B"),
-                                TRUE ~ str_replace(custom_response, "green", "G"))) %>%
-    mutate(response = str_replace(response, "G", "green"),
-           custom_response = str_replace(custom_response, "G", "green")) %>%
-    mutate(response = str_replace(response, "B", "blue"),
-           custom_response = str_replace(custom_response, "B", "blue"
+    mutate(response = case_when(group == "group2" ~ str_replace_all(response, "green", "B"),
+                                TRUE ~ str_replace_all(response, "green", "G")),
+           custom_response = case_when(group == "group2" ~ str_replace_all(custom_response, "green", "-B-"),
+                                TRUE ~ str_replace_all(custom_response, "green", "-G-"))) %>%
+    mutate(response = str_replace_all(response, "G", "green"),
+           custom_response = str_replace_all(custom_response, "-G-", "-green-")) %>%
+    mutate(response = str_replace_all(response, "B", "blue"),
+           custom_response = str_replace_all(custom_response, "-B-", "-blue-"
            ));
-  df <- df %>% mutate(group = "group1");
+  df <- df %>% mutate(group = "group1", 
+                      response = as.factor(response),
+                      custom_response = as.factor(custom_response)
+                      );
 
   return(df)
 }

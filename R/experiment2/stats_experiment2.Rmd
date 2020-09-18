@@ -12,8 +12,9 @@ library(scales)
 library(tidyverse)
 source(here("R", "utils.R"));
 
-# result_dir <-  here("data", "test-runs");
+# result_dir <-  here("data", "test-runs", "results", "experiment2");
 result_dir <- here("data", "prolific", "results", "experiment2")
+
 data_fn <- "exp2_tidy.rds"
 path_data <- paste(result_dir, data_fn, sep=.Platform$file.sep)
 
