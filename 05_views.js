@@ -261,15 +261,15 @@ const thanks = magpieViews.view_generator("thanks", {
 });
 
 
-const dropdown_choice_custom = magpieViews.view_generator('dropdown_choice', {
-  trials: color_vision_trials.length,
-  name: "color-vision",
-  data: _.shuffle(color_vision_trials)
-}, {
-  stimulus_container_generator: dropdown_choice_generator.stimulus_container_gen,
-  answer_container_generator: dropdown_choice_generator.answer_container_gen,
-  handle_response_function: dropdown_choice_generator.handle_response_function
-});
+// const dropdown_choice_custom = magpieViews.view_generator('dropdown_choice', {
+//   trials: color_vision_trials.length,
+//   name: "color-vision",
+//   data: _.shuffle(color_vision_trials)
+// }, {
+//   stimulus_container_generator: dropdown_choice_generator.stimulus_container_gen,
+//   answer_container_generator: dropdown_choice_generator.answer_container_gen,
+//   handle_response_function: dropdown_choice_generator.handle_response_function
+// });
 
 const sentence_choice_custom = magpieViews.view_generator("sentence_choice", {
   trials: color_vision_test.length,
@@ -331,18 +331,56 @@ const instruction_slider_example = magpieViews.view_generator(
   }
 );
 
-const fridge_view = magpieViews.view_generator(
-  "slider_rating", {
-    trials: FRIDGE_TRIALS.length,
-    name: "fridge_view",
-    data: FRIDGE_TRIALS
-  }, {
-    stimulus_container_generator: fridge_generator.stimulus_container_gen,
-    answer_container_generator: fridge_generator.answer_container_gen,
-    handle_response_function: fridge_generator.handle_response_function
-  }
-);
+// const fridge_view = magpieViews.view_generator(
+//   "slider_rating", {
+//     trials: FRIDGE_TRIALS.length,
+//     name: "fridge_view",
+//     data: FRIDGE_TRIALS
+//   }, {
+//     stimulus_container_generator: fridge_generator.stimulus_container_gen,
+//     answer_container_generator: fridge_generator.answer_container_gen,
+//     handle_response_function: fridge_generator.handle_response_function
+//   }
+// );
 
+fridge_view = function(boundaries){
+  let view = magpieViews.view_generator(
+    "slider_rating", {
+      trials: boundaries[1] - boundaries[0],
+      name: "fridge_view",
+      data: FRIDGE_TRIALS.slice(boundaries[0], boundaries[1])
+    }, {
+      stimulus_container_generator: fridge_generator.stimulus_container_gen,
+      answer_container_generator: fridge_generator.answer_container_gen,
+      handle_response_function: fridge_generator.handle_response_function
+    }
+  );
+  return(view)
+}
+
+let fridge_views = [];
+_.map([[0,2], [2, 4], [4, 6], [6, 8], [8, 10], [10, 12], [12, 14], [14, 16], [16, 18]], function(arr){
+  fridge_views.push(fridge_view(arr));
+});
+
+
+color_vision_view = function(boundaries){
+  let dropdown_choice_custom = magpieViews.view_generator('dropdown_choice', {
+    trials: boundaries[1]-boundaries[0],
+    name: "color-vision",
+    data: COLOR_VISION_TRIALS.slice(boundaries[0], boundaries[1])
+  }, {
+    stimulus_container_generator: dropdown_choice_generator.stimulus_container_gen,
+    answer_container_generator: dropdown_choice_generator.answer_container_gen,
+    handle_response_function: dropdown_choice_generator.handle_response_function
+  });
+  return(dropdown_choice_custom)
+}
+
+let color_vision_views = [];
+_.map([[0,2], [2, 4], [4, 6], [6, 8], [8, 10], [10, 12], [12, 14], [14, 16], [16, 18]], function(arr){
+  color_vision_views.push(color_vision_view(arr));
+});
 
 const fridge_train = magpieViews.view_generator(
   "slider_rating", {

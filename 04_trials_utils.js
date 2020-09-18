@@ -102,7 +102,7 @@ let shuffleTestTrials = function(trial_data){
 }
 const TEST_TRIALS = shuffleTestTrials(slider_rating_trials);
 const FRIDGE_TRIALS = shuffleTestTrials(fridge_trials);
-
+const COLOR_VISION_TRIALS = _.shuffle(color_vision_trials);
 
 if (DEBUG){
   let arr = _.map(TEST_TRIALS, 'id')
