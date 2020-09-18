@@ -45,9 +45,27 @@ const intro = magpieViews.view_generator("intro", {
   buttonText: "begin the experiment"
 });
 
-const instructions_color_vision = magpieViews.view_generator("instructions", {
+// const instructions_color_vision = magpieViews.view_generator("instructions", {
+//   trials: 1,
+//   name: "instructions_color_vision",
+//   title: "General Instructions",
+//   text: `In this experiment you are shown pictures of different arrangements of
+//           blocks.
+//          <br />
+//          <br />
+//          The experiment consists of two phases, a <b>training</b> and a <b>testing</b> phase.
+//          In total, you will need about <b>15 minutes</b> to finish it.
+//          <br/>
+//          <br/>
+//          We will start the training phase with a few simple questions concerning
+//          the color of the blocks that we will show you in the experiment.
+//          Please click on <b>CONITINUE</b> to proceed with the questions.`,
+//   buttonText: "continue"
+// });
+
+const instructions_general = magpieViews.view_generator("instructions", {
   trials: 1,
-  name: "instructions_color_vision",
+  name: "instructions_general",
   title: "General Instructions",
   text: `In this experiment you are shown pictures of different arrangements of
           blocks.
@@ -57,17 +75,7 @@ const instructions_color_vision = magpieViews.view_generator("instructions", {
          In total, you will need about <b>15 minutes</b> to finish it.
          <br/>
          <br/>
-         We will start the training phase with a few simple questions concerning
-         the color of the blocks that we will show you in the experiment.
-         Please click on <b>CONITINUE</b> to proceed with the questions.`,
-  buttonText: "continue"
-});
-
-const instructions_general = magpieViews.view_generator("instructions", {
-  trials: 1,
-  name: "instructions_general",
-  title: "General Instructions",
-  text: `We will now start the actual training phase which consists of <b>15</b>
+         We will now start the training phase which consists of <b>15</b>
          trials. You will see block arrangements similar to those you will be
          shown later in the test phase, such that you are able to <b>develop
          intuitions</b> about the <b>physical properties</b> and get familiar
@@ -226,7 +234,7 @@ const instructions_test = magpieViews.view_generator("instructions", {
 const instructions_fridge_reminder = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_fridge_reminder",
-  title: "Please Remember",
+  title: "Please remember",
   text: `<b>1</b>. A block is considered to <b>fall</b> as soon as it <b>drops</b>
     from a platform or from another block or when it simply <b>topples over</b> -
     that is, a block does not necessarily need to fall to the ground in
@@ -239,7 +247,9 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
     special or unexpected properties.
     </br>
     </br>
-    We will now start with the test phase which comprises <b>18</b> scenes in total.`,
+    We will now start with the test phase which comprises in total <b>18</b> scenes of
+    block arrangements and <b>8</b> simple color questions in between.
+    `,
   buttonText: "start test phase"
 });
 
