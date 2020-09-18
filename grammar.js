@@ -60,6 +60,7 @@ let shownNext = function (last, sentence='') {
   });
   let symbols = poss_utts.length == 0 ? [] : WORDS;
   symbols = _.filter(symbols, function(word){
+    // at least one of the possible utterences must be possible to build by current sentence + next word
     return _.some(poss_utts, function(utt){
       let s = (sentence + ' ' + word).trim()
       let holds = utt.startsWith(s);
@@ -68,8 +69,10 @@ let shownNext = function (last, sentence='') {
        (sentence=="the green block" || sentence=="probably the green block" ||
         sentence=="the green block probably" || sentence=="the blue block" ||
         sentence=="probably the blue block" || sentence=="the blue block probably" ||
-        (sentence.includes('if') && last !== "does not")) && word.startsWith('fall') ?
-        holds && word.endsWith('falls') : holds;
+        (sentence.includes('neither') && !sentence.includes('nor')) ||
+        (sentence.includes('if') && last !== "does not"))
+        && word.startsWith('fall') ? (holds && word.endsWith('falls')) : holds;
+
       return holds;
     });
   });
@@ -88,6 +91,8 @@ let templates = [
   "the COL1 block falls and the COL2 block falls [as well]",
   "the COL1 block falls but the COL2 block does not fall",
   "the COL1 block falls and the COL2 block does not fall",
+  "the COL1 block does not fall but the COL2 block falls",
+  "the COL1 block does not fall and the COL2 block falls",
   "neither the COL1 block nor the COL2 block fall",
   "neither the COL1 block nor the COL2 block falls",
   "neither the COL1 block falls nor the COL2 block falls",
