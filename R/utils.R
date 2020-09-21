@@ -115,7 +115,7 @@ tidy_data <- function(data, N_trials, test_trial_name){
   if(N_trials$color_vision != 0) {
     dat.color_vision <- df %>%
       filter(startsWith(trial_name, "color-vision")) %>%
-      select(prolific_id, id, question, response, expected, QUD)
+      select(prolific_id, id, question, response, expected, QUD, trial_number)
     df <- df %>% filter(!startsWith(trial_name, "color-vision"));
   }
   N_participants <- df %>% select(prolific_id) %>% unique() %>% nrow()

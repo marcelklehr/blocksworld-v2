@@ -31,7 +31,17 @@ plot_dir <- paste(result_dir, "plots", sep=.Platform$file.sep);
 dir.create(plot_dir, showWarnings = FALSE)
 ```
 
+
+## Training data
+
+```{r training}
+df <- data$train %>% group_by(prolific_id, id)
+```
+
+
+
 ## Experimental data: Produced sentences
+standardized sentences (the green and the blue = the blue and the green, etc.)
 
 ```{r}
 # summarize utterances
@@ -67,21 +77,42 @@ dat %>%
 ```
 
 ```{r all-trials}
-plotTrials <- function(dat, n_pages){
+plotTrials <- function(dat, n_pages, trials="all", min=0){
   ids = dat$id %>% unique()
   n = ids %>% length();
-  # for (pa in seq(1, n_pages)){
-  for(i in seq(1, n)) {
-    # print(pa)
-    p <- dat %>% filter(id == ids[[i]]) %>% 
-      ggplot(aes(y=fct_rev(fct_infreq(response)))) +
-      geom_bar() +
-      # facet_wrap_paginate(~id, nrow=2, ncol=1, page=pa, scales="free") + 
-      theme(text = element_text(size=14),
-            axis.text.x=element_text(angle=45, vjust = 0.5)) +
-      labs(x="#participants", y="response", title = ids[[i]]) +
-      theme_bw()
-    # p
+  brks=seq(0, 1, by=0.1)
+  
+  dat <- dat %>%
+    mutate(response = as.factor(response)) %>%
+    group_by(id,response) %>%
+    summarize(n=n(), .groups='drop_last') %>%
+    mutate(N=sum(n), ratio=n/N) %>% 
+    filter(ratio>min)
+      
+  if(trials=="all"){
+    for(i in seq(1, n)) {
+      df <- dat %>% filter(id == ids[[i]]) %>% 
+        mutate(response=fct_reorder(response, desc(-ratio)))
+      p <- df %>% filter(id == ids[[i]]) %>% 
+        ggplot(aes(x=ratio, y=response)) +
+        geom_bar(stat="identity") +
+        theme(text = element_text(size=20),
+              axis.text.x=element_text(angle=45, vjust = 0.5)) +
+        labs(x="percentage of participants who built utterance", y="built utterance", title = ids[[i]]) +
+        theme_bw()
+      print(p)
+    }
+  } else {
+    p <- dat %>%
+      filter(str_detect(id, trials)) %>%
+      mutate(response=fct_reorder(response, desc(-ratio))) %>% 
+      ggplot(aes(x=ratio, y=response)) +
+      geom_bar(aes(fill=id), stat="identity", position=position_dodge(preserve="single")) +
+      theme_bw() +
+      theme(text = element_text(size=20),
+            axis.text.x=element_text(angle=45, vjust = 0.5),
+            legend.position="bottom") +
+      labs(x="percentage of participants who built utterance", y="built utterance")
     print(p)
   }
 }
@@ -90,8 +121,26 @@ plotTrials <- function(dat, n_pages){
 Plot responses per trial
 
 ```{r}
-# +1 for example test-trial (ind2)
 dat %>% group_by(id) %>% plotTrials(N_trials$test/2 + 1)
+```
+
+All trials 
+
+```{r}
+dat$id %>% unique()
+```
+
+
+```{r, fig.width=15}
+# +1 for example test-trial (ind2)
+dat %>% group_by(id) %>% plotTrials(N_trials$test/2 + 1, trials = "if1_hh|independent_hh", 0.15)
+dat %>% group_by(id) %>%
+  plotTrials(N_trials$test/2 + 1,
+             trials = "if1_uh|if1_u-Lh|if1_u-Hh|if2_ul|if2_u-Ll|if2_u-Hl|independent_uh", 0.15)
+dat %>% group_by(id) %>%
+  plotTrials(N_trials$test/2 + 1,
+             trials = "if1_lh|if1_uh|if1_u-Lh|if1_u-Hh|if1_hh|if2_ul|if2_u-Hl|if2_u-Ll", 0.15)
+
 ```
 
 Plot custom responses

@@ -52,6 +52,7 @@ df %>%
   ggplot(aes(x=id)) + geom_bar(position="dodge", aes(fill=correct)) +
   theme(axis.text.x = element_text(angle=90, hjust=1), legend.position = "top")
 
+df %>% filter(!correct)
 ```
 
 ## Train Trials
