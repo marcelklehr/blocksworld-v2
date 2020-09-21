@@ -15,21 +15,22 @@ experimental_data <- function(path_to_csv){
   return(data)
 }
 
-anonymize_and_save <- function(data_dir, data_fn, result_dir, result_fn, debug_run=FALSE){
+anonymize_and_save <- function(data_dir, data_fn, result_dir, result_fn,
+                               debug_run=FALSE, anonymize=TRUE){
   path_to_data <- paste(data_dir, data_fn, sep=.Platform$file.sep)
   data <- if(debug_run) test_data(path_to_data) else experimental_data(path_to_data)
 
-  # if(!debug_run) {
-  #   # anonymize
-  #   prolific_ids <- data %>% pull(prolific_id) %>% unique()
-  #   new_ids <- paste("participant", seq(1,  length(prolific_ids)), sep="")
-  #   n_trials <- data %>% group_by(prolific_id) %>% summarize(n=n()) %>% pull(n) %>%
-  #     unique()
-  #   data <- data %>% mutate(prolific_id = rep(new_ids, each = n_trials))
-  # }
+  if(!debug_run && anonymize) {
+    prolific_ids <- data %>% pull(prolific_id) %>% unique()
+    new_ids <- paste("participant", seq(1,  length(prolific_ids)), sep="")
+    n_trials <- data %>% group_by(prolific_id) %>% summarize(n=n()) %>% pull(n) %>%
+      unique()
+    data <- data %>% mutate(prolific_id = rep(new_ids, each = n_trials))
+  }
   path_target <- paste(result_dir, paste(result_fn, "raw.csv", sep="_"), sep = .Platform$file.sep)
   write_excel_csv(data, path = path_target, delim = ",", append = FALSE, col_names=TRUE)
-  print(paste('written anonymized version to:', path_target))
+  msg = ifelse(anonymize, 'anonymized', '')
+  print(paste('written', msg, 'data to:', path_target))
   return(data)
 }
 
@@ -143,7 +144,7 @@ tidy_data <- function(data, N_trials, test_trial_name){
   return(dat.all)
 }
 
-standardize_color_groups <- function(df){
+standardize_color_groups_exp1 <- function(df){
   df <- df %>%
     mutate(question = case_when((question == "bg" | question == "gb") ~ "ac",
                                  question == "none" ~ "none",
@@ -274,9 +275,11 @@ save_prob_tables <- function(df, result_dir, result_fn){
   print(paste('written means of normalized probability tables to:', path_tables_all))
 }
 
-process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run, N_trials, test_trial_name){
+process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
+                         N_trials, test_trial_name, anonymize){
   # Anonymize and save raw ------------------------------------------------------
-  dat.anonym <- anonymize_and_save(data_dir, data_fn, result_dir, result_fn, debug_run)
+  dat.anonym <- anonymize_and_save(data_dir, data_fn, result_dir, result_fn,
+                                   debug_run, anonymize)
   dat.tidy <- tidy_data(dat.anonym, N_trials, test_trial_name);
   dat.all <- list(train=dat.tidy$train, info=dat.tidy$info, comments=dat.tidy$comments,
                   color=dat.tidy$color)
@@ -298,16 +301,16 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run, N_
   if(test_trial_name == "multiple_slider"){
     # process exp1
     df <- add_normed_exp1(df);
-    df <- standardize_color_groups(df)
+    df <- standardize_color_groups_exp1(df)
     save_prob_tables(df, result_dir, result_fn);
   } else {
-    # df <- standardize_color_groups_exp2(df)
+    df <- standardize_color_groups_exp2(df)
   }
   
   # save processed data -----------------------------------------------------
   fn_tidy <- paste(result_fn, "_tidy.rds", sep="");
   path_target <- paste(result_dir, fn_tidy, sep=.Platform$file.sep)
-  print(paste('written processed anonymized tidy data to:', path_target))
+  print(paste('written processed tidy data to:', path_target))
   dat.all$test <- df
   saveRDS(dat.all, path_target)
   

@@ -3,6 +3,7 @@ library(tidyverse)
 source("R/utils.R")
 
 N_trials <- list(train=15, test=18, color_vision=8);
+anonymize <- FALSE
 
 # Experiment 1 ------------------------------------------------------------
 # data_dir <- here("data", "test-runs")
@@ -16,14 +17,13 @@ result_fn <- "exp1"
 test_trial_name <- "multiple_slider"
 
 dat.exp1 <- process_data(data_dir, data_fn, result_dir, result_fn, debug_run,
-                         N_trials, test_trial_name);
+                         N_trials, test_trial_name, anonymize);
 
 
 # Experiment 2 ------------------------------------------------------------
 # data_dir <- here("data", "test-runs")
 data_dir <- here("data", "prolific")
-# data_fn <- "results_17_WordsOfToyBlocks-Pilot_BG.csv"
-data_fn <- "results_38_Experiment-2-Fridge-Pilot_BG.csv"
+data_fn <- "results_38_Experiment-2-Fridge-Pilot_BG_20.csv"
 
 result_dir <- paste(data_dir, "results", "experiment2", sep=.Platform$file.sep)
 dir.create(result_dir, recursive=TRUE);
@@ -32,7 +32,7 @@ result_fn <- "exp2"
 test_trial_name <- "fridge_view"
 
 dat.exp2 <- process_data(data_dir, data_fn, result_dir, result_fn, debug_run,
-                         N_trials, test_trial_name);
+                         N_trials, test_trial_name, anonymize);
 
 
 

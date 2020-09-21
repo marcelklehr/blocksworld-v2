@@ -10,6 +10,7 @@ library(ggforce)
 library(here)
 library(tidyverse)
 source(here("R", "utils.R"))
+source(here("R", "utils-exp2.R"))
 
 N_trials <- list(train=15, test=18, color_vision=8);
 
@@ -33,23 +34,52 @@ dir.create(plot_dir, showWarnings = FALSE)
 ## Experimental data: Produced sentences
 
 ```{r}
-dat <- data$test %>% mutate(response = as.factor(response),
-                            custom_response = as.factor(custom_response))
-dat.standardized <- dat %>% standardize_color_groups_exp2();
+# summarize utterances
+# and / but
+df <- data$test %>%
+ mutate(across(where(is.factor), as.character),
+        response= case_when(str_detect(response, "but") ~
+                              str_replace(response, "but", "and"),
+                            TRUE ~ response));
+s.pos.and = "the blue block and the green block fall"
+s.neg.and = "neither the blue block nor the green block fall"
+s.pos.if_green = "if the green block falls the blue block falls as well"
+s.pos.if_blue = "if the blue block falls the green block falls as well"
+s.pos.prob_green = "probably the green block falls"
+s.pos.prob_blue = "probably the blue block falls"
+s.pos_neg.and_gb = "the green block falls but the blue block does not fall"
+s.pos_neg.and_bg = "the blue block falls but the green block does not fall"
+
+dat <- df %>%
+  summarize_utts(c("and"), c("does not"), s.pos.and) %>%
+  summarize_utts(c("neither"), c("does not"), s.neg.and) %>%
+  summarize_utts(c("if the green block"), c("does not"), s.pos.if_green) %>%
+  summarize_utts(c("if the blue block"), c("does not"), s.pos.if_blue) %>%
+  summarize_utts(c("the green block probably"), c("does not"), s.pos.prob_green) %>%
+  summarize_utts(c("the blue block probably"), c("does not"), s.pos.prob_blue) %>%
+  summarize_utts(c("and", "the green block falls", "the blue block does not"), c(),
+                 s.pos_neg.and_gb) %>%
+  summarize_utts(c("and", "the blue block falls", "the green block does not"), c(),
+                 s.pos_neg.and_bg)
+
+dat %>% 
+  select(response) %>% unique()
 ```
 
 ```{r all-trials}
 plotTrials <- function(dat, n_pages){
-  for (pa in seq(1, n_pages)){
+  ids = dat$id %>% unique()
+  n = ids %>% length();
+  # for (pa in seq(1, n_pages)){
+  for(i in seq(1, n)) {
     # print(pa)
-    p <- dat %>% 
-      ggplot(aes(x=response)) +
+    p <- dat %>% filter(id == ids[[i]]) %>% 
+      ggplot(aes(y=fct_rev(fct_infreq(response)))) +
       geom_bar() +
-      facet_wrap_paginate(~id, nrow=2, ncol=1, page=pa, scales="free") + 
+      # facet_wrap_paginate(~id, nrow=2, ncol=1, page=pa, scales="free") + 
       theme(text = element_text(size=14),
             axis.text.x=element_text(angle=45, vjust = 0.5)) +
-      labs(y="#participants") +
-      coord_flip() +
+      labs(x="#participants", y="response", title = ids[[i]]) +
       theme_bw()
     # p
     print(p)
@@ -61,7 +91,20 @@ Plot responses per trial
 
 ```{r}
 # +1 for example test-trial (ind2)
-dat.standardized %>% group_by(id) %>% plotTrials(N_trials$test/2 + 1)
+dat %>% group_by(id) %>% plotTrials(N_trials$test/2 + 1)
+```
+
+Plot custom responses
+
+```{r,  fig.height = 5, fig.width = 10}
+dat.custom = dat %>% filter(!is.na(custom_response)) %>% group_by(id)
+dat.custom %>%
+  ggplot(aes(x=fct_rev(fct_infreq(custom_response)))) + geom_bar(aes(fill=id)) +
+  theme(text = element_text(size=20),
+        axis.text.x=element_text(angle=45, vjust = 0.5)) +
+  labs(y="#participants") +
+  coord_flip() +
+  theme_bw()
 ```
 
 Plot specific trials seperately
@@ -69,30 +112,40 @@ Plot specific trials seperately
 trial = "independent_ll"
 data.specific = dat %>% filter(id==trial) %>% group_by(id)
 data.specific %>%
-  ggplot(aes(x=response)) + geom_bar() +
+  ggplot(aes(x=fct_rev(fct_infreq(response)))) + geom_bar() +
   facet_wrap(~group) +  
   theme(text = element_text(size=14),
         axis.text.x=element_text(angle=45, vjust = 0.5)) +
-  labs(y="#participants", title=trial) +
+  labs(y="#participants", x="response", title=trial) +
   coord_flip() +
   theme_bw()
 ```
 
 Plot set of generated utterances
 
-```{r all-sentences}
+```{r all-sentences,  fig.height = 7, fig.width = 15}
 plotSentences <- function(dat){ 
   df.sum = dat %>% group_by(response) %>% summarize(N=n(), .groups="keep")
   max <- df.sum %>% ungroup() %>% select(N) %>% max()
   p <- dat %>% 
     ggplot(aes(y=fct_rev(fct_infreq(response)))) +
     geom_bar(aes(fill=id), stat="count") + #   hier weiter machen!
-    theme(text = element_text(size=14)) +
-    scale_x_discrete(name="# generations", breaks = seq(1, max), labels = sprintf("%s", seq(1, max)), limits=sprintf("%s", seq(1, max))) +
-    theme_bw()
+    theme_bw() +
+    labs(x="times generated", y="response", fill="trial id") +
+    theme(text = element_text(size=20), legend.position = "top") 
+    # scale_x_discrete(name="# generations", breaks = seq(1, max, by=20), labels = sprintf("%s", breaks), limits=sprintf("%s", breaks))
   return(p)
 }
-p <- dat.standardized %>% plotSentences()
+p <- dat %>% plotSentences()
 p
 ```
+
+
+
+
+
+```{r}
+data$comments
+```
+
 
