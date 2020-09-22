@@ -162,6 +162,10 @@ input[type="range"].replied::-webkit-slider-thumb {
   background: green;
 }
 
+input[type="range"].correct-slider::-webkit-slider-runnable-track {
+  background: #51DE19;
+}
+
 .thick {
   font-weight: bold;
 }
@@ -172,6 +176,10 @@ input[type="range"].replied::-webkit-slider-thumb {
   background-color: #a9a9a9;
   pointer-events: none;
 
+}
+/*background color shall change immediately, not after clicking somewhere else*/
+.grid-button:focus {
+  background-color: #a9a9a9;
 }
 
 .buttonContainer {
@@ -207,7 +215,7 @@ input[type="range"].replied::-webkit-slider-thumb {
   text-algin: center;
   align-self: center;
   /* background-color: #28B463 ; */
-  border: 8px solid #28B463 ;
+  border: 8px solid #2C6131 ;
 }
 
 .correct {

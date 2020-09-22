@@ -100,7 +100,7 @@ _htmlSlider = function (idxSlider, utterance, options, value) {
 htmlSliderAnswers = function (trial_data, values=["", "", "", ""]) {
   let utterances = [trial_data.icon1, trial_data.icon2,
     trial_data.icon3, trial_data.icon4];
-
+  let ids = trial_data.picture == '' ? ['ry', 'r', 'y', 'none'] : ['bg', 'b', 'g', 'none'];
   let html_str = `<div class='magpie-multi-slider-grid' id='answerSliders'>`;
   _.range(1, 5)
     .forEach(function (i) {

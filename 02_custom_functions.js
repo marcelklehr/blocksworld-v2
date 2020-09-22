@@ -281,14 +281,15 @@ let CountTrials = {'fridge': 0,
 functionalityRunBttn = function(anim, answers){
   let animation = anim.animation;
   let CT = anim.CT;
-  let id_correct;
+  let id = SHUFFLED_TRAIN_STIMULI[CT].id
+  let id_correct = TrainExpectations[id];
   $('#runButton')
     .on('click', function (e) {
       if (!anim.started) {
         anim.started = true;
         runAnimation(animation.engine);
         toggleNextIfDone($("#buttonNextAnimation"), true);
-
+        $('#runButton').addClass("grid-button");
         //selected answers can't be changed anymore
         if(answers == "sliders"){
           _.range(1, 5)
@@ -296,9 +297,10 @@ functionalityRunBttn = function(anim, answers){
               document.getElementById("response" + i)
                 .disabled = true;
             });
+          let idx = id_correct == "ry" ? 1 : id_correct == "r" ? 2 :
+                    id_correct == "y" ? 3 : 4;
+          $('#response' + idx).addClass("correct-slider");
         } else { // buttons
-            let id = SHUFFLED_TRAIN_STIMULI[CT].id
-            id_correct = TrainExpectations[id]
             $('#' + id_correct).addClass("correct");
             $('#comment').append(SHUFFLED_TRAIN_TRIALS[CT].comment)
             // highlight selected button in red if wrong:

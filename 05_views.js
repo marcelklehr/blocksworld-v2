@@ -98,10 +98,9 @@ const instructions_train = magpieViews.view_generator("instructions", {
   text: `For each presented scene you will be asked to <b>indicate whether you
   think that most likely both, none or respectively only one of two colored
   blocks will fall</b> (there may be other blocks with different colors than the
-  two colored blocks asked for).
-  To indicate your beliefs, please click on the button with the respective icon.
+  two colored blocks asked for) by clicking on the button with the respective icon.
   <br />
-  A falling block is represented by a skewed rectangle and a resting block that
+  A falling block is represented by a skewed rectangle and a block that
   does not fall is represented by a rectangle with a line below.
   Here is an exemplary icon for the event:
   <br/>
@@ -113,21 +112,55 @@ const instructions_train = magpieViews.view_generator("instructions", {
   <img src='stimuli/img/icons/not-yellow.png' />
   <br/>
   <br/>
-  A block is considered to <b>fall</b> as soon as it <b>topples
-  over</b> or <b>drops</b> from a platform or from another block.</b>
+  A block is considered to <b>fall</b> as soon as it <b>drops off a platform or
+  off another block</b>.
   <br/>
-  The colored blocks represent common toy blocks <b>without</b> any
-  special or unexpected properties. The different colors do
-  <b>not have</b> any meaning, they are just used to distinguish them.
+  The colored blocks represent common toy blocks <b>without</b> any special or
+  unexpected properties and the different colors do <b>not have</b> any meaning.
      <br />
      <br />
   After you selected one of the four buttons (which will make their
-  border turn green), click on <b>RUN</b> to see what will
-  actually happen. The button of the event that occurred will turn light
-  green and if you were wrong, the button you selected will turn
-  red.
+  border turn green), click on <b>RUN</b> to see what happens.
+  The button of the event that occurred will turn light green.
   <br/>
   After that, you will be able to proceed to the next trial by clicking on <b>NEXT</b>.`,
+  buttonText: "CONTINUE"
+});
+
+const instructions_train_sliders = magpieViews.view_generator("instructions", {
+  trials: 1,
+  name: "instructions_train_sliders",
+  title: "Instructions Training",
+  text: `For each presented scene we ask you to think about which blocks will
+  fall. We will ask you to indicate <b>how surprised</b> you would be when
+  certain blocks fell/did not fall by moving the sliders below the respective
+  icons.
+  <br />
+  A falling block is represented by a skewed rectangle and a block that
+  does not fall is represented by a rectangle with a line below.
+  Here is an exemplary icon for the event:
+  <br/>
+  <i>The <b>green</b> block <b>falls</b>, but the <b>yellow</b> block
+  <b>does not fall</b></i>.
+  <br/>
+  <br/>
+  <img src='stimuli/img/icons/green.png'/>
+  <img src='stimuli/img/icons/not-yellow.png' />
+  <br/>
+  <br/>
+  A block is considered to <b>fall</b> as soon as it <b>drops off a platform or
+  off another block</b>.
+  <br/>
+  The colored blocks represent common toy blocks <b>without</b> any special or
+  unexpected properties and the different colors do <b>not have</b> any meaning.
+     <br />
+     <br />
+  After you moved all four sliders, (the circle on top of the slider will turn
+    green at clicking), please click on <b>RUN</b> to see what happens.
+  The picture of the event that occurred will be highlighted in green.
+  <br/>
+  After that, you will be able to proceed to the next trial by clicking on
+  <b>NEXT</b>.`,
   buttonText: "CONTINUE"
 });
 

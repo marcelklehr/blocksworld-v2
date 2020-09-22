@@ -29,7 +29,8 @@ cols = {
       'yellow': '#FFBC42',
       'darkgreen': '#119533',
       'darkred': '#8F2D56',
-      'sienna': '#A0522D'
+      'sienna': '#A0522D',
+      'darkgreen': '#2C6131'
     };
 cols.plank = cols.blue
 cols.test_blocks = [cols.royal, cols.green];
