@@ -407,6 +407,9 @@ input[type="range"].correct-slider::-webkit-slider-runnable-track {
     border-radius: 15px;
 }
 
+.train-not-clickable {
+  pointer-events: none;
+}
 
 .not-clickable {
   background-color: #a9a9a9;

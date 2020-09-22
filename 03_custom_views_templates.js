@@ -34,10 +34,8 @@ const animation_view = {
           let nb_selected = selected.length;
           if (nb_selected === 1) {
             TRAIN_BTTN_IDS.forEach(function (bttn) {
-              $('#' + bttn)
-                .hasClass('selected') ?
-                $('#' + bttn)
-                .removeClass('selected') : null;
+              $('#' + bttn).hasClass('selected') ?
+              $('#' + bttn).removeClass('selected') : null;
             })
           }
           $('#' + id).addClass('selected');

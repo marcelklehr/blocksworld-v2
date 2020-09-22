@@ -4,6 +4,8 @@ const DEBUG = false;
 // var MODE = "test"
 // var MODE = "pretest"
 var MODE = "experiment"
+var ANIM_ANSWERS = "sliders"
+// var ANIM_ANSWERS = "buttons"
 
 const SCENE = {w: 800, h: 400};
 PROPS = {'blocks': {'w':40, 'h': 80},

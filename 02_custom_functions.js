@@ -302,6 +302,9 @@ functionalityRunBttn = function(anim, answers){
           $('#response' + idx).addClass("correct-slider");
         } else { // buttons
             $('#' + id_correct).addClass("correct");
+            _.map(TRAIN_BTTN_IDS, function(id){
+              $('#' + id).addClass('train-not-clickable');
+            });
             $('#comment').append(SHUFFLED_TRAIN_TRIALS[CT].comment)
             // highlight selected button in red if wrong:
             // console.log(id_selected + ' ' + id_correct);
