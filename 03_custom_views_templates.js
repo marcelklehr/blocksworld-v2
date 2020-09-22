@@ -12,7 +12,6 @@ const animation_view = {
   title: "title",
   CT: 0, //is this the start value?
   trials: NB_TRAIN_TRIALS - 1,
-  // trials: 1,
   data: "",
   // The render function gets the magpie object as well as the current trial
   // in view counter as input
@@ -26,7 +25,7 @@ const animation_view = {
         cleared = true;
       }
     });
-    let id_bttn_selected;
+    let id_selected;
     TRAIN_BTTN_IDS.forEach(function (id) {
       $('#' + id)
         .on('click', function (e) {
@@ -41,60 +40,15 @@ const animation_view = {
                 .removeClass('selected') : null;
             })
           }
-          $('#' + id)
-            .addClass('selected');
-          id_bttn_selected = id;
+          $('#' + id).addClass('selected');
+          id_selected = id;
           nb_selected = 1;
           toggleNextIfDone($('#runButton'), true);
         });
     });
-
-    let animationStarted = false;
-    let id_button_correct;
-    $('#runButton')
-      .on('click', function (e) {
-        if (!animationStarted) {
-          animationStarted = true;
-          runAnimation(animation.engine);
-          toggleNextIfDone($("#buttonNextAnimation"), true);
-          //selected answers can't be changed anymore
-          $(".selected")
-            .off("click");
-          $(".unselected")
-            .off("click");
-
-          let id = SHUFFLED_TRAIN_TRIALS[CT].id
-          id_button_correct = TrainExpectations[id]
-          $('#' + id_button_correct)
-            .addClass("correct");
-          id_bttn_selected !== id_button_correct ?
-            $('#' + id_bttn_selected)
-            .addClass('incorrect') : null;
-
-          $('#comment').append(SHUFFLED_TRAIN_TRIALS[CT].comment)
-        }
-      });
-
-    $("#buttonNextAnimation")
-      .on("click", function () {
-        const RT = Date.now() - animation.startTime; // measure RT before anything else
-        if (!cleared) {
-          clearWorld(animation.engine, animation.render, stop2Render = false);
-        }
-        let data = getButtonResponse();
-        let trial_data = Object.assign(data, {
-          trial_name: 'animation_buttons',
-          trial_number: CT + 1,
-          RT: RT,
-          id: SHUFFLED_TRAIN_TRIALS[CT].id
-        });
-        trial_data = magpieUtils.view.save_config_trial_data(
-          _.omit(SHUFFLED_TRAIN_TRIALS[CT], ['icon1', 'icon2', 'icon3', 'icon4']),
-          trial_data
-        );
-        magpie.trial_data.push(trial_data);
-        magpie.findNextView();
-      });
+    let anim = {animation, cleared, CT, started:false, name:'animation_buttons'};
+    functionalityRunBttn(anim, "buttons");
+    functionalityBttnNextAnimation(getButtonResponse, magpie, anim)
   }
 };
 
@@ -518,76 +472,29 @@ handle_response_function: function(config, CT, magpie, answer_container_generato
 
 
 // view for train trial with sliders instead of buttons
-// const animation_view2 = {
-//   name: "animation",
-//   title: "title",
-//   CT: NB_TRAIN_TRIALS - 1,
-//   trials: 1,
-//   data: "",
-//   // The render function gets the magpie object as well as the current trial
-//   // in view counter as input
-//   render: function (CT, magpie) {
-//     let html_answers = htmlSliderAnswers(TRAIN_TRIALS[CT])
-//     let animation = showAnimationInTrial(CT, html_answers, progress_bar = false);
-//
-//     let cleared = false;
-//     Events.on(animation.engine, 'afterUpdate', function (event) {
-//       if (!cleared && animation.engine.timing.timestamp >= DURATION_ANIMATION) {
-//         clearWorld(animation.engine, animation.render, stop2Render = false);
-//         cleared = true;
-//       }
-//     });
-//     addCheckSliderResponse($('#runButton'));
-//     DEBUG ? addKeyToMoveSliders($("#runButton")) : null;
-//
-//     let animationStarted = false;
-//     $('#runButton')
-//       .on('click', function (e) {
-//         if (!animationStarted) {
-//           animationStarted = true;
-//           runAnimation(animation.engine);
-//           toggleNextIfDone($("#buttonNextAnimation"), true);
-//           //selected answers can't be changed anymore
-//           _.range(1, 5)
-//             .forEach(function (i) {
-//               document.getElementById("response" + i)
-//                 .disabled = true;
-//             });
-//         }
-//         let id = SHUFFLED_TRAIN_STIMULI[CT].id
-//         id_button_correct = TrainExpectations[id]
-//         $('#' + id_button_correct)
-//           .addClass("correct");
-//       });
-//     $("#buttonNextAnimation")
-//       .on("click", function () {
-//         const RT = Date.now() - animation.startTime; // measure RT before anything else
-//         if (!cleared) {
-//           clearWorld(animation.engine, animation.render, stop2Render = false);
-//         }
-//         let data = getSliderResponse();
-//         let trial_data = Object.assign(data, {
-//           trial_name: 'animation_slider',
-//           trial_number: CT + 1,
-//           RT: RT,
-//           id: SHUFFLED_TRAIN_STIMULI[CT].id
-//         });
-//         var copied = Object.assign({}, TRAIN_TRIALS[CT]);
-//         copied.icon1 = iconHtml2Utterance(copied.icon1)
-//           .short;
-//         copied.icon2 = iconHtml2Utterance(copied.icon2)
-//           .short;
-//         copied.icon3 = iconHtml2Utterance(copied.icon3)
-//           .short;
-//         copied.icon4 = iconHtml2Utterance(copied.icon4)
-//           .short;
-//         copied.expected = TrainExpectations[trial_data.id];
-//         trial_data = magpieUtils.view.save_config_trial_data(
-//           copied,
-//           trial_data
-//         );
-//         magpie.trial_data.push(trial_data);
-//         magpie.findNextView();
-//       });
-//   }
-// };
+const animation_view2 = {
+  name: "animation",
+  title: "title",
+  CT: 0,
+  trials: NB_TRAIN_TRIALS - 1,
+  data: "",
+  // The render function gets the magpie object as well as the current trial
+  // in view counter as input
+  render: function (CT, magpie) {
+    let html_answers = htmlSliderAnswers(TRAIN_TRIALS[CT])
+    let animation = showAnimationInTrial(CT, html_answers, progress_bar=true);
+    let cleared = false;
+    Events.on(animation.engine, 'afterUpdate', function (event) {
+      if (!cleared && animation.engine.timing.timestamp >= DURATION_ANIMATION) {
+        clearWorld(animation.engine, animation.render, stop2Render = false);
+        cleared = true;
+      }
+    });
+    addCheckSliderResponse($('#runButton'));
+    DEBUG ? addKeyToMoveSliders($("#runButton")) : null;
+
+    let anim = {animation, cleared, CT, started:false,  name:'animation_slider'}
+    functionalityRunBttn(anim, "sliders");
+    functionalityBttnNextAnimation(getSliderResponse, magpie, anim);
+  }
+};

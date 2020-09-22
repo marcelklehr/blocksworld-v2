@@ -276,3 +276,62 @@ getTrialById = function(trials_all, id){
 let CountTrials = {'fridge': 0,
                    'color_vision': 0
                  };
+
+/*@arg answers: "sliders", "buttons"*/
+functionalityRunBttn = function(anim, answers){
+  let animation = anim.animation;
+  let CT = anim.CT;
+  let id_correct;
+  $('#runButton')
+    .on('click', function (e) {
+      if (!anim.started) {
+        anim.started = true;
+        runAnimation(animation.engine);
+        toggleNextIfDone($("#buttonNextAnimation"), true);
+
+        //selected answers can't be changed anymore
+        if(answers == "sliders"){
+          _.range(1, 5)
+            .forEach(function (i) {
+              document.getElementById("response" + i)
+                .disabled = true;
+            });
+        } else { // buttons
+            let id = SHUFFLED_TRAIN_STIMULI[CT].id
+            id_correct = TrainExpectations[id]
+            $('#' + id_correct).addClass("correct");
+            $('#comment').append(SHUFFLED_TRAIN_TRIALS[CT].comment)
+            // highlight selected button in red if wrong:
+            // console.log(id_selected + ' ' + id_correct);
+            // id_selected !== id_correct ?
+            //   $('#' + id_selected).addClass('incorrect') : null;
+        }
+      }
+    });
+}
+
+functionalityBttnNextAnimation = function(response_fn, magpie, anim){
+  $("#buttonNextAnimation")
+    .on("click", function () {
+      let CT = anim.CT
+      let animation = anim.animation
+      const RT = Date.now() - animation.startTime; // measure RT before anything else
+      if (!anim.cleared) {
+        clearWorld(animation.engine, animation.render, stop2Render = false);
+      }
+      let data = response_fn();
+      let trial_data = Object.assign(data, {
+        trial_name: anim.trial_name,
+        trial_number: CT + 1,
+        RT: RT,
+        id: SHUFFLED_TRAIN_TRIALS[CT].id
+      });
+      // copied.expected = TrainExpectations[trial_data.id];
+      trial_data = magpieUtils.view.save_config_trial_data(
+        _.omit(SHUFFLED_TRAIN_TRIALS[CT], ['icon1', 'icon2', 'icon3', 'icon4']),
+        trial_data
+      );
+      magpie.trial_data.push(trial_data);
+      magpie.findNextView();
+    });
+}

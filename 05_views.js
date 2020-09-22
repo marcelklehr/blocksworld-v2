@@ -293,13 +293,12 @@ const sentence_choice_custom = magpieViews.view_generator("sentence_choice", {
   }
 });
 
-// experimental phase trials
+// experimental phase trials Experiment1
 const multiple_slider = magpieViews.view_generator(
   "slider_rating", {
     // This will use all trials specified in `data`, you can use a smaller value
     // (for testing), but not a larger value
     trials: TEST_TRIALS.length,
-    // trials: 4,
     // name should be identical to the variable name
     name: "multiple_slider",
     data: TEST_TRIALS
