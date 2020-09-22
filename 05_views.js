@@ -133,8 +133,9 @@ const instructions_train_sliders = magpieViews.view_generator("instructions", {
   title: "Instructions Training",
   text: `For each presented scene we ask you to think about which blocks will
   fall. We will ask you to indicate <b>how surprised</b> you would be when
-  certain blocks fell/did not fall by moving the sliders below the respective
-  icons.
+  certain blocks fall/do not fall by moving the sliders
+  (<b>left</b>: <i>not surprised at all</i>, <b>right</b>: <i>totally
+  surprised</i>) below the respective icons.
   <br />
   A falling block is represented by a skewed rectangle and a block that
   does not fall is represented by a rectangle with a line below.
@@ -148,6 +149,11 @@ const instructions_train_sliders = magpieViews.view_generator("instructions", {
   <img src='stimuli/img/icons/not-yellow.png' />
   <br/>
   <br/>
+  <b>Note</b>: the slider that you position <b>leftmost</b> is the event that
+  you would be <b>least surprised</b> about, that is, you rate this as
+  <b>the most likely event</b>.
+  <br/>
+  <br/>
   A block is considered to <b>fall</b> as soon as it <b>drops off a platform or
   off another block</b>.
   <br/>
@@ -156,12 +162,12 @@ const instructions_train_sliders = magpieViews.view_generator("instructions", {
      <br />
      <br />
   After you moved all four sliders, (the circle on top of the slider will turn
-    green at clicking), please click on <b>RUN</b> to see what happens.
-  The picture of the event that occurred will be highlighted in green.
+  green at clicking), you will be able to click on <b>RUN</b> to see what happens.
+  The slider of the event that occurred will be highlighted in green.
   <br/>
   After that, you will be able to proceed to the next trial by clicking on
-  <b>NEXT</b>.`,
-  buttonText: "CONTINUE"
+  <b>NEXT SCENE</b>.`,
+  buttonText: "start training"
 });
 
 const instructions_train3 = magpieViews.view_generator("instructions", {
