@@ -202,12 +202,15 @@ _.map(slider_rating_trials, function (trial) {
 // the 4 buttons are always shown in same order
 let TRAIN_TRIALS = [];
 let train_ids = _.map(TrainStimuli.list_all, 'id');
+let QUD = ANIM_ANSWERS == "sliders" ?
+  "How surprised would you be to see the following blocks falling?" :
+  "Which block(s) do you think will fall? Click on RUN to see!";
 train_ids
   .forEach(function (id) {
     let comment = ''
     // if(id == 'ssw0') {comment = 'Note: the red block fell off another block.'}
     let data = {
-      QUD: 'Which block(s) do you think will fall? Click on RUN to see!',
+      QUD: QUD,
       id: id,
       icon1: id2IconTrain.ac,
       icon2: id2IconTrain.a,
@@ -219,8 +222,8 @@ train_ids
       question4: text_train_buttons.short.none,
       question: '',
       expected: TrainExpectations[id],
-      optionLeft: '',
-      optionRight: '',
+      optionLeft: 'not at all',
+      optionRight: 'totally',
       group: '',
       picture: '',
       comment: comment
