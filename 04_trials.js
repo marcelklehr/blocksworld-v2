@@ -299,7 +299,7 @@ fridge_trials = _.map(fridge_trials, function (trial, i) {
    'optionLeft', 'optionRight', 'expected'].forEach(function(key){
     trial[key] = '';
   });
-  trial.QUD = "Please build the utterance that for you is the most natural and informative description of the scene below.";
+  trial.QUD = "Please build the best sentence such that another person can position the 2 colored blocks in the scene below.";
   trial.sentence = "";
   trial = _.omit(trial, ['icon1', 'icon2', 'icon3', 'icon4']);
   return trial
