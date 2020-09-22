@@ -218,14 +218,6 @@ showAnimationInTrial = function (CT, html_answers, progress_bar = true) {
 
 // new for fridge views//MALIN FRIDGE
 checkBuildSentence = function (sentenceArray, poss_next, button2Toggle) {
-  // let has_block = sentenceArray.some(item => item.includes('block'));
-  // let has_verb = sentenceArray.some(item => GRAMMAR_VAR['V'].includes(item));
-  // // let next_is_conj =  GRAMMAR_VAR["CONJ"].every(item => poss_next.includes(item));
-  // let last_word = _.last(sentenceArray);
-  // // console.log('a: ' + a + ', b: ' + b  + ', c: ' + c);
-  // if(has_block && has_verb && !GRAMMAR_VAR['CONJ'].includes(last_word) &&
-  //     !GRAMMAR_VAR['SUBJ'].includes(last_word)) {
-  //   toggleNextIfDone(button2Toggle, true);
   // sentence is only submittable if it is one of the sentences in UTTERANCES //
   let sentence = sentenceArray.join(" ");
   if(UTTERANCES.includes(sentence.trim())) {
@@ -280,3 +272,7 @@ getTrialById = function(trials_all, id){
   trial.length != 1 ? console.error('several trials with id ' + id) : null;
   return trial[0];
 }
+
+let CountTrials = {'fridge': 0,
+                   'color_vision': 0
+                 };

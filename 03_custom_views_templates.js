@@ -342,11 +342,13 @@ const fridge_generator = {
     button.on("click", function () {
       const RT = Date.now() - startingTime; // measure RT before anything else
       let response2 = custom_sentence == "" ? "" : custom_sentence.value;
+      CountTrials.fridge = CountTrials.fridge + 1;
       let trial_data = {
         trial_name: config.name,
-        trial_number: CT + 1,
-        response: [sentence, response2],
-        response1: sentence,
+        // trial_number: CT + 1,
+        trial_number: CountTrials.fridge
+        response: [config.data[CT].sentence, response2],
+        response1: config.data[CT].sentence,
         response2: response2,
         response3: config.data[CT].cost,
         response4: response2.split(" ").length,
@@ -354,7 +356,7 @@ const fridge_generator = {
       };
       // console.log(trial_data.response3);
       trial_data = magpieUtils.view.save_config_trial_data(
-        _.omit(config.data[CT], 'sentence', 'cost'),
+        _.omit(config.data[CT], 'sentence'),
         trial_data
       );
       magpie.trial_data.push(trial_data);
@@ -411,9 +413,11 @@ handle_response_function: function(config, CT, magpie, answer_container_generato
 
   $("#next").on("click", function() {
       const RT = Date.now() - startingTime; // measure RT before anything else
+      CountTrials.color_vision = CountTrials.color_vision + 1;
       let trial_data = {
           trial_name: config.name,
-          trial_number: CT + 1,
+          // trial_number: CT + 1,
+          trial_nubmer: CountTrials.color_vision,
           question: question_left_part.concat("...answer here...").concat(question_right_part),
           response: response.val(),
           RT: RT

@@ -10,20 +10,7 @@ const GRAMMAR_VAR = {
   'ADV1': ["as well"],
   'ADV2': ["probably"]
 }
-
 const CONSTITUENTS = _.values(GRAMMAR_VAR);
-
-// which words are clickable after which type of words
-const GRAMMAR_RULE = {
-  'S': ["SUBJ", "neither", "if", "ADV2"],
-  'SUBJ': ['NEG', 'V', 'CONJ', "ADV2", 'NOT'],
-  'V': ['SUBJ', 'CONJ', 'NEG', 'ADV1'],
-  'CONJ': ['SUBJ'],
-  'NEG': ['SUBJ'],
-  'NOT': ['fall'],
-  'ADV1': [],
-  'ADV2': ['SUBJ', 'V', 'NOT']
-}
 // each word must appear in this array to get a color
 let WORD_GROUPS = [
   {words: GRAMMAR_VAR.SUBJ,
