@@ -1,11 +1,11 @@
 ---
-title: "results experiment 2"
+title: "Results Experiment 2 Pilot"
 output:
   html_document:
     df_print: paged
 ---
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, include=FALSE}
 library(ggforce)
 library(here)
 library(tidyverse)
@@ -34,33 +34,83 @@ dir.create(plot_dir, showWarnings = FALSE)
 
 ## Training data
 
-```{r training}
-df <- data$train %>% group_by(prolific_id, id)
+Events that should **NOT** be selected:
+
+```{r training, echo=FALSE}
+dat.train <- data$train %>% group_by(prolific_id, id) %>%
+  mutate(across(where(is.factor), as.character)) %>%
+  mutate(response = as.logical(response))
+
+# distance1: red, ¬yellow
+# distance0: yellow, ¬red
+# ac0: yellow, ¬red
+# ac1: red, ¬yellow
+# ac2: yellow, ¬red
+# ac3: red, ¬yellow
+# ssw0: red, ¬yellow
+# ssw1: yellow, ¬red
+N = dat.train$prolific_id %>% unique() %>% length()
+df.train <- dat.train %>%
+  filter((id=="distance1" & question=="r" & response) |
+         (id=="distance0" & question=="y" & response) |
+         (id=="ac0" & question=="y" & response) |
+         (id=="ac1" & question=="r" & response) |
+         (id=="ac2" & question=="y" & response) |
+         (id=="ac3" & question=="r" & response) |
+         (id=="ssw0" & question=="r" & response) |
+         (id=="ssw1" & question=="y" & response)) %>%
+  group_by(id) %>% 
+  mutate(n=n(), ratio=n/N) %>%
+  select(expected, id, question, n, ratio, prolific_id)
+  
+df.train %>%
+  distinct(id, .keep_all = TRUE) %>%
+  ggplot(aes(x=id, y=ratio)) +
+  geom_bar(aes(fill=question), stat="identity", position="dodge") +
+  labs(x="trial id", y="ratio participants")
+
+df.train.participants <- df.train %>%
+  group_by(prolific_id) %>% 
+  mutate(n=n()) %>%
+  distinct(prolific_id, .keep_all = TRUE)
+
+df.train.participants %>%
+  ggplot(aes(x=prolific_id, y=n)) +
+  geom_bar(stat="identity") +
+  theme(axis.text.x=element_text(angle=90, vjust = 0.5))
 ```
 
-
-
 ## Experimental data: Produced sentences
-standardized sentences (the green and the blue = the blue and the green, etc.)
+
+filter data first wrt results in train data
 
 ```{r}
-# summarize utterances
-# and / but
-df <- data$test %>%
+ids_out_train = df.train.participants %>% filter(n>=4) %>%
+  pull(prolific_id) %>% as.character()
+
+# summarize uttterances: use 'and' instead of 'but' everywhere
+dat.test <- data$test %>%
  mutate(across(where(is.factor), as.character),
         response= case_when(str_detect(response, "but") ~
                               str_replace(response, "but", "and"),
-                            TRUE ~ response));
+                            TRUE ~ response))
+df.test <- dat.test %>%
+  filter(!prolific_id %in% ids_out_train);
+```
+
+standardize sentences (the green and the blue = the blue and the green, etc.)
+
+```{r standardize}
 s.pos.and = "the blue block and the green block fall"
 s.neg.and = "neither the blue block nor the green block fall"
-s.pos.if_green = "if the green block falls the blue block falls as well"
-s.pos.if_blue = "if the blue block falls the green block falls as well"
+s.pos.if_green = "if the green block falls the blue block falls"
+s.pos.if_blue = "if the blue block falls the green block falls"
 s.pos.prob_green = "probably the green block falls"
 s.pos.prob_blue = "probably the blue block falls"
 s.pos_neg.and_gb = "the green block falls but the blue block does not fall"
 s.pos_neg.and_bg = "the blue block falls but the green block does not fall"
 
-dat <- df %>%
+test.standardized <- df.test %>%
   summarize_utts(c("and"), c("does not"), s.pos.and) %>%
   summarize_utts(c("neither"), c("does not"), s.neg.and) %>%
   summarize_utts(c("if the green block"), c("does not"), s.pos.if_green) %>%
@@ -71,12 +121,11 @@ dat <- df %>%
                  s.pos_neg.and_gb) %>%
   summarize_utts(c("and", "the blue block falls", "the green block does not"), c(),
                  s.pos_neg.and_bg)
-
-dat %>% 
+test.standardized %>% 
   select(response) %>% unique()
 ```
 
-```{r all-trials}
+```{r all-trials, echo=FALSE}
 plotTrials <- function(dat, n_pages, trials="all", min=0){
   ids = dat$id %>% unique()
   n = ids %>% length();
@@ -96,57 +145,86 @@ plotTrials <- function(dat, n_pages, trials="all", min=0){
       p <- df %>% filter(id == ids[[i]]) %>% 
         ggplot(aes(x=ratio, y=response)) +
         geom_bar(stat="identity") +
-        theme(text = element_text(size=20),
+        theme_bw() +
+        theme(text = element_text(size=12),
               axis.text.x=element_text(angle=45, vjust = 0.5)) +
         labs(x="percentage of participants who built utterance", y="built utterance", title = ids[[i]]) +
-        theme_bw()
+        scale_y_discrete(labels = function(ylab) str_wrap(ylab, width = 27.5))
       print(p)
     }
   } else {
     p <- dat %>%
       filter(str_detect(id, trials)) %>%
-      mutate(response=fct_reorder(response, desc(-ratio))) %>% 
+      mutate(response=fct_rev(fct_relevel(response, sort))) %>% 
       ggplot(aes(x=ratio, y=response)) +
       geom_bar(aes(fill=id), stat="identity", position=position_dodge(preserve="single")) +
       theme_bw() +
-      theme(text = element_text(size=20),
+      theme(text = element_text(size=12),
             axis.text.x=element_text(angle=45, vjust = 0.5),
-            legend.position="bottom") +
-      labs(x="percentage of participants who built utterance", y="built utterance")
+            legend.position="top") +
+      labs(x="percentage of participants who built utterance", y="built utterance") +
+      scale_y_discrete(labels = function(ylab) str_wrap(ylab, width = 27.5))
     print(p)
   }
 }
 ```
 
-Plot responses per trial
+## Responses per trial
 
-```{r}
-dat %>% group_by(id) %>% plotTrials(N_trials$test/2 + 1)
+```{r, echo=FALSE}
+test.standardized %>% group_by(id) %>% plotTrials(N_trials$test/2 + 1)
 ```
 
-All trials 
-
-```{r}
-dat$id %>% unique()
+```{r, include=FALSE}
+# All trials 
+test.standardized$id %>% unique()
 ```
 
+## Trials in which conditionals were built. 
 
-```{r, fig.width=15}
+```{r generated-if, echo=FALSE}
+test.standardized.ifs <-
+  test.standardized %>%
+  filter(str_detect(response, "if")) %>%
+  select(id, response, prolific_id) %>%
+  group_by(id) %>% mutate(n=n()) %>% arrange(desc(n)) %>%
+  select(id, n) %>% distinct()
+
+test.standardized.ifs
+
+participants.used_if = test.standardized %>%
+  filter(str_detect(response, "if")) %>% select(prolific_id) %>% unique()
+participants.nb.used_if = nrow(participants.used_if)
+trials.nb_if = test.standardized.ifs %>% pull(n) %>% sum()
+
+```
+
+Nb of participants who created if-sentences: `r participants.nb.used_if`.
+Nb of total created if-sentences: `r trials.nb_if`.
+
+## Responses that were created most often for each trial
+
+```{r, fig.width=10, height=12}
+test.std.max = test.standardized %>% group_by(id, response) %>%
+  summarize(n=n(), .groups='drop_last') %>%
+  filter(n==max(n)) %>%
+  mutate(id=as.factor(id), response = as.factor(response))
+
+test.std.max %>%
+  ggplot(aes(y=response, x=n)) + geom_bar(aes(fill=id), stat="identity")
+
+```
+
+```{r, fig.width=10, height=8}
 # +1 for example test-trial (ind2)
-dat %>% group_by(id) %>% plotTrials(N_trials$test/2 + 1, trials = "if1_hh|independent_hh", 0.15)
-dat %>% group_by(id) %>%
-  plotTrials(N_trials$test/2 + 1,
-             trials = "if1_uh|if1_u-Lh|if1_u-Hh|if2_ul|if2_u-Ll|if2_u-Hl|independent_uh", 0.15)
-dat %>% group_by(id) %>%
-  plotTrials(N_trials$test/2 + 1,
-             trials = "if1_lh|if1_uh|if1_u-Lh|if1_u-Hh|if1_hh|if2_ul|if2_u-Hl|if2_u-Ll", 0.15)
-
+test.standardized %>% group_by(id) %>%
+  plotTrials(N_trials$test/2 + 1,trials = "if1_hh|if2_hl|if2_u-Hl|if2_u-Ll|if1_uu|independent_hh", 0.15)
 ```
 
-Plot custom responses
+## Custom responses
 
 ```{r,  fig.height = 5, fig.width = 10}
-dat.custom = dat %>% filter(!is.na(custom_response)) %>% group_by(id)
+dat.custom = dat.test %>% filter(!is.na(custom_response)) %>% group_by(id)
 dat.custom %>%
   ggplot(aes(x=fct_rev(fct_infreq(custom_response)))) + geom_bar(aes(fill=id)) +
   theme(text = element_text(size=20),
@@ -156,10 +234,11 @@ dat.custom %>%
   theme_bw()
 ```
 
-Plot specific trials seperately
-```{r}
+
+```{r, include=FALSE}
+# Plot specific trials seperately
 trial = "independent_ll"
-data.specific = dat %>% filter(id==trial) %>% group_by(id)
+data.specific = test.standardized %>% filter(id==trial) %>% group_by(id)
 data.specific %>%
   ggplot(aes(x=fct_rev(fct_infreq(response)))) + geom_bar() +
   facet_wrap(~group) +  
@@ -170,7 +249,7 @@ data.specific %>%
   theme_bw()
 ```
 
-Plot set of generated utterances
+## Set of generated utterances
 
 ```{r all-sentences,  fig.height = 7, fig.width = 15}
 plotSentences <- function(dat){ 
@@ -185,16 +264,16 @@ plotSentences <- function(dat){
     # scale_x_discrete(name="# generations", breaks = seq(1, max, by=20), labels = sprintf("%s", breaks), limits=sprintf("%s", breaks))
   return(p)
 }
-p <- dat %>% plotSentences()
+p <- test.standardized %>% plotSentences()
 p
 ```
 
 
 
-
+## Comments
 
 ```{r}
-data$comments
+data$comments %>% filter(comments != "") %>%  pull(comments)
 ```
 
 
