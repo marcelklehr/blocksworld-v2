@@ -346,7 +346,7 @@ const fridge_generator = {
       let trial_data = {
         trial_name: config.name,
         // trial_number: CT + 1,
-        trial_number: CountTrials.fridge
+        trial_number: CountTrials.fridge,
         response: [config.data[CT].sentence, response2],
         response1: config.data[CT].sentence,
         response2: response2,
