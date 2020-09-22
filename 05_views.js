@@ -199,33 +199,72 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
 const instructions_fridge = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_fridge",
-  title: "Instructions Test Phase",
-  text: `Great - we'll now proceed to the test phase of the experiment.
-          Again, you will be shown scenes of different block arrangements.
-          However, this time, we ask you to <b>build a sentence</b> that you think is the <b>most natural</b> and <b>most informative utterance</b> to describe what you think happens in the scene.
-          <br />
-          <br />
-          <b>A few things to note</b>:
-          <br />
-          <b>1</b>. We ask you to concatenate words into a <b>grammatical sentence</b>
-          by clicking on their corresponding buttons.
-          <br />
-          <b>2</b>. At each position in the sentence, you can only select words
-          on buttons that are highlighted (by an orange frame).
-          <br/>
-          <b>3</b>. You always have the possibility to <b>make corrections</b> by clicking on <b>DELETE LAST WORD</b> in the lower right of the screen.
-          <br />
-          <b>4</b>. After you have built the sentence (shown word by word in a box in the lower left), click on <b>SUBMIT SENTECE</b> to continue (not clickable for all combinations, e.g. if ungrammatical).
-          <br />
-          <b>5</b>. If you think that a different sentence, that you couldn't built with the available words, would describe the scene more naturally, click on <b>USE MY OWN WORDS</b> and type it into the box that will appear in the lower left corner.
-          By clicking on <b>NEXT SCENE</b>, your sentence <b>will be submitted and</b>
-          you will directly <b>get to the next trial</b>.
-          <br />
-          Otherwise, click on <b>NEXT SCENE</b> right away to continue straight with the next trial.
-          <br />
-          <br />
-          There will be one example trial next before we start with the actual test phase.`,
-  buttonText: "continue with example trial"
+  title: "General Instructions Test Phase",
+  text: `Great - we will now proceed to the test phase of the experiment, where
+  you will again be shown different block arrangements.
+  <br/>
+  Please imagine that <b>someone else</b> sees the <b>exact same scene</b> as you will,
+  but <b>without the two colored blocks</b>.
+  <br/>
+  Your task is to <b>produce the sentence</b> that <b>best
+  describes</b> what happens in the scene, such that the other person is able
+  to <b>put the two blocks as close as possible to where you see them</b>.
+  <br/>
+  The other person is instructed to put the blocks - <b>based on your hint</b> -
+  on any platform or block that is shown in the scene with only one block being
+  allowed per platform.
+  <br/>
+  <br/>
+  The sentences that you can produce are <b>limited</b>: you will see a <b>set of
+  words</b> which we ask you to <b>concatenate by clicking</b> on them.
+  <br />
+  <br />
+  <b>You will be able to produce the following types of sentences</b>:
+  <br/>
+  <b>1.</b> <b>simple assertions</b>, e.g. <i>The green block
+  falls</i>, <i>The blue block does not fall</i>, ...
+  <br/>
+  <b>2.</b> <b>simple assertions</b> combined with <b>'probably'</b>, e.g.
+  <i>The green block probably falls</i>, ...
+  <br/>
+  <b>3.</b> <b>conjunctions</b>, e.g. <i>The green block and the blue block fall</i>,
+  <i>The blue block falls but the green block does not fall</i>, ...
+  <br/>
+  <b>4.</b> <b>conditionals</b>, e.g. <i>If the green block falls, the blue block
+  falls as well</i>, <i>If the green block does not fall, the blue block falls
+  </i>, ...`,
+  buttonText: "continue"
+});
+const instructions_fridge_procedure = magpieViews.view_generator("instructions", {
+  trials: 1,
+  name: "instructions_fridge_procedure",
+  title: "Instructions Procedure Test Phase",
+  text: `<b>1</b>. Only the <b>highlighted</b> words (orange frame) are <b>clickable</b>;
+  these differ depending on the position in the sentence that you are
+  about to produce.
+  <br/>
+  <b>2</b>. <b>Corrections</b> can be made by clicking on
+  <b>DELETE LAST WORD</b> in the lower right of the screen.
+  <br />
+  <b>3</b>. When you have produced a grammatical sentence (<i>not all
+    grammatical sentences are producable!</i>), which is shown
+  word by word in a box in the lower left, you will be able to click on
+  <b>SUBMIT SENTENCE</b> to continue.
+  <br />
+  <b>4</b>. If you think there is a sentence that better describes
+  what happens in the scene, please click on <b>USE MY OWN WORDS</b> and
+  type it into the box that will appear in the lower left corner.
+  <br/>
+  By clicking on <b>NEXT SCENE</b>, your sentence <b>will be saved and
+  you will directly get to the next trial</b>.
+  <br/>
+  <b>5</b>. If you think that there is no better sentence for describing
+  what happens in the scene, click on <b>NEXT SCENE</b>
+  right away to continue straight with the next trial.
+  <br />
+  <br />
+  There will be one example trial next before we start with the actual test phase.`,
+  buttonText: "start test phase"
 });
 
 
@@ -265,20 +304,24 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
   trials: 1,
   name: "instructions_fridge_reminder",
   title: "Please remember",
-  text: `<b>1</b>. A block is considered to <b>fall</b> as soon as it <b>drops</b>
-    from a platform or from another block - that is, a block does not necessarily
-    need to fall to the ground in order to count as falling.
+  text: `<b>1</b>. A block is considered to <b>fall</b> as soon as it <b>drops
+    off a platform</b> or <b>off another block</b> - that is, a block does not
+    necessarily need to fall to the ground in order to count as falling.
     <br/>
-    <b>2</b>. The colored blocks all have <b>the same properties</b>; the colors
-    are only used to distinguish them.
     <br/>
-    <b>3</b>. The blocks represent common toy blocks <b>without</b> any
-    special or unexpected properties.
-    </br>
-    </br>
-    We will now start with the test phase which comprises in total <b>18</b> scenes of
-    block arrangements and <b>8</b> simple color questions in between.
-    `,
+    <b>2</b>. The colors do not have any meaning, all colored blocks represent
+    <b>common toy blocks</b>, they all have <b>the same properties</b> and they <b>all
+    behave as in the training trials</b>.
+    <br/>
+    <br/>
+    <b>3</b>. The sentence that you produce is given as <b>hint</b> to another person
+    who sees the same scene without the two colored blocks and whose task it is to
+    position them - based on your hint - as close as to where you see them
+    (each block on a different platform/block).
+    <br/>
+    <br/>
+    We will now start with the test phase which comprises in total <b>18</b>
+    scenes of block arrangements and <b>8</b> simple color questions in between.`,
   buttonText: "start test phase"
 });
 
