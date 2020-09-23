@@ -91,9 +91,10 @@ labels <- c(bg="Blue, Green", b="Blue, ¬Green",
 df <- cluster_responses(dat, "g") %>%
   group_by(question, id) %>% mutate(mu=mean(response), med=median(response));
 
+ids <- df$id %>% unique() %>% as.character()
 n_pages <- 14/2 # 2 test trials per page!
-for (pa in seq(1, n_pages)){
-  p <- df  %>%
+for (id in ids){
+  p <- df  %>% filter(id == (!! id)) %>% 
     ggplot(aes(x=response, y=factor(0))) +
     geom_jitter(height = 0.1, alpha=0.5, aes(shape = cluster, colour = prolific_id)) +
     geom_point(mapping=aes(x=mu, y=factor(0)),  shape=8, color = "red") +
@@ -105,11 +106,9 @@ for (pa in seq(1, n_pages)){
     geom_vline(aes(xintercept=1), color = "grey", size=0.2, linetype='dashed') +
     scale_x_continuous(limits=c(-0.2, 1.2),
                        breaks=c(0, 0.25, 0.5, 0.75, 1)) +
-    labs(x="estimates probability", y="") +
+    labs(x="estimates probability", y="", title=id) +
     theme_bw() +
-    facet_grid_paginate(id~question, nrow=2, ncol = 4,
-                        labeller = labeller(question=labels),
-                        page = pa) +
+    facet_wrap(~question, nrow=2, ncol=2) + 
     theme(axis.text.y=element_blank(),
           axis.ticks.y =element_blank(),
           text = element_text(size=14),
