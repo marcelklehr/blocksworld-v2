@@ -2,7 +2,7 @@
 
 // map from type of words to actual words
 const GRAMMAR_VAR = {
-  "SUBJ": ["the green block", "the blue block"],
+  "SUBJ": ["the green block", "the blue block", "both blocks", "neither block"],
   "V": ["falls", "fall"],
   'CONJ': ["but", "if", "and"],
   'NEG': ["neither", "nor"],
@@ -10,7 +10,6 @@ const GRAMMAR_VAR = {
   'ADV1': ["as well"],
   'ADV2': ["probably"]
 }
-const CONSTITUENTS = _.values(GRAMMAR_VAR);
 // each word must appear in this array to get a color
 let WORD_GROUPS = [
   {words: GRAMMAR_VAR.SUBJ,
@@ -76,13 +75,15 @@ let templates = [
 
   "the COL1 block and the COL2 block fall",
   "the COL1 block falls and the COL2 block falls [as well]",
-  "the COL1 block falls but the COL2 block does not fall",
+  "the COL1 block falls but the COL2 block does not [fall]",
   "the COL1 block falls and the COL2 block does not fall",
   "the COL1 block does not fall but the COL2 block falls",
   "the COL1 block does not fall and the COL2 block falls",
   "neither the COL1 block nor the COL2 block fall",
   "neither the COL1 block nor the COL2 block falls",
   "neither the COL1 block falls nor the COL2 block falls",
+  "neither block falls",
+  "both blocks fall",
 
   "if the COL1 block falls the COL2 block falls [as well]",
   "if the COL1 block does not fall the COL2 block falls",
@@ -93,10 +94,12 @@ let templates = [
   "the COL1 block does not fall if the COL2 block falls",
   "the COL1 block does not fall if the COL2 block does not fall",
   "the COL1 block falls if the COL2 block does not fall"
+
 ]
 
 let UTTERANCES = [];
 _.map(templates, function(u){
+  if(u.includes("COL1")) {
     let gb = u.replace("COL1", "green").replace("COL2", "blue");
     let bg = u.replace("COL1", "blue").replace("COL2", "green");
 
@@ -106,6 +109,9 @@ _.map(templates, function(u){
     let u4 = bg.replace(/\[[^\]]*\] */g, "").trim() // replace what is inside []-brackets
 
     UTTERANCES.push.apply(UTTERANCES, [u1, u2, u3, u4]);
+  } else {
+    UTTERANCES.push(u);
+  }
 });
 
 UTTERANCES = Array.from(new Set(UTTERANCES));

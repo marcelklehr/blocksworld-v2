@@ -18,17 +18,24 @@ $("document")
       views_seq: [
       intro,
       instructions_general,
-      instructions_train,
-      animation_view,
 
-      // // Experiment 1
+      // * Buttons in Training * //
+      // instructions_train,
+      // animation_view,
+
+      // * Sliders with surprise in Training * //
+      instructions_train_sliders,
+      animation_view_sliders,
+
+      // * Experiment 1 * //
       // instruction_slider_example,
       // multiple_slider_train,
       // instructions_test,
       // multiple_slider,
 
-      // Experiment 2
+      // * Experiment 2 * //
       instructions_fridge,
+      instructions_fridge_procedure,
       fridge_train,
       instructions_fridge_reminder,
       fridge_views[0],
@@ -58,7 +65,7 @@ $("document")
         // Possible deployment methods are:
         // "debug" and "directLink"
         // As well as "MTurk", "MTurkSandbox" and "Prolific"
-        deployMethod: "Prolific",
+        deployMethod: "debug",
         contact_email: "britta.grusdt@uni-osnabrueck.de",
         prolificURL: "https://app.prolific.co/submissions/complete?cc=316E9218"
       },

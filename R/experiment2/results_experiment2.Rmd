@@ -116,8 +116,8 @@ dat.test <- data$test %>%
         response= case_when(str_detect(response, "but") ~
                               str_replace(response, "but", "and"),
                             TRUE ~ response))
-df.test <- dat.test %>%
-  filter(!prolific_id %in% ids_out_train);
+df.test <- dat.test # %>%
+  # filter(!prolific_id %in% ids_out_train);
 ```
 
 standardize sentences (the green and the blue = the blue and the green, etc.)
@@ -143,8 +143,9 @@ test.standardized <- df.test %>%
                  s.pos_neg.and_gb) %>%
   summarize_utts(c("and", "the blue block falls", "the green block does not"), c(),
                  s.pos_neg.and_bg)
-test.standardized %>% 
+utterances <- test.standardized %>% 
   select(response) %>% unique()
+utterances
 ```
 
 ```{r all-trials, echo=FALSE}
@@ -216,6 +217,20 @@ test.standardized %>% group_by(id) %>%
   filter(str_detect(id, "if2")) %>%
   plotTrials(N_trials$test/2 + 1)
 ```
+
+Did participants get the relationship between both blocks in the if2-trials?
+
+```{r if2-trials-relation, include=FALSE}
+test.standardized %>% group_by(id) %>%
+  filter(
+    # id == "if2_ul" &
+    str_detect(id, "if2")
+  ) %>% select(id, response, custom_response)
+  
+```
+
+- 2 cases were green was thought (if2_hl/if2_hh) not to count as falling, because it stays on the platform
+although it falls off another block (see custom response).
 
 
 ```{r, include=FALSE}
@@ -305,6 +320,10 @@ test.standardized %>% group_by(id) %>%
 ```
 
 ## Custom responses
+
+Some of the custom responses that we do include, but with different words, should
+be accepted/included as well, e.g. *the blue block falls but the green does not*
+(no 'fall' in the end)
 
 ```{r,  fig.height = 5, fig.width = 10}
 dat.custom = dat.test %>% filter(!is.na(custom_response)) %>% group_by(id)

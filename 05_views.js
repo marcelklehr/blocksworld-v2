@@ -112,8 +112,9 @@ const instructions_train = magpieViews.view_generator("instructions", {
   <img src='stimuli/img/icons/not-yellow.png' />
   <br/>
   <br/>
-  A block is considered to <b>fall</b> as soon as it <b>drops off a platform or
-  off another block</b>.
+  A block is considered to <b>fall</b> as soon as it <b>drops off a platform</b> or
+  <b>off another block</b> - that is, a block does not
+  necessarily need to fall to the ground in order to count as falling.
   <br/>
   The colored blocks represent common toy blocks <b>without</b> any special or
   unexpected properties and the different colors do <b>not have</b> any meaning.
@@ -154,8 +155,9 @@ const instructions_train_sliders = magpieViews.view_generator("instructions", {
   <b>the most likely event</b>.
   <br/>
   <br/>
-  A block is considered to <b>fall</b> as soon as it <b>drops off a platform or
-  off another block</b>.
+  A block is considered to <b>fall</b> as soon as it <b>drops off a platform</b> or
+  <b>off another block</b> - that is, a block does not
+  necessarily need to fall to the ground in order to count as falling.
   <br/>
   The colored blocks represent common toy blocks <b>without</b> any special or
   unexpected properties and the different colors do <b>not have</b> any meaning.
@@ -294,8 +296,8 @@ const instructions_test = magpieViews.view_generator("instructions", {
     <br />
     <b>1</b>. Your estimates <b>may</b>, but <b>do not have to</b> <i>sum to 1</i>.
     <br />
-    <b>2</b>. A block is considered to <b>fall</b> as soon as it <b>drops</b> from
-    a platform or from another block - that is, a block does not necessarily need
+    <b>2</b>. A block is considered to <b>fall</b> as soon as it <b>drops</b> off
+    a platform or off another block - that is, a block does not necessarily need
     to fall to the ground in order to count as falling.
     <br/>
     <b>3</b>. The colored blocks all have <b>the same properties</b>; the colors
