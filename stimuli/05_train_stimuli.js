@@ -92,28 +92,43 @@ trials_ramp = function(){
 
 trials_uncertain = function(){
   let priors = {'uncertain0': ["uncertainL", "uncertainH"],
-                'uncertain1': ["uncertainH", "uncertainL"],
-                'uncertain2': ['uncertainH', 'uncertainH'],
-                'uncertain3': ['uncertainL', 'uncertainL']};
+                'uncertain1': ["uncertainH", "low"],
+                'uncertain2': ['high', 'uncertainL'],
+                'uncertain3': ['low', 'high']};
   let dir = {'uncertain0': ['horizontal', 'vertical'],
-             'uncertain1': ['horizontal', 'vertical'],
-             'uncertain2': ['horizontal', 'horizontal'],
+             'uncertain1': ['horizontal', 'horizontal'],
+             'uncertain2': ['horizontal', 'vertical'],
              'uncertain3': ['vertical', 'vertical'],
             };
  let colors = BLOCK_COLS_SHORT.train;
 
   let expected = {'uncertain0': colors[1],
                   'uncertain1': colors[0],
-                  'uncertain2': colors.join(""),
-                  'uncertain3': "none"}
+                  'uncertain2': colors[0],
+                  'uncertain3': colors[1]}
   let walls = Walls.train.uncertain;
   let data = {}
   _.keys(priors).forEach(function(id, i){
-    let b1 = blockOnBase(walls[0], PRIOR[dir[id][0]][priors[id][0]],
-      cols.train_blocks[0], "block1", dir[id][0] == 'horizontal');
-    let b2 = blockOnBase(walls[1], -PRIOR[dir[id][1]][priors[id][1]],
-      cols.train_blocks[1], "block2", dir[id][1] == 'horizontal');
-    data[id] = {objs: [b1, b2].concat(walls),
+    let b1 = [blockOnBase(walls[0], PRIOR[dir[id][0]][priors[id][0]],
+      cols.train_blocks[0], "block1", dir[id][0] == 'horizontal')];
+    let b2 = [blockOnBase(walls[1], -PRIOR[dir[id][1]][priors[id][1]],
+      cols.train_blocks[1], "block2", dir[id][1] == 'horizontal')];
+
+    let xBlocks = [];
+    if(id == "uncertain1"){
+      xBlocks.push(blockOnBase(walls[1], -PRIOR["horizontal"]["uncertainL"],
+        cols.sienna, "xBlock", true));
+      xBlocks.push(blockOnBase(xBlocks[0], PRIOR[dir[id][1]][priors[id][1]],
+        cols.train_blocks[1], "block2", dir[id][1] == 'horizontal'));
+      b2 = [];
+    } else if (id == "uncertain2") {
+      xBlocks.push(blockOnBase(walls[0], PRIOR["horizontal"]["low"],
+        cols.sienna, "xBlock", true));
+      xBlocks.push(blockOnBase(xBlocks[0], -PRIOR[dir[id][0]][priors[id][0]],
+        cols.train_blocks[0], "block2", dir[id][0] == 'horizontal'));
+      b1 = [];
+    }
+    data[id] = {objs: b1.concat(b2).concat(walls).concat(xBlocks),
                 meta: priors[id],
                 id}
     TrainExpectations[id] = expected[id]

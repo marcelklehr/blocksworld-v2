@@ -1,9 +1,9 @@
-const DEBUG = false;
+const DEBUG = true;
 // var MODE = "color-vision"
-// var MODE = "train"
+var MODE = "train"
 // var MODE = "test"
 // var MODE = "pretest"
-var MODE = "experiment"
+// var MODE = "experiment"
 var ANIM_ANSWERS = "sliders"
 // var ANIM_ANSWERS = "buttons"
 
@@ -30,7 +30,7 @@ OPTS = {
 let TRIAL_TYPES = ['if1', 'if2', 'independent'];
 // Proportion of block that's ON TOP of its base wall beneath
 let PRIOR = {
-  'vertical': {'high': 0.45, 'uncertainH': 0.52, 'uncertain': 0.54,
+  'vertical': {'high': 0.40, 'uncertainH': 0.52, 'uncertain': 0.54,
                'uncertainL': 0.55, 'lowH': 0.62, 'low': 0.70
               },
   'horizontal': {'high': 0.42, 'uncertainH': 0.5, 'uncertain': 0.51,
@@ -57,14 +57,14 @@ let ANGLES = {
 let PRETEST_ANGLES = _.range(45);
 let BASE_RAMP = {
   'horizontal': {'high': 125, 'uncertainH': 160, 'uncertain': 180,
-                 'uncertainL': 200, 'low': 240},
-  'vertical': {'high': 140, 'uncertainH': 190, 'uncertain': 195,
+                 'uncertainL': 200, 'low': 270},
+  'vertical': {'high': 120, 'uncertainH': 190, 'uncertain': 195,
                'uncertainL': 230, 'low': 290},
   'default': 200
 };
 
 // when uncertainty comes from balls, this dist is left towards the edge of platform
-let DIST_EDGE = {'default': 5, 'low': 50};
+let DIST_EDGE = {'default': 5, 'low': 50, 'no-dist': 0};
 let SIMULATION = {'duration': 5000};
 
 // fine-grained uncertain priors, e.g. u-Ll/u-Hl do not need extra entry, they
