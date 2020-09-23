@@ -1,6 +1,7 @@
 ---
 title: "Results Experiment 2 Pilot"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 ---
@@ -33,6 +34,27 @@ dir.create(plot_dir, showWarnings = FALSE)
 
 
 ## Training data
+
+A few examples of train trials, to see why certain answers are not expected
+at all.
+
+**if1_ac0: not red, but yellow**
+
+```{r if_ac0, echo=FALSE, out.width="50%", fig.align='center'}
+knitr::include_graphics("../../stimuli/img/train/if1_ac0.png")
+```
+
+**if2_ssw0: not yellow, but red**
+
+```{r fig_ssw0, echo=FALSE, out.width="50%", fig.cap="", fig.align='center'}
+knitr::include_graphics("../../stimuli/img/train/ssw0.png")
+```
+
+**ramp_distance1: red, but not yellow**
+
+```{r fig_distance1, echo=FALSE, out.width="50%", fig.cap="", fig.align='center'}
+knitr::include_graphics("../../stimuli/img/train/ramp_distance1.png")
+```
 
 Events that should **NOT** be selected:
 
@@ -75,9 +97,9 @@ df.train.participants <- df.train %>%
   distinct(prolific_id, .keep_all = TRUE)
 
 df.train.participants %>%
-  ggplot(aes(x=prolific_id, y=n)) +
+  ggplot(aes(y=prolific_id, x=n)) +
   geom_bar(stat="identity") +
-  theme(axis.text.x=element_text(angle=90, vjust = 0.5))
+  labs(x="# train trials where unexpected event chosen")
 ```
 
 ## Experimental data: Produced sentences
@@ -171,9 +193,30 @@ plotTrials <- function(dat, n_pages, trials="all", min=0){
 
 ## Responses per trial
 
-```{r, echo=FALSE}
-test.standardized %>% group_by(id) %>% plotTrials(N_trials$test/2 + 1)
+**Independent Trials**
+
+```{r independent-trials, echo=FALSE}
+test.standardized %>% group_by(id) %>%
+  filter(str_detect(id, "independent")) %>%
+  plotTrials(N_trials$test/2 + 1)
 ```
+
+**If1-trials**
+
+```{r if1-trials, echo=FALSE}
+test.standardized %>% group_by(id) %>%
+  filter(str_detect(id, "if1")) %>%
+  plotTrials(N_trials$test/2 + 1)
+```
+
+**If2-trials**
+
+```{r if2-trials, echo=FALSE}
+test.standardized %>% group_by(id) %>%
+  filter(str_detect(id, "if2")) %>%
+  plotTrials(N_trials$test/2 + 1)
+```
+
 
 ```{r, include=FALSE}
 # All trials 
@@ -209,13 +252,53 @@ test.std.max = test.standardized %>% group_by(id, response) %>%
   summarize(n=n(), .groups='drop_last') %>%
   filter(n==max(n)) %>%
   mutate(id=as.factor(id), response = as.factor(response))
+```
 
-test.std.max %>%
+**Independent trials**
+
+- independent_hl is strange (participants are uncertain whether or not second block
+(here green block) falls, situation where block is completely on platform which 
+was not shown in training phase...!)
+- too certain about what is supposed to be uncertain! (ul, uh)
+
+```{r max-independent}
+test.std.max %>% filter(str_detect(id, "independent")) %>%
   ggplot(aes(y=response, x=n)) + geom_bar(aes(fill=id), stat="identity")
 
 ```
 
-```{r, fig.width=10, height=8}
+**If1-trials** 
+(only one possible cause for second block to fall, namely the other block)
+
+- if1_lh is as expected, neither-nor is max response.
+(Remember: second prior refers to distance of platform after ramp, i.e.high means
+the strength of the relation A->C is high, hence, distance is low)
+- for all others it is okay to utter blue and green fall, but it should not be 
+the max response for all, people seem to be too certain about what are supposed 
+to be uncertain trials!
+
+```{r max-if1}
+test.std.max %>% filter(str_detect(id, "if1")) %>%
+  ggplot(aes(y=response, x=n)) + geom_bar(aes(fill=id), stat="identity")
+
+```
+
+**If2 trials**
+
+- if2_ll (green) should have neither-nor as max response.
+- if2_hl (ocker) doesnt consider relation
+- for all others it is okay to utter blue and green fall, but it should not be 
+the max response for all, people seem to be too certain about what are supposed 
+to be uncertain trials!
+
+```{r max-if2}
+test.std.max %>% filter(str_detect(id, "if2")) %>%
+  ggplot(aes(y=response, x=n)) + geom_bar(aes(fill=id), stat="identity")
+```
+
+
+```{r, fig.width=10, height=8, include=FALSE}
+# **Comparison across trials**
 # +1 for example test-trial (ind2)
 test.standardized %>% group_by(id) %>%
   plotTrials(N_trials$test/2 + 1,trials = "if1_hh|if2_hl|if2_u-Hl|if2_u-Ll|if1_uu|independent_hh", 0.15)
