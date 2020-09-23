@@ -102,8 +102,8 @@ seesawIf2 = function(prior, dir, side_ramp, offset=PROPS.seesaw.d_to_walls){
 }
 
 Walls.test = {
-  'independent': [[wall('w_up1', 280, 100), wall('w_low1', 320, 250, w=100)],
-                  [wall('w_up2', 520, 100), wall('w_low2', 480, 250, w=100)]],
+  'independent': [[wall('w_up1', 280, 100), wall('w_low1', 290, 250, w=100)],
+                  [wall('w_up2', 520, 100), wall('w_low2', 510, 250, w=100)]],
   'if1': wallsIf1,
   'if2': seesawIf2
 };
