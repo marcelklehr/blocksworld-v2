@@ -172,7 +172,7 @@ var slider_rating_trials = [];
 test_ids.forEach(function(id) {
     slider_rating_trials.push({
       id: id,
-      picture: "stimuli/img/group/" + id + ".jpg",
+      picture: "stimuli/img/group/" + id + ".png",
       QUD: "Please indicate how likely you think the represented events will occur.",
       icon1: id2Icon.ac,
       icon2: id2Icon.a,

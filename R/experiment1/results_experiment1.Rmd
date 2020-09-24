@@ -92,7 +92,6 @@ df <- cluster_responses(dat, "g") %>%
   group_by(question, id) %>% mutate(mu=mean(response), med=median(response));
 
 ids <- df$id %>% unique() %>% as.character()
-n_pages <- 14/2 # 2 test trials per page!
 for (id in ids){
   p <- df  %>% filter(id == (!! id)) %>% 
     ggplot(aes(x=response, y=factor(0))) +

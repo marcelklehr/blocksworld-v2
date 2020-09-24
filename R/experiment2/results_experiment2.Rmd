@@ -148,8 +148,8 @@ utterances <- test.standardized %>%
 utterances
 ```
 
-```{r all-trials, echo=FALSE}
-plotTrials <- function(dat, n_pages, trials="all", min=0){
+```{r all-trials, echo=FALSE, warning=FALSE}
+plotTrials <- function(dat, trials="all", min=0, responses="all"){
   ids = dat$id %>% unique()
   n = ids %>% length();
   brks=seq(0, 1, by=0.1)
@@ -163,9 +163,9 @@ plotTrials <- function(dat, n_pages, trials="all", min=0){
       
   if(trials=="all"){
     for(i in seq(1, n)) {
-      df <- dat %>% filter(id == ids[[i]]) %>% 
+      df <- dat %>% filter(id == ids[[i]]) %>%
         mutate(response=fct_reorder(response, desc(-ratio)))
-      p <- df %>% filter(id == ids[[i]]) %>% 
+      p <- df %>% filter(id == ids[[i]]) %>%
         ggplot(aes(x=ratio, y=response)) +
         geom_bar(stat="identity") +
         theme_bw() +
@@ -175,9 +175,18 @@ plotTrials <- function(dat, n_pages, trials="all", min=0){
         scale_y_discrete(labels = function(ylab) str_wrap(ylab, width = 27.5))
       print(p)
     }
-  } else {
-    p <- dat %>%
-      filter(str_detect(id, trials)) %>%
+  } else if(responses!="all") {
+      dat <- dat %>%
+        filter(response %in% responses) %>%
+        group_by(id) %>% summarize(ratio=sum(ratio)) %>%
+        add_column(response = "literal/probably+literal") %>%
+        mutate(response = as.factor(response))
+    
+    # if(trials != "all"){
+    #   dat <- dat %>%
+    #     filter(str_detect(id, trials))
+    # }
+    p <-  dat %>%
       mutate(response=fct_rev(fct_relevel(response, sort))) %>% 
       ggplot(aes(x=ratio, y=response)) +
       geom_bar(aes(fill=id), stat="identity", position=position_dodge(preserve="single")) +
@@ -199,7 +208,7 @@ plotTrials <- function(dat, n_pages, trials="all", min=0){
 ```{r independent-trials, echo=FALSE}
 test.standardized %>% group_by(id) %>%
   filter(str_detect(id, "independent")) %>%
-  plotTrials(N_trials$test/2 + 1)
+  plotTrials()
 ```
 
 **If1-trials**
@@ -207,7 +216,7 @@ test.standardized %>% group_by(id) %>%
 ```{r if1-trials, echo=FALSE}
 test.standardized %>% group_by(id) %>%
   filter(str_detect(id, "if1")) %>%
-  plotTrials(N_trials$test/2 + 1)
+  plotTrials()
 ```
 
 **If2-trials**
@@ -215,7 +224,20 @@ test.standardized %>% group_by(id) %>%
 ```{r if2-trials, echo=FALSE}
 test.standardized %>% group_by(id) %>%
   filter(str_detect(id, "if2")) %>%
-  plotTrials(N_trials$test/2 + 1)
+  plotTrials()
+```
+
+## Responses that only contain 1 block
+
+```{r resp-independent, echo=FALSE}
+literals <- utterances %>% filter(!str_detect(response, "and|neither|but|if")) %>% 
+  pull(response)
+df <- test.standardized %>% group_by(id)
+df %>% filter(str_detect(id, "if1")) %>%
+  plotTrials(trials="", min=0, responses=literals)
+
+df %>% filter(str_detect(id, "if2")) %>%
+  plotTrials(trials="", min=0, responses=literals)
 ```
 
 Did participants get the relationship between both blocks in the if2-trials?
@@ -315,8 +337,8 @@ test.std.max %>% filter(str_detect(id, "if2")) %>%
 ```{r, fig.width=10, height=8, include=FALSE}
 # **Comparison across trials**
 # +1 for example test-trial (ind2)
-test.standardized %>% group_by(id) %>%
-  plotTrials(N_trials$test/2 + 1,trials = "if1_hh|if2_hl|if2_u-Hl|if2_u-Ll|if1_uu|independent_hh", 0.15)
+# test.standardized %>% group_by(id) %>%
+#   plotTrials(trials = "if1_hh|if2_hl|if2_u-Hl|if2_u-Ll|if1_uu|independent_hh", 0.15)
 ```
 
 ## Custom responses
