@@ -69,10 +69,12 @@ seesaw = function(x, y_base_min=SCENE.h - PROPS.bottom.h, props={}){
 
 // The first two list entries are respectively the bases for block1 and block2
 wallsIf1 = function(side, horiz, prior){
+  let x_up_r = 700
+  let x_up_l = 100
   let dat = side == "right" ?
-    {w_up: wall('wall_ac_up', 600, 90, 150), move_x: 1, increase: true} :
-    {w_up:  wall('wall_ac_up', 150, 90, 150), move_x: -1, increase: false};
-  let base_ssw = wall('base_seesaw', 375, 185, PROPS.if1_base_ssw.w,
+    {w_up: wall('wall_ac_up', x_up_r, 90, 150), x_up: x_up_r, move_x: 1, increase: true} :
+    {w_up:  wall('wall_ac_up', x_up_l, 90, 150), x_up: x_up_l, move_x: -1, increase: false};
+  let base_ssw = wall('base_seesaw', dat.x_up+225*(-dat.move_x), 185, PROPS.if1_base_ssw.w,
                       PROPS.if1_base_ssw.h);
   let x = base_ssw.position.x + dat.move_x * 40 + dat.move_x * PROPS.walls.w/2
   let y = base_ssw.position.y + 67;

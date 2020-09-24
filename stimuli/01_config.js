@@ -1,9 +1,9 @@
-const DEBUG = true;
+const DEBUG = false;
 // var MODE = "color-vision"
-var MODE = "train"
+// var MODE = "train"
 // var MODE = "test"
 // var MODE = "pretest"
-// var MODE = "experiment"
+var MODE = "experiment"
 var ANIM_ANSWERS = "sliders"
 // var ANIM_ANSWERS = "buttons"
 

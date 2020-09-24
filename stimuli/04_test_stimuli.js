@@ -55,8 +55,8 @@ testTrials_if1 = function(priors){
 
   let b1 = blockOnBase(objs.walls[0], PRIOR[horiz[0]][p1] * data.edge_blocks,
     cols.test_blocks[colors[0]], 'blockA', horiz[0] == 'horizontal');
-  let pr = p2 != "low" ? "default" : "low";
-  let b2 = blockOnBase(objs.walls[1], data.edge_blocks * (b2_w + DIST_EDGE[pr]) / b2_w,
+  // uncertainty via length of base platform
+  let b2 = blockOnBase(objs.walls[1], data.edge_blocks * (b2_w + DIST_EDGE["default"]) / b2_w,
     cols.test_blocks[colors[1]], 'blockC', horiz[1] == 'horizontal');
 
   let blocks = [b1, b2].concat(objs.dynamic);
