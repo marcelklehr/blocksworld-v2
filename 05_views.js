@@ -124,7 +124,7 @@ const instructions_train = magpieViews.view_generator("instructions", {
   border turn green), click on <b>RUN</b> to see what happens.
   The button of the event that occurred will turn light green.
   <br/>
-  After that, you will be able to proceed to the next trial by clicking on <b>NEXT</b>.`,
+  After that, you will be able to proceed with the next trial by clicking on <b>NEXT</b>.`,
   buttonText: "CONTINUE"
 });
 
@@ -132,11 +132,11 @@ const instructions_train_sliders = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_train_sliders",
   title: "Instructions Training",
-  text: `For each presented scene we ask you to think about which blocks will
-  fall. We will ask you to indicate <b>how surprised</b> you would be when
-  certain blocks fall/do not fall by moving the sliders
-  (<b>left</b>: <i>not surprised at all</i>, <b>right</b>: <i>totally
-  surprised</i>) below the respective icons.
+  text: `For each presented scene we would like to know <b>how surprised</b> you
+  would be to see certain blocks falling/not falling.
+  We will ask you to indicate what you think by moving the sliders below the
+  respective icons (<b>left</b>: <i>not surprised at all</i>, <b>right</b>:
+    <i>totally surprised</i>).
   <br />
   A falling block is represented by a skewed rectangle and a block that
   does not fall is represented by a rectangle with a line below.
@@ -167,7 +167,7 @@ const instructions_train_sliders = magpieViews.view_generator("instructions", {
   green at clicking), you will be able to click on <b>RUN</b> to see what happens.
   The slider of the event that occurred will be highlighted in green.
   <br/>
-  After that, you will be able to proceed to the next trial by clicking on
+  After that, you will be able to go to the next trial by clicking on
   <b>NEXT SCENE</b>.`,
   buttonText: "start training"
 });
@@ -196,8 +196,8 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   From now on, you won't get feedback anymore about what will actually happen.
   <br />
   That means, after you have moved all four sliders (they turn green when moved
-  and clicked to fix its new position), you will directly proceed
-  to the next trial by clicking on <b>NEXT</b>.
+  and clicked to fix its new position), you will directly proceed with the next
+  trial by clicking on <b>NEXT</b>.
   <br />
   Please click on <b>CONTINUE</b> to see an example.
   `,
@@ -208,19 +208,20 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_fridge",
   title: "General Instructions Test Phase",
-  text: `Great - we will now proceed to the test phase of the experiment, where
-  you will again be shown different block arrangements.
+  text: `Great - we will now proceed with the test phase of the experiment.
+  You will see pictures of different block arrangements that we ask you to
+  describe.
+  More concretely, your task is to <b>produce the sentence</b> that <b>best
+  describes</b> which blocks you think will fall.
+  <br />
+  For this, imagine another person who does not see the picture that you see but
+  four sliders as those that you saw in the training phase.
+  The task of this other person is to to allocate the sliders - <b>based on the
+  sentence that you produced</b> - such that they <b>best resemble</b> what you
+  think happens in the picture.
   <br/>
-  Please imagine that <b>someone else</b> sees the <b>exact same scene</b> as you will,
-  but <b>without the two colored blocks</b>.
-  <br/>
-  Your task is to <b>produce the sentence</b> that <b>best
-  describes</b> what happens in the scene, such that the other person is able
-  to <b>put the two blocks as close as possible to where you see them</b>.
-  <br/>
-  The other person is instructed to put the blocks - <b>based on your hint</b> -
-  on any platform or block that is shown in the scene with only one block being
-  allowed per platform.
+  To put it another way, the other person's slider ratings should be as close as
+  possible to how your ratings would look like.
   <br/>
   <br/>
   The sentences that you can produce are <b>limited</b>: you will see a <b>set of
@@ -246,7 +247,7 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
 const instructions_fridge_procedure = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_fridge_procedure",
-  title: "Instructions Procedure Test Phase",
+  title: "Procedure Test Phase",
   text: `<b>1</b>. Only the <b>highlighted</b> words (orange frame) are <b>clickable</b>;
   these differ depending on the position in the sentence that you are
   about to produce.
@@ -280,7 +281,7 @@ const instructions_test = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_test",
   title: "Instructions Test Phase",
-  text: `Great -  we'll now proceed to the test phase of the experiment.
+  text: `Great -  we'll now proceed with the test phase of the experiment.
     <br />
     Again, you will be shown scenes of different block arrangements.
     As in the previous trial, we will ask you to indicate <b>how likely</b> you
@@ -289,7 +290,7 @@ const instructions_test = magpieViews.view_generator("instructions", {
     what will actually happen.
     <br />
     Only after you have given your estimate for all four sliders by moving them
-    (all circles have to be green), you will be able proceed to the next trial.
+    (all circles have to be green), you will be able to proceed with the next trial.
     <br />
     <br />
     <b>Please note and keep in mind</b>:
@@ -323,9 +324,9 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
     <br/>
     <br/>
     <b>3</b>. The sentence that you produce is given as <b>hint</b> to another person
-    who sees the same scene without the two colored blocks and whose task it is to
-    position them - based on your hint - as close as to where you see them
-    (each block on a different platform/block).
+    who has to move four sliders (as you did in the training phase), such that
+    this other person's slider ratings most closely resemble to what you think
+    happens in the scene, that is to how your slider ratings would look like.
     <br/>
     <br/>
     We will now start with the test phase which comprises in total <b>18</b>
@@ -541,7 +542,7 @@ const fridge_train = magpieViews.view_generator(
 //          you may click on RUN to see what actually happens. If you were wrong,
 //          the selected button will turn red and the correct one will turn light
 //          green.
-//          Then, you can proceed to the next trial.`,
+//          Then, you can proceed with the next trial.`,
 //   buttonText: "CONTINUE"
 // });
 
