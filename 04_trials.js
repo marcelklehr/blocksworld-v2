@@ -182,8 +182,8 @@ test_ids.forEach(function(id) {
       question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
       question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
       question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
-      optionLeft: "will not happen",
-      optionRight: "will happen",
+      optionLeft: "impossible",
+      optionRight: "certain",
       expected: ''
     });
 });
@@ -242,13 +242,13 @@ TRAIN_SLIDER_TRIALS = _.filter(train_trials_cloned, function(trial){
 TRAIN_SLIDER_TRIALS[0].QUD =
   "Please indicate how likely you think the represented events will occur.";
 TRAIN_SLIDER_TRIALS[0].picture = "stimuli/img/train_slider_fridge/" + id_slider + ".jpg";
-TRAIN_SLIDER_TRIALS[0].optionLeft = 'will not happen';
-TRAIN_SLIDER_TRIALS[0].optionRight = 'will happen';
+TRAIN_SLIDER_TRIALS[0].optionLeft = 'impossible';
+TRAIN_SLIDER_TRIALS[0].optionRight = 'certain';
 
 let INSTRUCTION_SLIDER = [{
   picture: '',
-  optionLeft: "will not happen",
-  optionRight: "will happen",
+  optionLeft: "impossible",
+  optionRight: "certain",
   icon1: id2IconTrain.ac,
   icon2: id2IconTrain.a,
   icon3: id2IconTrain.c,

@@ -19,11 +19,12 @@ $("document")
       intro,
       instructions_general,
 
-      // * Buttons in Training * //
+      // ** TRAINING ** //
+      // * with Buttons * //
       // instructions_train,
       // animation_view,
 
-      // * Sliders with surprise in Training * //
+      // * Sliders with surprise* //
       instructions_train_sliders,
       animation_view_sliders,
 
@@ -55,6 +56,7 @@ $("document")
       fridge_views[7],
       color_vision_views[7],
       fridge_views[8],
+
       post_test,
       thanks
     ],

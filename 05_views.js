@@ -67,8 +67,7 @@ const instructions_general = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_general",
   title: "General Instructions",
-  text: `In this experiment you are shown pictures of different arrangements of
-          blocks.
+  text: `In this experiment you are shown different arrangements of blocks.
          <br />
          <br />
          The experiment consists of two phases, a <b>training</b> and a <b>testing</b> phase.
@@ -112,12 +111,14 @@ const instructions_train = magpieViews.view_generator("instructions", {
   <img src='stimuli/img/icons/not-yellow.png' />
   <br/>
   <br/>
+  <b>Please note</b>:
+  <br/>
   A block is considered to <b>fall</b> as soon as it <b>drops off a platform</b> or
   <b>off another block</b> - that is, a block does not
   necessarily need to fall to the ground in order to count as falling.
   <br/>
-  The colored blocks represent common toy blocks <b>without</b> any special or
-  unexpected properties and the different colors do <b>not have</b> any meaning.
+  The colored blocks represent common toy blocks <b>without</b> any special
+  properties and the different colors do <b>not have</b> any meaning.
      <br />
      <br />
   After you selected one of the four buttons (which will make their
@@ -132,41 +133,38 @@ const instructions_train_sliders = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_train_sliders",
   title: "Instructions Training",
-  text: `For each presented scene we would like to know <b>how surprised</b> you
-  would be to see certain blocks falling/not falling.
-  We will ask you to indicate what you think by moving the sliders below the
-  respective icons (<b>left</b>: <i>not surprised at all</i>, <b>right</b>:
-    <i>totally surprised</i>).
+  text: `For each presented scene we would like to know <b>how likely</b> you
+  think it is that certain blocks will or will not fall.
+  <br/>
+  For this purpose, your task will be to <b>adjust a slider</b> (left: <i>impossible event</i>,
+    right: <i>certain event</i>) for <b>each of four events</b>, each represented by a different icon.
   <br />
   A falling block is represented by a skewed rectangle and a block that
-  does not fall is represented by a rectangle with a line below.
-  Here is an exemplary icon for the event:
+  does not fall is represented by a rectangle with a line below, e.g.
+  the following icon represents the event
   <br/>
-  <i>The <b>green</b> block <b>falls</b>, but the <b>yellow</b> block
-  <b>does not fall</b></i>.
+  '<i>The <b>green</b> block <b>falls</b>, but the <b>yellow</b> block
+  <b>does not fall</b></i>':
   <br/>
   <br/>
   <img src='stimuli/img/icons/green.png'/>
   <img src='stimuli/img/icons/not-yellow.png' />
   <br/>
   <br/>
-  <b>Note</b>: the slider that you position <b>leftmost</b> is the event that
-  you would be <b>least surprised</b> about, that is, you rate this as
-  <b>the most likely event</b>.
-  <br/>
+  <b>Please note</b>:
   <br/>
   A block is considered to <b>fall</b> as soon as it <b>drops off a platform</b> or
-  <b>off another block</b> - that is, a block does not
-  necessarily need to fall to the ground in order to count as falling.
+  <b>off another block</b> - that is, a block does <b>not
+  necessarily</b> need to fall to the ground in order to count as falling.
   <br/>
-  The colored blocks represent common toy blocks <b>without</b> any special or
-  unexpected properties and the different colors do <b>not have</b> any meaning.
+  The blocks represent common toy blocks <b>without</b> any special properties
+  and the different colors do <b>not have</b> any meaning.
      <br />
      <br />
   After you moved all four sliders, (the circle on top of the slider will turn
   green at clicking), you will be able to click on <b>RUN</b> to see what happens.
-  The slider of the event that occurred will be highlighted in green.
   <br/>
+  The slider of the event that occurred will be highlighted in green.
   After that, you will be able to go to the next trial by clicking on
   <b>NEXT SCENE</b>.`,
   buttonText: "start training"
@@ -181,13 +179,15 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
   icons.
    <br />
    <br />
-  The more certain you are that an event (e.g. both blocks fall) <b>will</b> occur,
-  the more you should position the corresponding slider towards the
+  The more certain you are that an event <b>will</b> occur, the more you should
+  position the corresponding slider towards the
   <b>right end</b> (<i>certain</i>/1) and the more certain you are that it
   <b>will not</b> occur, the more you should position its slider towards the
   <b>left end</b> (<i>will not happen</i>).
   <br />
-  When you are rather <b>uncertain whether or not</b> an event will occur, you should position the corresponding slider somewhere close to the center around 0.50.
+  When you are rather <b>uncertain whether or not</b> an event will occur, you
+  should position the corresponding slider somewhere close to the center around
+  0.50.
   <br />
   <br />
   Note, that your estimates <b>may</b>, but <b>do not have to</b> sum up to 1.
@@ -209,14 +209,15 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
   name: "instructions_fridge",
   title: "General Instructions Test Phase",
   text: `Great - we will now proceed with the test phase of the experiment.
-  You will see pictures of different block arrangements that we ask you to
+  You will see pictures of different block arrangements that we now ask you to
   describe.
   More concretely, your task is to <b>produce the sentence</b> that <b>best
   describes</b> which blocks you think will fall.
   <br />
+  <br />
   For this, imagine another person who does not see the picture that you see but
-  four sliders as those that you saw in the training phase.
-  The task of this other person is to to allocate the sliders - <b>based on the
+  four sliders as those that you adjusted in the training phase.
+  The task of this other person is to to adjust the sliders - <b>based on the
   sentence that you produced</b> - such that they <b>best resemble</b> what you
   think happens in the picture.
   <br/>
@@ -273,7 +274,7 @@ const instructions_fridge_procedure = magpieViews.view_generator("instructions",
   <br />
   <br />
   There will be one example trial next before we start with the actual test phase.`,
-  buttonText: "start test phase"
+  buttonText: "go to example trial"
 });
 
 
@@ -283,29 +284,30 @@ const instructions_test = magpieViews.view_generator("instructions", {
   title: "Instructions Test Phase",
   text: `Great -  we'll now proceed with the test phase of the experiment.
     <br />
-    Again, you will be shown scenes of different block arrangements.
-    As in the previous trial, we will ask you to indicate <b>how likely</b> you
-    think certain blocks <b>will or will not fall</b> (<i>left: impossible event,
-    right: certain event</i>). Also, <b>you will not get feedback</b> anymore about
-    what will actually happen.
-    <br />
-    Only after you have given your estimate for all four sliders by moving them
-    (all circles have to be green), you will be able to proceed with the next trial.
+    As in the training phase, you will be shown scenes of different block
+    arrangements and we will ask you to indicate <b>how likely</b> you
+    think certain blocks will or will not fall (left: <i>impossible</i>
+    event, right: <i>certain</i> event).
+    The only difference is that <b>you will not get feedback</b> anymore about
+    what will happen.
     <br />
     <br />
-    <b>Please note and keep in mind</b>:
+    <b>Please keep in mind</b>:
     <br />
-    <b>1</b>. Your estimates <b>may</b>, but <b>do not have to</b> <i>sum to 1</i>.
-    <br />
-    <b>2</b>. A block is considered to <b>fall</b> as soon as it <b>drops</b> off
-    a platform or off another block - that is, a block does not necessarily need
-    to fall to the ground in order to count as falling.
+    <b>1</b>. A block is considered to <b>fall</b> as soon as it <b>drops off
+    a platform</b> or <b>off another block</b> - that is, a block does
+    <b>not necessarily</b> need to fall to the ground in order to count as falling.
     <br/>
-    <b>3</b>. The colored blocks all have <b>the same properties</b>; the colors
-    are only used to distinguish them.
+    <b>2</b>. The colors do not have any meaning, all colored blocks represent
+    <b>common toy blocks</b>, they all have <b>the same properties</b> and they
+    <b>behave as in the training trials</b>.
+    <br/>
+    <b>3</b>. Only after you have adjusted all four sliders (all circles on the
+    sliders have to be green!), you will be able to proceed with the next trial.
       </br>
       </br>
-    We will now start with the test phase which comprises <b>18</b> scenes in total.`,
+    We will now start with the test phase which comprises in total <b>18</b>
+    scenes of block arrangements and <b>8</b> simple color questions in between.`,
   buttonText: "start test phase"
 });
 
@@ -319,14 +321,15 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
     <br/>
     <br/>
     <b>2</b>. The colors do not have any meaning, all colored blocks represent
-    <b>common toy blocks</b>, they all have <b>the same properties</b> and they <b>all
-    behave as in the training trials</b>.
+    <b>common toy blocks</b>, they all have <b>the same properties</b> and they
+    <b>behave as in the training trials</b>.
     <br/>
     <br/>
-    <b>3</b>. The sentence that you produce is given as <b>hint</b> to another person
-    who has to move four sliders (as you did in the training phase), such that
-    this other person's slider ratings most closely resemble to what you think
-    happens in the scene, that is to how your slider ratings would look like.
+    <b>3</b>. The sentence that you produce is given as <b>hint to another
+    person</b> who has to adjust four sliders (as you did in the training phase)
+    , such that this <b>other person's slider ratings most closely resemble to what
+    you think happens</b> in the scene, that is to how your slider ratings would look
+    like.
     <br/>
     <br/>
     We will now start with the test phase which comprises in total <b>18</b>
@@ -534,7 +537,7 @@ const fridge_train = magpieViews.view_generator(
 //          over</i> or <i>drops</i> from a platform or from another block.</b>
 //          <br/>
 //          The colored blocks represent common toy blocks, they do not have any
-//          special or unexpected properties and they are only distinguishable by
+//          special properties and they are only distinguishable by
 //          their color.
 //              <br />
 //              <br />
