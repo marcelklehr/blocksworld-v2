@@ -8,10 +8,13 @@
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "lodash": ">=4.17.19"
+  },
   "devDependencies": {
     "magpie-modules": "^0.1.2",
     "matter-js": "^0.14.2",
     "underscore": "^1.9.2",
-    "lodash": ">=4.17.19"    
+    "lodash": ">=4.17.19"
   }
 }
