@@ -142,25 +142,22 @@ test.standardized <- df.test %>%
   summarize_utts(c("and", "the green block falls", "the blue block does not"), c(),
                  s.pos_neg.and_gb) %>%
   summarize_utts(c("and", "the blue block falls", "the green block does not"), c(),
-                 s.pos_neg.and_bg)
+                 s.pos_neg.and_bg) %>%
+  mutate(response=case_when(str_detect(response, "neither") ~ "neither block falls",
+                            str_detect(response, 'and') ~ "both blocks fall",
+                            TRUE ~ response))
 utterances <- test.standardized %>% 
   select(response) %>% unique()
 utterances
 ```
 
 ```{r all-trials, echo=FALSE, warning=FALSE}
-plotTrials <- function(dat, trials="all", min=0, responses="all"){
+plotTrials <- function(dat, trials="all", min=0, responses="all", dat.model=tibble()){
   ids = dat$id %>% unique()
   n = ids %>% length();
   brks=seq(0, 1, by=0.1)
   
-  dat <- dat %>%
-    mutate(response = as.factor(response)) %>%
-    group_by(id,response) %>%
-    summarize(n=n(), .groups='drop_last') %>%
-    mutate(N=sum(n), ratio=n/N) %>% 
-    filter(ratio>min)
-      
+  dat <- dat %>% filter(ratio>min)
   if(trials=="all"){
     for(i in seq(1, n)) {
       df <- dat %>% filter(id == ids[[i]]) %>%
@@ -169,13 +166,20 @@ plotTrials <- function(dat, trials="all", min=0, responses="all"){
         ggplot(aes(x=ratio, y=response)) +
         geom_bar(stat="identity") +
         theme_bw() +
-        theme(text = element_text(size=12),
+        theme(text = element_text(size=22),
               axis.text.x=element_text(angle=45, vjust = 0.5)) +
-        labs(x="percentage of participants who built utterance", y="built utterance", title = ids[[i]]) +
+        labs(x="ratio participants", y="response", title = ids[[i]]) +
         scale_y_discrete(labels = function(ylab) str_wrap(ylab, width = 27.5))
+      if(nrow(dat.model) != 0){
+       p <- p + 
+        geom_point(data=dat.model %>% filter(endsWith(id, ids[[i]])),
+                   aes(x=ratio, y=response, color=cn), shape='*', size=10, alpha=0.5)
+      }
+      ggsave(paste("plots/", ids[[i]], ".png", sep=""), p, width=8, height=10)
+
       print(p)
     }
-  } else if(responses!="all") {
+  } else if(responses != "all") {
       dat <- dat %>%
         filter(response %in% responses) %>%
         group_by(id) %>% summarize(ratio=sum(ratio)) %>%
@@ -191,7 +195,7 @@ plotTrials <- function(dat, trials="all", min=0, responses="all"){
       ggplot(aes(x=ratio, y=response)) +
       geom_bar(aes(fill=id), stat="identity", position=position_dodge(preserve="single")) +
       theme_bw() +
-      theme(text = element_text(size=12),
+      theme(text = element_text(size=22),
             axis.text.x=element_text(angle=45, vjust = 0.5),
             legend.position="top") +
       labs(x="percentage of participants who built utterance", y="built utterance") +
@@ -203,28 +207,59 @@ plotTrials <- function(dat, trials="all", min=0, responses="all"){
 
 ## Responses per trial
 
+Load qualitative model data
+
+```{r model-qualitativ}
+test.empirical <- test.standardized %>%
+  filter(id != "ind2") %>%
+  group_by(id,response) %>%
+  summarize(n=n(), .groups='drop_last') %>%
+  mutate(N=sum(n), ratio=n/N) %>% 
+  select(id, response, ratio) %>%
+  add_column(predictor="empirical")
+
+trials = test.empirical$id %>% unique() 
+test.model =
+  readRDS(here("data", "speaker-predictions-means-stimuli.rds")) %>%
+  rename(ratio=avg, id=stimulus) %>% 
+  add_column(predictor="model") %>%
+  filter(!endsWith(id, "if1_ul") & !endsWith(id, "if1_hl") & !endsWith(id, "if1_hu") &
+    !endsWith(id, "if1_lu") & !endsWith(id, "if1_ll") & ratio>0)
+
+model.if1_uh = test.model %>% filter(id=="if1_uh")
+model.if2_ul = test.model %>% filter(id=="if2_ul")
+
+test.model <- test.model %>% 
+  bind_rows(model.if1_uh %>% mutate(id="if1_u-Hh")) %>%
+  bind_rows(model.if1_uh %>% mutate(id="if1_u-Lh")) %>%
+  bind_rows(model.if2_ul %>% mutate(id="if2_u-Hl")) %>%
+  bind_rows(model.if2_ul %>% mutate(id="if2_u-Ll"))
+  
+```
+
+
 **Independent Trials**
 
-```{r independent-trials, echo=FALSE}
-test.standardized %>% group_by(id) %>%
+```{r independent-trials, echo=FALSE, fig.height=9}
+test.empirical %>%
   filter(str_detect(id, "independent")) %>%
-  plotTrials()
+  plotTrials(dat.model=test.model %>% filter(str_detect(id, "independent")))
 ```
 
 **If1-trials**
 
-```{r if1-trials, echo=FALSE}
-test.standardized %>% group_by(id) %>%
+```{r if1-trials, echo=FALSE, fig.height=7}
+test.empirical %>%
   filter(str_detect(id, "if1")) %>%
-  plotTrials()
+  plotTrials(dat.model=test.model %>% filter(str_detect(id, "if1")))
 ```
 
 **If2-trials**
 
-```{r if2-trials, echo=FALSE}
-test.standardized %>% group_by(id) %>%
+```{r if2-trials, echo=FALSE, fig.height=7}
+test.empirical %>% group_by(id) %>%
   filter(str_detect(id, "if2")) %>%
-  plotTrials()
+  plotTrials(dat.model=test.model %>% filter(str_detect(id, "if2")))
 ```
 
 ## Responses that only contain 1 block
@@ -232,12 +267,12 @@ test.standardized %>% group_by(id) %>%
 ```{r resp-independent, echo=FALSE}
 literals <- utterances %>% filter(!str_detect(response, "and|neither|but|if")) %>% 
   pull(response)
-df <- test.standardized %>% group_by(id)
+df <- test.empirical %>% group_by(id)
 df %>% filter(str_detect(id, "if1")) %>%
-  plotTrials(trials="", min=0, responses=literals)
+  plotTrials(trials="", min=0, responses=literals, dat.model=test.model %>% filter(str_detect(id, "if1")))
 
 df %>% filter(str_detect(id, "if2")) %>%
-  plotTrials(trials="", min=0, responses=literals)
+  plotTrials(trials="", min=0, responses=literals, dat.model=test.model %>% filter(str_detect(id, "if2")))
 ```
 
 Did participants get the relationship between both blocks in the if2-trials?

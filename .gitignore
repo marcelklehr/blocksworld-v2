@@ -3,6 +3,8 @@
 .RData
 .Ruserdata
 R/*.html
+*.html
+*.pdf
 
 data/test-runs
 
