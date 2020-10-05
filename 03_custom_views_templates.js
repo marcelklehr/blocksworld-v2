@@ -44,7 +44,7 @@ const animation_view = {
           toggleNextIfDone($('#runButton'), true);
         });
     });
-    let anim = {animation, cleared, CT, started:false, name:'animation_buttons'};
+    let anim = {animation, cleared, CT, started:false, trial_name:'animation_buttons'};
     functionalityRunBttn(anim, "buttons");
     functionalityBttnNextAnimation(getButtonResponse, magpie, anim)
   }
@@ -63,7 +63,7 @@ const multi_slider_generator = {
 
   answer_container_gen: function (config, CT) {
     return htmlSliderAnswers(config.data[CT]) +
-      `<button id='smallMarginNextButton' class='grid-button magpie-view-button'>Next scene</button>`;
+      `<button id='smallMarginNextButton' class='grid-button magpie-view-button'>continue with task 2</button>`;
   },
 
   handle_response_function: function (
@@ -85,9 +85,10 @@ const multi_slider_generator = {
     button.on("click", function () {
       const RT = Date.now() - startingTime; // measure RT before anything else
       let responseData = getSliderResponse();
+      CountTrials.test = CountTrials.test + 1;
       let trial_data = Object.assign(responseData, {
         trial_name: config.name,
-        trial_number: CT + 1,
+        trial_number: CountTrials.test,
         RT: RT
       });
       trial_data = magpieUtils.view.save_config_trial_data(
@@ -140,9 +141,9 @@ const multi_slider_generator = {
 const fridge_generator = {
   stimulus_container_gen: function (config, CT) {
     return `<div class='magpie-view'>
-      <h1 id='qud' class='stimulus'>
+      <h2 id='qud' class='stimulus'>
       ${config.data[CT].QUD}
-      </h1>
+      </h2>
       <div class='stimulus'>
       <img src=${config.data[CT].picture}>
       </div>
@@ -231,6 +232,7 @@ const fridge_generator = {
           // Important for displaying sentence built so far
         sentence = sentence_array.toString()
           .replace(/,/g, " ");
+        config.data[CT].sentence = sentence;
         config.data[CT].cost = sentence_array.length;
 
         checkBuildSentence(sentence_array, poss_next, submitbutton)
@@ -247,6 +249,7 @@ const fridge_generator = {
         $(".selected-words")
           .append(sentence);
         //update for synchronizing with what is shown in textbox
+
         config.data[CT].sentence = sentence;
         config.data[CT].cost = sentence_array.length;
         let value = _.last(sentence_array)
@@ -294,11 +297,10 @@ const fridge_generator = {
     button.on("click", function () {
       const RT = Date.now() - startingTime; // measure RT before anything else
       let response2 = custom_sentence == "" ? "" : custom_sentence.value;
-      CountTrials.fridge = CountTrials.fridge + 1;
+      CountTrials.test = CountTrials.test + 1;
       let trial_data = {
         trial_name: config.name,
-        // trial_number: CT + 1,
-        trial_number: CountTrials.fridge,
+        trial_number: CountTrials.test,
         response: [config.data[CT].sentence, response2],
         response1: config.data[CT].sentence,
         response2: response2,
@@ -306,7 +308,6 @@ const fridge_generator = {
         response4: response2.split(" ").length,
         RT: RT
       };
-      // console.log(trial_data.response3);
       trial_data = magpieUtils.view.save_config_trial_data(
         _.omit(config.data[CT], 'sentence'),
         trial_data
@@ -369,7 +370,7 @@ handle_response_function: function(config, CT, magpie, answer_container_generato
       let trial_data = {
           trial_name: config.name,
           // trial_number: CT + 1,
-          trial_nubmer: CountTrials.color_vision,
+          trial_number: CountTrials.color_vision,
           question: question_left_part.concat("...answer here...").concat(question_right_part),
           response: response.val(),
           RT: RT
@@ -491,7 +492,7 @@ const animation_view_sliders = {
     addCheckSliderResponse($('#runButton'));
     DEBUG ? addKeyToMoveSliders($("#runButton")) : null;
 
-    let anim = {animation, cleared, CT, started:false,  name:'animation_slider'}
+    let anim = {animation, cleared, CT, started:false,  trial_name:'animation_slider'}
     functionalityRunBttn(anim, "sliders");
     functionalityBttnNextAnimation(getSliderResponse, magpie, anim);
   }

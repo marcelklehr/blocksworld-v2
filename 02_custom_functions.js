@@ -273,7 +273,7 @@ getTrialById = function(trials_all, id){
   return trial[0];
 }
 
-let CountTrials = {'fridge': 0,
+let CountTrials = {'test': 0,
                    'color_vision': 0
                  };
 

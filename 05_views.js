@@ -71,7 +71,7 @@ const instructions_general = magpieViews.view_generator("instructions", {
          <br />
          <br />
          The experiment consists of two phases, a <b>training</b> and a <b>testing</b> phase.
-         In total, you will need about <b>15 minutes</b> to finish it.
+         In total, you will need about <b>25 minutes</b> to finish it.
          <br/>
          <br/>
          We will now start the training phase which consists of <b>15</b>
@@ -207,30 +207,26 @@ const instructions_train3 = magpieViews.view_generator("instructions", {
 const instructions_fridge = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_fridge",
-  title: "General Instructions Test Phase",
-  text: `Great - we will now proceed with the test phase of the experiment.
-  You will see pictures of different block arrangements that we now ask you to
-  describe.
+  title: "Instructions Task 2 Test Phase",
+  text: `In task 2 of the test trials we will ask you to
+  <b>describe the scene</b> shown in the picture.
   More concretely, your task is to <b>produce the sentence</b> that <b>best
   describes</b> which blocks you think will fall.
   <br />
   <br />
-  For this, imagine another person who does not see the picture that you see but
-  four sliders as those that you adjusted in the training phase.
-  The task of this other person is to to adjust the sliders - <b>based on the
-  sentence that you produced</b> - such that they <b>best resemble</b> what you
-  think happens in the picture.
-  <br/>
-  To put it another way, the other person's slider ratings should be as close as
-  possible to how your ratings would look like.
+  For this, imagine <b>another person</b> who has to <b>adjust the four sliders</b>
+  of the first task, such that they <b>match your ratings of task 1
+  as close as possible</b>.
+  <br />
+  The <b>only hint</b> that the other person gets to adjust the sliders to <b>match your ratings</b>,
+  is <b>the sentence that you produce</b> to describe the scene
+  (the other person does not see the picture that you see).
   <br/>
   <br/>
   The sentences that you can produce are <b>limited</b>: you will see a <b>set of
   words</b> which we ask you to <b>concatenate by clicking</b> on them.
+  You will be able to produce the following types of sentences:
   <br />
-  <br />
-  <b>You will be able to produce the following types of sentences</b>:
-  <br/>
   <b>1.</b> <b>simple assertions</b>, e.g. <i>The green block
   falls</i>, <i>The blue block does not fall</i>, ...
   <br/>
@@ -241,9 +237,8 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
   <i>The blue block falls but the green block does not fall</i>, ...
   <br/>
   <b>4.</b> <b>conditionals</b>, e.g. <i>If the green block falls, the blue block
-  falls as well</i>, <i>If the green block does not fall, the blue block falls
-  </i>, ...`,
-  buttonText: "continue"
+  falls as well</i>, <i>If the green block does not fall, the blue block falls</i>, ...`,
+  buttonText: "go to example trial"
 });
 const instructions_fridge_procedure = magpieViews.view_generator("instructions", {
   trials: 1,
@@ -270,11 +265,8 @@ const instructions_fridge_procedure = magpieViews.view_generator("instructions",
   <br/>
   <b>5</b>. If you think that there is no better sentence for describing
   what happens in the scene, click on <b>NEXT SCENE</b>
-  right away to continue straight with the next trial.
-  <br />
-  <br />
-  There will be one example trial next before we start with the actual test phase.`,
-  buttonText: "go to example trial"
+  right away to continue straight with the next trial.`,
+  buttonText: "go to example task 2"
 });
 
 
@@ -283,38 +275,45 @@ const instructions_test = magpieViews.view_generator("instructions", {
   name: "instructions_test",
   title: "Instructions Test Phase",
   text: `Great -  we'll now proceed with the test phase of the experiment.
-    <br />
     As in the training phase, you will be shown scenes of different block
-    arrangements and we will ask you to indicate <b>how likely</b> you
+    arrangements.
+    <br />
+    <br />
+    There will now be <b>two tasks for each scene</b>. The first task is as in the
+    training phase: you will be asked to indicate <b>how likely</b> you
     think certain blocks will or will not fall (left: <i>impossible</i>
     event, right: <i>certain</i> event).
-    The only difference is that <b>you will not get feedback</b> anymore about
-    what will happen.
-    <br />
-    <br />
-    <b>Please keep in mind</b>:
-    <br />
-    <b>1</b>. A block is considered to <b>fall</b> as soon as it <b>drops off
-    a platform</b> or <b>off another block</b> - that is, a block does
-    <b>not necessarily</b> need to fall to the ground in order to count as falling.
     <br/>
-    <b>2</b>. The colors do not have any meaning, all colored blocks represent
-    <b>common toy blocks</b>, they all have <b>the same properties</b> and they
-    <b>behave as in the training trials</b>.
-    <br/>
-    <b>3</b>. Only after you have adjusted all four sliders (all circles on the
-    sliders have to be green!), you will be able to proceed with the next trial.
-      </br>
-      </br>
-    We will now start with the test phase which comprises in total <b>18</b>
-    scenes of block arrangements and <b>8</b> simple color questions in between.`,
-  buttonText: "start test phase"
+    Note that <b>you will not get feedback</b> anymore about what will happen.
+    <br />
+    <br />
+    Then in <b>task 2</b>, you will see the same scene again and we will ask you to
+    <b>produce a sentence</b> which we will explain next.
+    `,
+  buttonText: "continue"
 });
+
+// <b>Please keep in mind</b>:
+// <br />
+// <b>1</b>. A block is considered to <b>fall</b> as soon as it <b>drops off
+// a platform</b> or <b>off another block</b> - that is, a block does
+// <b>not necessarily</b> need to fall to the ground in order to count as falling.
+// <br/>
+// <b>2</b>. The colors do not have any meaning, all colored blocks represent
+// <b>common toy blocks</b>, they all have <b>the same properties</b> and they
+// <b>behave as in the training trials</b>.
+// <br/>
+// <b>3</b>. Only after you have adjusted all four sliders (all circles on the
+// sliders have to be green!), you will be able to proceed with the next trial.
+//   </br>
+//   </br>
+// We will now start with the test phase which comprises in total <b>18</b>
+// scenes of block arrangements and <b>8</b> simple color questions in between.`,
 
 const instructions_fridge_reminder = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_fridge_reminder",
-  title: "Please remember",
+  title: "Short reminder",
   text: `<b>1</b>. A block is considered to <b>fall</b> as soon as it <b>drops
     off a platform</b> or <b>off another block</b> - that is, a block does not
     necessarily need to fall to the ground in order to count as falling.
@@ -325,11 +324,10 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
     <b>behave as in the training trials</b>.
     <br/>
     <br/>
-    <b>3</b>. The sentence that you produce is given as <b>hint to another
-    person</b> who has to adjust four sliders (as you did in the training phase)
-    , such that this <b>other person's slider ratings most closely resemble to what
-    you think happens</b> in the scene, that is to how your slider ratings would look
-    like.
+    <b>3</b>. The <b>sentence that you produce</b> is given as <b>hint to another
+    person</b> who has to adjust the four sliders of task 1 (without seeing the
+    picture) such that they are <b>as close as possible to your ratings</b>
+    from task 1.
     <br/>
     <br/>
     We will now start with the test phase which comprises in total <b>18</b>
@@ -412,6 +410,26 @@ const multiple_slider_train = magpieViews.view_generator(
   }
 )
 
+multi_slider_view = function(idx){
+  let view = magpieViews.view_generator(
+    "slider_rating", {
+      // This will use all trials specified in `data`, you can use a smaller value
+      // (for testing), but not a larger value
+      trials: 1,
+      // name should be identical to the variable name
+      name: "multiple_slider" + idx,
+      data: TEST_TRIALS.slice(idx, idx+1)
+    },
+    // you can add custom functions at different stages through a view's life cycle
+    {
+      stimulus_container_generator: multi_slider_generator.stimulus_container_gen,
+      answer_container_generator: multi_slider_generator.answer_container_gen,
+      handle_response_function: multi_slider_generator.handle_response_function
+    }
+  );
+  return(view)
+}
+
 const instruction_slider_example = magpieViews.view_generator(
   "slider_rating", {
     trials: 1,
@@ -424,24 +442,12 @@ const instruction_slider_example = magpieViews.view_generator(
   }
 );
 
-// const fridge_view = magpieViews.view_generator(
-//   "slider_rating", {
-//     trials: FRIDGE_TRIALS.length,
-//     name: "fridge_view",
-//     data: FRIDGE_TRIALS
-//   }, {
-//     stimulus_container_generator: fridge_generator.stimulus_container_gen,
-//     answer_container_generator: fridge_generator.answer_container_gen,
-//     handle_response_function: fridge_generator.handle_response_function
-//   }
-// );
-
-fridge_view = function(boundaries){
+fridge_view = function(idx){
   let view = magpieViews.view_generator(
     "slider_rating", {
-      trials: boundaries[1] - boundaries[0],
-      name: "fridge_view" + boundaries.join(""),
-      data: FRIDGE_TRIALS.slice(boundaries[0], boundaries[1])
+      trials: 1,
+      name: "fridge_view" + idx,
+      data: FRIDGE_TRIALS.slice(idx, idx+1)
     }, {
       stimulus_container_generator: fridge_generator.stimulus_container_gen,
       answer_container_generator: fridge_generator.answer_container_gen,
@@ -450,12 +456,6 @@ fridge_view = function(boundaries){
   );
   return(view)
 }
-
-let fridge_views = [];
-_.map([[0,2], [2, 4], [4, 6], [6, 8], [8, 10], [10, 12], [12, 14], [14, 16], [16, 18]], function(arr){
-  fridge_views.push(fridge_view(arr));
-});
-
 
 color_vision_view = function(idx){
   let dropdown_choice_custom = magpieViews.view_generator('dropdown_choice', {
@@ -470,7 +470,15 @@ color_vision_view = function(idx){
   return(dropdown_choice_custom)
 }
 
+let fridge_views = [];
+let multi_slider_views = [];
 let color_vision_views = [];
+_.map(_.range(FRIDGE_TRIALS.length), function(idx){
+  fridge_views.push(fridge_view(idx));
+});
+_.map(_.range(TEST_TRIALS.length), function(arr){
+  multi_slider_views.push(multi_slider_view(arr));
+});
 _.map(_.range(0,8), function(idx){
   color_vision_views.push(color_vision_view(idx));
 });

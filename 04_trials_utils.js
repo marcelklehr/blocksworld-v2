@@ -100,8 +100,17 @@ let shuffleTestTrials = function(trial_data){
   });
   return shuffled_trials;
 }
+// Fridge-trials and test-trials (exp 1) need to be in the same order
 const TEST_TRIALS = shuffleTestTrials(slider_rating_trials);
-const FRIDGE_TRIALS = shuffleTestTrials(fridge_trials);
+var test_trial_ids = _.map(TEST_TRIALS, 'id')
+var fridge_trial_ids = _.map(fridge_trials, 'id')
+var FRIDGE_TRIALS = [];
+
+_.map(test_trial_ids, function(id, idx){
+  let idx_fridge = fridge_trial_ids.indexOf(id)
+  FRIDGE_TRIALS[[idx]] = fridge_trials[idx_fridge]
+});
+
 const COLOR_VISION_TRIALS = _.shuffle(color_vision_trials);
 
 if (DEBUG){

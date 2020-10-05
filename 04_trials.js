@@ -173,7 +173,7 @@ test_ids.forEach(function(id) {
     slider_rating_trials.push({
       id: id,
       picture: "stimuli/img/group/" + id + ".png",
-      QUD: "Please indicate how likely you think the represented events will occur.",
+      QUD: "Task 1: Please indicate how likely you think the represented events will occur.",
       icon1: id2Icon.ac,
       icon2: id2Icon.a,
       icon3: id2Icon.c,
@@ -203,8 +203,8 @@ _.map(slider_rating_trials, function (trial) {
 let TRAIN_TRIALS = [];
 let train_ids = _.map(TrainStimuli.list_all, 'id');
 let QUD = ANIM_ANSWERS == "sliders" ?
-  "How likely are you to say that the following blocks will fall?" :
-  "Which block(s) do you think will fall? Click on RUN to see!";
+  "Please indicate how likely you think the represented events will occur. <br/>Click on RUN to see!" :
+  "Which block(s) do you think will fall?<br/>Click on RUN to see!";
 train_ids
   .forEach(function (id) {
     let comment = ''
@@ -222,8 +222,8 @@ train_ids
       question4: text_train_buttons.short.none,
       question: '',
       expected: TrainExpectations[id],
-      optionLeft: 'not at all',
-      optionRight: 'totally',
+      optionLeft: 'impossible',
+      optionRight: 'certain',
       group: '',
       picture: '',
       comment: comment
@@ -240,7 +240,7 @@ TRAIN_SLIDER_TRIALS = _.filter(train_trials_cloned, function(trial){
 })
 
 TRAIN_SLIDER_TRIALS[0].QUD =
-  "Please indicate how likely you think the represented events will occur.";
+  "Task 1: Please indicate how likely you think the represented events will occur.";
 TRAIN_SLIDER_TRIALS[0].picture = "stimuli/img/train_slider_fridge/" + id_slider + ".jpg";
 TRAIN_SLIDER_TRIALS[0].optionLeft = 'impossible';
 TRAIN_SLIDER_TRIALS[0].optionRight = 'certain';
@@ -299,7 +299,7 @@ fridge_trials = _.map(fridge_trials, function (trial, i) {
    'optionLeft', 'optionRight', 'expected'].forEach(function(key){
     trial[key] = '';
   });
-  trial.QUD = "Please build the sentence that best describes what happens in the scene, such that another person's slider ratings would match yours as much as possible.",
+  trial.QUD = "Task 2: Please build the best sentence such that another person's slider ratings match yours as much as possible.",
   trial.sentence = "";
   trial = _.omit(trial, ['icon1', 'icon2', 'icon3', 'icon4']);
   return trial

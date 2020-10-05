@@ -8,7 +8,11 @@ $("document")
         e.preventDefault();
       }
     };
-
+    //add color vision views to alternating test views
+    var views_test = _.flatten(_.zip(multi_slider_views, fridge_views))
+    _.map(color_vision_views, function(view, idx){
+      views_test.splice(4+idx*5, 0, view);
+    });
     // calls magpieInit
     // in debug mode this returns the magpie-object, which you can access in the console of your browser
     // e.g. >> window.magpie_monitor or window.magpie_monitor.findNextView()
@@ -18,48 +22,18 @@ $("document")
       views_seq: [
       intro,
       instructions_general,
-
-      // ** TRAINING ** //
-      // * with Buttons * //
-      // instructions_train,
-      // animation_view,
-
-      // * Sliders with surprise* //
+      // * Training with sliders* //
       instructions_train_sliders,
       animation_view_sliders,
-
-      // * Experiment 1 * //
-      // instruction_slider_example,
-      // multiple_slider_train,
-      // instructions_test,
-      // multiple_slider,
-
-      // * Experiment 2 * //
+      // Testing //
+      //*alternating trials of Exp1 (prior elicitation) and Exp2 (production)*//
+      instructions_test,
       instructions_fridge,
+      multiple_slider_train,
       instructions_fridge_procedure,
       fridge_train,
-      instructions_fridge_reminder,
-      fridge_views[0],
-      color_vision_views[0],
-      fridge_views[1],
-      color_vision_views[1],
-      fridge_views[2],
-      color_vision_views[2],
-      fridge_views[3],
-      color_vision_views[3],
-      fridge_views[4],
-      color_vision_views[4],
-      fridge_views[5],
-      color_vision_views[5],
-      fridge_views[6],
-      color_vision_views[6],
-      fridge_views[7],
-      color_vision_views[7],
-      fridge_views[8],
-
-      post_test,
-      thanks
-    ],
+      instructions_fridge_reminder
+    ].concat(views_test).concat([post_test, thanks]),
       // Here, you can specify all information for the deployment
       deploy: {
         experimentID: "38",
@@ -75,8 +49,7 @@ $("document")
       progress_bar: {
         // list the view-names of the views for which you want a progress bar
         // multiple_slider.name,
-        in: [animation_view.name].concat(_.map(color_vision_views, 'name').concat(
-          _.map(fridge_views, 'name'))),
+        in: [animation_view_sliders.name].concat(_.map(views_test, 'name')),
       // Possible styles are "default", "separate" and "chunks"
         style: "default",
         width: 100
