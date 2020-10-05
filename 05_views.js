@@ -161,8 +161,8 @@ const instructions_train_sliders = magpieViews.view_generator("instructions", {
   and the different colors do <b>not have</b> any meaning.
      <br />
      <br />
-  After you moved all four sliders, (the circle on top of the slider will turn
-  green at clicking), you will be able to click on <b>RUN</b> to see what happens.
+  After you moved all four sliders (the circle on top of the slider will turn
+  green at clicking) you will be able to click on <b>RUN</b> to see what happens.
   <br/>
   When you start the animation, the slider of the event that occurred will be
   highlighted in green.
