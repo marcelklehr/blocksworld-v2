@@ -162,8 +162,17 @@ input[type="range"].replied::-webkit-slider-thumb {
   background: green;
 }
 
+input[type=range].replied::-moz-range-thumb {
+  background-color: green;
+}
+
 input[type="range"].correct-slider::-webkit-slider-runnable-track {
   background: #51DE19;
+}
+
+/* needed for firefox */
+input[type=range].correct-slider::-moz-range-track {
+  background-color: #51DE19;
 }
 
 .thick {
