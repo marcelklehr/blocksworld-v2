@@ -219,7 +219,7 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
   of the first task, such that they <b>match your ratings of task 1
   as close as possible</b>.
   <br />
-  The <b>only hint</b> that the other person gets to adjust the sliders to <b>match your ratings</b>,
+  The <b>only hint</b> that the other person gets for adjusting the sliders
   is <b>the sentence that you produce</b> to describe the scene
   (the other person does not see the picture that you see).
   <br/>
@@ -332,7 +332,8 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
     <br/>
     <br/>
     We will now start with the test phase which comprises in total <b>18</b>
-    scenes of block arrangements and <b>8</b> simple color questions in between.`,
+    scenes of block arrangements (for each there is a slider rating and a sentence
+    production task) and <b>8</b> simple color questions in between.`,
   buttonText: "start test phase"
 });
 

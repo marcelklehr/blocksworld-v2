@@ -173,7 +173,7 @@ test_ids.forEach(function(id) {
     slider_rating_trials.push({
       id: id,
       picture: "stimuli/img/group/" + id + ".png",
-      QUD: "Task 1: Please indicate how likely you think the represented events will occur.",
+      QUD: "Task 1: Please indicate how likely you think the shown events will occur.",
       icon1: id2IconTest.ac,
       icon2: id2IconTest.a,
       icon3: id2IconTest.c,
@@ -203,7 +203,7 @@ _.map(slider_rating_trials, function (trial) {
 let TRAIN_TRIALS = [];
 let train_ids = _.map(TrainStimuli.list_all, 'id');
 let QUD = ANIM_ANSWERS == "sliders" ?
-  "Please indicate how likely you think the represented events will occur. <br/>Click on RUN to see!" :
+  "Please indicate how likely you think the shown events will occur. <br/>Click on RUN to see!" :
   "Which block(s) do you think will fall?<br/>Click on RUN to see!";
 train_ids
   .forEach(function (id) {
@@ -239,7 +239,7 @@ TRAIN_SLIDER_TRIALS = _.filter(train_trials_cloned, function(trial){
   return trial.id == id_slider
 });
 TRAIN_SLIDER_TRIALS[0].QUD =
-  "Task 1: Please indicate how likely you think the represented events will occur.";
+  "Task 1: Please indicate how likely you think the shown events will occur.";
 TRAIN_SLIDER_TRIALS[0].picture = "stimuli/img/train_slider_fridge/" + id_slider + "_test_colors.jpg";
 TRAIN_SLIDER_TRIALS[0].icon1 = id2IconTest.ac
 TRAIN_SLIDER_TRIALS[0].icon2 = id2IconTest.a
@@ -304,7 +304,7 @@ fridge_trials = _.map(fridge_trials, function (trial, i) {
    'optionLeft', 'optionRight', 'expected'].forEach(function(key){
     trial[key] = '';
   });
-  trial.QUD = "Task 2: Please build the best sentence such that another person's slider ratings match yours as much as possible.",
+  trial.QUD = "Task 2: Please build the best sentence such that another person's<br/> slider ratings match yours as much as possible.",
   trial.sentence = "";
   trial = _.omit(trial, ['icon1', 'icon2', 'icon3', 'icon4']);
   return trial

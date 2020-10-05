@@ -178,7 +178,7 @@ const fridge_generator = {
       word_array +
       `</div>
       <br>
-      <div class ="sentence selected1" style = "font-size: 20px"> Your sentence:
+      <div class ="sentence selected1" style = "font-size: 20px"> Your sentence:<br/><br/>
         <span class = "selected-words" id ="sentence">${config.data[CT].sentence}</span>
       </div>
       <div align="right">
