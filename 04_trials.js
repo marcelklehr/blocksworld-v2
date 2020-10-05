@@ -203,8 +203,8 @@ _.map(slider_rating_trials, function (trial) {
 let TRAIN_TRIALS = [];
 let train_ids = _.map(TrainStimuli.list_all, 'id');
 let QUD = ANIM_ANSWERS == "sliders" ?
-  "Please indicate how likely you think the shown events will occur. <br/>Click on RUN to see!" :
-  "Which block(s) do you think will fall?<br/>Click on RUN to see!";
+  "Please indicate how likely you think the shown events will occur. Click on RUN to see!" :
+  "Which block(s) do you think will fall? Click on RUN to see!";
 train_ids
   .forEach(function (id) {
     let comment = ''

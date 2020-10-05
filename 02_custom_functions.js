@@ -185,7 +185,7 @@ showAnimationInTrial = function (CT, html_answers, progress_bar = true) {
   const view_template = html_bar +
     `<div class='magpie-view-stimulus-grid'>
       <animationTitle class='stimulus'>
-        <h1>${TRAIN_TRIALS[CT].QUD}</h1>
+        <h2>${TRAIN_TRIALS[CT].QUD}</h2>
       </animationTitle>
       <animation id='animationDiv'></animation>
     </div>` +

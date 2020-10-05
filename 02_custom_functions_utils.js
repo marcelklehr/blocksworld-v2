@@ -89,14 +89,11 @@ _htmlSlider = function (idxSlider, utterance, options, value) {
   let html_slider = start +
     `<span class='magpie-response-slider-option optionWide thick'>` + options.left + `</span>
      <input type='range' id=` + responseID + ` name=` + answerID +
-    ` class='magpie-response-slider slider-width' min='0' max='100' value='` + value + `'>` +
+    ` class='magpie-response-slider slider-width' min='0' max='100' value='` + value +
+    `' oninput='` + outputID + `.value=` + responseID + `.value/100'>` +
     `<span class='magpie-response-slider-option optionWide thick'>` + options.right + `</span>
-    <output name="` + outputName + `" id=` + outputID + `></output>` +
+    <output name="` + outputName + `" id=` + outputID + ` class="thick">` + value/100 + `</output>` +
     end;
-    // ` class='magpie-response-slider' min='0' max='100' value='` + value + `' oninput='` +
-    // outputID + `.value=` + responseID + `.value/100'>` +
-    // <output name="` + outputName + `" id=` + outputID + ` class="thick">` + (value/100) + `</output>` +
-
   return html_question + html_slider
 }
 
