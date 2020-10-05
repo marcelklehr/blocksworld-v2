@@ -31,9 +31,8 @@ sliderIcons = function (cols) {
   return id2Html;
 }
 
-// let id2Icon = sliderTexts(BLOCK_COLS.test);
-let id2Icon = sliderIcons(BLOCK_COLS.test);
-let text_sliders = sliderTexts(BLOCK_COLS.test);
+let id2IconTest = sliderIcons(BLOCK_COLS.test);
+let text_test_sliders = sliderTexts(BLOCK_COLS.test);
 
 let id2IconTrain = sliderIcons(BLOCK_COLS.train);
 // let id2IconTrain = sliderTexts(BLOCK_COLS.train);
@@ -46,6 +45,10 @@ let text_train_buttons = {
     'none': "<b>Neither </b>" + BLOCK_COLS.train[0] + " <b>nor</b> " + BLOCK_COLS.train[1]
   }
 };
+let text_test_buttons = {
+  'short': {ac: BLOCK_COLS_SHORT.test.join(''), a: BLOCK_COLS_SHORT.test[0],
+            c: BLOCK_COLS_SHORT.test[1], none: 'none'}
+}
 
 // function to randomly order the four utterences, given per trial
 function shuffleQuestionsAllTrials(questions, slider_rating_trials = [{}]) {

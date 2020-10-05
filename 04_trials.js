@@ -174,14 +174,14 @@ test_ids.forEach(function(id) {
       id: id,
       picture: "stimuli/img/group/" + id + ".png",
       QUD: "Task 1: Please indicate how likely you think the represented events will occur.",
-      icon1: id2Icon.ac,
-      icon2: id2Icon.a,
-      icon3: id2Icon.c,
-      icon4: id2Icon.none,
-      question1: abbreviateQuestion(text_sliders.ac, BLOCK_COLS_SHORT.test),
-      question2: abbreviateQuestion(text_sliders.a,  BLOCK_COLS_SHORT.test),
-      question3: abbreviateQuestion(text_sliders.c,  BLOCK_COLS_SHORT.test),
-      question4: abbreviateQuestion(text_sliders.none,  BLOCK_COLS_SHORT.test),
+      icon1: id2IconTest.ac,
+      icon2: id2IconTest.a,
+      icon3: id2IconTest.c,
+      icon4: id2IconTest.none,
+      question1: abbreviateQuestion(text_test_sliders.ac, BLOCK_COLS_SHORT.test),
+      question2: abbreviateQuestion(text_test_sliders.a,  BLOCK_COLS_SHORT.test),
+      question3: abbreviateQuestion(text_test_sliders.c,  BLOCK_COLS_SHORT.test),
+      question4: abbreviateQuestion(text_test_sliders.none,  BLOCK_COLS_SHORT.test),
       optionLeft: "impossible",
       optionRight: "certain",
       expected: ''
@@ -237,26 +237,31 @@ let id_slider = 'ind2';
 let train_trials_cloned = _.cloneDeep(TRAIN_TRIALS)
 TRAIN_SLIDER_TRIALS = _.filter(train_trials_cloned, function(trial){
   return trial.id == id_slider
-})
-
+});
 TRAIN_SLIDER_TRIALS[0].QUD =
   "Task 1: Please indicate how likely you think the represented events will occur.";
-TRAIN_SLIDER_TRIALS[0].picture = "stimuli/img/train_slider_fridge/" + id_slider + ".jpg";
-TRAIN_SLIDER_TRIALS[0].optionLeft = 'impossible';
-TRAIN_SLIDER_TRIALS[0].optionRight = 'certain';
+TRAIN_SLIDER_TRIALS[0].picture = "stimuli/img/train_slider_fridge/" + id_slider + "_test_colors.jpg";
+TRAIN_SLIDER_TRIALS[0].icon1 = id2IconTest.ac
+TRAIN_SLIDER_TRIALS[0].icon2 = id2IconTest.a
+TRAIN_SLIDER_TRIALS[0].icon3 = id2IconTest.c
+TRAIN_SLIDER_TRIALS[0].icon4 = id2IconTest.none
+TRAIN_SLIDER_TRIALS[0].question1 = text_test_buttons.short.ac
+TRAIN_SLIDER_TRIALS[0].question2 = text_test_buttons.short.a
+TRAIN_SLIDER_TRIALS[0].question3 = text_test_buttons.short.c
+TRAIN_SLIDER_TRIALS[0].question4 = text_test_buttons.short.none
 
 let INSTRUCTION_SLIDER = [{
   picture: '',
   optionLeft: "impossible",
   optionRight: "certain",
-  icon1: id2IconTrain.ac,
-  icon2: id2IconTrain.a,
-  icon3: id2IconTrain.c,
-  icon4: id2IconTrain.none,
-  question1: text_train_buttons.short.ac,
-  question2: text_train_buttons.short.a,
-  question3: text_train_buttons.short.c,
-  question4: text_train_buttons.short.none,
+  icon1: id2IconTest.ac,
+  icon2: id2IconTest.a,
+  icon3: id2IconTest.c,
+  icon4: id2IconTest.none,
+  question1: text_test_buttons.short.ac,
+  question2: text_test_buttons.short.a,
+  question3: text_test_buttons.short.c,
+  question4: text_test_buttons.short.none,
   expected: '',
   group: '',
   // QUD: `Let us assume, that you are pretty <b>certain</b> that the <b>red
