@@ -24,6 +24,7 @@ $("document")
       instructions_general,
       // * Training with sliders* //
       instructions_train_sliders,
+      instructions_train_sliders_procedure,
       animation_view_sliders,
       // Testing //
       //*alternating trials of Exp1 (prior elicitation) and Exp2 (production)*//

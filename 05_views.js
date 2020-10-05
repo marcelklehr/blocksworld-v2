@@ -150,7 +150,6 @@ const instructions_train_sliders = magpieViews.view_generator("instructions", {
   <img src='stimuli/img/icons/green.png'/>
   <img src='stimuli/img/icons/not-yellow.png' />
   <br/>
-  <br/>
   <b>Please note</b>:
   <br/>
   A block is considered to <b>fall</b> as soon as it <b>drops off a platform</b> or
@@ -158,18 +157,39 @@ const instructions_train_sliders = magpieViews.view_generator("instructions", {
   necessarily</b> need to fall to the ground in order to count as falling.
   <br/>
   The blocks represent common toy blocks <b>without</b> any special properties
-  and the different colors do <b>not have</b> any meaning.
-     <br />
-     <br />
-  After you moved all four sliders (the circle on top of the slider will turn
-  green at clicking) you will be able to click on <b>RUN</b> to see what happens.
+  and the different colors do <b>not have</b> any meaning.`,
+  buttonText: "continue"
+});
+
+const instructions_train_sliders_procedure = magpieViews.view_generator("instructions", {
+  trials: 1,
+  name: "instructions_train_sliders_procedure",
+  title: "Procedure Training Phase",
+  text: `You have to move all four sliders (the circles on the sliders will turn green!)
+  such that you will be able to start the animation by clicking on <b>RUN</b>.
+  The <b>slider of the event that occurred</b> will be <b>highlighted in green</b>.
   <br/>
-  When you start the animation, the slider of the event that occurred will be
-  highlighted in green.
-  After that, you will be able to go to the next trial by clicking on
-  <b>NEXT SCENE</b>.`,
+  <br/>
+  The value of each slider will be shown to its right. Please note that your
+  estimates do <b>not necessarily have to</b> sum up to 1 as we are interested in
+  <b>how likely</b> you think the events are <b>relative to each other</b>.
+  <br />
+  In other words, <b>a large difference</b> between two slider positions means that
+  one event is rated as <b>much more plausible</b> than the other.
+  Contrary to that, <b>identical slider positions</b> mean that the events are rated as
+  being <b>equally plausible</b>.
+  <br />
+  <br />
+  After you moved all four sliders, you can click on <b>NEXT SCENE</b> to
+  continue with the next trial.`,
   buttonText: "start training"
 });
+// <img src=stimuli/img/icons/red.png>
+// <img src=stimuli/img/icons/yellow.png>
+// <br />
+// <input type='range' id=ex_slider class='magpie-response-slider replied' min='0' max='100' value='40' oninput='ex_slider.value/100'/>
+// <output name=ex_slider_out id=out_ex class="thick">0.40</output>
+// <script>document.getElementById("ex_slider").disabled=true;</script>
 
 const instructions_train3 = magpieViews.view_generator("instructions", {
   trials: 1,
@@ -325,7 +345,16 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
     <b>behave as in the training trials</b>.
     <br/>
     <br/>
-    <b>3</b>. The <b>sentence that you produce</b> is given as <b>hint to another
+    <b>3</b>. In task 1, your estimates how likely you think two blocks will fall/not fall
+    do <b>not necessarily have to</b> sum up to 1 - we are interested in
+    <b>how likely</b> you think the events are <b>relative to each other</b>.
+    <br />
+    <b>A large difference</b> between two slider positions means: one event
+    is <b>much more plausible</b> than the other;
+    <b>identical slider positions</b> mean: <b>equally plausible</b> events.
+    <br/>
+    <br/>
+    <b>4</b>. The <b>sentence that you produce</b> is given as <b>hint to another
     person</b> who has to adjust the four sliders of task 1 (without seeing the
     picture) such that they are <b>as close as possible to your ratings</b>
     from task 1.
