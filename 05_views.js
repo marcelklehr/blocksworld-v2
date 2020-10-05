@@ -134,10 +134,10 @@ const instructions_train_sliders = magpieViews.view_generator("instructions", {
   name: "instructions_train_sliders",
   title: "Instructions Training",
   text: `For each presented scene we would like to know <b>how likely</b> you
-  think it is that certain blocks will or will not fall.
+  think it is for certain blocks to fall or not to fall.
   <br/>
-  For this purpose, your task will be to <b>adjust a slider</b> (left: <i>impossible event</i>,
-    right: <i>certain event</i>) for <b>each of four events</b>, each represented by a different icon.
+  For this purpose, your task will be to <b>adjust a slider</b> for <b>each of four events</b> (left: <i>impossible event</i>, right: <i>certain event</i>).
+  Each event is represented by a different icon.
   <br />
   A falling block is represented by a skewed rectangle and a block that
   does not fall is represented by a rectangle with a line below, e.g.
@@ -164,7 +164,8 @@ const instructions_train_sliders = magpieViews.view_generator("instructions", {
   After you moved all four sliders, (the circle on top of the slider will turn
   green at clicking), you will be able to click on <b>RUN</b> to see what happens.
   <br/>
-  The slider of the event that occurred will be highlighted in green.
+  When you start the animation, the slider of the event that occurred will be
+  highlighted in green.
   After that, you will be able to go to the next trial by clicking on
   <b>NEXT SCENE</b>.`,
   buttonText: "start training"

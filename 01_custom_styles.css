@@ -496,3 +496,9 @@ input[type="range"].correct-slider::-webkit-slider-runnable-track {
   padding-bottom: 0px;
   margin-bottom: 0px;
 }
+
+
+.slider-width
+{
+    width: 250px;
+}
