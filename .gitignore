@@ -10,3 +10,7 @@ data/test-runs
 
 # dont include unanonymized data
 results_14_blocksworld-conditionals_BG.csv
+
+# do include index.html files
+!index.html
+!stimuli/index-stimuli.html
