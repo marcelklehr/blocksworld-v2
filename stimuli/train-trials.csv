@@ -1,0 +1,33 @@
+,,,,,,,
+,,,,,,,
+,color,falls,orientation,prior,cause,id,learns
+left_block,yellow,TRUE,vert,uncertainH,edge,ssw0,relation for if2
+right_block,red,TRUE,horiz,low,edge/seesaw,ssw0,red on other block
+left_block,red,TRUE,vert,high,ball-ramp,ind1,
+right_block,yellow,TRUE,vert,uncertainH,edge,ind1,uncertain edge vertical falls
+left_block,red,FALSE,vert,low,edge,uncertain3,
+right_block,yellow,TRUE,vert,high,edge,uncertain3,
+left_block,yellow,FALSE,vert,uncertainL,edge,ac3,relation if1
+right_block,red,FALSE,horiz,high,seesaw,ac3,
+left_block,red,FALSE,horiz,uncertainL,edge,uncertain0,
+right_block,yellow,TRUE,vert,uncertainH,edge,uncertain0,
+left_block,red,TRUE,horiz,high,edge,uncertain2,falls from other block
+right_block,yellow,FALSE,vert,uncertainL,edge,uncertain2,
+left_block,red,FALSE,vert,uncertainL,edge,ssw1,relation if2
+right_block,yellow,FALSE,horiz,low,edge,ssw1,on top of other block does not fall
+left_block,red,TRUE,horiz,uncertainH,edge,ac2,relation if1
+right_block,yellow,TRUE,vert,uncertainH,ball-if,ac2,
+left_block,red,TRUE,horiz,uncertainH,edge,uncertain1,
+right_block,yellow,FALSE,horiz,low,edge,uncertain1,two blocks on top that dont fall
+upper block,yellow,FALSE,horiz,uncertainL,ball-ramp,distance0,ramp distance
+lower block,red,TRUE,horiz,uncertainH,ball-ramp,distance0,ramp distance
+upper block,red,FALSE,vert,uncertainL,ball-ramp,distance1,ramp distance
+lower block,yellow,TRUE,vert,uncertainH,ball-ramp,distance1,ramp distance
+left_block,yellow,TRUE,vert,high,edge,ac1,distance vertical ball ramp
+right_block,red,FALSE,vert,low,ball-if,ac1,relation if1
+left_block,red,TRUE,vert,uncertainH,ball-ramp,ind0,vertical uncertain ball-ramp (falls)
+right_block,yellow,FALSE,vert,lowH,edge,ind0,
+left_block,red,TRUE,horiz,high,edge,ac0,relation if1
+right_block,yellow,TRUE,horiz,high,ball-if,ac0,
+left_block,red,FALSE,horiz,uncertainL,ball-ramp,ind2,horizontal uncertain ball-ramp (doesnt fall)
+right_block,yellow,FALSE,vert,high,edge,ind2,

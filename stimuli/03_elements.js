@@ -18,7 +18,9 @@ makeRamp = function(dir, prior, increase, w1, label1="bottom", test=true,
                              : {rx: "min", ry: "max", x: -1, y: -1};
   // 1. sin(angle) = h/w_tillted and 2. h² + w_low² = ramp²
   let r = increase ? radians(360 - angle) : radians(angle);
-  let factor = dir == "horizontal" ? 1.5 : 0.9;
+  // always use the same angle + width of the ramp!
+  let factor = 1.2
+  // let factor = dir == "horizontal" ? 1.5 : 0.9;
   let ramp_width = factor * (Math.sqrt(Math.pow(100, 2) / (1 - Math.pow(Math.sin(r), 2))));
   let ramp = wall('ramp' + angle, w1.bounds[dat.rx].x + dat.x * ramp_width/2,
     w1.bounds[dat.ry].y + dat.y * PROPS.walls.h/2, ramp_width);
@@ -133,7 +135,7 @@ Walls.train.distance1 = [
 ];
 
 Walls.train.independent = [
-  wall('ramp_top', 100, 125),
+  wall('ramp_top', 100, 75),
   wall('w_right', 750, 140, 90)
 ];
 Walls.train.if1 = wallsIf1

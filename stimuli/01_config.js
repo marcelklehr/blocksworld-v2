@@ -56,10 +56,10 @@ let ANGLES = {
 
 let PRETEST_ANGLES = _.range(45);
 let BASE_RAMP = {
-  'horizontal': {'high': 125, 'uncertainH': 160, 'uncertain': 180,
+  'horizontal': {'high': 125, 'uncertainH': 130, 'uncertain': 165,
                  'uncertainL': 200, 'low': 270},
-  'vertical': {'high': 120, 'uncertainH': 190, 'uncertain': 195,
-               'uncertainL': 230, 'low': 290},
+  'vertical': {'high': 130, 'uncertainH': 220, 'uncertain': 255,
+               'uncertainL': 290, 'low': 320},
   'default': 200
 };
 

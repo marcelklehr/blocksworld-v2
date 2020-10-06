@@ -34,19 +34,20 @@
         let p1 = _.sample(['u', 'h', 'l']);
         let p2 = _.sample(['l', 'h', 'u']);
 
-        p1 = 'u-L'
+        p1 = 'l'
         p2 = 'h'
         id =  cond + '_' + p1 + p2;
         stimulus = TestStimuli[cond][id];
       } else if(MODE === "train") {
         let types = ["independent", "if1", "uncertain", "ramp", "if2"];
         types = ["independent"];
-        // types = ["uncertain"]
+        types = ["uncertain"]
         // types = ["if1"]
         // types = ["if2"];
+        // types = ["ramp"];
         cond = types[_.random(0, types.length-1)];
         id = _.sample(_.keys(TrainStimuli.map_category[cond]));
-        id = 'ind2';
+        id = 'uncertain2';
         stimulus = TrainStimuli.map_category[cond][id];
       } else if (MODE == "color-vision"){
         let ColorVisionStimuli = [];
@@ -98,8 +99,9 @@
         $('#startBttn').toggleClass('hide');
 
         document.getElementById("title").innerHTML = 'stimulus id: ' + id;
+        var priors = id.includes("distance") ? [1,2] : [0,1];
         document.getElementById("data").innerHTML =
-          'P(A): ' + stimulus.meta[0] + ' P(C): ' + stimulus.meta[1] +
+          'P(A): ' + stimulus.meta[priors[0]] + ' P(C): ' + stimulus.meta[priors[1]] +
           ', mode: ' + MODE;
 
         let utterances = getExpectations(stimulus);

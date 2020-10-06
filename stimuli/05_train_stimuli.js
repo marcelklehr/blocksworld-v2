@@ -12,7 +12,7 @@ trials_independent = function(){
   let prior = {
     "ind0": ["uncertainH", "lowH"],
     "ind1": ["high", "uncertainH"],
-    "ind2": ["uncertain", "uncertain"] // slider train trial (no feedback)
+    "ind2": ["uncertainL", "high"] // slider train trial (no feedback)
   };
   let dir = {'ind0': ['vertical', 'vertical'],
              'ind1': ['vertical', 'vertical'],
@@ -32,7 +32,10 @@ trials_independent = function(){
     let b2 = blockOnBase(walls[1], -PRIOR[dir[id][1]][prior[id][1]],
       color_blocks[1], 'block2', dir[id][1] == 'horizontal');
 
-    let ssw= seesaw(walls[1].bounds.min.x - 100);
+    let ssw= seesaw(x=walls[1].bounds.min.x - 100);
+      // y_base_min=SCENE.h - PROPS.bottom.h,
+      // props={'stick': {'h': PROPS.seesaw.stick.h * 2/3, 'w': PROPS.seesaw.stick.w}
+    // });
     walls = walls.concat([ramp.tilted, ramp.wall_bottom, ssw.skeleton]);
     let objs = {'objs':[ssw.plank, ssw.constraint, b1, b2, ramp.ball].concat(walls),
                 'meta': prior[id],
@@ -46,13 +49,13 @@ trials_independent = function(){
 
 trials_ramp = function(){
   let cs = BLOCK_COLS_SHORT.train;
-  let colors = {distance0: [cols.train_blocks[1],
-                            cols.train_blocks[0],
-                            cols.sienna],
+  let colors = {distance0: [cols.sienna,
+                            cols.train_blocks[1],
+                            cols.train_blocks[0]],
                 distance1: [cols.sienna].concat(cols.train_blocks),
                 balls: COLORS_BALL.train.slice(0,3)
                };
-  let priors = {distance0: ['uncertainL', 'uncertainH', 'high'],
+  let priors = {distance0: ['low', 'uncertainL', 'uncertainH'],
                 distance1: ['low', 'uncertainL', 'uncertainH']}
   let dir = {distance0: ['horizontal', 'horizontal', 'horizontal'],
              distance1: ['vertical', 'vertical', 'vertical']};
@@ -78,8 +81,7 @@ trials_ramp = function(){
       walls.push(base);
       let width = dir[id][idx] == 'horizontal' ? PROPS.blocks.h : PROPS.blocks.w
       let horiz = dir[id][idx] == 'horizontal';
-      let pr = !(priors[id][idx].startsWith("low")) ? "default" : horiz ? "low" : "default";
-      let prop_on_base = (width + DIST_EDGE[pr]) / width;
+      let prop_on_base = (width + DIST_EDGE["default"]) / width;
       let block = blockOnBase(base, prop_on_base, colors[id][idx],
                               "block"+idx, horiz);
       objs_dyn.push(block);
@@ -141,7 +143,7 @@ trials_ac = function(){
   let priors = {
     'ac0': ["high", "high"],
     'ac1': ["high", "low"],
-    'ac2': ['uncertainL', 'uncertainL'],
+    'ac2': ['uncertainH', 'uncertainH'],
     'ac3': ['uncertainL', 'high']
   };
   let dir = {'ac0': ['horizontal', 'horizontal'], 'ac1': ['vertical', 'vertical'],
@@ -153,7 +155,7 @@ trials_ac = function(){
 
   let expected = {'ac0': BLOCK_COLS_SHORT.train.join(""),
                   'ac1': BLOCK_COLS_SHORT.train[1],
-                  'ac2': 'none',
+                  'ac2': BLOCK_COLS_SHORT.train.join(""),
                   'ac3': 'none'};
   let data = {};
   _.keys(priors).forEach(function(id, i){
