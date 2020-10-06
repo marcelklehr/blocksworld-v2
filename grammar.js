@@ -8,7 +8,7 @@ const GRAMMAR_VAR = {
   'NEG': ["neither", "nor"],
   'NOT': ["does not"],
   'ADV1': ["as well"],
-  'ADV2': ["probably", "maybe"]
+  'ADV2': ["maybe"]
 }
 // each word must appear in this array to get a color
 let WORD_GROUPS = [
@@ -69,12 +69,10 @@ let shownNext = function (last, sentence='') {
 
 
 let templates = [
-  "the COL1 block [probably] falls",
-  "the COL1 block [probably] does not fall",
-  "probably the COL1 block falls",
-  "probably the COL1 block does not fall",
-  "maybe the COL1 block falls",
-  "maybe the COL1 block does not fall",
+  "the COL1 block falls",
+  "the COL1 block does not fall",
+  "[maybe] the COL1 block falls",
+  "[maybe] the COL1 block does not fall",
 
   "the COL1 block and the COL2 block fall",
   "the COL1 block falls and the COL2 block falls [as well]",
