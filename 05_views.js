@@ -71,7 +71,7 @@ const instructions_general = magpieViews.view_generator("instructions", {
          <br />
          <br />
          The experiment consists of two phases, a <b>training</b> and a <b>testing</b> phase.
-         In total, you will need about <b>25 minutes</b> to finish it.
+         In total, you will need about <b>20 minutes</b> to finish it.
          <br/>
          <br/>
          We will now start the training phase which consists of <b>15</b>
@@ -328,7 +328,7 @@ const instructions_test = magpieViews.view_generator("instructions", {
 // sliders have to be green!), you will be able to proceed with the next trial.
 //   </br>
 //   </br>
-// We will now start with the test phase which comprises in total <b>18</b>
+// We will now start with the test phase which comprises in total <b>13</b>
 // scenes of block arrangements and <b>8</b> simple color questions in between.`,
 
 const instructions_fridge_reminder = magpieViews.view_generator("instructions", {
@@ -360,7 +360,7 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
     from task 1.
     <br/>
     <br/>
-    We will now start with the test phase which comprises in total <b>18</b>
+    We will now start with the test phase which comprises in total <b>13</b>
     scenes of block arrangements (for each there is a slider rating and a sentence
     production task) and <b>8</b> simple color questions in between.`,
   buttonText: "start test phase"
