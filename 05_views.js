@@ -510,7 +510,7 @@ _.map(_.range(FRIDGE_TRIALS.length), function(idx){
 _.map(_.range(TEST_TRIALS.length), function(arr){
   multi_slider_views.push(multi_slider_view(arr));
 });
-_.map(_.range(0,8), function(idx){
+_.map(_.range(0, color_vision_trials.length), function(idx){
   color_vision_views.push(color_vision_view(idx));
 });
 

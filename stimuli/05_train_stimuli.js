@@ -25,8 +25,7 @@ trials_independent = function(){
     let walls = Walls.train.independent;
     let ramp = makeRamp(dir[id][0], prior[id][0], false, walls[0], "top", false);
 
-    // let color_blocks = id == "ind2" ? cols.test_blocks : cols.train_blocks;
-    let color_blocks = cols.train_blocks;
+    let color_blocks = id == "ind2" ? cols.test_blocks : cols.train_blocks;
     let b1 = blockOnBase(ramp.wall_bottom, PRIOR['impossible'],
       color_blocks[0], 'block1', dir[id][0] == 'horizontal');
     let b2 = blockOnBase(walls[1], -PRIOR[dir[id][1]][prior[id][1]],
