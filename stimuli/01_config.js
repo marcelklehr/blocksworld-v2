@@ -97,7 +97,7 @@ let HORIZ_AC1 = {
 // If test trial ids are changed, updated pseudoRandomTestTrials function, to
 // get a reasonable sequence of trials (always dependent on exact trials used)
 const PRIORS_IDS = {
-  'if1': _.shuffle(['hh', 'uh', 'uu', 'lh', 'u-Lh', 'u-Hh']),
-  'if2': _.shuffle(['hl', 'hh', 'ul', 'uh', 'll', 'u-Ll', 'u-Hl']),
+  'if1': _.shuffle(['hh', 'uh', 'lh', 'u-Lh']),
+  'if2': _.shuffle(['hl', 'ul', 'll', 'u-Ll']),
   'independent': _.shuffle(['hl', 'hh', 'ul', 'uh', 'll'])
 };

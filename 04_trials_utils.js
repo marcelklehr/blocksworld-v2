@@ -70,15 +70,21 @@ const SHUFFLED_TRAIN_TRIALS = training.trial_data;
 // change, order needs to be adapted here!
 pseudoRandomTestTrials = function(){
   let trials = [];
+  let keys = []
   _.map(PRIORS_IDS, function(arr, key){
-    arr = arr.slice(0,5); // take minimum nb of trials per type
+    arr = arr.slice(0,4); // take minimum nb of trials per type
     trials.push(_.map(arr, function(p){return(key + "_" + p)}));
+    keys.push(key);
   });
-  let order = _.shuffle(trials);
+  // independent not last trial, because only independent missing and added in end
+  let idx_ind = keys.indexOf("independent")
+  let indices_dep = _.without(_.shuffle(_.range(3)), idx_ind);
+  let order = [trials[indices_dep[0]], trials[indices_dep[1]]];
+  let idx = _.shuffle([0,1])[0];
+  order.splice(idx, 0, trials[idx_ind]) // add independent trials
   let ids = _.flatten(_.zip(order[0], order[1], order[2]));
   // add missing trials
-  ids.push.apply(ids, ['if2_' + PRIORS_IDS.if2[5], 'if1_' + PRIORS_IDS.if1[5],
-                       'if2_' + PRIORS_IDS.if2[6]]);
+  ids.push.apply(ids, ['independent_' + PRIORS_IDS.independent[4]]);
   return ids
 }
 
