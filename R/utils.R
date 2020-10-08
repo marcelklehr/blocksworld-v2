@@ -15,27 +15,22 @@ experimental_data <- function(path_to_csv){
   return(data)
 }
 
-anonymize_and_save <- function(data_dir, data_fn, result_dir, result_fn,
-                               debug_run=FALSE, anonymize=TRUE){
+save_raw_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run=FALSE){
   path_to_data <- paste(data_dir, data_fn, sep=.Platform$file.sep)
-  data <- if(debug_run) test_data(path_to_data) else experimental_data(path_to_data)
-
-  if(!debug_run && anonymize) {
-    prolific_ids <- data %>% pull(prolific_id) %>% unique()
-    new_ids <- paste("participant", seq(1,  length(prolific_ids)), sep="")
-    n_trials <- data %>% group_by(prolific_id) %>% summarize(n=n()) %>% pull(n) %>%
-      unique()
-    data <- data %>% mutate(prolific_id = rep(new_ids, each = n_trials))
+  if(debug_run){
+    data <- test_data(path_to_data)
+  } else {
+    data <- experimental_data(path_to_data)
   }
+  
   path_target <- paste(result_dir, paste(result_fn, "raw.csv", sep="_"), sep = .Platform$file.sep)
   write_excel_csv(data, path = path_target, delim = ",", append = FALSE, col_names=TRUE)
-  msg = ifelse(anonymize, 'anonymized', '')
-  print(paste('written', msg, 'data to:', path_target))
+  print(paste('written raw data to:', path_target))
   return(data)
 }
 
 tidy_test_exp1 <- function(df){
-  dat.test <- df %>% filter(trial_name == "multiple_slider") %>%
+  dat.test <- df %>% filter(str_detect(trial_name, "multiple_slider")) %>%
     select(prolific_id, RT, QUD, id, group,
            question1, question2, question3, question4,
            response1, response2, response3, response4) %>%
@@ -52,7 +47,10 @@ tidy_test_exp1 <- function(df){
     mutate(response = as.numeric(response),
            response = response/100,
            prolific_id = factor(prolific_id),
-           id = factor(id))
+           group=case_when(id=="ind2" ~ "group1",
+                           TRUE ~ group),
+           id = factor(id)
+  )
   return(dat.test)
 }
 
@@ -65,6 +63,18 @@ tidy_test_exp2 <- function(df){
   dat.test <- dat.test %>%
     mutate(prolific_id = factor(prolific_id),
            id = factor(id))
+  return(dat.test)
+}
+
+tidy_test_joint <- function(df){
+  data.prior = df %>% filter(str_detect(trial_name, "multiple_slider")) %>%
+    tidy_test_exp1() %>%
+    add_column(custom_response="", utterance="")
+  data.production = df %>% filter(str_detect(trial_name, "fridge_")) %>%
+    tidy_test_exp2() %>%
+    rename(utterance=response) %>%
+    add_column(question="")
+  dat.test = bind_rows(data.prior, data.production)
   return(dat.test)
 }
 
@@ -96,9 +106,10 @@ tidy_pretest <- function(df){
   return(dat.pre)
 }
 
-tidy_data <- function(data, N_trials, test_trial_name){
+## @arg experiment: "prior", "production", "joint" ##
+tidy_data <- function(data, N_trials, experiment){
   # 1. Select only columns relevant for data analysis
-  df <- data %>% select(prolific_id,
+  df <- data %>% select(prolific_id, submission_id,
                         question, question1, question2, question3, question4,
                         QUD, response,
                         expected, response1, response2, response3, response4,
@@ -130,10 +141,14 @@ tidy_data <- function(data, N_trials, test_trial_name){
     unique()
 
   dat.train <- tidy_train(df)
-  if(test_trial_name == "multiple_slider") {
+  if(experiment == "prior") {
     dat.test <- tidy_test_exp1(df)
-  } else {
+  } else if(experiment == "production") {
     dat.test <- tidy_test_exp2(df)
+  } else if(experiment == "joint"){
+    dat.test <- tidy_test_joint(df)
+  } else {
+    stop(paste(experiment, 'unknown'))
   }
   dat.pretest <- tidy_pretest(df)
 
@@ -145,12 +160,13 @@ tidy_data <- function(data, N_trials, test_trial_name){
 }
 
 standardize_color_groups_exp1 <- function(df){
+  # ind2 is used as single training example for production task (always group1!)
   df <- df %>%
-    mutate(question = case_when((question == "bg" | question == "gb") ~ "ac",
+    mutate(question = case_when((question == "bg" | question == "gb" | question=="ry" | question == "yr") ~ "ac",
                                  question == "none" ~ "none",
-                                 group == "group1" & question == "b" ~ "a",
-                                 group == "group1" & question == "g" ~ "c",
-                                 group == "group2" & question == "g" ~ "a",
+                                 group == "group1" & (question == "b" | question=="r") ~ "a",
+                                 group == "group1" & (question == "g" | question=="y") ~ "c",
+                                 group == "group2" & question == "g"  ~ "a",
                                  group == "group2" & question == "b" ~ "c"
                                 ),
            group = "group1",
@@ -206,12 +222,6 @@ add_probs <- function(df, keys){
   return(df)
 }
 
-# filter_noticed_steepness <- function(df){
-#   df$noticed_steepness %>% unique()
-#   df <- df %>% mutate(noticed_steepness = str_to_lower(noticed_steepness))
-#   return(df %>% filter(str_detect(noticed_steepness, "yes")))
-# }
-
 # @arg quest: question which is used to generate the clusters, e.g. 'b'
 cluster_responses <- function(dat, quest){
   dat.kmeans <- dat %>% filter(question == quest) %>%
@@ -234,8 +244,8 @@ cluster_responses <- function(dat, quest){
 }
 
 filter_exp1 <- function(df){
-  # All 0 or all 1 responses
-  # One can't believe that all events will certainly (not) happen
+  # All 0 or all 1 responses: as one can't believe that all events will
+  # certainly (not) happen
   filtered_sum <- df %>%
     group_by(prolific_id, id) %>%
     filter(sum(response) == 0 | sum(response) == 4)
@@ -276,36 +286,22 @@ save_prob_tables <- function(df, result_dir, result_fn){
 }
 
 process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
-                         N_trials, test_trial_name, anonymize){
-  # Anonymize and save raw ------------------------------------------------------
-  dat.anonym <- anonymize_and_save(data_dir, data_fn, result_dir, result_fn,
-                                   debug_run, anonymize)
-  dat.tidy <- tidy_data(dat.anonym, N_trials, test_trial_name);
+                         N_trials, name_exp){
+  dat.anonym <- save_raw_data(data_dir, data_fn, result_dir, result_fn, debug_run)
+  dat.tidy <- tidy_data(dat.anonym, N_trials, name_exp);
   dat.all <- list(train=dat.tidy$train, info=dat.tidy$info, comments=dat.tidy$comments,
                   color=dat.tidy$color)
-  
-  # Process TEST data -----------------------------------------------------------
+  # Further process TEST data -----------------------------------------------------------
   data <- dat.tidy$test
-  # filter
-  # 1. Reaction time
-  filtered_rt_small <- data %>% filter(RT < 4 * 1000)
-  filtered_rt_large <- data %>% filter(RT > 3 * 60  * 1000)
-  #TODO: (un-)comment filtering for RTs?
-  # df <- data %>% filter(RT >= 4000 & RT <= 3 * 60 * 1000)
-  df <- data
-  # print(paste('filtered due to too long RT:', nrow(filtered_rt_large)))
-  # print(paste('filtered due to too small RT:', nrow(filtered_rt_small)))
-  # 2. Comments
-  # potentially filter trials/participants due to their comments, add here
-  
-  if(test_trial_name == "multiple_slider"){
-    # process exp1
-    df <- add_normed_exp1(df);
+  if(name_exp == "prior"){
+    df <- add_normed_exp1(data);
     df <- standardize_color_groups_exp1(df)
     save_prob_tables(df, result_dir, result_fn);
-  } else {
-    df <- standardize_color_groups_exp2(df)
-  }
+  } else if(name_exp == "production") {
+    df <- standardize_color_groups_exp2(data)
+  } else if (name_exp == "joint"){
+    
+  }else {stop(paste('unknown experiment with name: ', name_exp))}
   
   # save processed data -----------------------------------------------------
   fn_tidy <- paste(result_fn, "_tidy.rds", sep="");
@@ -316,35 +312,3 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
   
   return(dat.all)
 }
-
-
-# prepare_tables <- function(tables, N_test = 25){
-#   tables_wide <- tables %>%
-#     group_by(stimulus_id, participant_id) %>%
-#     pivot_wider(names_from = utterance, values_from = response) %>%
-#     mutate(none=sprintf("%3f", none), ac=sprintf("%3f", ac),
-#            a=sprintf("%3f", a), c=sprintf("%3f", c)) %>%
-#     select(-n) %>%
-#     mutate(none=floor(as.numeric(none)*1000)/1000,
-#            ac=floor(as.numeric(ac) * 1000)/1000,
-#            a=floor(as.numeric(a)*1000)/1000,
-#            c=floor(as.numeric(c)*1000)/1000) %>%
-#     distinct()
-#
-#   tables_to_wppl <- tables_wide %>%
-#     add_column(vs=list(c("AC", "A-C", "-AC", "-A-C"))) %>%
-#     group_by(stimulus_id, participant_id) %>%
-#     mutate(ps=list(c(ac, a, c, none))) %>%
-#     ungroup() %>%
-#     select(participant_id, stimulus_id, ps, vs)
-#
-#   return(tables_to_wppl)
-# }
-
-
-# # TODO: remove response/utterances/RT into useful string
-# # then separate into different cols
-# df <- df %>% mutate(response = str_replace_all(response, "\\|", "-"))
-# df <- df %>%
-#   separate(response, into=c("response1", "response2", "response3",
-#                             "response4"), sep="-")
