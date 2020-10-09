@@ -72,7 +72,7 @@ plotProductionTrials <- function(dat, target_dir, min=0, dat.model=tibble(),
       if(nrow(dat.model) != 0){
         p <- p + 
           geom_point(data=dat.model %>% filter(endsWith(id, ids[[i]])),
-                     aes(x=ratio, y=response, color=cn), shape='*', size=10, alpha=0.5)
+                     aes(x=ratio, y=response, shape=cn), color='red', size=10, alpha=0.5)
       }
       if(nrow(dat.prior_empirical) != 0){
         utterances = df$response %>% unique()
@@ -85,7 +85,8 @@ plotProductionTrials <- function(dat, target_dir, min=0, dat.model=tibble(),
         p <- p + 
           geom_jitter(data=dat.map,
                       width=0, height=0.1,
-                     aes(x=val, y=response, color=prolific_id), size=2, alpha=0.5)
+                     aes(x=val, y=response, color=prolific_id), size=2, alpha=0.5) +
+          guides(color=FALSE)
       }
       ggsave(paste(target_dir,
                    paste(ids[[i]], ".png", sep=""), sep=.Platform$file.sep), p,
