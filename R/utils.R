@@ -206,7 +206,7 @@ standardize_color_groups_exp2 <- function(df){
 }
 
 
-# @arg df: data frame containing columns ac, a
+# @arg df: data frame containing columns bg, b, g
 add_probs <- function(df, keys){
   df <- df %>% mutate(p_a=bg+b, p_c=bg+g, p_na=1-p_a, p_nc=1-p_c) %>%
     mutate(p_c_given_a = if_else(p_a==0, 0, bg / p_a),

@@ -29,8 +29,6 @@ standardize_sentences = function(df.test){
   s.neg.and = "neither the blue block nor the green block fall"
   s.pos.if_green = "if the green block falls the blue block falls"
   s.pos.if_blue = "if the blue block falls the green block falls"
-  s.pos.prob_green = "probably the green block falls"
-  s.pos.prob_blue = "probably the blue block falls"
   s.pos_neg.and_gb = "the green block falls but the blue block does not fall"
   s.pos_neg.and_bg = "the blue block falls but the green block does not fall"
   
@@ -39,8 +37,6 @@ standardize_sentences = function(df.test){
     summarize_utts(c("neither"), c("does not"), s.neg.and) %>%
     summarize_utts(c("if the green block"), c("does not"), s.pos.if_green) %>%
     summarize_utts(c("if the blue block"), c("does not"), s.pos.if_blue) %>%
-    summarize_utts(c("the green block probably"), c("does not"), s.pos.prob_green) %>%
-    summarize_utts(c("the blue block probably"), c("does not"), s.pos.prob_blue) %>%
     summarize_utts(c("and", "the green block falls", "the blue block does not"), c(),
                    s.pos_neg.and_gb) %>%
     summarize_utts(c("and", "the blue block falls", "the green block does not"), c(),
@@ -54,14 +50,14 @@ standardize_sentences = function(df.test){
 }
 
 
-plotProductionTrials <- function(dat, target_dir, trials="all", min=0,
-                                 responses="all", dat.model=tibble()){
+plotProductionTrials <- function(dat, target_dir, min=0, dat.model=tibble(),
+                                 dat.prior_empirical=tibble()){
+  
   ids = dat$id %>% unique()
   n = ids %>% length();
   brks=seq(0, 1, by=0.1)
   
   dat <- dat %>% filter(ratio>min)
-  if(trials=="all"){
     for(i in seq(1, n)) {
       df <- dat %>% filter(id == ids[[i]]) %>%
         mutate(response=fct_reorder(response, desc(-ratio)))
@@ -78,45 +74,23 @@ plotProductionTrials <- function(dat, target_dir, trials="all", min=0,
           geom_point(data=dat.model %>% filter(endsWith(id, ids[[i]])),
                      aes(x=ratio, y=response, color=cn), shape='*', size=10, alpha=0.5)
       }
+      if(nrow(dat.prior_empirical) != 0){
+        utterances = df$response %>% unique()
+        responses = df.production %>%  filter(id == ids[[i]]) %>%  
+          select(prolific_id, response)
+        empirical = dat.prior_empirical %>%
+          filter(id==ids[[i]] & utterance %in% utterances)
+        dat.map = left_join(empirical, responses, by="prolific_id") %>%
+          filter(response == utterance);
+        p <- p + 
+          geom_jitter(data=dat.map,
+                      width=0, height=0.1,
+                     aes(x=val, y=response, color=prolific_id), size=2, alpha=0.5)
+      }
       ggsave(paste(target_dir,
                    paste(ids[[i]], ".png", sep=""), sep=.Platform$file.sep), p,
              width=8, height=10)
       
       print(p)
     }
-  } else if(responses != "all") {
-    dat <- dat %>%
-      filter(response %in% responses) %>%
-      group_by(id) %>% summarize(ratio=sum(ratio)) %>%
-      add_column(response = "literal/probably+literal") %>%
-      mutate(response = as.factor(response))
-    
-    # if(trials != "all"){
-    #   dat <- dat %>%
-    #     filter(str_detect(id, trials))
-    # }
-    p <-  dat %>%
-      mutate(response=fct_rev(fct_relevel(response, sort))) %>% 
-      ggplot(aes(x=ratio, y=response)) +
-      geom_bar(aes(fill=id), stat="identity", position=position_dodge(preserve="single")) +
-      theme_bw() +
-      theme(text = element_text(size=22),
-            axis.text.x=element_text(angle=45, vjust = 0.5),
-            legend.position="top") +
-      labs(x="percentage of participants who built utterance", y="built utterance") +
-      scale_y_discrete(labels = function(ylab) str_wrap(ylab, width = 27.5))
-    print(p)
-  }
 }
-
-
-
-# w_pos = c("and")
-# w_neg = c("does not")
-# 
-# dat <- df %>% select(response) %>% distinct()
-# 
-# dat <- df %>% 
-#   filter(str_detect(response, paste(w_pos, collapse='|')) &
-#          !str_detect(response, paste(w_neg, collapse="|"))) 
-#                      
