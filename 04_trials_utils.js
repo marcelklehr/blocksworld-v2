@@ -69,23 +69,35 @@ const SHUFFLED_TRAIN_TRIALS = training.trial_data;
 // generates sequence of test trial ids specified in PRIORS_IDS; if these
 // change, order needs to be adapted here!
 pseudoRandomTestTrials = function(){
-  let trials = [];
-  let keys = []
-  _.map(PRIORS_IDS, function(arr, key){
-    arr = arr.slice(0,4); // take minimum nb of trials per type
-    trials.push(_.map(arr, function(p){return(key + "_" + p)}));
-    keys.push(key);
+  let if1_conj = _.shuffle(["if1_hh", "if1_lh"]);
+  let if2_conj = _.shuffle(["if2_hl", "if2_ll"]);
+  let ind_conj = _.shuffle(["independent_hh", "independent_ll"]);
+  let ind = _.shuffle(["independent_uh", "independent_ul", "independent_hl"]);
+  let if1 = _.shuffle(["if1_uh", "if2_ul"]);
+  let if2 = _.shuffle(["if1_u-Lh", "if2_u-Ll"]);
+  // trials added such that not two same kinds directly after another, and
+  // expected conditinals/conjunctions evenly distributed
+  let conditionals = _.flatten(_.shuffle([if1, if2]));
+  let trials = _.flatten(_.zip(conditionals.slice(0, 3), ind)).concat(conditionals[3]);
+  let conjunctions = []
+  let i1 = 0; let i2=0;
+  _.map(_.range(0, 7, by=2), function(i, idx){
+    if(trials[i].includes("if1")){
+      conjunctions.push(if2_conj[i2]);
+      i2 = i2 + 1;
+    } else {
+      conjunctions.push(if1_conj[i1]);
+      i1 = i1 + 1;
+    }
   });
-  // independent not last trial, because only independent missing and added in end
-  let idx_ind = keys.indexOf("independent")
-  let indices_dep = _.without(_.shuffle(_.range(3)), idx_ind);
-  let order = [trials[indices_dep[0]], trials[indices_dep[1]]];
-  let idx = _.shuffle([0,1])[0];
-  order.splice(idx, 0, trials[idx_ind]) // add independent trials
-  let ids = _.flatten(_.zip(order[0], order[1], order[2]));
-  // add missing trials
-  ids.push.apply(ids, ['independent_' + PRIORS_IDS.independent[4]]);
-  return ids
+  trials = _.flatten(_.zip(conjunctions.slice(0,3), conditionals.slice(0, 3), ind))
+  trials.push(conjunctions[3]);
+  trials.push(conditionals[3]);
+  // add 2 independent trials where conjunction expected s.t not two independent directly after one another
+  trials.splice(4, 0, ind_conj[0]);
+  trials.push(ind_conj[1]);
+  // console.log(trials)
+  return trials
 }
 
 // save trial data in specified pseudorandom order s.t. accessible in experiment

@@ -177,7 +177,7 @@ const instructions_train_sliders_procedure = magpieViews.view_generator("instruc
   In other words, <b>a large difference</b> between two slider positions means that
   one event is rated as <b>much more plausible</b> than the other.
   Contrary to that, <b>identical slider positions</b> mean that the events are rated as
-  being <b>equally plausible</b>.
+  being <b>equally plausible/implausible</b>.
   <br />
   <br />
   After you moved all four sliders, you can click on <b>NEXT SCENE</b> to
@@ -237,7 +237,7 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
   <br />
   For this, imagine <b>another person</b> who has to <b>adjust the four sliders</b>
   of the first task, such that they <b>match your ratings of task 1
-  as close as possible</b>.
+  as closely as possible</b>.
   <br />
   The <b>only hint</b> that the other person gets for adjusting the sliders
   is <b>the sentence that you produce</b> to describe the scene
@@ -251,14 +251,17 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
   <b>1.</b> <b>simple assertions</b>, e.g. <i>The green block
   falls</i>, <i>The blue block does not fall</i>, ...
   <br/>
-  <b>2.</b> <b>simple assertions</b> combined with <b>'probably'</b>, e.g.
-  <i>The green block probably falls</i>, ...
+  <b>2.</b> <b>simple assertions</b> combined with <b>'might'</b>, e.g.
+  <i>The green block might fall</i>, ...
   <br/>
   <b>3.</b> <b>conjunctions</b>, e.g. <i>The green block and the blue block fall</i>,
   <i>The blue block falls but the green block does not fall</i>, ...
   <br/>
   <b>4.</b> <b>conditionals</b>, e.g. <i>If the green block falls, the blue block
-  falls as well</i>, <i>If the green block does not fall, the blue block falls</i>, ...`,
+  falls as well</i>, <i>If the green block does not fall, the blue block falls</i>, ...<br />
+  Please note: <b>might/might not</b> can only be used in combination with a single block,
+  i.e.~'might' can't be used within conjunctions or conditionals!
+  `,
   buttonText: "go to example trial"
 });
 const instructions_fridge_procedure = magpieViews.view_generator("instructions", {
@@ -329,7 +332,7 @@ const instructions_test = magpieViews.view_generator("instructions", {
 //   </br>
 //   </br>
 // We will now start with the test phase which comprises in total <b>13</b>
-// scenes of block arrangements and <b>8</b> simple color questions in between.`,
+// scenes of block arrangements and <b>6</b> simple color questions in between.`,
 
 const instructions_fridge_reminder = magpieViews.view_generator("instructions", {
   trials: 1,
@@ -362,7 +365,7 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
     <br/>
     We will now start with the test phase which comprises in total <b>13</b>
     scenes of block arrangements (for each there is a slider rating and a sentence
-    production task) and <b>8</b> simple color questions in between.`,
+    production task) and <b>6</b> simple color questions in between.`,
   buttonText: "start test phase"
 });
 

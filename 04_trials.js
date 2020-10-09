@@ -249,6 +249,7 @@ TRAIN_SLIDER_TRIALS[0].question1 = text_test_buttons.short.ac
 TRAIN_SLIDER_TRIALS[0].question2 = text_test_buttons.short.a
 TRAIN_SLIDER_TRIALS[0].question3 = text_test_buttons.short.c
 TRAIN_SLIDER_TRIALS[0].question4 = text_test_buttons.short.none
+TRAIN_SLIDER_TRIALS[0].group = "group1"
 
 let INSTRUCTION_SLIDER = [{
   picture: '',
