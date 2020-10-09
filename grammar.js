@@ -4,7 +4,7 @@
 const GRAMMAR_VAR = {
   "SUBJ": ["the green block", "the blue block", "both blocks", "neither block"],
   "V": ["falls", "fall"],
-  'CONJ': ["but", "if", "and"],
+  'CONJ': ["if", "but", "and"],
   'NEG': ["neither", "nor"],
   'NOT': ["does not"],
   'ADV1': ["as well"],
@@ -20,12 +20,12 @@ let WORD_GROUPS = [
     col: 'orange'
   },
   {
-    words: GRAMMAR_VAR.CONJ,
-    col: 'blue'
-  },
-  {
     words: GRAMMAR_VAR.NEG.concat(GRAMMAR_VAR.NOT),
     col: 'red'
+  },
+  {
+    words: GRAMMAR_VAR.CONJ,
+    col: 'blue'
   },
   {
     words: GRAMMAR_VAR.ADV1,
