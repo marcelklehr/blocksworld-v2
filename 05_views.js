@@ -229,10 +229,9 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
   trials: 1,
   name: "instructions_fridge",
   title: "Instructions Task 2 Test Phase",
-  text: `In task 2 of the test trials we will ask you to
-  <b>describe the scene</b> shown in the picture.
-  More concretely, your task is to <b>produce the sentence</b> that <b>best
-  describes</b> which blocks you think will fall.
+  text: `In trials of task 2 we will ask you to <b>describe the scene</b>
+  shown in the picture.More concretely, your task is to <b>produce the
+  sentence</b> that <b>best describes</b> which blocks you think will fall.
   <br />
   <br />
   For this, imagine <b>another person</b> who has to <b>adjust the four sliders</b>
@@ -258,7 +257,9 @@ const instructions_fridge = magpieViews.view_generator("instructions", {
   <i>The blue block falls but the green block does not fall</i>, ...
   <br/>
   <b>4.</b> <b>conditionals</b>, e.g. <i>If the green block falls, the blue block
-  falls as well</i>, <i>If the green block does not fall, the blue block falls</i>, ...<br />
+  falls as well</i>, <i>If the green block does not fall, the blue block falls</i>, ...
+  <br />
+  <br />
   Please note: <b>might/might not</b> can only be used in combination with a single block,
   i.e.~'might' can't be used within conjunctions or conditionals!
   `,
@@ -364,8 +365,8 @@ const instructions_fridge_reminder = magpieViews.view_generator("instructions", 
     <br/>
     <br/>
     We will now start with the test phase which comprises in total <b>13</b>
-    scenes of block arrangements (for each there is a slider rating and a sentence
-    production task) and <b>6</b> simple color questions in between.`,
+    scenes of block arrangements (task1 and task2 for each scene) and <b>6</b>
+    simple color questions in between.`,
   buttonText: "start test phase"
 });
 
