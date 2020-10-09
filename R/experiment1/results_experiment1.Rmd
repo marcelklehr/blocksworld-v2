@@ -11,13 +11,16 @@ library(here)
 library(tidyverse)
 source(here("R", "utils.R"))
 
-# data_dir <-  here("data", "test-runs")
-data_dir <- here("data", "prolific")
+data_dir <-  here("data", "test-runs")
+# data_dir <- here("data", "prolific")
 
-# result_dir <- here("data", "test-runs", "experiment1")
-result_dir <- here("data", "prolific", "results", "experiment1-v2")
+exp.name = "experiment-wor(l)ds-of-toy-blocks"
+# exp.name = "exp1_tidy" "exp1_tidy_quality.rds"
 
-fn <- "exp1_tidy.rds"
+result_dir <- here("data", "test-runs", exp.name)
+# result_dir <- here("data", "prolific", "results", exp.name)
+
+fn <- paste(exp.name, ".rds", sep="");
 # fn <- "exp1_tidy_quality.rds"
 
 data.from_rds <- readRDS(paste(result_dir, fn, sep=.Platform$file.sep))
@@ -112,7 +115,7 @@ for (id in ids){
     theme(axis.text.y=element_blank(),
           axis.ticks.y =element_blank(),
           text = element_text(size=14),
-          legend.position = "right")
+            legend.position = "right")
   print(p)
 }
 ```

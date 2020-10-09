@@ -2,20 +2,21 @@ library(here)
 library(tidyverse)
 source("R/utils.R")
 
-
 # Setup -------------------------------------------------------------------
 # experiment = "prior"
 # experiment="production"
 experiment = "joint"
+
 debug_run = TRUE  # vs. experimental (prolific) run
+# debug_run = FALSE
 
 # data_fn <- "results_15_WorldOfToyBlocks-Pilot_BG.csv"
-data_fn <- "results_39_wor(l)ds-of-toy-blocks-pilot_BG.csv"
 # data_fn <- "results_38_Experiment-2-Fridge-Pilot_BG_20.csv"
+data_fn <- "results_39_wor(l)ds-of-toy-blocks-pilot_BG.csv"
 
 # result_fn = "experiment1-v2"
 result_fn = "experiment-wor(l)ds-of-toy-blocks"
-# result_fn = "experiment2" 
+# result_fn = "experiment2"
 
 # Processing --------------------------------------------------------------
 data_dir = ifelse(debug_run,  here("data", "test-runs"), here("data", "prolific"));

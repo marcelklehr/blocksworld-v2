@@ -31,7 +31,8 @@ save_raw_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run=FA
 
 tidy_test_exp1 <- function(df){
   dat.test <- df %>% filter(str_detect(trial_name, "multiple_slider")) %>%
-    select(prolific_id, RT, QUD, id, group,
+    select(trial_name, trial_number,
+           prolific_id, RT, QUD, id, group,
            question1, question2, question3, question4,
            response1, response2, response3, response4) %>%
     pivot_longer(cols=c(contains("response")),
@@ -56,8 +57,8 @@ tidy_test_exp1 <- function(df){
 
 tidy_test_exp2 <- function(df){
   dat.test <- df %>% filter(startsWith(trial_name, "fridge_view") | trial_name == "fridge_train") %>%
-    select(prolific_id, RT, QUD, id, group,
-           response1, response2) %>%
+    select(prolific_id, RT, QUD, id, group, response1, response2, trial_name,
+           trial_number) %>%
     rename(custom_response=response2, response=response1)
   
   dat.test <- dat.test %>%
@@ -162,13 +163,15 @@ tidy_data <- function(data, N_trials, experiment){
 standardize_color_groups_exp1 <- function(df){
   # ind2 is used as single training example for production task (always group1!)
   df <- df %>%
-    mutate(question = case_when((question == "bg" | question == "gb" | question=="ry" | question == "yr") ~ "ac",
-                                 question == "none" ~ "none",
-                                 group == "group1" & (question == "b" | question=="r") ~ "a",
-                                 group == "group1" & (question == "g" | question=="y") ~ "c",
-                                 group == "group2" & question == "g"  ~ "a",
-                                 group == "group2" & question == "b" ~ "c"
-                                ),
+    mutate(question =
+             case_when((question == "bg" | question == "gb" |
+                        question=="ry" | question == "yr") ~ "ac",
+                        question == "none" ~ "none",
+                        group == "group1" & (question == "b" | question=="r") ~ "a",
+                        group == "group1" & (question == "g" | question=="y") ~ "c",
+                        group == "group2" & question == "g"  ~ "a",
+                        group == "group2" & question == "b" ~ "c"
+                      ),
            group = "group1",
            question = case_when(question == "a" ~ "b",
                                 question == "c" ~ "g",
@@ -190,9 +193,9 @@ standardize_color_groups_exp2 <- function(df){
            custom_response = case_when(group == "group2" ~ str_replace_all(custom_response, "green", "-B-"),
                                 TRUE ~ str_replace_all(custom_response, "green", "-G-"))) %>%
     mutate(response = str_replace_all(response, "G", "green"),
-           custom_response = str_replace_all(custom_response, "-G-", "-green-")) %>%
+           custom_response = str_replace_all(custom_response, "-G-", "green")) %>%
     mutate(response = str_replace_all(response, "B", "blue"),
-           custom_response = str_replace_all(custom_response, "-B-", "-blue-"
+           custom_response = str_replace_all(custom_response, "-B-", "blue"
            ));
   df <- df %>% mutate(group = "group1", 
                       response = as.factor(response),
@@ -300,7 +303,15 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
   } else if(name_exp == "production") {
     df <- standardize_color_groups_exp2(data)
   } else if (name_exp == "joint"){
-    
+    df1 <- data %>% filter(str_detect(trial_name, "multiple_slider"))
+    df1 <- add_normed_exp1(df1);
+    df1 <- standardize_color_groups_exp1(df1)
+    save_prob_tables(df1, result_dir, result_fn);
+    df2 <- data %>% filter(str_detect(trial_name, "fridge_view")) %>%
+      mutate(response=utterance) %>%
+      select(-utterance)
+    df2 <- standardize_color_groups_exp2(df2)
+    df <- bind_rows(df1, df2);
   }else {stop(paste('unknown experiment with name: ', name_exp))}
   
   # save processed data -----------------------------------------------------
@@ -312,3 +323,4 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
   
   return(dat.all)
 }
+
