@@ -7,8 +7,8 @@ source("R/utils.R")
 # experiment="production"
 experiment = "joint"
 
-debug_run = TRUE  # vs. experimental (prolific) run
-# debug_run = FALSE
+# debug_run = TRUE  # vs. experimental (prolific) run
+debug_run = FALSE
 
 # data_fn <- "results_15_WorldOfToyBlocks-Pilot_BG.csv"
 # data_fn <- "results_38_Experiment-2-Fridge-Pilot_BG_20.csv"
@@ -30,8 +30,8 @@ if(experiment == "prior"){
 } else if(experiment == "production") {
   N_trials <- list(train=15, test=18, color_vision=8);
 } else if(experiment == "joint"){
-  N_trials <- list(train=14, test=19*2, color_vision=8)
-  # N_trials <- list(train=14, test=14*2, color_vision=6);
+  # N_trials <- list(train=14, test=19*2, color_vision=8)
+  N_trials <- list(train=14, test=14*2, color_vision=6);
 }
 data <- process_data(data_dir, data_fn, result_dir, result_fn, debug_run,
                      N_trials, experiment)

@@ -82,10 +82,14 @@ plotProductionTrials <- function(dat, target_dir, min=0, dat.model=tibble(),
           filter(id==ids[[i]] & utterance %in% utterances)
         dat.map = left_join(empirical, responses, by="prolific_id") %>%
           filter(response == utterance);
+        empirical.mean = dat.map %>% group_by(response) %>%
+          summarize(m=mean(val), .groups="drop") %>%
+          mutate(response=factor(response))
         p <- p + 
           geom_jitter(data=dat.map,
                       width=0, height=0.1,
                      aes(x=val, y=response, color=prolific_id), size=2, alpha=0.5) +
+          geom_point(data=empirical.mean, aes(x=m, y=response), shape='*', size=8, color='red') +
           guides(color=FALSE)
       }
       ggsave(paste(target_dir,
