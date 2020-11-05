@@ -71,8 +71,8 @@ plotProductionTrials <- function(dat, target_dir, min=0, dat.model=tibble(),
         scale_y_discrete(labels = function(ylab) str_wrap(ylab, width = 27.5))
       if(nrow(dat.model) != 0){
         p <- p + 
-          geom_point(data=dat.model %>% filter(endsWith(id, ids[[i]])),
-                     aes(x=ratio, y=response, shape=cn), color='red', size=10, alpha=0.5)
+          geom_point(data=dat.model %>% filter(id == ids[[i]] & ratio > 0),
+                     aes(x=ratio, y=response, shape=cn), color='red', size=2)
       }
       if(nrow(dat.prior_empirical) != 0){
         utterances = df$response %>% unique()
@@ -89,7 +89,7 @@ plotProductionTrials <- function(dat, target_dir, min=0, dat.model=tibble(),
           geom_jitter(data=dat.map,
                       width=0, height=0.1,
                      aes(x=val, y=response, color=prolific_id), size=2, alpha=0.5) +
-          geom_point(data=empirical.mean, aes(x=m, y=response), shape='*', size=8, color='red') +
+          geom_point(data=empirical.mean, aes(x=m, y=response), shape='*', size=8, color='orange') +
           guides(color=FALSE)
       }
       ggsave(paste(target_dir,
@@ -99,3 +99,58 @@ plotProductionTrials <- function(dat, target_dir, min=0, dat.model=tibble(),
       print(p)
     }
 }
+
+translate_utterances = function(speaker.model){
+  df.green_blue <- speaker.model %>%
+    # filter(str_detect(stimulus, "if1_uh|if1_uu|if2_hh|if2_ll|independent_ul")) %>%
+    mutate(response=case_when(
+      str_detect(response, "-C") ~ str_replace(response, "-C", "the blue block does not fall"),
+      str_detect(response, "C") ~ str_replace(response, "C", "the blue block falls"),
+      TRUE ~ response)) %>%
+    mutate(response=case_when(
+      str_detect(response, "-A") ~ str_replace(response, "-A", "the green block does not fall"),
+      str_detect(response, "A") ~ str_replace(response, "A", "the green block falls"),
+      TRUE ~ response));
+  
+  df.blue_green <- speaker.model %>%
+    # filter(!str_detect(stimulus, "if1_uh|if1_uu|if2_hh|if2_ll|independent_ul")) %>%
+    mutate(response=case_when(
+      str_detect(response, "-A") ~ str_replace(response, "-A", "the blue block does not fall"),
+      str_detect(response, "A") ~ str_replace(response, "A", "the blue block falls"),
+      TRUE ~ response)) %>%
+    mutate(response=case_when(
+      str_detect(response, "-C") ~ str_replace(response, "-C", "the green block does not fall"),
+      str_detect(response, "C") ~ str_replace(response, "C", "the green block falls"),
+      TRUE ~ response));
+  
+  df <- bind_rows(df.blue_green, df.green_blue) %>%
+    mutate(response=case_when(str_detect(response, " >") ~
+                                paste("if", str_replace(response, " >", "")),
+                              TRUE ~ response)) %>%
+    mutate(response=case_when(str_detect(response, "likely") ~ str_replace(response, "falls", "might fall"),
+                              TRUE ~ response)) %>%
+    mutate(response=case_when(str_detect(response, "likely") ~ str_replace(response, "does not fall", "might not fall"),
+                              TRUE ~ response)) %>% 
+    mutate(response=case_when(str_detect(response, "might") ~ str_replace(response, "likely", ""),
+                              TRUE ~ response)) %>%
+    mutate(response=case_when(response=="the green block falls and the blue block falls" ~ "both blocks fall",
+                              response=="the blue block falls and the green block falls" ~ "both blocks fall",
+                              response=="the green block does not fall and the blue block does not fall" ~
+                                "neither block falls",
+                              response=="the blue block does not fall and the green block does not fall" ~
+                                "neither block falls",
+                              TRUE ~ response)) %>%
+    mutate(response=str_replace(response, "and", "but")) %>%
+    mutate(response=case_when(
+      response=="the green block does not fall but the blue block falls" ~
+        "the blue block falls but the green block does not fall",
+      response=="the blue block does not fall but the green block falls" ~
+        "the green block falls but the blue block does not fall",
+      TRUE ~ response)) %>%
+    mutate(response=str_trim(response)) %>%
+    ungroup() 
+  return(df)
+}
+
+
+

@@ -82,6 +82,7 @@ tidy_test_joint <- function(df){
 tidy_train <- function(df){
   dat.train <- df %>% filter(startsWith(trial_name, "animation")) %>%
     select(prolific_id, RT, expected, QUD, id, trial_name,
+           trial_number,
            question1, question2, question3, question4,
            response1, response2, response3, response4
     ) %>%
@@ -93,8 +94,10 @@ tidy_train <- function(df){
                  values_to = "question") %>%
     filter(response_idx == question_idx) %>%
     select(-response_idx, -question_idx) %>%
-    mutate(prolific_id = factor(prolific_id),
-           id = factor(id))
+    mutate(prolific_id = factor(prolific_id), id = factor(id)) %>%
+    group_by(prolific_id, id) %>%
+    mutate(response = as.numeric(response), response = response/100)%>%
+    add_normed_exp1()
   return(dat.train)
 }
 
@@ -258,13 +261,20 @@ filter_exp1 <- function(df){
   return(df_filtered)
 }
 
-add_normed_exp1 <- function(df){
+# @arg df1 in long-format
+add_normed_exp1 <- function(df1, epsilon=0.000001){
+  data = df1 %>% group_by(prolific_id, id)
+  df = data %>% filter(sum(response)!=0)
+  zeros = (nrow(data) - nrow(df)) / 4
+  message(paste("#datapoints filtered out as all 4 events rated as 0:", zeros))
   # normalize such that slider responses sum up to 1 but also keep original response
-  df <- df %>% group_by(prolific_id, id) %>%
+  df.with_normed = df %>%
     mutate(n=sum(response), r_norm=response/n) %>%
-    rename(r_orig=response)  
-  return(df)
+    rename(r_orig=response)
+  return(df.with_normed)
 }
+
+
 
 save_prob_tables <- function(df, result_dir, result_fn){
   # Also save just Table means of normalized values as csv files
@@ -294,7 +304,7 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
   dat.tidy <- tidy_data(dat.anonym, N_trials, name_exp);
   dat.all <- list(train=dat.tidy$train, info=dat.tidy$info, comments=dat.tidy$comments,
                   color=dat.tidy$color)
-  # Further process TEST data -----------------------------------------------------------
+  # Further process TEST-trial data --------------------------------------------
   data <- dat.tidy$test
   if(name_exp == "prior"){
     df <- add_normed_exp1(data);
@@ -313,7 +323,7 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
     df2 <- standardize_color_groups_exp2(df2)
     df <- bind_rows(df1, df2);
   }else {stop(paste('unknown experiment with name: ', name_exp))}
-  
+
   # save processed data -----------------------------------------------------
   fn_tidy <- paste(result_fn, "_tidy.rds", sep="");
   path_target <- paste(result_dir, fn_tidy, sep=.Platform$file.sep)
@@ -324,3 +334,13 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
   return(dat.all)
 }
 
+tables_longer = function(tables.wide){
+  tables.long = tables.wide %>%
+    pivot_longer(cols=c(AC, `A-C`, `-AC`, `-A-C`), names_to="cell",
+                 values_to="val")
+  return(tables.long)
+}
+
+tables_wider = function(tables.long){
+  return(tables.long %>% pivot_wider(names_from=cell, values_from=val))  
+}
