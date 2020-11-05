@@ -31,7 +31,7 @@ trials_independent = function(){
     let b2 = blockOnBase(walls[1], -PRIOR[dir[id][1]][prior[id][1]],
       color_blocks[1], 'block2', dir[id][1] == 'horizontal');
 
-    let ssw= seesaw(x=walls[1].bounds.min.x - 100);
+    let ssw= seesaw(x=walls[1].bounds.min.x - 250);
       // y_base_min=SCENE.h - PROPS.bottom.h,
       // props={'stick': {'h': PROPS.seesaw.stick.h * 2/3, 'w': PROPS.seesaw.stick.w}
     // });

@@ -18,7 +18,7 @@ testTrials_if2 = function(priors){
   let w_no_ramp = seesaw.walls[data.i_ramp === 0 ? 1 : 0];
   // let w_x = w_no_ramp.bounds[data.i_ramp === 0 ? "min" : "max"].x
   // let w_width = w_no_ramp.bounds.max.x - w_no_ramp.bounds.min.x;
-  let xBlock = blockOnBase(w_no_ramp, -1 * data.b_sides[0] * 0.52,
+  let xBlock = blockOnBase(w_no_ramp, -1 * data.b_sides[0] * 0.60,
     cols.sienna, "Xblock", true);
   let bases = [xBlock];
   let w_ramp = seesaw.walls[data.i_ramp];
@@ -30,7 +30,7 @@ testTrials_if2 = function(priors){
 
   let dir = horiz[data.i_ramp]
   let w = dir == 'horizontal' ? PROPS.blocks.h : PROPS.blocks.w;
-  let pr = "no-dist";
+  let pr = "default";
   let ps = [data.i_ramp === 0 ? (w + DIST_EDGE[pr]) / w : PRIOR[dir][priors[0]],
             data.i_ramp === 1 ? (w + DIST_EDGE[pr]) / w : PRIOR[dir][priors[1]]];
   let b1 = blockOnBase(bases[0], data.b_sides[0]*ps[0], c1, 'blockA', horiz[0]=='horizontal');
