@@ -312,6 +312,7 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
     save_prob_tables(df, result_dir, result_fn);
   } else if(name_exp == "production") {
     df <- standardize_color_groups_exp2(data)
+    df <- standardize_sentences(df)
   } else if (name_exp == "joint"){
     df1 <- data %>% filter(str_detect(trial_name, "multiple_slider"))
     df1 <- add_normed_exp1(df1);
@@ -321,6 +322,7 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
       mutate(response=utterance) %>%
       select(-utterance)
     df2 <- standardize_color_groups_exp2(df2)
+    df2 <- standardize_sentences(df2)
     df <- bind_rows(df1, df2);
   }else {stop(paste('unknown experiment with name: ', name_exp))}
 

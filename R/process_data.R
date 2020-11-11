@@ -2,6 +2,7 @@ library(here)
 library(tidyverse)
 source("R/utils.R")
 source("R/utils-exp1.R")
+source("R/utils-exp2.R")
 
 # Setup -------------------------------------------------------------------
 # experiment = "prior"

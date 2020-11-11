@@ -22,16 +22,27 @@ summarize_utts = function(df, w_pos, w_neg, utt){
   return(dat)
 }
 
+standardized.sentences = list(
+  # bg = "the blue block and the green block fall",
+  # none = "neither the blue block nor the green block fall",
+  bg = "both blocks fall",
+  none = "neither block falls",
+  if_gb = "if the green block falls the blue block falls",
+  if_bg = "if the blue block falls the green block falls",
+  g = "the green block falls but the blue block does not fall",
+  b = "the blue block falls but the green block does not fall"
+);
 
 # (the green and the blue = the blue and the green, etc.)
 standardize_sentences = function(df.test){
-  s.pos.and = "the blue block and the green block fall"
-  s.neg.and = "neither the blue block nor the green block fall"
-  s.pos.if_green = "if the green block falls the blue block falls"
-  s.pos.if_blue = "if the blue block falls the green block falls"
-  s.pos_neg.and_gb = "the green block falls but the blue block does not fall"
-  s.pos_neg.and_bg = "the blue block falls but the green block does not fall"
+  s.pos.and = standardized.sentences$bg
+  s.neg.and = standardized.sentences$none
+  s.pos.if_green = standardized.sentences$if_gb
+  s.pos.if_blue = standardized.sentences$if_bg
+  s.pos_neg.and_gb = standardized.sentences$g
+  s.pos_neg.and_bg = standardized.sentences$b
   
+  df.test = df.test %>% mutate(response = as.character(response))
   test.standardized <- df.test %>%
     summarize_utts(c("and"), c("does not"), s.pos.and) %>%
     summarize_utts(c("neither"), c("does not"), s.neg.and) %>%
@@ -40,29 +51,32 @@ standardize_sentences = function(df.test){
     summarize_utts(c("and", "the green block falls", "the blue block does not"), c(),
                    s.pos_neg.and_gb) %>%
     summarize_utts(c("and", "the blue block falls", "the green block does not"), c(),
-                   s.pos_neg.and_bg) %>%
-    mutate(response=case_when(str_detect(response, "neither") ~ "neither block falls",
-                              str_detect(response, 'and') ~ "both blocks fall",
-                              TRUE ~ response))
+                   s.pos_neg.and_bg);
+    # mutate(response=case_when(str_detect(response, "neither") ~ "neither block falls",
+    #                           str_detect(response, 'and') ~ "both blocks fall",
+    #                           TRUE ~ response))
   utterances <- test.standardized %>% select(response) %>% unique()
+  print('standardized responses:')
   print(utterances)
   return(test.standardized)
 }
 
 
-plotProductionTrials <- function(dat, target_dir, min=0, dat.model=tibble(),
+# @todo: plot empirical probabilities on top nicht als absoluten wert, 
+# sondern mit differenzen
+plotProductionTrials <- function(df.production.means, target_dir, min=0, dat.model=tibble(),
                                  dat.prior_empirical=tibble()){
-  
-  ids = dat$id %>% unique()
+  ids = df.production.means$id %>% unique()
   n = ids %>% length();
   brks=seq(0, 1, by=0.1)
   
-  dat <- dat %>% filter(ratio>min)
+  df.production.means <- df.production.means %>% filter(ratio>min)
     for(i in seq(1, n)) {
-      df <- dat %>% filter(id == ids[[i]]) %>%
+      df <- df.production.means %>% filter(id == ids[[i]]) %>%
+        ungroup() %>% select(-prolific_id) %>% distinct() %>% 
         mutate(response=fct_reorder(response, desc(-ratio)))
       p <- df %>% filter(id == ids[[i]]) %>%
-        ggplot(aes(x=ratio, y=response)) +
+        ggplot(aes(y=response, x=ratio)) +
         geom_bar(stat="identity") +
         theme_bw() +
         theme(text = element_text(size=22),
@@ -75,21 +89,17 @@ plotProductionTrials <- function(dat, target_dir, min=0, dat.model=tibble(),
                      aes(x=ratio, y=response, shape=cn), color='red', size=2)
       }
       if(nrow(dat.prior_empirical) != 0){
-        utterances = df$response %>% unique()
-        responses = df.production %>%  filter(id == ids[[i]]) %>%  
-          select(prolific_id, response)
-        empirical = dat.prior_empirical %>%
-          filter(id==ids[[i]] & utterance %in% utterances)
-        dat.map = left_join(empirical, responses, by="prolific_id") %>%
-          filter(response == utterance);
-        empirical.mean = dat.map %>% group_by(response) %>%
+        priors = left_join(df.production.means %>% select(prolific_id, id, response),
+          dat.prior_empirical %>% select(prolific_id, id, utterance, prob, val),
+          by=c("prolific_id", "id")) %>%  filter(id == ids[[i]] & response==utterance) 
+        priors.mean = priors %>% group_by(response) %>%
           summarize(m=mean(val), .groups="drop") %>%
           mutate(response=factor(response))
         p <- p + 
-          geom_jitter(data=dat.map,
+          geom_jitter(data=priors,
                       width=0, height=0.1,
                      aes(x=val, y=response, color=prolific_id), size=2, alpha=0.5) +
-          geom_point(data=empirical.mean, aes(x=m, y=response), shape='*', size=8, color='orange') +
+          geom_point(data=priors.mean, aes(x=m, y=response), shape='*', size=8, color='orange') +
           guides(color=FALSE)
       }
       ggsave(paste(target_dir,

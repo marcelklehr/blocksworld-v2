@@ -1,14 +1,3 @@
-# library(dplyr)
-# library(ggplot2)
-# library(tidyverse)
-# library(here)
-# library(reticulate)
-# library(scales)
-# library(truncnorm)
-# use_condaenv("anaconda3/py36")
-# library(greta)
-# source("R/utils.R")
-# source("R/utils-exp1.R")
 source("R/joint_experiment/my-utils.R")
 
 fn = paste(RESULT.dir, "experiment-wor(l)ds-of-toy-blocks_tables_all.csv",
@@ -72,11 +61,11 @@ cnToProbs = function(y.tables, cn){
 }
 
 # Fit P(C|A), P(C|-A), P(A) beta distributions ----------------------------
-BetaFits = function(save_as) {
+BetaFits = function(save_as, target_dir_params= "../MA-project/conditionals/data") {
   get_optimal_params = function(cn, id=NA){
     # print(cn)
     if(cn == "A || C"){
-      df.observations = TABLES.ind %>% cnToProbs(cn)
+      df.observations = TABLES.ind %>% cnToProbs(cn);
       if(!is.na(id)) df.observations = df.observations %>% filter(id==(!! id));
       y = list(p_a=df.observations$p_a,
                p_c=df.observations$p_c)
@@ -97,43 +86,27 @@ BetaFits = function(save_as) {
       fit_opt.p_a <- opt(m.p_a)
       fit_opt.p_c <- opt(m.p_c)
       
-      params = tibble(
-        p_a.shape1 = fit_opt.p_a$par$p_a.shape[1],
-        p_a.shape2 = fit_opt.p_a$par$p_a.shape[2],
-        p_c.shape1 = fit_opt.p_c$par$p_c.shape[1],
-        p_c.shape2 = fit_opt.p_c$par$p_c.shape[2],
-        cn=cn, id=id
-      )
+      params = tibble(p_a1 = fit_opt.p_a$par$p_a.shape[1],
+                      p_a2 = fit_opt.p_a$par$p_a.shape[2],
+                      p_c1 = fit_opt.p_c$par$p_c.shape[1],
+                      p_c2 = fit_opt.p_c$par$p_c.shape[2],
+                      cn=cn, id=id);
     } else {
-      df.observations = TABLES.dep %>% cnToProbs(cn)
+      df.observations = TABLES.dep %>% cnToProbs(cn);
       if(!is.na(id)) df.observations = df.observations %>% filter(id==(!! id));
-      y = list(causal_power.pos = df.observations %>%
-                 filter(causal_power > 0) %>% pull(causal_power),
-               causal_power.neg = df.observations %>%
-                 filter(causal_power <= 0) %>% pull(causal_power),
-               conditional_pos = df.observations %>% pull(p_pos),
+      y = list(conditional_pos = df.observations %>% pull(p_pos),
                conditional_neg = df.observations %>% pull(p_neg),
                conditional_marginal = df.observations %>% pull(p_marginal)
       );
       # priors of the parameters of the beta distributions
-      cp_pos.shape = uniform(0, 10, 2)
-      cp_neg.rate = uniform(0, 20, 1)
       pos.shape = uniform(0, 10, 2)
       neg.shape = uniform(0, 10, 2)
       marg.shape = uniform(0, 10, 2)
-      
-      distribution(y$causal_power.pos) <- beta(cp_pos.shape[1], cp_pos.shape[2])
-      distribution(y$causal_power.neg) <- exponential(cp_neg.rate[1])
       distribution(y$conditional_pos) <- beta(pos.shape[1], pos.shape[2])
       distribution(y$conditional_neg) <- beta(neg.shape[1], neg.shape[2])
       distribution(y$conditional_marginal) <- beta(marg.shape[1], marg.shape[2])
       
       # fits
-      m.cp_pos <- model(cp_pos.shape)
-      m.cp_neg <- model(cp_neg.rate)
-      fit_opt.cp_pos <- opt(m.cp_pos)
-      fit_opt.cp_neg <- opt(m.cp_neg)
-      
       m.pos <- model(pos.shape)
       m.neg <- model(neg.shape)
       m.marg <- model(marg.shape)
@@ -141,27 +114,27 @@ BetaFits = function(save_as) {
       fit_opt.neg <- opt(m.neg)
       fit_opt.marg <- opt(m.marg)
       
-      params =     tibble(
-        cp_pos.shape1 = fit_opt.cp_pos$par$cp_pos.shape[1],
-        cp_pos.shape2 = fit_opt.cp_pos$par$cp_pos.shape[2],
-        cp_neg.rate = fit_opt.cp_neg$par$cp_neg.rate[1],
-        
-        pos.shape1 = fit_opt.pos$par$pos.shape[1],
-        pos.shape2 = fit_opt.pos$par$pos.shape[2],
-        neg.shape1 = fit_opt.neg$par$neg.shape[1],
-        neg.shape2 = fit_opt.neg$par$neg.shape[2],
-        marg.shape1 = fit_opt.marg$par$marg.shape[1],
-        marg.shape2 = fit_opt.marg$par$marg.shape[2],
-        cn=cn, id=id
-      );
+      params = tibble(pos1=fit_opt.pos$par$pos.shape[1],
+                      pos2=fit_opt.pos$par$pos.shape[2],
+                      neg1 = fit_opt.neg$par$neg.shape[1],
+                      neg2 = fit_opt.neg$par$neg.shape[2],
+                      marg1 = fit_opt.marg$par$marg.shape[1],
+                      marg2 = fit_opt.marg$par$marg.shape[2],
+                      cn=cn, id=id);
     }
     return(params)
   }
   results = pmap_dfr(ID_CNS, function(id, cn){
+                       print(paste(id, cn))
                        get_optimal_params(cn, id)
                      });
-  # fits = add_mirrored_cns(results);
-  write_csv(results, paste(RESULT.dir, save_as, sep=.Platform$file.sep))
+  write_csv(results, paste(RESULT.dir, save_as, sep=SEP))
+  
+  results.formatted = formatParams4WebPPL(results);
+  save_to = paste(target_dir_params, "params-formatted.rds", sep=SEP)
+  write_rds(results.formatted, save_to)
+  print(paste('saved formatted ll-params for input to webppl:', save_to))
   return(results)
 }
-res.fits = BetaFits("beta-fits-by-stimulus.csv", by_stimulus=TRUE)
+
+res.fits = BetaFits("beta-fits.csv")

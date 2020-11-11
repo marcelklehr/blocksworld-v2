@@ -1,35 +1,50 @@
-plotSliderRatings <- function(data, questions, labels, cluster_by="g"){
+plotSliderRatings <- function(data, questions, labels, cluster_by="g", relation=FALSE){
   dat <- data %>% ungroup() %>%
     mutate(question = factor(question, levels = (!!questions)),
            response=as.numeric(response))
   
-  df <- cluster_responses(dat, cluster_by) %>%
-    # group_by(question, id) %>% mutate(mu=mean(response), med=median(response));
-    group_by(question, id, cluster) %>% mutate(mu=mean(response), med=median(response));
-  
+  df <- cluster_responses(dat, cluster_by);
+  if(relation) {
+    df.stats = df %>% group_by(question, id, understood_rel) %>%
+      select(question, id, response, understood_rel) %>%
+      summarize(mu=mean(response), med=median(response), .groups="keep");
+  } else {
+    df.stats = df %>% group_by(question, id) %>%
+      select(question, id, response) %>%
+      summarize(mu=mean(response), med=median(response), .groups="keep");
+  }
   ids <- df$id %>% unique() %>% as.character()
   # ids <- c("independent_hh")
   for (id in ids){
     p <- df  %>% filter(id == (!! id)) %>% 
-      ggplot(aes(x=response, y=factor(0))) +
-      geom_jitter(width=0, height = 0.1, alpha=0.5, aes(colour = prolific_id)) + #, colour = prolific_id)) +
-      geom_point(mapping=aes(x=mu, y=factor(0), colour=cluster),  size=2, shape=23) + # color = 'red') +
+      ggplot(aes(y=response, x=factor(0)))
+    if(relation) {
+      p <- p + geom_boxplot(aes(colour=understood_rel), outlier.shape=NA,
+                            position=position_dodge(0.75))
+      df.stats <- df.stats %>% group_by(question, id, understood_rel)
+    } else {
+      p <- p + geom_boxplot(outlier.shape=NA) +
+        guides(color=FALSE)
+    }
+    p <- p + 
+      geom_jitter(width=0.1, height = 0, alpha=0.5) + #, colour = prolific_id)) +
+      geom_point(data=df.stats %>% filter(id==(!! id)),
+                 mapping=aes(y=mu, x=factor(0)),  size=2, shape=23) +
       # geom_vline(aes(xintercept=med), color = "red", size=0.5) +
-      geom_vline(aes(xintercept=0), color = "grey", size=0.2, linetype='dashed') +
-      geom_vline(aes(xintercept=0.25), color = "grey", size=0.2, linetype='dashed') +
-      geom_vline(aes(xintercept=0.5), color = "gray45", size=0.5, linetype='dashed') +
-      geom_vline(aes(xintercept=0.75), color = "grey", size=0.2, linetype='dashed') +
-      geom_vline(aes(xintercept=1), color = "grey", size=0.2, linetype='dashed') +
-      scale_x_continuous(limits=c(-0.2, 1.2),
+      geom_hline(aes(yintercept=0), color = "grey", size=0.2, linetype='dashed') +
+      geom_hline(aes(yintercept=0.25), color = "grey", size=0.2, linetype='dashed') +
+      geom_hline(aes(yintercept=0.5), color = "gray45", size=0.5, linetype='dashed') +
+      geom_hline(aes(yintercept=0.75), color = "grey", size=0.2, linetype='dashed') +
+      geom_hline(aes(yintercept=1), color = "grey", size=0.2, linetype='dashed') +
+      scale_y_continuous(limits=c(-0.2, 1.2),
                          breaks=c(0, 0.25, 0.5, 0.75, 1)) +
       labs(x="estimates probability", y="", title=id) +
       theme_bw() +
       facet_wrap(~question, nrow=2, ncol=2, labeller = as_labeller(labels)) + 
-      theme(axis.text.y=element_blank(),
-            axis.ticks.y =element_blank(),
+      theme(axis.text.x=element_blank(),
+            axis.ticks.x =element_blank(),
             text = element_text(size=14),
-            legend.position = "right") +
-      guides(color=FALSE)
+            legend.position = "right")
     print(p)
   }
   
@@ -59,18 +74,13 @@ filterOutLowQuality = function(df, fct_iqr=1.5){
 }
 
 
-filter_by_train_data = function(dat, threshold=0.5){
-  # for each participant only the latter 50% of the train trials are taken
-  # for each train trial type
-  df = dat %>% filter(trial_number >= 8 | id=="uncertain3") %>% select(-RT, -expected, -QUD, -trial_name) %>% 
-    pivot_wider(names_from=question, values_from=response)
-  
-  df.filtered = df %>%
-    filter(!(id == "distance1" & r > threshold)) %>%
-    filter(!(id == "distance0" & y > threshold)) %>% 
-    filter(!(id == "ssw0" & r > threshold)) %>% 
-    filter(!(id == "ssw1" & y > threshold)) %>%
-    filter(!(id == "uncertain1" & (ry + y > threshold))) %>%
+filter_by_train_data = function(dat, theta_large=0.5, max_diff_equal=0.2, theta_small=0.15){
+  df.filtered = dat %>%
+    filter(!(id == "distance0" & r+ry > y+ry )) %>% #P(red)>P(yellow)
+    filter(!(id == "distance1" & r+ry < y+ry)) %>% #P(red)<P(yellow)
+    filter(!(id == "ssw0" & y < theta_small)) %>% # yellow, ¬red
+    filter(!(id == "ssw1" & r < theta_small)) %>% # red, ¬yellow
+    filter(!(id == "uncertain1" & (ry + y < theta_small))) %>%
     filter(!(id == "uncertain2" & (none + y) > threshold)) %>%
     filter(!(id == "uncertain3" & ((ry + r > threshold) | (none + r > threshold)))) %>%
     filter(!(id == "ac0" & ((none + y > threshold) | y>threshold))) %>%
@@ -81,7 +91,8 @@ filter_by_train_data = function(dat, threshold=0.5){
     filter(!(id == "ind1" & (none + y > threshold))) %>%
     rowwise() %>%
     mutate(max=max(ry, r, y, none), min=min(ry, r, y, none), max_diff=max-min) %>%
-    filter(!(id == "uncertain0" & max_diff > 0.2)) %>%
+    filter(!(id == "uncertain0" & max_diff > max_diff_equal)) %>%
+    ungroup() %>% 
     select(-min, -max, -max_diff)
   return(df.filtered)     
 }
@@ -135,35 +146,35 @@ qualityResponses = function(df.prior, save_as){
 log_likelihood = function(df, cn, par){
   if(cn == "A implies C"){
     df <- df %>% 
-          mutate(ll=dbeta(p_c_given_a, par$pos.shape1, par$pos.shape2, log=TRUE) +
-                    dbeta(p_c_given_na, par$neg.shape1, par$neg.shape2, log=TRUE) +
-                    dbeta(p_a, par$marg.shape1, par$marg.shape2, log=TRUE),
+          mutate(ll=dbeta(p_c_given_a, par$pos1, par$pos2, log=TRUE) +
+                    dbeta(p_c_given_na, par$neg1, par$neg2, log=TRUE) +
+                    dbeta(p_a, par$marg1, par$marg2, log=TRUE),
                  cn=cn)
   } else if(cn == "A implies -C") {
     df <- df %>% 
-      mutate(ll=dbeta(1-p_c_given_a, par$pos.shape1, par$pos.shape2, log=TRUE) +
-                dbeta(1-p_c_given_na, par$neg.shape1, par$neg.shape2, log=TRUE) +
-                dbeta(p_a, par$marg.shape1, par$marg.shape2, log=TRUE),
+      mutate(ll=dbeta(1-p_c_given_a, par$pos1, par$pos2, log=TRUE) +
+                dbeta(1-p_c_given_na, par$neg1, par$neg2, log=TRUE) +
+                dbeta(p_a, par$marg1, par$marg2, log=TRUE),
              cn=cn)
   } else if(cn=="C implies A"){
     df <- df %>% 
-      mutate(ll=dbeta(p_a_given_c, par$pos.shape1, par$pos.shape2, log=TRUE) +
-                dbeta(p_a_given_nc, par$neg.shape1, par$neg.shape2, log=TRUE) +
-                dbeta(p_c, par$marg.shape1, par$marg.shape2, log=TRUE),
+      mutate(ll=dbeta(p_a_given_c, par$pos1, par$pos2, log=TRUE) +
+                dbeta(p_a_given_nc, par$neg1, par$neg2, log=TRUE) +
+                dbeta(p_c, par$marg1, par$marg2, log=TRUE),
              cn=cn)
   } else if(cn=="C implies -A"){
     df <- df %>% 
-      mutate(ll=dbeta(1-p_a_given_c, par$pos.shape1, par$pos.shape2, log=TRUE) +
-                dbeta(1-p_a_given_nc, par$neg.shape1, par$neg.shape2, log=TRUE) +
-                dbeta(p_c, par$marg.shape1, par$marg.shape2, log=TRUE),
+      mutate(ll=dbeta(1-p_a_given_c, par$pos1, par$pos2, log=TRUE) +
+                dbeta(1-p_a_given_nc, par$neg1, par$neg2, log=TRUE) +
+                dbeta(p_c, par$marg1, par$marg2, log=TRUE),
              cn=cn)
   } else if(cn=="A || C") {
     df <- df %>% 
       mutate(lb= p_a + p_c,
              lb=case_when(lb<=1 ~ 0, TRUE ~ lb-1),
              ub=pmin(p_a, p_c)) %>% 
-      mutate(ll=log(dtruncnorm(p_a, 0, 1, par$p_a.shape1, par$p_a.shape2)) +
-                log(dtruncnorm(p_c, 0, 1, par$p_c.shape1, par$p_c.shape2)) +
+      mutate(ll=log(dtruncnorm(p_a, 0, 1, par$p_a1, par$p_a2)) +
+                log(dtruncnorm(p_c, 0, 1, par$p_c1, par$p_c2)) +
                 log(dtruncnorm(AC, a=lb, b=ub, mean=p_a*p_c, sd=0.01)),
              cn=cn)
       # mutate(ll=dbeta(p_a, par$p_a.shape1, par$p_a.shape2, log=TRUE) +
@@ -174,6 +185,22 @@ log_likelihood = function(df, cn, par){
   }
   return(df)
 }
+
+formatParams4WebPPL = function(params){
+  par=params %>% ungroup() %>% select(-cn) %>% group_by(id) %>% 
+    transmute(p_ind=list(c(a1=p_a1, a2=p_a2, c1=p_c1, c2=p_c2)),
+              p_dep=list(c(pos1=pos1, pos2=pos2, neg1=neg1, neg2=neg2,
+                           marg1=marg1, marg2=marg2))
+             )
+  par.ind = par %>% filter(str_detect(id, "independent")) %>% select(-p_dep) %>%
+    pivot_wider(names_from="id", values_from="p_ind", names_prefix="logL_")
+  par.dep = par %>% filter(!str_detect(id, "independent")) %>% select(-p_ind) %>%
+    pivot_wider(names_from="id", values_from="p_dep", names_prefix="logL_")
+ formatted = bind_cols(par.ind, par.dep) 
+ return(formatted)
+}
+
+
 
 
 qualityPlots = function(df.quality, save_as, w=10, h=12){
@@ -220,6 +247,19 @@ add_table_probabilities = function(tables){
            theta_cna = ((1-p_a_given_c) - (1-p_a_given_nc)) / (1 - (1-p_a_given_nc)),
           );
   return(df)
+}
+
+plot_ratings_across_conditions = function(df, title){
+  p = df %>% group_by(dir) %>%
+    ggplot(aes(x=condition, y=response)) +
+    geom_boxplot(aes(color=relation), outlier.shape = NA, position=position_dodge(1)) +
+    geom_jitter(aes(color=relation), shape=16, alpha=0.5, width=0, height=0.1) +
+    facet_wrap(~dir) +
+    theme_classic(base_size = 22) +
+    theme(axis.text.x = element_text(size=15), legend.position = "bottom") +
+    coord_flip() +
+    ggtitle(title)
+  return(p)
 }
 
 

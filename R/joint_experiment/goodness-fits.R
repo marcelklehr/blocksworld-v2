@@ -1,7 +1,8 @@
 source("R/joint_experiment/my-utils.R")
+source("R/joint_experiment/generate-prior-based-tables.R")
 goodness_fits = function(n){
   N=30
-  fn = "beta-fits-by-stimulus.csv"
+  fn = "beta-fits.csv"
   params = read_csv(
     paste(RESULT.dir, fn, sep=.Platform$file.sep)
   ) %>% group_by(cn, id)
@@ -10,8 +11,9 @@ goodness_fits = function(n){
   par.cn = params %>% filter(cn == "A || C")
   ll.ind = map_dfr(IDS.ind, function(id){
     par.cn = par.cn %>% filter(id == (!! id));
-    TABLES.ind %>% filter(id == (!! id)) %>% 
-      log_likelihood("A || C", par.cn) %>% select(ll, cn, id, prolific_id) %>%
+    df = TABLES.ind %>% filter(id == (!! id));
+    df %>% log_likelihood("A || C", par.cn) %>%
+      select(ll, cn, id, prolific_id) %>%
       summarize(ll_sample = sum(ll), .groups = "keep") %>%
       add_column(cn="A || C", id=id)
   });
@@ -19,8 +21,8 @@ goodness_fits = function(n){
   par.cn = params %>% filter(cn == "A implies C")
   ll.dep=map_dfr(IDS.dep, function(id){
     par = par.cn %>% filter(id==(!! id));
-    TABLES.dep %>% filter(id == (!! id)) %>%
-    log_likelihood("A implies C", par) %>% select(ll, cn) %>%
+    df = TABLES.dep %>% filter(id == (!! id));
+    df %>% log_likelihood("A implies C", par) %>% select(ll, cn) %>%
     summarize(ll_sample=sum(ll), .groups="keep") %>%
     add_column(cn="A implies C", id=id)
   });
