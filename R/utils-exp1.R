@@ -100,7 +100,7 @@ filter_by_train_data = function(dat, theta_large=0.5, max_diff_equal=0.2, theta_
 # Quality of the data
 # For each participant and trial, compute the distance in RESPONSE to all other participants
 # and compute the average distance for this participant from all other participants.
-qualityResponses = function(df.prior, save_as){
+qualityResponses = function(df.prior, save_as=NA){
   df = df.prior %>% 
     select(prolific_id, id, r_norm, question) %>%
     unite(col = "id_quest", "id", "question", remove=FALSE) %>%
@@ -137,11 +137,30 @@ qualityResponses = function(df.prior, save_as){
   
   df <- left_join(df, stats_all, by=c("question", "id")) %>%
     group_by(question, id)
-  message(paste('save data to:', save_as))
-  saveRDS(df, save_as)
+  if(!is.na(save_as)){
+    message(paste('save data to:', save_as))
+    saveRDS(df, save_as)
+  }
   return(df)
 }
 
+
+# Quality of the data squared diff to mean
+responsesSquaredDiff2Mean = function(df.prior){
+  df = df.prior %>% 
+    select(prolific_id, id, r_norm, question) %>%
+    unite(col = "id_quest", "id", "question", sep="--") %>%
+    rename(response=r_norm) %>% group_by(id_quest)
+  mus = df %>% group_by(id_quest) %>%
+    summarize(mu=mean(response), .groups="drop_last")
+  dat = left_join(df, mus) %>%
+    separate(id_quest, into=c("stimulus_id", "question"), sep="--") %>% 
+    mutate(sq_mean_diff=(response-mu)**2) %>%
+    group_by(prolific_id, stimulus_id) %>%
+    summarize(sum_sq_diff=sum(sq_mean_diff), .groups="drop_last") %>% 
+    group_by(stimulus_id)
+  return(dat)
+}
 
 log_likelihood = function(df, cn, par){
   if(cn == "A implies C"){
@@ -170,16 +189,10 @@ log_likelihood = function(df, cn, par){
              cn=cn)
   } else if(cn=="A || C") {
     df <- df %>% 
-      mutate(lb= p_a + p_c,
-             lb=case_when(lb<=1 ~ 0, TRUE ~ lb-1),
-             ub=pmin(p_a, p_c)) %>% 
-      mutate(ll=log(dtruncnorm(p_a, 0, 1, par$p_a1, par$p_a2)) +
-                log(dtruncnorm(p_c, 0, 1, par$p_c1, par$p_c2)) +
-                log(dtruncnorm(AC, a=lb, b=ub, mean=p_a*p_c, sd=0.01)),
+      mutate(ll=dbeta(p_a, par$p_a1, par$p_a2, log=TRUE) +
+                dbeta(p_c, par$p_c1, par$p_c2, log=TRUE) +
+                log(dtruncnorm(AC-(p_a*p_c), a=-1, b=1, mean=0, sd=par$p_diff_sd)),
              cn=cn)
-      # mutate(ll=dbeta(p_a, par$p_a.shape1, par$p_a.shape2, log=TRUE) +
-      #           dbeta(p_c, par$p_c.shape1, par$p_c.shape2, log=TRUE),
-      #        cn=cn)
   } else {
     stop(paste("likelihood not defined for cn:", cn))
   }
@@ -199,9 +212,6 @@ formatParams4WebPPL = function(params){
  formatted = bind_cols(par.ind, par.dep) 
  return(formatted)
 }
-
-
-
 
 qualityPlots = function(df.quality, save_as, w=10, h=12){
   facet_labels <- c(
@@ -248,6 +258,34 @@ add_table_probabilities = function(tables){
           );
   return(df)
 }
+
+
+understood_relations = function(data.prior.norm){
+  prior.exp.wide = data.prior.norm %>% filter(id!="ind2") %>%
+    separate(id, into = c("relation", "condition"), sep="_", remove=FALSE) %>%
+    group_by(prolific_id, relation, condition) %>%
+    mutate(response=(response+epsilon)/sum(response+epsilon)) %>% 
+    pivot_wider(names_from="question", values_from="response") %>%
+    mutate(p_blue=bg+b, p_green=bg+g, g_given_b=bg/(bg+b),
+           g_given_nb=g/(g+none), b_given_g=bg/(bg+g), b_given_ng=b/(b+none))
+  
+  threshold.ind = 0.07
+  threshold = 0.15
+  prior.relations = prior.exp.wide %>% group_by(relation, prolific_id) %>%
+    select(relation, id, prolific_id, condition, g, b, p_blue, p_green, bg, none,
+           g_given_nb, g_given_b) %>%
+    mutate(as_expected=case_when(
+      relation=="independent" ~ abs(bg - p_blue * p_green) < threshold.ind,
+      (relation == "if1" | relation=="if2") ~ g<threshold & g_given_b > g_given_nb)
+    ) %>% group_by(id)
+  # df = prior.relations %>% 
+  #   summarize(N=n(), n=sum(as_expected), ratio=n/N, .groups = "keep") %>%
+  #   arrange(desc(ratio))
+  return(prior.relations)
+}
+
+
+
 
 plot_ratings_across_conditions = function(df, title){
   p = df %>% group_by(dir) %>%

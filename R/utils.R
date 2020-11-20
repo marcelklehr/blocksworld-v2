@@ -97,7 +97,7 @@ tidy_train <- function(df){
     mutate(prolific_id = factor(prolific_id), id = factor(id)) %>%
     group_by(prolific_id, id) %>%
     mutate(response = as.numeric(response), response = response/100)%>%
-    add_normed_exp1()
+    add_normed_exp1("train")
   return(dat.train)
 }
 
@@ -262,7 +262,7 @@ filter_exp1 <- function(df){
 }
 
 # @arg df1 in long-format
-add_normed_exp1 <- function(df1, epsilon=0.000001){
+add_normed_exp1 <- function(df1, test_or_train, epsilon=0.000001){
   data = df1 %>% group_by(prolific_id, id)
   df = data %>% filter(sum(response)!=0)
   zeros = (nrow(data) - nrow(df)) / 4
@@ -271,31 +271,68 @@ add_normed_exp1 <- function(df1, epsilon=0.000001){
   df.with_normed = df %>%
     mutate(n=sum(response), r_norm=response/n) %>%
     rename(r_orig=response)
+  print(paste("in", test_or_train, "data"))
   return(df.with_normed)
 }
-
-
 
 save_prob_tables <- function(df, result_dir, result_fn){
   # Also save just Table means of normalized values as csv files
   means <- df %>% group_by(id, question) %>% summarise(mean=mean(r_norm))
-  
   fn_table_means <- paste(result_fn, "_tables_mean.csv", sep="");
   path_table_means <- paste(result_dir, fn_table_means, sep=.Platform$file.sep);
   write.table(means %>% pivot_wider(names_from = question, values_from = mean),
               file=path_table_means, sep = ",", row.names=FALSE)
-  
   print(paste('written means of normalized probability tables to:', path_table_means))
   
   # All Tables (with normalized values)
   tables.all <- df %>% select(id, question, prolific_id, r_norm) %>%
     group_by(id, question, prolific_id) %>%
     pivot_wider(names_from = question, values_from = r_norm)
-  
   fn_tables_all <- paste(result_fn, "_tables_all.csv", sep="");
   path_tables_all <- paste(result_dir, fn_tables_all, sep=.Platform$file.sep);
   write.table(tables.all, file=path_tables_all, sep = ",", row.names=FALSE)
-  print(paste('written means of normalized probability tables to:', path_tables_all))
+  print(paste('written normalized probability tables to:', path_tables_all))
+  
+  # save smoothed version of all (normalized) tables as well
+  epsilon = 0.00001
+  tables.orig <- tables.all %>% rename(AC=bg, `A-C`=b, `-AC`=g, `-A-C`=none)
+  tables.mat = tables.orig %>% ungroup() %>%
+    select(AC, `A-C`, `-AC`, `-A-C`) %>% as.matrix()
+  tables.smooth = prop.table(tables.mat + epsilon, 1)
+  tables.smooth = cbind(tables.smooth, rowid=seq.int(from=1, to=nrow(tables.mat), by=1)) %>%
+    as_tibble() %>%
+    mutate(p_c_given_a=`AC`/(`AC`+`A-C`),
+           p_c_given_na=`-AC`/(`-AC`+`-A-C`),
+           p_a_given_c=`AC`/(`AC`+`-AC`),
+           p_a_given_nc=`A-C`/(`A-C`+`-A-C`),
+           p_a=`AC`+`A-C`, p_c=AC+`-AC`,
+           theta_ac = (p_c_given_a - p_c_given_na) / (1 - p_c_given_na),
+           theta_anc = ((1-p_c_given_a) - (1-p_c_given_na)) / (1 - (1-p_c_given_na)),
+           theta_ca = (p_a_given_c - p_a_given_nc) / (1 - p_a_given_nc),
+           theta_cna = ((1-p_a_given_c) - (1-p_a_given_nc)) / (1 - (1-p_a_given_nc)),
+    );
+  TABLES = left_join(tables.smooth,
+    tables.orig %>% select(id, prolific_id) %>% rowid_to_column(var="rowid"),
+    by="rowid"
+  ) %>% select(-rowid)
+
+  TABLES.long = TABLES %>% rowid_to_column() %>%
+    mutate(ind_diff=AC-(p_a*p_c)) %>%
+    pivot_longer(cols=c(-prolific_id, -id), names_to="cell", values_to="val")
+  TABLES.mat = TABLES %>% as.matrix()
+  TABLES.ind = TABLES %>% filter(str_detect(id, "independent"))
+  TABLES.dep = TABLES %>% filter(!str_detect(id, "independent"))
+  TABLES.all = bind_rows(TABLES.ind, TABLES.dep)
+  
+  save_to = paste(result_dir, "empiric-ind-tables-smooth.rds", sep=.Platform$file.sep);
+  saveRDS(TABLES.ind, save_to)
+  print(paste("saved smoothed version of all (normalized) tables to", save_to))
+  save_to = paste(result_dir, "empiric-dep-tables-smooth.rds", sep=.Platform$file.sep);
+  saveRDS(TABLES.dep, save_to)
+  print(paste("saved smoothed version of all (normalized) tables to", save_to))
+  save_to = paste(result_dir, "empiric-all-tables-smooth.rds", sep=.Platform$file.sep);
+  saveRDS(TABLES.all, save_to)
+  print(paste("saved smoothed version of all (normalized) tables to", save_to))
 }
 
 process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
@@ -307,7 +344,7 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
   # Further process TEST-trial data --------------------------------------------
   data <- dat.tidy$test
   if(name_exp == "prior"){
-    df <- add_normed_exp1(data);
+    df <- add_normed_exp1(data, "test");
     df <- standardize_color_groups_exp1(df)
     save_prob_tables(df, result_dir, result_fn);
   } else if(name_exp == "production") {
@@ -315,7 +352,7 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
     df <- standardize_sentences(df)
   } else if (name_exp == "joint"){
     df1 <- data %>% filter(str_detect(trial_name, "multiple_slider"))
-    df1 <- add_normed_exp1(df1);
+    df1 <- add_normed_exp1(df1, "test");
     df1 <- standardize_color_groups_exp1(df1)
     save_prob_tables(df1, result_dir, result_fn);
     df2 <- data %>% filter(str_detect(trial_name, "fridge_view")) %>%
@@ -334,15 +371,4 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
   saveRDS(dat.all, path_target)
   
   return(dat.all)
-}
-
-tables_longer = function(tables.wide){
-  tables.long = tables.wide %>%
-    pivot_longer(cols=c(AC, `A-C`, `-AC`, `-A-C`), names_to="cell",
-                 values_to="val")
-  return(tables.long)
-}
-
-tables_wider = function(tables.long){
-  return(tables.long %>% pivot_wider(names_from=cell, values_from=val))  
 }

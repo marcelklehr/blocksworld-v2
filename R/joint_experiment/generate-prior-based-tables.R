@@ -1,4 +1,4 @@
-source("R/joint_experiment/my-utils.R")
+source(here("R", "joint_experiment", "analysis-utils.R"))
 
 # CREATE TABLES FOR MODEL PREDICTIONS -------------------------------------
 sample_probs_independent = function(n, par, sd=0.01){
@@ -127,59 +127,58 @@ formatGeneratedTables4Webppl = function(generated_tables) {
            `-A-C`=round(`-A-C`, 2))
   
   tables.empirical = bind_rows(tables.ind.empirical, tables.dep.empirical) %>%
-    rename(stimulus_id=id)
-  tables.model = bind_rows(tables.ind, tables.dep) 
+    rename(stimulus_id=id) %>%  unite("trial_id", c(stimulus_id, prolific_id), sep="--")
   
-  tables.eq.with_id = intersect(tables.empirical %>% select(-prolific_id),
-                                tables.model %>% select(-ll, -ll.key, -id, -cn)); 
-  tables.eq.without_id = intersect(
-    tables.empirical %>% select(-stimulus_id, -prolific_id),
-    tables.model %>% select(-stimulus_id, -ll, -ll.key, -id, -cn)
-  ); 
-  print(paste('nb. of generated empirical tables (dependent on id):', nrow(tables.eq.with_id)))
-  print(paste('nb. of generated empirical tables (across ids):', nrow(tables.eq.without_id)))
+  tables.model = bind_rows(tables.ind, tables.dep) %>%
+    distinct_at(vars(c(AC, `A-C`, `-AC`, `-A-C`, stimulus_id, ll.key)), .keep_all = TRUE) %>% 
+    rename(table_id=id) %>% unite("bn_id", c(stimulus_id, table_id), sep="--") %>%
+    group_by(bn_id)
+  df = tables.model %>% select(-ll, -ll.key,-cn) %>% distinct() %>% 
+    left_join(tables.empirical, by=c("AC", "A-C", "-AC", "-A-C"))
+  model = left_join(tables.model, df) %>%
+    mutate(empirical=ifelse(is.na(trial_id), FALSE, TRUE))
   
-  generated.empirical = left_join(
-    tables.eq.without_id,
-    tables.model, by=c("AC", "A-C", "-AC", "-A-C")
-  ) %>% group_by(AC, `A-C`, `-AC`, `-A-C`) %>%
-    add_column(empirical=TRUE);
-  
-  generated.not_empirical = setdiff(
-    tables.model, generated.empirical %>% select(-empirical)
-  ) %>% add_column(empirical=FALSE)
-  
-  tables.toWPPL = bind_rows(generated.empirical, generated.not_empirical) %>%
-    mutate(orig_stimulus=stimulus_id) %>% 
-    unite("stimulus_id", stimulus_id, id, sep="--") %>%
-    group_by(stimulus_id)
-  
-  df1 = tables.toWPPL %>% filter(str_detect(ll.key, "independent")) %>% 
+  df.eq = model %>% filter(!is.na(trial_id)) %>% 
+    separate(bn_id, into=c("stimulus_src", "table_id"), sep="--") %>% 
+    separate(trial_id, into=c("stimulus_id", "prolific_id"), sep="--")
+  tables.eq.by_stimulus = df.eq %>% filter(stimulus_src==stimulus_id) %>%
+    distinct_at(vars(c(AC, `A-C`, `-AC`, `-A-C`, stimulus_src)))
+  tables.eq.across_stimuli = df.eq %>%
+    distinct_at(vars(c(AC, `A-C`, `-AC`, `-A-C`)), .keep_all = TRUE)
+  print(paste('nb. of generated empirical tables (dependent on stimulus):', nrow(tables.eq.by_stimulus)))
+  print(paste('nb. of generated empirical tables (across stimuli):', nrow(tables.eq.across_stimuli)))
+
+  # take src stimulus with highest log likelihood among independent/dependent stimuli
+  # (for ll_ind and ll_dep)
+  df = model %>% mutate(trial_id=list(trial_id)) %>% distinct()
+  df1 = df %>% filter(str_detect(ll.key, "independent")) %>% 
     mutate(ll.key=ll.key[ll==max(ll)], ll=max(ll)) %>%
     distinct()
-  df2 = tables.toWPPL %>% filter(!str_detect(ll.key, "independent")) %>% 
+  df2 = df %>% filter(!str_detect(ll.key, "independent")) %>% 
     mutate(ll.key=ll.key[ll==max(ll)], ll=max(ll)) %>%
     distinct()
-  df=bind_rows(df1, df2) %>%
+  df.model = bind_rows(df1, df2) %>%
     mutate(ll.key = case_when(startsWith(ll.key, "independent") ~ "logL_ind",
                               TRUE ~ "logL_if_ac")) %>%
-    group_by(stimulus_id, ll.key) %>% arrange(desc(ll)) %>% 
+    group_by(bn_id, ll.key) %>% arrange(desc(ll)) %>% 
     distinct()
   
-  tables.toWPPL = df %>% group_by(stimulus_id) %>% 
+  tables.toWPPL = df.model %>% group_by(bn_id) %>% 
     pivot_wider(names_from=ll.key, values_from=ll) %>% 
     mutate(vs=list(c("AC", "A-C", "-AC", "-A-C")),
            ps=list(c(`AC`, `A-C`, `-AC`, `-A-C`))) %>%
-    select(-AC, -`A-C`, -`-AC`, -`-A-C`)
+    select(-AC, -`A-C`, -`-AC`, -`-A-C`) %>%
+    rename(stimulus_id=bn_id)
   save_to = paste(target_dir, "model-tables-stimuli.rds", sep=SEP)
   saveRDS(tables.toWPPL, save_to);
   print(paste('saved generated tables to:', save_to))
   
-  save_to = "tables-empirical-all.rds"
-  saveRDS(tables.empirical, save_to)
-  print(paste('saved empirical tables to:', save_to))
-  
-  return (tables.toWPPL)
+  mapping = tables.toWPPL %>% select(stimulus_id, trial_id, empirical) %>%
+    unnest(c(trial_id)) %>% filter(!is.na(trial_id)) %>% distinct()
+  save_to = paste(target_dir, "mapping-tableID-prolificID.rds", sep=SEP)
+  saveRDS(mapping, save_to);
+  print(paste('saved generated tables to:', save_to))
+  return(tables.toWPPL)
 }
 
 # Plot Tables -------------------------------------------------------------
@@ -200,9 +199,9 @@ plot_tables <- function(tables.model, tables.empirical){
   return(p)
 }
 
-target_dir = "../MA-project/conditionals/data";
-tables.nested = create_tables(target_dir, 2500)
-tables = formatGeneratedTables4Webppl(tables.nested)
+# target_dir = "../MA-project/conditionals/data";
+# tables.nested = create_tables(target_dir, 3000)
+# tables = formatGeneratedTables4Webppl(tables.nested)
 
 
 # stimulus = "independent_hl"

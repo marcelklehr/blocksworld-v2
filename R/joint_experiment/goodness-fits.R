@@ -1,59 +1,54 @@
-source("R/joint_experiment/my-utils.R")
 source("R/joint_experiment/generate-prior-based-tables.R")
-goodness_fits = function(n){
-  N=30
-  fn = "beta-fits.csv"
-  params = read_csv(
-    paste(RESULT.dir, fn, sep=.Platform$file.sep)
-  ) %>% group_by(cn, id)
+goodness_fits = function(n, fn, N=30){
+  params = readRDS(
+    paste("../MA-project/conditionals/data", fn, sep=.Platform$file.sep)
+  ) %>% group_by(cn, stimulus_id) %>% 
+    filter(stimulus_id != "ind2") %>%
+    rename(cn_params=cn) %>%
+    mutate(cn=str_split(cn_params, "--")[[1]][[1]])
+  
   # likelihood of empirical data
-  # 1.independent tables
-  par.cn = params %>% filter(cn == "A || C")
-  ll.ind = map_dfr(IDS.ind, function(id){
-    par.cn = par.cn %>% filter(id == (!! id));
-    df = TABLES.ind %>% filter(id == (!! id));
-    df %>% log_likelihood("A || C", par.cn) %>%
-      select(ll, cn, id, prolific_id) %>%
-      summarize(ll_sample = sum(ll), .groups = "keep") %>%
-      add_column(cn="A || C", id=id)
-  });
-  # 2.dependent tables
-  par.cn = params %>% filter(cn == "A implies C")
-  ll.dep=map_dfr(IDS.dep, function(id){
-    par = par.cn %>% filter(id==(!! id));
-    df = TABLES.dep %>% filter(id == (!! id));
-    df %>% log_likelihood("A implies C", par) %>% select(ll, cn) %>%
-    summarize(ll_sample=sum(ll), .groups="keep") %>%
-    add_column(cn="A implies C", id=id)
-  });
-  ll.empirical = bind_rows(ll.ind, ll.dep)
-  # Sample n times N=30 values for each of the distinctive numbers mapping
+  ll.empirical = params %>% ungroup() %>%  
+    select(stimulus_id, cn_params, cn, ll.sample)
+
+  # Sample n times N=30 values for each of the distinctive probabilities mapping
   # to a probability table
   p_values = pmap_dfr(
     params, function(...){
       par = tibble(...)
-      print(par$cn)
+      print(par$stimulus_id)
       # empirical likelihood for all participants data for current cn(+id)
       # given fitted params
       ll.obs = ll.empirical %>%
-        filter(cn == par$cn & id == par$id) %>%
-        pull(ll_sample)
+        filter(cn_params == par$cn_params & stimulus_id == par$stimulus_id) %>%
+        pull(ll.sample)
       # sample n times N (#participants,30) tables and compute log likelihood
-      if(par$cn == "A || C"){
+      if(par$cn ==  "A || C"){
         probs = sample_probs_independent(N*n, par) %>%
           add_column(idx=rep(seq(1,n), N))
       } else {
-        probs = sample_probs_dependent(N*n, par) %>%
-          rename(p_c_given_na=p_neg, p_c_given_a=p_pos, p_a=p_marg) %>%
+        probs = sample_probs_dependent(N*n, par) %>% 
           add_column(idx=rep(seq(1,n), N))
+        if(par$cn=="A implies C"){
+          probs = probs %>% rename(p_c_given_na=p_neg, p_c_given_a=p_pos, p_a=p_marg)
+        }else if(par$cn=="A implies -C"){
+          probs = probs %>% rename(p_nc_given_na=p_neg, p_nc_given_a=p_pos, p_a=p_marg)
+        }else if(par$cn=="C implies A"){
+          probs = probs %>% rename(p_a_given_nc=p_neg, p_a_given_c=p_pos, p_c=p_marg)
+        }else if(par$cn=="A implies -C"){
+          probs = probs %>% rename(p_nc_given_na=p_neg, p_nc_given_a=p_pos, p_c=p_marg)
+        }
       }
       ll.simulated = probs %>% group_by(idx) %>% log_likelihood(par$cn, par) %>%
-        summarize(s=sum(ll), .groups="keep");
+        summarize(s=sum(ll), .groups = "drop") %>% select(-idx);
       p.val = (ll.simulated < ll.obs) %>% sum()/n
-      tibble(id=par$id, cn=par$cn, p.val=p.val, n=n)
+      ll.simulated %>%
+        mutate(stimulus_id=par$stimulus_id, cn_params=par$cn_params, p.val=p.val, n=n)
+      # tibble(stimulus_id=par$stimulus_id, cn_params=par$cn_params, p.val=p.val, n=n)
     }) ;
   return(p_values)
 }
-res.goodness = goodness_fits(10**4) %>% arrange(desc(p.val));
+res.goodness = goodness_fits(10**4, "params-ll-best-cn.rds") %>% arrange(desc(p.val));
+res.goodness %>% select(-s) %>% distinct()
 saveRDS(res.goodness, paste(RESULT.dir, "simulated-p-values.rds", sep=.Platform$file.sep))
 

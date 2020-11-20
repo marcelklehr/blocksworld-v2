@@ -1,0 +1,349 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r, message=FALSE, echo=FALSE}
+library(here)
+source(here("R", "joint_experiment", "analysis-utils.R"))
+# Data Test Trials
+prior.test = data.prior.norm %>% filter(id == "ind2")
+prior.exp.wide = data.prior.norm %>% filter(id!="ind2") %>%
+  separate(id, into = c("relation", "condition"), sep="_", remove=FALSE) %>%
+  group_by(prolific_id, relation, condition) %>%
+  mutate(response=(response+epsilon)/sum(response+epsilon)) %>% 
+  pivot_wider(names_from="question", values_from="response") %>%
+  mutate(p_blue=bg+b, p_green=bg+g, g_given_b=bg/(bg+b),
+         g_given_nb=g/(g+none), b_given_g=bg/(bg+g), b_given_ng=b/(b+none))
+
+prior.exp.long = prior.exp.wide %>%
+  pivot_longer(cols=c(bg, g, b, none, p_blue, p_green,
+                      b_given_g, b_given_ng, g_given_b, g_given_nb),
+               names_to="event", values_to="response")
+```
+
+Look at whether participants rated high-uncertain-low conditions appropriately
+(decreasing values with decreasing prior), across all test stimuli, when
+- block is on edge
+- block may be kicked off by ball on top of ramp
+
+Facets indicate whether block is vertically or horizontally aligned.
+
+```{r, echo=FALSE}
+prior.exp.edges = left_join(prior.dir_edges, prior.exp.long, by = c("relation", "condition", "event"));
+prior.exp.ramp = left_join(prior.dir_ramp, prior.exp.long, by=c("relation", "condition", "event"));
+df.edges = prior.exp.edges %>%
+  mutate(condition=case_when(event=="p_blue" & startsWith(condition, "u-") ~ substr(condition, 1, 3),
+                             event=="p_blue" ~ substr(condition, 1, 1),
+                             event=="p_green" & substr(condition, 2,3)=="u-" ~ substr(condition, 2, 4),
+                             TRUE ~ substr(condition, str_length(condition), str_length(condition)))) %>% 
+  mutate(condition = case_when(condition == "l" ~ "low",
+                               condition == "u" ~ "uncertain",
+                               startsWith(condition, "u-L") ~ "uncertainL",
+                               startsWith(condition, "u-H") ~ "uncertainH",
+                               condition == "h" ~ "high")) %>%
+  mutate(condition = factor(condition, levels = c("low", "uncertainL", "uncertain", "uncertainH", "high")))
+
+df.ramp = prior.exp.ramp %>%
+  mutate(condition=case_when(event=="p_blue" & startsWith(condition, "u-") ~ substr(condition, 1, 3),
+                             event=="p_blue" ~ substr(condition, 1, 1),
+                             event=="p_green" & substr(condition, 2,3)=="u-" ~ substr(condition, 2, 4),
+                             TRUE ~ substr(condition, str_length(condition), str_length(condition)))) %>% 
+  mutate(condition = case_when(condition == "l" ~ "low",
+                               condition == "u" ~ "uncertain",
+                               startsWith(condition, "u-L") ~ "uncertainL",
+                               startsWith(condition, "u-H") ~ "uncertainH",
+                               condition == "h" ~ "high")) %>%
+  mutate(condition = factor(condition, levels = c("low", "uncertainL", "uncertain", "uncertainH", "high")))
+```
+
+- It is differentiated between trials where uncertainty comes from ball
+potentialy kicking the block off ("ramp") or from the block standing on
+the edge ("edge").
+
+- The data points plotted are the given normalized probabilities
+for all participants across all stimuli separately for each prior condition
+(supposed to fall with low/uncertain/high likelihood.). The datapoints do not 
+always refer to the same probability, e.g. the datapoints plotted for if1 + ramp are the
+probability of the lower block to fall given that the upper block falls (only then the ball starts rolling due to the upper block's falling),
+whereas in independent + ramp trials, the plotted datapoints are the marginal probabilities of the respective block to fall since here the ball is always rolling as it is on the edge, summarized:
+  - if1 + ramp: P(lower|upper)
+  - if1 + edge: P(upper)
+  - if2 + edge: (lower) which is supposed to be always low, as
+  these are the interesting cases, i.e. when the lower block only has a low
+  probability to fall when the upper block does not fall.
+  - if2 + ramp: P(upper) as here the ball always starts rolling
+  - independent + edge: P(upper)
+  - independent + ramp: P(lower) as here the ball always starts rolling
+  
+- The Ratings for low-uncertain-high (across stimuli) should if at all, only
+overlap slightly. At least *high* and *low* should not overlap.
+
+
+```{r}
+p.edges = df.edges %>% plot_ratings_across_conditions("test-trials blocks on edge");
+p.edges
+
+p.ramp = df.ramp %>% plot_ratings_across_conditions("test-trials ramp with ball");
+p.ramp
+```
+
+# Same plots for training trials 
+Here only the second half of the training trials are taken for each participant, 
+i.e. for each training type trial, the last shwon 50% are considered here.
+
+```{r, message=FALSE}
+# Data Training Trials
+df.train.edges = data.train.norm.half %>% filter(id %in% train.edges$id) %>%
+  group_by(prolific_id, id) %>% 
+  mutate(red=ry + r, yellow=ry + y) %>% 
+  left_join(train.edges, join_by = c("id")) %>%
+  pivot_longer(c(red, yellow, ry, none, r, y), names_to="event", values_to="response")  %>%
+  filter(event == block)
+
+df.train.ramp = data.train.norm.half %>% filter(id %in% train.ramp$id) %>%
+  group_by(prolific_id, id) %>% 
+  mutate(red=ry + r, yellow=ry + y) %>% 
+  left_join(train.ramp, join_by = c("id")) %>%
+  pivot_longer(c(red, yellow, ry, none, r, y), names_to="event", values_to="response")  %>%
+  filter(event == block)
+```
+
+```{r, fig.height = 10, include=FALSE}
+df.train.edges %>%
+  mutate(relation=case_when(id %in% c("ssw0", "ssw1") ~ "if2",
+                            id %in% c("ac0", "ac1", "ac2", "ac3") ~ "if1",
+                            TRUE ~ "independent"),
+         condition=factor(condition, levels = c("low", "uncertain", "uncertainH", "high"))) %>% 
+  plot_ratings_across_conditions("training-trials block on edge")
+
+df.train.ramp %>% 
+  mutate(relation=case_when(id %in% c("ssw0", "ssw1") ~ "if2",
+                            id %in% c("ac0", "ac1", "ac2", "ac3") ~ "if1",
+                            TRUE ~ "independent"),
+         condition=factor(condition, levels = c("low", "uncertain", "uncertainH", "high"))) %>% 
+  plot_ratings_across_conditions("training trials ramp with ball")
+```
+
+## Training data: ratings per stimulus, block on edge (low/uncertain/high prior)
+
+```{r, fig.width=12}
+p1 = df.train.edges %>% filter(condition=="high") %>% 
+  mutate(condition=as.factor(condition)) %>% 
+  ggplot(aes(x=condition, y=response)) + 
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color=dir), shape=16, width=0.2, alpha=0.5) +
+  facet_wrap(~id) +
+  theme_classic(base_size = 20) +
+  theme(axis.text.x = element_text(size=15)) +
+  ggtitle("block on edge") +
+  coord_flip()
+  # theme(axis.text.x=element_text(angle=90))
+ggsave(paste(PLOT.dir, "train-edges-high.png", sep=.Platform$file.sep), p1, width=15, height=10)
+p1
+
+p2 = df.train.edges %>% filter(startsWith(condition, "uncertain")) %>% 
+  mutate(condition=as.factor(condition)) %>% 
+  ggplot(aes(x=condition, y=response)) + 
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color=dir), shape=16, width=0.2, alpha=0.5) +
+  facet_wrap(~id) +
+  theme_classic(base_size = 20) +
+  theme(axis.text.x = element_text(size=15)) +
+  ggtitle("block on edge") +
+  coord_flip()
+  # theme(axis.text.x=element_text(angle=90))
+ggsave(paste(PLOT.dir, "train-edges-uncertain.png", sep=.Platform$file.sep), p2, width=15, height=10)
+p2   
+
+p3 = df.train.edges %>% filter(condition == "low") %>% 
+  mutate(condition=as.factor(condition)) %>% 
+  ggplot(aes(x=condition, y=response)) + 
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color=dir), shape=16, width=0.2, alpha=0.5) +
+  facet_wrap(~id)+
+  theme(axis.text.x = element_text(size=15)) +
+  ggtitle("block on edge") +
+  coord_flip()
+  # theme(axis.text.x=element_text(angle=90))
+ggsave(paste(PLOT.dir, "train-edges-low.png", sep=.Platform$file.sep), p3, width=15, height=10)
+p3 
+```
+
+
+1. condition high-edge
+  1.1 Horizontal. Training trial ac0 has clearest response.
+Uncertain2 block is horizontal as well, but on top of another block.
+-> make sure that this is learnt in training! and that
+participants really rate a block to fall when it only falls off another block, but not
+to the ground. -> *use this as extra attention/sanity quesitons in between*? E.g.
+show two pictures and ask before and after and ask whether or not the respective
+block is considered as having fallen (decide between yes/no/don't know).
+
+  1.2 Vertical, a little more variabilty than for horiztonal case in ac0.
+  -> always use horizontal for high prior to fall? 
+
+2. condition uncertain-edge
+  2.1 Vertical. ac3 rated much higher than uncertain2, ssw1, ind1.
+  ssw1 also includes seesaw, main difference is color of the blocks
+  (ssw1: vertical-red, ac3: vertical-yellow). Otherwise ratings are as expected around 0.5.
+  -> Maybe use two different colors that are closer to each other? (e.g. red + blue instead of red+yellow)
+
+  2.2 Horizontal.
+  (ac2/uncertain1) probabilities are rated as higher than in the four vertical cases and 
+  compared to uncertain0. That's as expected, since here prior is *uncertainH* meaning
+  a little less on the platform than in *uncertain* condition. -> using **uncertain** is inded better
+  option.
+
+In sum, I would not want to make big changes to the stimuli (maybe colors, and using vertical/horizontal blocks as suggested above). I think they seem to be good enough, instead I think improving the training would be the better option.
+
+3. condition low-edge.
+  Way to high in all cases, these should be adapted!
+
+
+## Training data: ratings per stimulus, block potentially kicked off by ball rolling off a ramp (low/uncertain/high prior)
+
+```{r, echo=FALSE, fig.width=12}
+p1 = df.train.ramp %>% filter(condition=="high") %>% 
+  mutate(condition=as.factor(condition)) %>% 
+  ggplot(aes(x=condition, y=response)) + 
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color=dir), shape=16, width=0.2, alpha=0.5) +
+  facet_wrap(~id) +
+  theme_classic(base_size = 20) +
+  theme(axis.text.x = element_text(size=15)) +
+  ggtitle("block falls ball on ramp") +
+  coord_flip()
+  # theme(axis.text.x=element_text(angle=90))
+ggsave(paste(PLOT.dir, "train-ramp-high.png", sep=.Platform$file.sep), p1, width=15, height=10)
+p1
+
+p2 = df.train.ramp %>% filter(startsWith(condition, "uncertain")) %>% 
+  mutate(condition=as.factor(condition)) %>% 
+  ggplot(aes(x=condition, y=response)) + 
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color=dir), shape=16, width=0.2, alpha=0.5) +
+  facet_wrap(~id) +
+  theme_classic(base_size = 20) +
+  theme(axis.text.x = element_text(size=15)) +
+  ggtitle("block falls ball on ramp") +
+  coord_flip()
+  # theme(axis.text.x=element_text(angle=90))
+ggsave(paste(PLOT.dir, "train-ramp-uncertain.png", sep=.Platform$file.sep), p2, width=15, height=10)
+p2   
+
+p3 = df.train.ramp %>% filter(condition == "low") %>% 
+  mutate(condition=as.factor(condition)) %>% 
+  ggplot(aes(x=condition, y=response)) + 
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color=dir), shape=16, width=0.2, alpha=0.5) +
+  facet_wrap(~id)+
+  theme(axis.text.x = element_text(size=15)) +
+  ggtitle("block falls ball on ramp") +
+  coord_flip()
+  # theme(axis.text.x=element_text(angle=90))
+ggsave(paste(PLOT.dir, "train-ramp-low.png", sep=.Platform$file.sep), p3, width=15, height=10)
+p3 
+```
+
+
+Here, condition high is rated as too low. -> More training?!
+and condition low is rated as too high.
+
+
+## Relations understood?
+
+A,C independent:
+  * |P(blue,green) - P(blue) * P(green)| < threshold
+A->C: (blue -> green)
+  * if1, if2: P(¬blue, green) < threshold && P(green|blue) > P(green|¬blue)
+
+```{r}
+threshold.ind = 0.07
+threshold = 0.15
+prior.relations = prior.exp.wide %>% group_by(relation, prolific_id) %>%
+  select(relation, id, prolific_id, condition, g, b, p_blue, p_green, bg, none,
+         g_given_nb, g_given_b) %>%
+  mutate(as_expected=case_when(
+    relation=="independent" ~ abs(bg - p_blue * p_green) < threshold.ind,
+    (relation == "if1" | relation=="if2") ~ g<threshold & g_given_b > g_given_nb)
+  ) %>% group_by(id)
+df = prior.relations %>% 
+  summarize(N=n(), n=sum(as_expected), ratio=n/N, .groups = "keep") %>%
+  arrange(desc(ratio))
+df
+
+relations.bad = prior.relations %>%
+  filter(!as_expected) %>% select(id, prolific_id)
+relations.good = prior.relations %>%
+  filter(as_expected) %>% select(id, prolific_id)
+```
+
+
+```{r, slider-ratings-bad-relations}
+df.bad=left_join(relations.bad, prior.exp.wide, by=c("prolific_id", "id")) %>%
+  rename(p_c_given_a=g_given_b, p_c_given_na=g_given_nb) %>% 
+  # filter(!is.na(p_c_given_na) & p_c_given_na > p_c_given_a) %>%
+  group_by(prolific_id, id) %>%
+  pivot_longer(cols=c(bg, b, g, none), names_to="question", values_to="response") %>% 
+  mutate(question=as.factor(question)) %>% add_column(understood_rel=FALSE)
+
+df.good=left_join(relations.good, prior.exp.wide, by=c("prolific_id", "id")) %>%
+  rename(p_c_given_a=g_given_b, p_c_given_na=g_given_nb) %>% 
+  # filter(!is.na(p_c_given_na) & p_c_given_na > p_c_given_a) %>%
+  group_by(prolific_id, id) %>%
+  pivot_longer(cols=c(bg, b, g, none), names_to="question", values_to="response") %>% 
+  mutate(question=as.factor(question)) %>% add_column(understood_rel=TRUE)
+
+df = bind_rows(df.bad, df.good) %>% select(-RT, -QUD, -group, -custom_response, -utterance)
+df %>% 
+  plotSliderRatings(questions.test, labels.test, cluster_by="bg", relation=TRUE)
+
+df.understood_rel = df %>% filter(understood_rel) %>%
+  select(id, prolific_id) %>% distinct()
+```
+
+# Quality of test data per stimulus
+For each participant compute the distance to responses of all other participants.
+Look at Average of these N-1 values (for each participant).
+
+```{r, quality-checks, fig.height=12}
+df.quality = left_join(df.understood_rel, data.quality %>% rename(prolific_id=comparator),
+               by=c("prolific_id", "id"))
+
+# make plots (save as png)
+pd <- position_dodge(0.5) 
+p <- data.quality %>%
+  # df.quality %>% 
+  ggplot(aes(x=question,  y=mean_diff, colour=question)) + 
+    facet_wrap(~id, scales="free") +
+    geom_boxplot(aes(colour=question), outlier.shape=NA) +
+    geom_jitter(height=0, width=0.05, alpha=0.4, size=0.5) + 
+    # geom_errorbar(aes(ymin=-sd, ymax=mu+sd), width=.5, position=pd) +
+    # geom_line(position=pd) +
+    # geom_point(position=pd) +
+    theme(axis.text.x=element_blank(), legend.position="bottom")
+p
+ggsave(paste(PLOT.dir, "quality-check.png", sep=.Platform$file.sep), p, width=15, height=10)
+```
+
+Most variations in quality in 
+* if1_hh (blue,green)
+* if1_lh (¬blue, green)
+* if2_hl (bg, b¬g)
+* if2_ul (bg, b¬g)
+* independent_hh (bg)
+
+- make sure that participants have understood that block count as falling even
+if it only drops off another block
+- make sure they understood that some balls roll directly while others need to
+be kicked by seesaw
+
+## How to improve training?
+
+## Criteria for preregistration
+
+
+

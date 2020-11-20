@@ -5,45 +5,21 @@ output:
     df_print: paged
 ---
 
+Load data
+
 ```{r, warning=FALSE, message=FALSE}
-library(ggforce)
 library(here)
-library(tidyverse)
-library(scales)
-source(here("R", "utils.R"))
-source(here("R", "utils-exp2.R"))
-source(here("R", "utils-exp1.R"))
-
-# debug_run <- TRUE
-debug_run <- FALSE
-
-exp.name = "experiment-wor(l)ds-of-toy-blocks"
-fn <- paste(exp.name, "_tidy.rds", sep="");
-RESULT_DIR <- ifelse(debug_run, here("data", "test-runs", "results", exp.name), 
-                     here("data", "prolific", "results", exp.name))
-PLOT_DIR <- paste(RESULT_DIR, "plots", sep=.Platform$file.sep);
-if(!dir.exists(PLOT_DIR)){dir.create(PLOT_DIR, recursive=TRUE)}
-data <- readRDS(paste(RESULT_DIR, fn, sep=.Platform$file.sep)) 
-
-data.prior = data$test %>% filter(str_detect(trial_name, "multiple_slider")) %>% 
-  select(-utterance, -custom_response)
-data.production = data$test %>% filter(str_detect(trial_name, "fridge_view")) %>%
-  select(-question, -utterance, -r_orig, -r_norm, -RT, -QUD, -n) # todo: utterance should not be there!
-
-# Model data
-model.dir <- paste(RESULT_DIR, "model-results", sep=.Platform$file.sep)
-data.model <- readRDS(paste(model.dir, "results-speaker-empirical-model-tables.rds", sep=.Platform$file.sep)) %>%
-  separate(stimulus_id, into=c("id", "prolific_id"), sep="--") %>%
-  select(bn_id, cn, id, prolific_id, AC, `A-C`, `-AC`, `-A-C`, utterance, probs) %>%
-  group_by(prolific_id, id) %>% select(-bn_id)
-
-data.model.best = data.model %>% mutate(m=max(probs)) %>%
-  filter(m==probs) %>% rename(response=utterance, model.p=probs) %>% 
-  select(-m) %>% translate_utterances() %>%
-  rename(model=response)
+library(ggforce)
+source(here("R", "joint_experiment", "analysis-utils.R"))
 ```
 
-# Meta info about participants
+```{r}
+df.prior = data.prior %>% select(-utterance, -custom_response)
+df.production = data.production %>%
+  select(-question, -r_orig, -r_norm, -QUD, -n) 
+```
+
+## Meta info about participants
 
 ```{r, meta, echo=FALSE}
 df <- data$info %>% group_by(prolific_id) %>% distinct()
@@ -61,12 +37,14 @@ p
 
 df %>% ungroup() %>%  group_by(prolific_id) %>%  summary()
 ```
-# Reaction Times per stimulus
+
+## Reaction Times per stimulus
 
 ```{r, reaction-times, echo=FALSE}
-df <- data$test %>% select(prolific_id, id, RT) %>% group_by(id) %>% distinct()
+df <- df.production %>% select(prolific_id, id, RT) %>% group_by(id) %>%
+  distinct()
 
-dat.RT = df %>% group_by(id) %>% summarise(mu=mean(RT), sd=sd(RT))
+dat.RT = df %>% group_by(id) %>% summarise(mu=mean(RT), sd=sd(RT), .groups="drop_last")
 df <- left_join(df, dat.RT, by="id")
 for(pa in seq(1,2)) {
   p <- df %>%  
@@ -84,234 +62,57 @@ for(pa in seq(1,2)) {
 }
 ```
 
-
-# Quality of data per participant
-
-```{r, include=FALSE, eval=FALSE}
-data.quality = readRDS(paste(RESULT_DIR, .Platform$file.sep, exp.name, "_tidy_quality.rds", sep=""))
-# make plots (save as png)
-# data.quality %>% qualityPlots(paste(PLOT_DIR, "quality_data", sep=.Platform$file.sep))
-pd <- position_dodge(0.5) 
-p <- data.quality %>%
-  ggplot(aes(x=id,  y=mu, colour=question)) + 
-    facet_wrap(~id, scales="free_x") +
-    # geom_bar(width=0.5, stat="identity", position=pd, aes(fill=question)) +
-    geom_errorbar(aes(ymin=-sd, ymax=mu+sd), width=.5, position=pd) +
-    geom_line(position=pd) +
-    geom_point(position=pd) +
-    theme(axis.text.x=element_blank(), legend.position="bottom")
-ggsave(paste(PLOT_DIR, "quality-check.png", sep=.Platform$file.sep), p, width=15, height=10)
-```
-
-
 # General comments
 
 ```{r, echo=FALSE}
-dat.comments = data$comments %>%
-  filter(!is.na(comments) & comments!="")
-print(dat.comments$comments)
+df.comments = data.comments %>% filter(!is.na(comments) & comments!="")
+print(df.comments$comments)
 ```
 
 
 # Color vision trials
 
 ```{r, color-vision, echo=FALSE}
-df <- data$color %>% group_by(prolific_id, id) %>%
+df <- data.color %>% group_by(prolific_id, id) %>%
   mutate(correct = expected == response)
 
 df %>%
   ggplot(aes(x=id)) + geom_bar(position="dodge", aes(fill=correct)) +
   theme(axis.text.x = element_text(angle=90, hjust=1), legend.position = "top")
-
-```
-
-# Training trials
-
-```{r, training-trials, echo=FALSE}
-question_factors = c("ry", "r", "y", "none")
-labels = c(ry="Red and Yellow", r="Red and ¬Yellow",
-           y="¬Red and Yellow", none="¬Red and ¬Yellow")
-
-dat.train = data$train %>% rename(response=r_norm) %>% select(-r_orig, -n)
-df.train = dat.train %>% filter_by_train_data(threshold=0.3) %>%
-  pivot_longer(cols=c(ry, r, y, none), names_to="question", values_to="response")
-
-left_join(
-  dat.train %>% filter(trial_number >= 8 | id=="uncertain3") %>% group_by(id) %>% summarize(n=n()/4),
-  df.train %>% group_by(id) %>% summarize(n=n()/4),
-  by="id"
-) %>% mutate(ratio_correct=n.y/n.x) %>%
-  arrange(desc(ratio_correct))
-
-# df = df.train %>% filter(prolific_id=="5f18a8fcc413fc0c4c0f4e49")
-plotSliderRatings(dat.train, question_factors, labels, cluster_by="r")
-
-df = df.train %>% pivot_wider(names_from="question", values_from="response") %>%
-  group_by(prolific_id, id) %>% 
-  transmute(red=ry + r, yellow=ry + y, ry=ry, none=none) %>%
-  pivot_longer(c(red, yellow, ry, none), names_to="event", values_to="response")
-
-df.stats = df %>%  group_by(id, event) %>% summarize(n=n(), m=mean(response), sd=sd(response)) %>%
-  mutate(se=sd/sqrt(n)) %>% arrange(se)
-
-vert.unc = df.stats %>% filter(id=="ind1" & event=="yellow" | (id=="uncertain2" & event=="yellow")
-                                | (id=="uncertain0" & event=="yellow") 
-                                | (id=="ssw0" & event=="yellow") |  (id=="ssw1" & event=="red")
-                                | (id=="ac3" & event=="yellow")
-                               ) %>% ungroup() %>% 
-  arrange(se)%>% add_column(dir="vert")
-horiz.unc = df.stats %>%
-  filter(id %in% c("uncertain1", "uncertain2", "ac2") & event == "red") %>%
-  arrange(se) %>% add_column(dir="horiz")
-df = bind_rows(horiz.unc, vert.unc)
-p <- df %>% group_by(id, event) %>% 
-  ggplot(aes(x=id, y=m)) + 
-  # geom_density(aes(x=response, color=event)) +
-  geom_bar(aes(x=id, y=m, fill=event), stat="identity", alpha=0.7, position=position_dodge(0.5)) + 
-  geom_errorbar(aes(ymin=m-se, ymax=m+se, color=event)) +
-  # geom_histogram(aes(x=response, fill=event), alpha=0.5, position="dodge") +
-  # geom_jitter(aes(x=response,y=0, color=event), width=0, height = 0.05, alpha=0.75) +
-  facet_wrap(~dir, scales="free") +
-  geom_hline(data=tibble(y=0.5), aes(yintercept=y), color='black',
-             linetype = "dashed", size = 1) +
-  theme_classic(base_size=18) +
-  theme(legend.position="top", axis.text.x=element_text(angle=90))
-p
-ggsave(paste(PLOT_DIR, "train-histograms.png", sep=.Platform$file.sep), p, width=15, height=10)
-    
+pids.false_colors = df %>% filter(correct == FALSE)  %>% pull(prolific_id) 
 ```
 
 
-```{r}
-# data$train %>% rename(response=r_orig) %>% select(-r_norm, -n) %>%
-data$train %>% rename(response=r_norm) %>% select(-r_orig, -n) %>%
-  filter(id=="ssw0") %>% mutate(keep=case_when(question=="ry" & response > 0.4 ~ TRUE,
-                                               question=="ry" ~ FALSE,
-                                               TRUE ~ TRUE))%>% 
-  filter(keep) %>% 
-  plotSliderRatings(question_factors, labels, cluster_by="y")
-```
-
-
-
-## Trials Prior-Elicitation 
-Setup prior-eliciation tasks analysis
-
-```{r, prior-elicitation-experiment, echo=FALSE}
-data.prior.orig <- data.prior %>% mutate(response=r_orig) %>% select(-r_norm, -r_orig)
-data.prior.norm <- data.prior %>% mutate(response=r_norm) %>% select(-r_norm, -r_orig)
-
-data.prior.invalid = data.prior.norm %>% filter(is.na(response))
-data.prior.norm <- data.prior.norm %>% filter(!is.na(response))
-
-STIMULI <- data.prior.orig %>% pull(id) %>% unique()
-N_participants <- data.prior.orig %>% pull(prolific_id) %>% unique() %>% length()
-
-plot_dir <- paste(RESULT_DIR, "plots", sep=.Platform$file.sep);
-dir.create(plot_dir, showWarnings = FALSE)
-```
-
-
-```{r, all-none-responses, include=FALSE}
-# Use normalized data and check how many all-or-none answers were given since we
-# dont really want them, stimuli should have a little more uncertainty than that.
-
-# Look for participants who gave all-or-none responses, if any,
-# which stimuli were rated as all-or-none by how many participants?
-df <- data.prior.norm %>% group_by(prolific_id, id) %>%
-  summarise(n=max(response), .groups="drop_last") %>%
-  filter(n==1) %>%
-  mutate(id=factor(id, levels=STIMULI))
-
-N0 <- N_participants - df %>% pull(prolific_id) %>% unique() %>% length()
-df0 <- tibble(prolific_id=rep('--', N0), ratio_all_none=rep(0, N0))
-
-df.participants_all_none <- df %>% group_by(prolific_id) %>%
-  summarise(ratio_all_none = n() / length(STIMULI), .groups="drop_last") %>%
-  mutate(prolific_id=as.character(prolific_id)) %>%
-  bind_rows(df0)
-
-if (nrow(df.participants_all_none) != 0){
-  p <- df.participants_all_none %>% filter(prolific_id != "--") %>% 
-        ggplot(aes(ratio_all_none)) +
-        geom_bar(aes(x=prolific_id, y=ratio_all_none), stat="identity") +
-        theme(axis.text.x = element_text(angle=90, hjust=1)) +
-        labs(y="#participants", x="#all-none answers")
-  print(p)
-
-  df.stimuli_all_none <- df %>%
-    ungroup() %>% group_by(id) %>%
-    summarise(n_participants = n(), .groups="keep")
-
-  p <- df.stimuli_all_none %>%
-        ggplot(aes(x=id, y=n_participants)) + geom_bar(stat="identity") +
-        scale_x_discrete(drop=FALSE) +
-        theme(axis.text.x = element_text(angle=90, hjust=1)) +
-        labs(y="#participants who gave all-none answer")
-  print(p)
-} else {
-  print('nobody gave all-none responses (where sum=1)')
-}
-```
-
-
-## Experimental data: probability tables
-1. original responses
-```{r, slider-ratings-prior}
-questions = c("bg", "b", "g", "none")
-labels <- c(bg="Blue and Green", b="Blue and ¬Green",
-            g="¬Blue and Green", none="¬Blue and ¬Green")
-# plotSliderRatings(data.prior.orig, questions, labels, cluster_by="b")
-``` 
-
-2. normalized responses
-```{r, slider-ratings-normed}
-df=data.prior.norm %>% select(-group, -QUD, -n, -RT, -trial_number, -trial_name) %>%
-  pivot_wider(names_from = "question", values_from = "response") %>%
-  mutate(p_c_given_na=g/(g+none), p_c_given_a=bg/(bg+b)) %>%
-  filter(!is.na(p_c_given_na) & p_c_given_na > p_c_given_a) %>%
+```{r, slider-ratings-prior-normed, include=FALSE}
+## Experimental data: probability tables with certain conditions
+df.wide = TABLES.dep %>% filter(prolific_id %in% pids.false_colors) %>%
   group_by(prolific_id, id) %>%
-  pivot_longer(cols=c(bg, b, g, none), names_to="question", values_to="response") %>% 
-  mutate(question=as.factor(question))
-
-df %>% 
-  plotSliderRatings(questions, labels, cluster_by="bg")
+  rename(bg=AC, b=`A-C`, g=`-AC`, none=`-A-C`) %>%
+  select(bg, b, g, none, prolific_id, id) %>%
+  rowid_to_column()
+df.long = df.wide %>% 
+  pivot_longer(cols=c(bg, b, g, none), names_to="question", values_to="response") 
+df.long %>% 
+  plotSliderRatings(questions.test, labels.test, cluster_by="bg")
 ```
-
 
 # Plot Mean of cell values of generated tables (normalized tables)
+Look at mean probability ratings dependent on the utterance expected in
+respective production trial. 
 
-```{r, echo = FALSE, message=FALSE}
-fn <- paste(RESULT_DIR, paste(exp.name, "_tables_mean.csv", sep=""),
-            sep=.Platform$file.sep)
-prob_means <- read_csv(fn) %>% add_probs() %>%
-  pivot_longer(cols=c("b", "g", "bg", "none", starts_with("p_")), names_to = "key", values_to = "prob")
-```
-
-
-```{r, echo=FALSE}
-PlotDensity <- function(tables, p1, p2, save_as){
-  df <- tables %>% filter(key==p1 | key == p2)
-  p <- df %>%
-    ggplot(aes(prob, fill=key)) +
-    facet_wrap(~id) +
-    geom_density(alpha=0.5)
-
-  # ggsave(paste(TARGET_DIR, save_as, sep=.Platform$file.sep), p, width=6, height=4)
-  return(p)
-}
-# Distributions of peoples' beliefs about probabilities across all stimuli
-
-# tables %>% PlotDensity("p_a_given_c", "p_c_given_a", "p-conditionals.png")
-# tables %>% PlotDensity("p_a", "p_c", "p-marginals.png")
-# tables %>% PlotDensity("p_na_given_nc", "p_nc_given_na", "p-neg-conditionals.png")
-# tables %>% PlotDensity("p_na", "p_nc", "p-neg-marginals.png")
-
+```{r, plot-functions, echo=FALSE}
 PlotMeans <- function(df, id, by_id=FALSE) {
-  p <- df %>% filter(key=="b" | key == "g" | key=="bg" | key=="none") %>%
-    mutate(key=factor(key, levels=c("bg", "b", "g", "none"),
-                      labels = c("blue and green", "only green", "only blue", "neither"))) %>% 
-    ggplot(aes(x=factor(0), y=prob))
+  df.sorted = df %>% arrange(desc(means)) %>%
+    mutate(label=case_when(question=="b" ~ labels.test[["b"]], 
+                           question=="g" ~ labels.test[["g"]],
+                           question=="bg" ~ labels.test[["bg"]],
+                           question=="none" ~ labels.test[["none"]]))
+  id.levels = df.sorted %>% pull(id) %>% unique()
+  df.sorted = df.sorted %>%
+    mutate(id=factor(id, levels=id.levels),
+                     question=factor(question, levels=questions.test, labels=labels.test))
+  p <- df.sorted %>%
+    ggplot(aes(x=factor(0), y=means))
   
   if(by_id){
     p <- p + geom_bar(aes(fill=id), stat="identity", position="dodge") + labs(x="")
@@ -320,52 +121,37 @@ PlotMeans <- function(df, id, by_id=FALSE) {
   }
   
   p <- p +
-    facet_wrap(~key, nrow=2, ncol=2) +
+    facet_wrap(~question, nrow=2, ncol=2) +
     theme(text = element_text(size=20))
   
   print(p)
   return(p)
 }
-```
 
-
-```{r, table-means, echo=FALSE, eval=FALSE, include=FALSE}
-df.all <- prob_means %>% filter(!is.na(prob))
-for(i in seq(1, length(STIMULI))) {
-    df <- df.all %>% filter(id == STIMULI[[i]])
-    if(df %>% nrow() != 0){
-      PlotMeans(df, STIMULI[[i]]) 
-    }
-}
-```
-
-```{r}
 expected.conjunction = c("if1_hh", "if1_lh", "if2_hl", "if2_ll",
                           "independent_hh", "independent_ll", "independent_hl",
                           "ind2");
 expected.literal = c("independent_uh", "independent_ul");
 expected.conditional = c("if1_uh", "if1_u-Lh", "if2_ul", "if2_u-Ll");
+
+prob_means = data.prior.norm %>%
+  select(-QUD, -RT, -group, -custom_response, -trial_name, -trial_number, -n, -utterance) %>%
+  group_by(id, question) %>% 
+  summarize(means=mean(response), sd=sd(response))
+
+df.all <- prob_means %>% mutate(id=factor(id, levels = IDS))
 ```
 
-```{r, means-all, echo=FALSE}
-df.all <- prob_means %>% filter(!is.na(prob)) %>%
-    mutate(id=factor(id, levels = c("if1_lh", "if1_u-Lh", "if1_uh", "if1_hh",
-                                  "if2_ll", "if2_u-Ll", "if2_ul", "if2_hl",
-                                  "independent_ll", "independent_ul", "independent_hl",
-                                  "independent_uh", "independent_hh", "ind2"
-                                  )))
-# p <- PlotMeans(df.all %>% filter(id %in% expected.conditional), "", by_id=TRUE) 
-# p <- PlotMeans(df.all %>% filter(id %in% expected.conjunction), "", by_id=TRUE) 
-# p <- PlotMeans(df.all %>% filter(id %in% expected.literal), "", by_id=TRUE) 
-
-p <- PlotMeans(df.all %>% filter(id %in% c("independent_uh", "independent_hh")),
+```{r, plotting}
+p <- PlotMeans(df.all %>%
+                 filter(id %in% c("independent_ll", "independent_ul",
+                                  "independent_hl", "independent_uh",
+                                  "independent_hh")),
                "", by_id=TRUE)
 
-p <- PlotMeans(df.all %>% filter(id %in% c("independent_ll", "independent_ul", "independent_hl")),
-               "", by_id=TRUE)
-
-p <- PlotMeans(df.all %>% filter(id %in% c("if1_lh", "if1_u-Lh", "if1_uh", "if1_hh")),
-               "", by_id=TRUE)
+p <- PlotMeans(df.all %>% filter(id %in% c("if1_lh", "if1_u-Lh", "if1_uh",
+                                           "if1_hh")),
+              "", by_id=TRUE)
 
 p <- PlotMeans(df.all %>% filter(id %in% c("if2_ll", "if2_u-Ll", "if2_ul",
                                            "if2_hl")), "", by_id=TRUE)
@@ -373,12 +159,38 @@ p <- PlotMeans(df.all %>% filter(id %in% c("if2_ll", "if2_u-Ll", "if2_ul",
 ```
 
 
+## Production Task
+Custom responses
 
-Prepare prior elicitation task data to compare with corresponding utterances
+```{r, custom-responses, fig.height = 10, fig.width = 10}
+dat.custom = df.production %>% filter(!is.na(custom_response)) %>%
+  group_by(prolific_id, id) %>% mutate(custom_response = tolower(custom_response))
+total = df.production %>% select(prolific_id, id) %>% distinct()
+print(paste('nb total custom responses given:', nrow(dat.custom), 'out of', nrow(total), 
+            '(', nrow(dat.custom)/nrow(total), ')'))
+df = dat.custom %>% rename(res.given=response, response=custom_response) %>%
+  standardize_sentences() %>%
+  mutate(newUtt = !response %in% standardized.sentences) %>%
+  filter(newUtt) %>% rename(custom_response=response)
 
-```{r}
+# dat.custom %>%
+df %>% group_by(custom_response) %>% mutate(n=n()) %>% 
+  ggplot(aes(x=n, y=fct_rev(fct_infreq(custom_response)))) +
+  geom_bar(aes(fill=id), stat="identity", position=position_dodge()) +
+  geom_text(aes(label=res.given), position = position_nudge(x=-0.5, y=-0.25)) +
+  theme(text = element_text(size=20),
+        axis.text.x=element_text(angle=45, vjust = 0.5),
+        legend.position="none") +
+  labs(y="#participants", x="custom response", title="(not creatable) custom responses") +
+  theme_bw()
+```
+
+
+## Slider Ratings
+
+```{r, prepare-exp1-data, echo=FALSE}
 df.prior_responses = data.prior.norm %>%
-  select(-trial_name, -trial_number, -RT, -QUD, -group) %>% 
+  select(-custom_response, -QUD, -RT, -trial_number, -trial_name) %>% 
   pivot_wider(names_from = "question", values_from = "response") %>%
   add_probs()
 
@@ -386,113 +198,238 @@ prior_responses = df.prior_responses %>%
   pivot_longer(cols=c("b", "g", "bg", "none", starts_with("p_")),
                names_to="prob", values_to="val") %>%
   mutate(utterance=
-           case_when(prob=="b" ~ "the blue block falls but the green block does not fall",
-                     prob=="g" ~ "the green block falls but the blue block does not fall",
-                     prob=="bg" ~ "both blocks fall",
-                     prob=="none" ~ "neither block falls",
-                     prob=="p_a" ~ "the blue block falls",
-                     prob=="p_c" ~ "the green block falls",
-                     prob=="p_na" ~ "the blue block does not fall",
-                     prob=="p_nc" ~ "the green block does not fall",
-                     prob=="p_c_given_a" ~ "if the blue block falls the green block falls",
-                     prob=="p_a_given_c" ~ "if the green block falls the blue block falls",
-                     prob=="p_nc_given_na" ~ "if the blue block does not fall the green block does not fall",
-                     prob=="p_na_given_nc" ~ "if the green block does not fall the blue block does not fall",
-                     prob=="p_likely_a" ~ "the blue block might fall",
-                     prob=="p_likely_na" ~ "the blue block might not fall",
-                     prob=="p_likely_c" ~ "the green block might fall",
-                     prob=="p_likely_nc" ~ "the green block might not fall",
-                     TRUE ~ ""
-         ))
+           case_when(prob=="b" ~ standardized.sentences$b,
+                     prob=="g" ~ standardized.sentences$g,
+                     prob=="bg" ~ standardized.sentences$bg,
+                     prob=="none" ~ standardized.sentences$none,
+                     prob=="p_a" ~ "blue falls",
+                     prob=="p_c" ~ "green falls",
+                     prob=="p_na" ~ "blue does not fall",
+                     prob=="p_nc" ~ "green does not fall",
+                     prob=="p_c_given_a" ~ standardized.sentences$if_bg,
+                     prob=="p_c_given_na" ~ standardized.sentences$if_nbg,
+                     prob=="p_a_given_c" ~ standardized.sentences$if_gb,
+                     prob=="p_a_given_nc" ~ standardized.sentences$if_ngb,
+                     prob=="p_nc_given_a" ~ standardized.sentences$if_bng,
+                     prob=="p_nc_given_na" ~ standardized.sentences$if_nbng,
+                     prob=="p_na_given_c" ~ standardized.sentences$if_gnb,
+                     prob=="p_na_given_nc" ~ standardized.sentences$if_ngnb,
+                     prob=="p_likely_a" ~ "blue might fall",
+                     prob=="p_likely_na" ~ "blue might not fall",
+                     prob=="p_likely_c" ~ "green might fall",
+                     prob=="p_likely_nc" ~ "green might not fall",
+                     TRUE ~ NA_character_)
+         )
 
+exp1.human = prior_responses %>% select(-group, -n, -prob) %>%
+  rename(human_exp1=val, stimulus_id=id)
+exp2.human = df.production %>% select(prolific_id, id, response) %>%
+  rename(stimulus_id=id, utterance=response) %>% add_column(human_exp2=1)
+joint.human = left_join(exp1.human, exp2.human,
+                        by=c("prolific_id", "stimulus_id", "utterance")) %>%
+  filter(stimulus_id != "ind2")
+```
+
+```{r, message=FALSE, include = FALSE}
+fn = paste(PLOT.dir, "by-participants", sep=SEP)
+dir.create(fn)
+plotSliderRatingsAndUtts(joint.human, fn)
+```
+
+```{r, slider-ratings-with-model}
+# join-model-human1-data
+exp2.model = data.model %>% select(-id) %>% 
+  group_by(table_id,cn) %>%
+  pivot_wider(names_from="response", values_from="probs", names_prefix="res.")
+df.mapping = mapping_table_participant %>% select(-stimulus_src) %>% 
+  group_by(table_id) %>%
+  # separate(trial_id, into=c("stimulus_id", "prolific_id"), sep="--") %>%
+  mutate(trial_id=list(trial_id)) %>% distinct()
+
+#here id = stimulus_src
+df = left_join(exp2.model, df.mapping, by=c("table_id")) %>%
+  unnest(c(trial_id)) %>%
+  separate(trial_id, into=c("stimulus_id", "prolific_id"), sep="--") %>% 
+  pivot_longer(cols=starts_with("res."), names_to="response", values_to="probs",
+               names_prefix="res.") %>% 
+  rename(model_exp2=probs)
+
+df.all_empirical = left_join(exp1.human, df, by=c("prolific_id", "stimulus_id", "response"))
+df.all_joint = df.all_empirical %>% filter(!is.na(model_exp2))
+saveRDS(df.all_joint, paste(RESULT.dir, "res-model-exp2-human-exp1.rds"))
+# join-model-human2-data
+exp2.human = df.production %>% select(prolific_id, id, response) %>%
+  rename(stimulus_id=id, utterance=response)
+df.plot = left_join(df.all_joint,
+                    exp2.human %>% add_column(human_exp2=1) %>% rename(response=utterance))
+```
+
+Plot empirical ratings for each utterance against model predictions for respective utterances
+for each participant separately.
+
+```{r}
+plotRatingsAndModel(df.plot, PLOT.dir)
+```
+
+Subjective probability ratings from Experiment 1 plotted dependent on utterance
+participants chose.
+  
+```{r}
+# 389 test trials (ind2 is not in here)
+df = left_join(exp1.human,
+               exp2.human %>% rename(response=utterance) %>%  
+               add_column(human_exp2=1), by=c("stimulus_id", "prolific_id", "response")) %>%
+  filter(!is.na(human_exp2)) %>% group_by(stimulus_id)
+
+p <- df %>%
+    ggplot(aes(y=response, x=human_exp1)) +
+    geom_point(aes(color=stimulus_id)) +
+    geom_vline(aes(xintercept=0.7), color="black", linetype='dashed') +
+    # facet_wrap(~stimulus_id) +
+    theme_bw(base_size = 20) +
+    theme(text = element_text(size=20), legend.position="bottom") +
+    labs(x="rated probability (prior elicitation)", y="response")
+
+ggsave(paste(PLOT.dir, "prior-vs-utt.png", sep=SEP), p, width=15)#, height=18)
+p
+df %>% filter(human_exp1 >= 0.7) %>% nrow() / nrow(df)   
+```
+
+Literal meaning probabilities for responses that each participant gave in
+respective trial, computed from participants' ratings in prior-elicitation task
+(exp1) plotted separately for each participant. Stimuli are color coded.
+When participants said 'X might/might not fall', it is checked whether the
+corresponding rated probability is larger than 0.1, if yes, it is set to 1.
+
+```{r}
+# 389 test trials (ind2 from training is not in here)
+df = left_join(exp1.human,
+               exp2.human %>% rename(response=utterance) %>%  
+               add_column(human_exp2=1), by=c("stimulus_id", "prolific_id", "response")) %>%
+  filter(!is.na(human_exp2)) %>% group_by(stimulus_id) %>%
+  mutate(human_exp1=case_when(str_detect(response, "might") & human_exp1>0.1 ~ 1,
+                              TRUE ~ human_exp1))
+p <- df %>%
+    ggplot(aes(y=response, x=human_exp1)) +
+    geom_point(aes(color=stimulus_id)) +
+    geom_vline(aes(xintercept=0.7), color="black", linetype='dashed') +
+    facet_wrap(~prolific_id) +
+    theme_bw(base_size = 14) +
+    theme(legend.position="none") +
+    labs(x="rated probability (prior elicitation)", y="response")
+ggsave(paste(PLOT.dir, "prior-vs-utt-per-proband.png", sep=SEP), p, width=15, height=18)
+p
+df %>% filter(human_exp1 >= 0.7) %>% nrow() / nrow(df) 
+
+# Same plot for those participants who had at least one color-vision question wrong.
+df.col = df %>% filter(prolific_id %in% pids.false_colors)
+p <- df.col %>%
+    ggplot(aes(y=response, x=human_exp1)) +
+    geom_point(aes(color=stimulus_id)) +
+    geom_vline(aes(xintercept=0.7), color="black", linetype='dashed') +
+    facet_wrap(~prolific_id) +
+    theme_bw(base_size = 14) +
+    theme(legend.position="bottom") +
+    labs(x="rated probability (prior elicitation)", y="response")
+p
 ```
 
 
-# Production Task
-first standardize utterances (e.g.'but' and 'and' are treated identically).
-All different utterances that were created are printed
-```{r, echo=FALSE}
-# summarize uttterances: use 'and' instead of 'but' everywhere
-df.production <- data.production %>%
- mutate(across(where(is.factor), as.character),
-        response= case_when(str_detect(response, "but") ~ str_replace(response, "but", "and"),
-                            TRUE ~ response))
-  # rename(utterance=response)
 
-df.production = standardize_sentences(df.production) %>%
-  select(-trial_name, -group)
+Quality of the data measured by the squared mean diff of a participant's prior rating to the 
+mean of all participants' ratings for the respective probability table cell (of the respective stimulus), summed across all 4 cells for each participant. For each stimulus:
+For each cell entry (P(A,C), P(A,¬C),..) $c$, compute mean rated probability:
+$\mu_c = 1/N \cdot \sum_{i=1}^N x_{c,i}$.
 
-df.production.means <- df.production %>%
-  filter(id != "ind2") %>%
+That is, we get one value for each participant and stimulus. For participant i and 
+a particular stimulus:
+$\sum_{c=1}^{c=4}(x_{c,i} - \mu_c)^2$
+
+jittered points are from those who gave at least one false response in color questions.
+```{r}
+df =  data.prior %>% responsesSquaredDiff2Mean() %>%
+  mutate(stimulus_id=factor(stimulus_id))
+df.colored = df %>%
+  mutate(colored=prolific_id %in% pids.false_colors) %>% filter(colored==TRUE)
+
+p = df %>%
+  ggplot(aes(x=stimulus_id,  y=sum_sq_diff)) +
+    geom_boxplot(aes(colour=stimulus_id), outlier.shape=NA) +
+    geom_jitter(data=df.colored, aes(colour=stimulus_id), height=0, width=0.05, alpha=0.4, size=1.5) +
+    theme_bw(base_size = 20) +
+    theme(axis.text.x=element_text(angle=90, vjust=0.5), legend.position="none")
+p
+ggsave(paste(PLOT.dir, "quality-check-sq-diff.png", sep=SEP), p, width=15, height=10)
+```
+
+For each stimulus, which response was created how often?
+
+```{r, echo=FALSE, fig.height = 12}
+df.production.means = df.production %>%
   group_by(id,response) %>%
-  summarize(n=n(), .groups='drop_last') %>%
+  select(id, response, prolific_id) %>% summarize(n=n(), .groups="drop_last") %>%
   mutate(N=sum(n), ratio=n/N) %>% 
   select(id, response, ratio) %>%
   add_column(predictor="empirical")
 
-df.model.qualitativ = readRDS(here("data", "speaker-predictions-means-stimuli.rds"));
+df = df.production.means %>% 
+  filter(ratio>0) %>%
+  mutate(response=as_factor(response))
 
+df %>% ggplot(aes(y=response, x=ratio)) +
+  geom_bar(aes(fill=id), stat="identity") +
+  theme_bw(base_size=18) +
+  theme(legend.position = "none") +
+  facet_wrap(~id)
 ```
 
-```{r, custom-responses, fig.height = 10, fig.width = 10}
-dat.custom = df.production %>% filter(!is.na(custom_response)) %>%
-  group_by(prolific_id, id)
-dat.custom %>%
-  ggplot(aes(x=fct_rev(fct_infreq(custom_response)))) + geom_bar(aes(fill=id)) +
-  theme(text = element_text(size=20),
-        axis.text.x=element_text(angle=45, vjust = 0.5),
-        legend.position="none") +
-  labs(y="#participants") +
-  coord_flip() +
-  theme_bw()
+Plot average model response per stimulus plotted against ratio of participants who
+chose the respective response.
+1.Trials where conjunctions are expected
+
+```{r, fig.width=12, fig.height=14}
+df.conj = bind_rows(df %>% filter(id %in% expected.conjunction),
+                    model.avg %>% filter(id %in% expected.conjunction))
+df.conj %>%
+  plotProductionTrials(PLOT.dir)
 ```
 
-
-
-# Trials where conjunctions are expected
-
-```{r, fig.width=12, fig.height=12}
-df.production.means %>%
-  filter(id %in% expected.conjunction) %>%
-  plotProductionTrials(PLOT_DIR,
-                       dat.model=df.model.qualitativ,
-                       dat.prior_empirical=prior_responses)
-```
-
-# Trials where conditionals are expected
+2.Trials where conditionals are expected
 
 ```{r, fig.width=12, fig.height=15}
-df.production.means %>%
-  filter(id %in% expected.conditional) %>%
-  plotProductionTrials(PLOT_DIR,
-                       dat.model=df.model.qualitativ,
-                       dat.prior_empirical=prior_responses,
-                       )
+df.conditionals = bind_rows(df %>% filter(id %in% expected.conditional),
+               model.avg %>% filter(id %in% expected.conditional))
+df.conditionals %>%  
+  plotProductionTrials(PLOT.dir)
 ```
 
-# Trials where literals/might are expected
+3.Trials where literals/might are expected
 
 ```{r, fig.width=12, fig.height=15}
-df.production.means %>%
-  filter(id %in% expected.literal) %>%
-  plotProductionTrials(PLOT_DIR,
-                       dat.model=df.model.qualitativ,
-                       dat.prior_empirical=prior_responses)
+df.literals = bind_rows(df %>% filter(id %in% expected.literal),
+               model.avg %>% filter(id %in% expected.literal))
+df.literals %>%  
+  plotProductionTrials(PLOT.dir)
 ```
 
-# Model predictions vs. experimental data
 
-```{r}
+Check whether many participants used all-or-none responses (0-0.5-1)
 
-data.empirical = df.production %>% select(-trial_number) %>%
-  group_by(prolific_id, id)
+```{r, all-none-responses, include=FALSE}
+# which stimuli were rated as all-or-none by how many participants?
+df.all = data.prior.norm %>% group_by(prolific_id, id)
 
-data.joint = left_join(data.model.best, data.empirical, by=c("prolific_id", "id"))
+df <- df.all %>% summarise(n=max(response), .groups="drop_last")
+df1 = df %>% mutate(id=factor(id, levels=c(IDS, "ind2"))) %>%
+  filter(n==1)
+ratio.one = nrow(df1) / nrow(df)
+print(paste('ratio 1-0-0-0 answers', round(ratio.one,3)))
+
+df05 = df.all %>% mutate(undecided=response>0.2 & response<=0.3) %>%
+  filter(undecided==TRUE)
+ratio.point5 = nrow(df05) / nrow(df.all)
+print(paste('ratio roughly .25-.25-.25-.25 answers', round(ratio.point5, 3)))
 ```
 
-```{r}
-df <- data.joint %>% select(-custom_response) %>%
-  pivot_longer(cols=c(model, response), names_to="predictor", values_to="utterance") %>% 
-  mutate(prolific_id=factor(prolific_id))
-```
+
 
