@@ -54,7 +54,7 @@ saveRDS(object=prior.quality,
         file=paste(filtered_dir, "test-data-prior-quality.rds", sep=.Platform$file.sep))
 
 # 2. merge data from prior elicitation and production
-getPriorElicitation = function(normalized=TRUE){
+getPriorElicitation = function(test.prior, normalized=TRUE){
   df.prior_responses = test.prior %>%
     select(-custom_response, -QUD, -trial_number, -trial_name) 
   if(normalized){
@@ -99,8 +99,8 @@ getPriorElicitation = function(normalized=TRUE){
                                 TRUE ~ question))
   return(exp1.human)
 }
-exp1.human.orig = getPriorElicitation(normalized = FALSE) %>% select(-response)
-exp1.human.norm = getPriorElicitation(normalized = TRUE) %>% select(-response)
+exp1.human.orig = getPriorElicitation(test.prior, normalized = FALSE) %>% select(-response)
+exp1.human.norm = getPriorElicitation(test.prior, normalized = TRUE) %>% select(-response)
 
 test.production = data$test %>%
   filter(str_detect(trial_name, "fridge_")) %>%

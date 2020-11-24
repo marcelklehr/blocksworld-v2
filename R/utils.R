@@ -215,16 +215,16 @@ standardize_color_groups_exp2 <- function(df){
 
 
 # @arg df: data frame containing columns bg, b, g
-add_probs <- function(df, keys){
-  df <- df %>% mutate(p_a=bg+b, p_c=bg+g, p_na=1-p_a, p_nc=1-p_c) %>%
+add_probs <- function(df){
+  df <- df %>% mutate(p_a=bg+b, p_c=bg+g, p_na=g+none, p_nc=b+none) %>%
     mutate(p_c_given_a = if_else(p_a==0, 0, bg / p_a),
            p_c_given_na = if_else(p_na==0, 0, g / p_na),
            p_a_given_c = if_else(p_c==0, 0, bg / p_c),
            p_a_given_nc = if_else(p_nc==0, 0, b / p_nc),
-           p_nc_given_a = 1 - p_c_given_a,
-           p_nc_given_na = 1 - p_c_given_na,
-           p_na_given_c = 1 - p_a_given_c,
-           p_na_given_nc = 1 - p_a_given_nc,
+           p_nc_given_a = b/p_a,
+           p_nc_given_na = none/p_na,
+           p_na_given_c = g/p_c,
+           p_na_given_nc = none/p_nc,
            p_likely_a = p_a,
            p_likely_na=p_na,
            p_likely_c = p_c,
@@ -305,12 +305,12 @@ save_prob_tables <- function(df, result_dir, result_fn){
     select(AC, `A-C`, `-AC`, `-A-C`) %>% as.matrix()
   tables.smooth = prop.table(tables.mat + epsilon, 1)
   tables.smooth = cbind(tables.smooth, rowid=seq.int(from=1, to=nrow(tables.mat), by=1)) %>%
-    as_tibble() %>%
+    as_tibble() %>% 
     mutate(p_c_given_a=`AC`/(`AC`+`A-C`),
            p_c_given_na=`-AC`/(`-AC`+`-A-C`),
            p_a_given_c=`AC`/(`AC`+`-AC`),
            p_a_given_nc=`A-C`/(`A-C`+`-A-C`),
-           p_a=`AC`+`A-C`, p_c=AC+`-AC`,
+           p_a=`AC`+`A-C`, p_c=AC+`-AC`, 
            theta_ac = (p_c_given_a - p_c_given_na) / (1 - p_c_given_na),
            theta_anc = ((1-p_c_given_a) - (1-p_c_given_na)) / (1 - (1-p_c_given_na)),
            theta_ca = (p_a_given_c - p_a_given_nc) / (1 - p_a_given_nc),

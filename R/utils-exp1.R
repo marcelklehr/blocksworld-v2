@@ -243,22 +243,6 @@ formatParams4WebPPL = function(params){
  return(formatted)
 }
 
-add_table_probabilities = function(tables){
-  df = tables %>%
-    mutate(p_c_given_a=`AC`/(`AC`+`A-C`),
-           p_c_given_na=`-AC`/(`-AC`+`-A-C`),
-           p_a_given_c=`AC`/(`AC`+`-AC`),
-           p_a_given_nc=`A-C`/(`A-C`+`-A-C`),
-           p_a=`AC`+`A-C`, p_c=AC+`-AC`,
-           theta_ac = (p_c_given_a - p_c_given_na) / (1 - p_c_given_na),
-           theta_anc = ((1-p_c_given_a) - (1-p_c_given_na)) / (1 - (1-p_c_given_na)),
-           theta_ca = (p_a_given_c - p_a_given_nc) / (1 - p_a_given_nc),
-           theta_cna = ((1-p_a_given_c) - (1-p_a_given_nc)) / (1 - (1-p_a_given_nc)),
-          );
-  return(df)
-}
-
-
 understood_relations = function(data.prior.norm){
   prior.exp.wide = data.prior.norm %>% filter(id!="ind2") %>%
     separate(id, into = c("relation", "condition"), sep="_", remove=FALSE) %>%

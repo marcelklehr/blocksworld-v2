@@ -8,12 +8,12 @@ df.wide = TABLES.dep %>%
   rowid_to_column()
 df.long = df.wide %>% 
   pivot_longer(cols=c(bg, b, g, none), names_to="question", values_to="response") 
-save_to = paste(PLOT.dir, "slider-rating-densities", sep=SEP)
+save_to = paste(PLOT.dir, "slider-ratings-densities", sep=SEP)
 if(!dir.exists(save_to)) {dir.create(save_to)}
 df.long %>%
   plotSliderDensities(questions.test, labels.test, target_dir=save_to)
 
-save_to = paste(PLOT.dir, "slider-ratings", sep=SEP)
+save_to = paste(PLOT.dir, "slider-ratings-boxplots", sep=SEP)
 if(!dir.exists(save_to)) {dir.create(save_to)}
 df.long %>% plotSliderRatings(questions.test, labels.test, cluster_by="bg",
                               relation=FALSE, target_dir=save_to)
@@ -21,7 +21,7 @@ df.long %>% plotSliderRatings(questions.test, labels.test, cluster_by="bg",
 
 # Slider Ratings ----------------------------------------------------------
 # 1.unnormalized slider ratings with utterance and normalized ratings
-save_to = paste(PLOT.dir, "slider-ratings-unnormalized", sep=SEP)
+save_to = paste(PLOT.dir, "slider-ratings-tables", sep=SEP)
 if(!dir.exists(save_to)) {dir.create(save_to)}
 pids = data.joint.orig %>% pull(prolific_id) %>% unique()
 stimuli =  data.prior.orig %>% pull(id) %>% unique()
