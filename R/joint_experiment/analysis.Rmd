@@ -9,8 +9,9 @@ output:
 library(here)
 source(here("R", "joint_experiment", "analysis-utils.R"))
 # Data Test Trials
-prior.test = data.prior.norm %>% filter(id == "ind2")
-prior.exp.wide = data.prior.norm %>% filter(id!="ind2") %>%
+prior.test = data.prior.norm %>% filter(id != "ind2" & !is.na(question)) %>%
+  select(-utterance, -RT)
+prior.exp.wide = prior.test %>%
   separate(id, into = c("relation", "condition"), sep="_", remove=FALSE) %>%
   group_by(prolific_id, relation, condition) %>%
   mutate(response=(response+epsilon)/sum(response+epsilon)) %>% 
@@ -297,7 +298,7 @@ df.good=left_join(relations.good, prior.exp.wide, by=c("prolific_id", "id")) %>%
   pivot_longer(cols=c(bg, b, g, none), names_to="question", values_to="response") %>% 
   mutate(question=as.factor(question)) %>% add_column(understood_rel=TRUE)
 
-df = bind_rows(df.bad, df.good) %>% select(-RT, -QUD, -group, -custom_response, -utterance)
+df = bind_rows(df.bad, df.good)
 df %>% 
   plotSliderRatings(questions.test, labels.test, cluster_by="bg", relation=TRUE)
 
@@ -309,24 +310,16 @@ df.understood_rel = df %>% filter(understood_rel) %>%
 For each participant compute the distance to responses of all other participants.
 Look at Average of these N-1 values (for each participant).
 
-```{r, quality-checks, fig.height=12}
-df.quality = left_join(df.understood_rel, data.quality %>% rename(prolific_id=comparator),
-               by=c("prolific_id", "id"))
-
-# make plots (save as png)
+```{r, distances-per-question, fig.height=15}
 pd <- position_dodge(0.5) 
-p <- data.quality %>%
-  # df.quality %>% 
-  ggplot(aes(x=question,  y=mean_diff, colour=question)) + 
-    facet_wrap(~id, scales="free") +
-    geom_boxplot(aes(colour=question), outlier.shape=NA) +
-    geom_jitter(height=0, width=0.05, alpha=0.4, size=0.5) + 
-    # geom_errorbar(aes(ymin=-sd, ymax=mu+sd), width=.5, position=pd) +
-    # geom_line(position=pd) +
-    # geom_point(position=pd) +
-    theme(axis.text.x=element_blank(), legend.position="bottom")
+p <- data.distances %>%
+  ggplot(aes(x=question,  y=mean_diff, colour=id)) + 
+    geom_boxplot(outlier.shape=NA) +
+    geom_jitter(height=0, width=0.05, alpha=0.4, size=2) + 
+    facet_wrap(~id) +
+    theme_bw(base_size=20) +
+    theme(legend.position="top", axis.text.x=element_text(angle=90))
 p
-ggsave(paste(PLOT.dir, "quality-check.png", sep=.Platform$file.sep), p, width=15, height=10)
 ```
 
 Most variations in quality in 
@@ -340,6 +333,27 @@ Most variations in quality in
 if it only drops off another block
 - make sure they understood that some balls roll directly while others need to
 be kicked by seesaw
+
+Same plot only with data from df.understood_rel from above.
+
+```{r, sum-sq-diff-mean, fig.height=15}
+df.quality = left_join(df.understood_rel, data.distances %>% rename(prolific_id=comparator),
+                       by=c("prolific_id", "id"))
+
+# make plots (save as png)
+pd <- position_dodge(0.5) 
+p <- df.quality %>%
+  ggplot(aes(x=question,  y=mean_diff, colour=id)) + 
+    geom_boxplot(outlier.shape=NA) +
+    geom_jitter(height=0, width=0.05, alpha=0.4, size=2) + 
+    facet_wrap(~id) +
+    theme_bw(base_size=20) +
+    theme(legend.position="top", axis.text.x=element_text(angle=90))
+p
+ggsave(paste(PLOT.dir, "quality-check.png", sep=.Platform$file.sep), p, width=15, height=10)
+```
+
+
 
 ## How to improve training?
 

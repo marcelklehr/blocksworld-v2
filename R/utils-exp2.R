@@ -155,7 +155,7 @@ translate_utterances = function(speaker.model, group="bg"){
   return(df)
 }
 
-plotProductionTrials <- function(df.production.means, target_dir, min=0, dat.model=tibble(),
+plotProductionTrials <- function(df.production.means, target_dir, min=0,
                                  dat.prior_empirical=tibble()){
   ids = df.production.means$id %>% unique()
   n = ids %>% length();
@@ -164,7 +164,8 @@ plotProductionTrials <- function(df.production.means, target_dir, min=0, dat.mod
   df.production.means <- df.production.means %>% filter(ratio>min)
     for(i in seq(1, n)) {
       df <- df.production.means %>% filter(id == ids[[i]]) %>%
-        ungroup() %>% select(-prolific_id) %>% distinct() %>% 
+        ungroup() %>%
+        select(-prolific_id) %>% distinct() %>%
         mutate(response=fct_reorder(response, ratio))
       p <- df %>%
         ggplot(aes(y=response, x=ratio)) +
@@ -200,9 +201,9 @@ plotProductionTrials <- function(df.production.means, target_dir, min=0, dat.mod
 }
 
 plotSliderRatingsAndUtts <- function(dat, target_dir){
-  stimuli = dat$stimulus_id %>% unique()
+  stimuli = dat$id %>% unique()
   participants = dat$prolific_id %>% unique()
-  df = dat %>% group_by(prolific_id, stimulus_id, utterance) %>%
+  df = dat %>% group_by(prolific_id, id, utterance) %>%
     mutate(utterance=factor(utterance, levels=levels.responses))
   brks=seq(0, 1, by=0.1)
   for(pid in participants){
@@ -211,11 +212,11 @@ plotSliderRatingsAndUtts <- function(dat, target_dir){
     dir.create(target)
     for(stimulus in stimuli) {
       df.stim <- df.pid %>%
-        filter(stimulus_id == (!! stimulus)) %>%
+        filter(id == (!! stimulus)) %>%
         arrange(human_exp1)
       levels.utt = df.stim$utterance %>% unique()
       uttered = df.stim %>% filter(!is.na(human_exp2)) %>% ungroup() %>% 
-        select(human_exp2, prolific_id, stimulus_id, utterance) %>% distinct()
+        select(human_exp2, prolific_id, id, utterance) %>% distinct()
       
       df.stim = df.stim %>%
         mutate(utt.col=case_when(

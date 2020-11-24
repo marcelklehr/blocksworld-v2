@@ -1,5 +1,4 @@
 library(tidyverse)
-
 test_data <- function(path_to_csv) {
   data <- read_csv(path_to_csv) %>%
     mutate(prolific_id = str_trim(str_to_lower(prolific_id))) %>%
@@ -80,7 +79,8 @@ tidy_test_joint <- function(df){
 }
 
 tidy_train <- function(df){
-  dat.train <- df %>% filter(startsWith(trial_name, "animation")) %>%
+  dat.train <- df %>%
+    filter(startsWith(trial_name, "animation") | trial_name == "multiple_slider_train") %>%
     select(prolific_id, RT, expected, QUD, id, trial_name,
            trial_number,
            question1, question2, question3, question4,
@@ -98,7 +98,12 @@ tidy_train <- function(df){
     group_by(prolific_id, id) %>%
     mutate(response = as.numeric(response), response = response/100)%>%
     add_normed_exp1("train")
-  return(dat.train)
+  
+  dat.train.norm = dat.train %>% rename(response=r_norm) %>%
+    select(-r_orig, -n, -trial_name)
+  dat.train.orig = dat.train %>% rename(response=r_orig) %>%
+    select(-r_norm, -n, -trial_name)
+  return(list(norm=dat.train.norm, orig=dat.train.orig))
 }
 
 tidy_pretest <- function(df){
@@ -143,8 +148,8 @@ tidy_data <- function(data, N_trials, experiment){
     unique()
   dat.info <- df %>% select(prolific_id, education, gender, age, timeSpent) %>%
     unique()
-
   dat.train <- tidy_train(df)
+  
   if(experiment == "prior") {
     dat.test <- tidy_test_exp1(df)
   } else if(experiment == "production") {
@@ -156,8 +161,8 @@ tidy_data <- function(data, N_trials, experiment){
   }
   dat.pretest <- tidy_pretest(df)
 
-  dat.all <- list(test=dat.test, train=dat.train,
-                  color=dat.color_vision,
+  dat.all <- list(test=dat.test, train.norm=dat.train$norm,
+                  train.orig=dat.train$orig, color=dat.color_vision,
                   info=dat.info, comments=dat.comments, pretest=dat.pretest)
 
   return(dat.all)
@@ -339,8 +344,6 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
                          N_trials, name_exp){
   dat.anonym <- save_raw_data(data_dir, data_fn, result_dir, result_fn, debug_run)
   dat.tidy <- tidy_data(dat.anonym, N_trials, name_exp);
-  dat.all <- list(train=dat.tidy$train, info=dat.tidy$info, comments=dat.tidy$comments,
-                  color=dat.tidy$color)
   # Further process TEST-trial data --------------------------------------------
   data <- dat.tidy$test
   if(name_exp == "prior"){
@@ -355,20 +358,44 @@ process_data <- function(data_dir, data_fn, result_dir, result_fn, debug_run,
     df1 <- add_normed_exp1(df1, "test");
     df1 <- standardize_color_groups_exp1(df1)
     save_prob_tables(df1, result_dir, result_fn);
-    df2 <- data %>% filter(str_detect(trial_name, "fridge_view")) %>%
+    df2 <- data %>% filter(str_detect(trial_name, "fridge_")) %>%
       mutate(response=utterance) %>%
       select(-utterance)
     df2 <- standardize_color_groups_exp2(df2)
     df2 <- standardize_sentences(df2)
-    df <- bind_rows(df1, df2);
+    df <- bind_rows(df1 %>% rename(response=utterance), df2);
   }else {stop(paste('unknown experiment with name: ', name_exp))}
 
   # save processed data -----------------------------------------------------
   fn_tidy <- paste(result_fn, "_tidy.rds", sep="");
   path_target <- paste(result_dir, fn_tidy, sep=.Platform$file.sep)
   print(paste('written processed tidy data to:', path_target))
-  dat.all$test <- df
-  saveRDS(dat.all, path_target)
+  dat.tidy$test <- df
+  saveRDS(dat.tidy, path_target)
   
-  return(dat.all)
+  return(dat.tidy)
 }
+
+
+# analyze_train_data = function(dat, theta_large=0.5, max_diff_equal=0.2, theta_small=0.15){
+#   df.filtered = dat %>%
+#     filter(!(id == "distance0" & r+ry > y+ry )) %>% #P(red)>P(yellow)
+#     filter(!(id == "distance1" & r+ry < y+ry)) %>% #P(red)<P(yellow)
+#     filter(!(id == "ssw0" & y < theta_small)) %>% # yellow, ¬red
+#     filter(!(id == "ssw1" & r < theta_small)) %>% # red, ¬yellow
+#     filter(!(id == "uncertain1" & (ry + y < theta_small))) %>%
+#     filter(!(id == "uncertain2" & (none + y) > threshold)) %>%
+#     filter(!(id == "uncertain3" & ((ry + r > threshold) | (none + r > threshold)))) %>%
+#     filter(!(id == "ac0" & ((none + y > threshold) | y>threshold))) %>%
+#     filter(!(id == "ac1" & ((none + r > threshold) | r>threshold))) %>%
+#     filter(!(id == "ac2" & y > threshold)) %>%
+#     filter(!(id == "ac3" & r > threshold)) %>%
+#     filter(!(id == "ind0" & (ry + y > threshold))) %>%
+#     filter(!(id == "ind1" & (none + y > threshold))) %>%
+#     rowwise() %>%
+#     mutate(max=max(ry, r, y, none), min=min(ry, r, y, none), max_diff=max-min) %>%
+#     filter(!(id == "uncertain0" & max_diff > max_diff_equal)) %>%
+#     ungroup() %>% 
+#     select(-min, -max, -max_diff)
+#   return(df.filtered)     
+# }

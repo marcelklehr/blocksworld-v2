@@ -12,9 +12,8 @@ source(here("R", "utils.R"))
 source(here("R", "utils-exp1.R"))
 source(here("R", "utils-exp2.R"))
 
-
 # General Data ------------------------------------------------------------
-exp.name = "experiment-wor(l)ds-of-toy-blocks"
+exp.name = "wor(l)ds-of-toy-blocks"
 
 IDS.dep=c("if1_uh", "if1_u-Lh", "if1_hh", "if1_lh",
           "if2_ul", "if2_u-Ll", "if2_hl", "if2_ll");
@@ -106,28 +105,28 @@ epsilon = 0.00001
 SEP = .Platform$file.sep
 
 # Experimental Data -------------------------------------------------------
-data <- readRDS(paste(RESULT.dir, "experiment-wor(l)ds-of-toy-blocks_tidy.rds", sep=SEP));
+data <- readRDS(paste(RESULT.dir, "wor(l)ds-of-toy-blocks_tidy.rds", sep=SEP));
 data.comments = data$comments
 data.color = data$color 
 
-data.production = data$test %>%
-  filter(str_detect(trial_name, "fridge_view")) %>%
-  select(-utterance) %>% standardize_sentences();
-data.prior = data$test %>% filter(str_detect(trial_name, "multiple_slider"))
-data.prior.orig <- data.prior %>% mutate(response=r_orig) %>%
-  select(-r_norm, -r_orig)
-data.prior.norm <- data.prior %>% mutate(response=r_norm) %>%
-  select(-r_norm, -r_orig)
+data.production = readRDS(paste(RESULT.dir, "human-exp2.rds", sep=SEP));
+data.prior.norm = readRDS(paste(RESULT.dir, "human-exp1-normed.rds", sep=SEP))
+data.prior.orig = readRDS(paste(RESULT.dir, "human-exp1-orig.rds", sep=SEP))
+data.joint = readRDS(paste(RESULT.dir, "human-exp1-exp2.rds", sep=SEP))
+data.joint.orig = readRDS(paste(RESULT.dir, "human-orig-exp1-exp2.rds", sep=SEP))
 
-data.quality = readRDS(paste(RESULT.dir, SEP, exp.name, "_tidy_filtered_by_quality.rds", sep=""))
+data.quality = readRDS(paste(RESULT.dir, SEP, "filtered_data", SEP,
+                             "test-data-prior-quality.rds", sep=""))
+data.distances = readRDS(paste(RESULT.dir, "distances-quality.rds", sep=SEP))
+
 # empirical tables (test-trials)
-TABLES.ind = readRDS(paste(RESULT.dir,"empiric-ind-tables-smooth.rds", sep=SEP)) %>% filter(id != "ind2")
+TABLES.ind = readRDS(paste(RESULT.dir,"empiric-ind-tables-smooth.rds", sep=SEP)) %>%
+  filter(id != "ind2")
 TABLES.dep = readRDS(paste(RESULT.dir, "empiric-dep-tables-smooth.rds", sep=SEP))
 TABLES.all = bind_rows(TABLES.ind, TABLES.dep)
 
-data.train = data$train %>% select(-QUD)
-data.train.norm = data.train %>% rename(response=r_norm) %>%
-  select(-r_orig, -n, -RT, -trial_name)
+data.train.norm = data$train.norm
+# for each participant only the last 50% of all train trials
 data.train.norm.half = data.train.norm %>% 
   separate(id, into=c("trial.relation", "trial.idx"), sep=-1, remove=FALSE) %>%
   group_by(prolific_id, trial.relation) %>% arrange(desc(trial_number)) %>%
@@ -180,21 +179,19 @@ mapping_table_participant = readRDS(
 
 
 # Other -------------------------------------------------------------------
-
+# ordered by informativity
 levels.responses = rev(c(
-  "both blocks fall", "neither block falls",
-  "green falls but blue does not fall", "blue falls but green does not fall",
-  "blue falls", "green falls", "blue does not fall", "green does not fall",
-  "if blue falls green falls", "if green falls blue falls", 
-  "if blue does not fall green does not fall",
-  "if green does not fall blue does not fall",
-  "if blue falls green does not fall", "if green falls blue does not fall",
-  "if blue does not fall green falls", "if green does not fall blue falls",
-  "blue might fall", "green might fall", "blue might not fall", "green might not fall"
+  standardized.sentences$bg, standardized.sentences$none,
+  standardized.sentences$g, standardized.sentences$b,
+  standardized.sentences$only_b, standardized.sentences$only_g,
+  standardized.sentences$only_nb, standardized.sentences$only_ng,
+  standardized.sentences$if_bg, standardized.sentences$if_gb, 
+  standardized.sentences$if_nbng, standardized.sentences$if_ngnb,
+  standardized.sentences$if_bng, standardized.sentences$if_gnb,
+  standardized.sentences$if_nbg, standardized.sentences$if_ngb,
+  standardized.sentences$might_b, standardized.sentences$might_g,
+  standardized.sentences$might_nb, standardized.sentences$might_ng
 ))
-
-
-
 
 
 

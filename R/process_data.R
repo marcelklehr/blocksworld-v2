@@ -17,7 +17,7 @@ debug_run = FALSE
 data_fn <- "results_39_wor(l)ds-of-toy-blocks-pilot_BG.csv"
 
 # result_fn = "experiment1-v2"
-result_fn = "experiment-wor(l)ds-of-toy-blocks"
+result_fn = "wor(l)ds-of-toy-blocks"
 # result_fn = "experiment2"
 
 data_dir = ifelse(debug_run,  here("data", "test-runs"), here("data", "prolific"));
@@ -36,85 +36,150 @@ if(experiment == "prior"){
 }
 data <- process_data(data_dir, data_fn, result_dir, result_fn, debug_run,
                      N_trials, experiment)
+# create dir for filtered data if filtered later
+filtered_dir <- paste(result_dir, "filtered_data", sep=.Platform$file.sep)
+if(!dir.exists(filtered_dir)){
+  dir.create(filtered_dir, recursive=TRUE);
+}
+
+# Save data in different formats ------------------------------------------
+# Quality of data in slider ratings: squared distance to mean each table cell
+# entry (considering all participants) summed for each participant across all
+# 4 questions/joint events
+test.prior = data$test %>% filter(str_detect(trial_name, "multiple_slider"))
+prior.quality = test.prior   %>%  select(-response, -custom_response) %>% 
+  responsesSquaredDiff2Mean() %>%
+  mutate(stimulus_id=factor(stimulus_id))
+saveRDS(object=prior.quality,
+        file=paste(filtered_dir, "test-data-prior-quality.rds", sep=.Platform$file.sep))
+
+# 2. merge data from prior elicitation and production
+getPriorElicitation = function(normalized=TRUE){
+  df.prior_responses = test.prior %>%
+    select(-custom_response, -QUD, -trial_number, -trial_name) 
+  if(normalized){
+    df.prior_responses = df.prior_responses %>% select(-r_orig) %>% 
+      pivot_wider(names_from = "question", values_from = "r_norm")
+  } else {
+    df.prior_responses = df.prior_responses %>% select(-r_norm) %>%
+      pivot_wider(names_from = "question", values_from = "r_orig")
+  }
+  df.prior_responses = df.prior_responses %>% add_probs()
+  
+  prior_responses = df.prior_responses %>%
+    pivot_longer(cols=c("b", "g", "bg", "none", starts_with("p_")),
+                 names_to="prob", values_to="val") %>%
+    mutate(utterance=
+             case_when(prob=="b" ~ standardized.sentences$b,
+                       prob=="g" ~ standardized.sentences$g,
+                       prob=="bg" ~ standardized.sentences$bg,
+                       prob=="none" ~ standardized.sentences$none,
+                       prob=="p_a" ~ "blue falls",
+                       prob=="p_c" ~ "green falls",
+                       prob=="p_na" ~ "blue does not fall",
+                       prob=="p_nc" ~ "green does not fall",
+                       prob=="p_c_given_a" ~ standardized.sentences$if_bg,
+                       prob=="p_c_given_na" ~ standardized.sentences$if_nbg,
+                       prob=="p_a_given_c" ~ standardized.sentences$if_gb,
+                       prob=="p_a_given_nc" ~ standardized.sentences$if_ngb,
+                       prob=="p_nc_given_a" ~ standardized.sentences$if_bng,
+                       prob=="p_nc_given_na" ~ standardized.sentences$if_nbng,
+                       prob=="p_na_given_c" ~ standardized.sentences$if_gnb,
+                       prob=="p_na_given_nc" ~ standardized.sentences$if_ngnb,
+                       prob=="p_likely_a" ~ "blue might fall",
+                       prob=="p_likely_na" ~ "blue might not fall",
+                       prob=="p_likely_c" ~ "green might fall",
+                       prob=="p_likely_nc" ~ "green might not fall",
+                       TRUE ~ NA_character_)
+    )
+  
+  exp1.human = prior_responses %>% select(-group, -n) %>%
+    rename(human_exp1=val, question=prob) %>% 
+    mutate(question = case_when(!question %in% c("bg", "b", "g", "none") ~ NA_character_,
+                                TRUE ~ question))
+  return(exp1.human)
+}
+exp1.human.orig = getPriorElicitation(normalized = FALSE) %>% select(-response)
+exp1.human.norm = getPriorElicitation(normalized = TRUE) %>% select(-response)
+
+test.production = data$test %>%
+  filter(str_detect(trial_name, "fridge_")) %>%
+  standardize_sentences();
+exp2.human = test.production %>%
+  select(prolific_id, id, response, RT, custom_response) %>%
+  rename(utterance=response) %>% add_column(human_exp2=1)
+joint.human = left_join(exp1.human.norm %>% select(-question, -RT),
+                        exp2.human %>% select(-RT, -custom_response),
+                        by=c("prolific_id", "id", "utterance"))
+
+joint.human.orig = left_join(
+  exp1.human.orig %>% select(-question, -RT),
+  exp2.human %>% select(-RT, -custom_response),
+  by=c("prolific_id", "id", "utterance"))
+saveRDS(joint.human.orig, paste(result_dir, "human-orig-exp1-exp2.rds", sep=.Platform$file.sep))
 
 
-# Filter data -------------------------------------------------------------
-filter_data_by_quality = function(data, dmax=2){
-  df.prior = data$test %>%
-    filter(str_detect(trial_name, "multiple_slider")) %>% 
-    select(-utterance, -custom_response)
-  exp1.quality = df.prior %>% responsesSquaredDiff2Mean()
-  
-  dat.quality = exp1.quality %>%
-    # mutate(quantiles=list(quantile(sum_sq_diff))) %>%
-    mutate(iqr=IQR(sum_sq_diff), mean=mean(sum_sq_diff),
-           outlier=sum_sq_diff < (mean-dmax*iqr) || (sum_sq_diff>mean + dmax*iqr)) %>%
-    filter(!outlier) %>% mutate(max_diff_iqr=dmax) %>%
-    select(prolific_id, stimulus_id)
-  
+saveRDS(exp2.human %>% rename(response=utterance),
+        paste(result_dir, "human-exp2.rds", sep=.Platform$file.sep))
+saveRDS(exp1.human.orig %>% rename(response=human_exp1),
+        paste(result_dir, "human-exp1-orig.rds", sep=.Platform$file.sep))
+saveRDS(exp1.human.norm %>% rename(response=human_exp1),
+        paste(result_dir, "human-exp1-normed.rds", sep=.Platform$file.sep))
+saveRDS(joint.human, paste(result_dir, "human-exp1-exp2.rds", sep=.Platform$file.sep))
+
+
+df = exp1.human.norm %>% rename(r_norm=human_exp1) %>% select(-utterance) %>% 
+  filter(!is.na(question))
+distances = distancesResponses(df)
+saveRDS(object=distances,
+        file=paste(result_dir, "distances-quality.rds", sep=.Platform$file.sep))
+
+
+
+# functions ---------------------------------------------------------------
+filter_data = function(target_dir, exp.name, by_quality=FALSE,
+                       by_color_vision=FALSE, out.by_comments=NA){
   # load smoothed tables
-  target.dir = here("data", "prolific", "results", "experiment-wor(l)ds-of-toy-blocks");
-  tables = readRDS(paste(target.dir, "empiric-all-tables-smooth.rds", sep=.Platform$file.sep))
-  df = right_join(tables, dat.quality %>% rename(id=stimulus_id))
+  tables = readRDS(paste(target_dir, "empiric-all-tables-smooth.rds", sep=.Platform$file.sep))
+  data = readRDS(paste(target_dir, .Platform$file.sep, exp.name, "_tidy.rds", sep=""))
+  stimuli = data$test$id %>% unique()
+  df = tibble()
+  if(by_quality) {
+    exp1.quality = readRDS(paste(paste(target_dir, "filtered_data", sep=.Platform$file.sep),
+                           "test-data-prior-quality.rds", sep=.Platform$file.sep))
+    dat.quality = exp1.quality %>%
+      # mutate(quantiles=list(quantile(sum_sq_diff))) %>%
+      mutate(iqr=IQR(sum_sq_diff), mean=mean(sum_sq_diff),
+             outlier=sum_sq_diff < (mean-2*iqr) | (sum_sq_diff>mean + 2*iqr)) %>%
+      filter(!outlier) %>% select(prolific_id, stimulus_id)
+    
+    df = bind_rows(df, right_join(tables, dat.quality %>% rename(id=stimulus_id)))
+  }
   
-  save_to = paste(target.dir, "empiric-filtered-tables-smooth.rds", sep=.Platform$file.sep)
+  if(by_color_vision){
+    dat.color = data$color %>%
+      mutate(correct = expected == response,  N=max(trial_number)) %>%
+      filter(correct) %>% group_by(prolific_id) %>%
+      mutate(n=n()) %>% filter(n == N) %>% select(prolific_id) %>% unique() %>%
+      add_column(id=list(stimuli)) %>%
+      unnest(c(id))
+
+    message(paste("#participants excluded as at least 1 wrong color question:",
+            length(data$color$prolific_id %>% unique())-length(dat.color$prolific_id %>% unique)))
+    df=right_join(df, dat.color)
+  }
+  
+  if(!is.na(out.by_comments)){
+      df = anti_join(df, out.by_comments)
+  }
+  save_to = paste(target_dir, "filtered_data",
+                  "empiric-filtered-tables-smooth.rds", sep=.Platform$file.sep)
   saveRDS(df, save_to)
-  print(paste("saved filtered tables to:", save_to))
+  print(paste("saved filtered smooth tables to:", save_to))
+  message(paste("remaining tables:", nrow(df), "(", nrow(df)/nrow(tables), ")"))
   return(df)
 }
-tables.quality = filter_data_by_quality(data)
 
-
-# filter_test_data = function(){
-#   data = readRDS(paste(result_dir, .Platform$file.sep, result_fn, "_tidy.rds", sep=""))
-#   exp1.quality = readRDS(paste(result_dir, .Platform$file.sep, result_fn, "_tidy_quality.rds", sep=""))
-#   
-#   # experiment == "joint")
-#   # 1.quality of test-responses
-#   out.test_quality = exp1.quality %>%
-#     filterOutLowQuality();
-#   
-#   # 2.color vision questions in between
-#   out.color_quality = data$color %>% group_by(prolific_id, id) %>%
-#     mutate(correct = expected == response) %>%
-#     filter(!correct) %>% 
-#     ungroup() %>% select(prolific_id);
-#   message(paste("#participants excluded as at least 1 wrong color question:",
-#                 nrow(out.color_quality)))
-#   stimuli = exp1.quality$id %>% unique
-#   out.color_quality = expand.grid(prolific_id=out.color_quality$prolific_id, id=stimuli) %>%
-#     as_tibble() 
-#   
-#   # 3. due to comments
-#   # (due to diminished motivation)
-#   out.comments = expand.grid(prolific_id="5f18a8fcc413fc0c4c0f4e49", id=stimuli) %>%
-#     as_tibble()
-#   # out.comments = tibble()
-#   
-#   # filter data
-#   out = bind_rows(out.color_quality, out.test_quality, out.comments) %>%
-#     distinct() %>% tibble_as_list();
-#   df.test = data$test %>% mutate(prolific_id=as.character(prolific_id),
-#                                  id=as.character(id));
-#   df.out = map_dfr(out, function(.x){
-#     df.test %>% filter(prolific_id == .x$prolific_id & id == .x$id)
-#   })
-#   dat.good = setdiff(df.test, df.out)
-#   target = paste(result_dir, .Platform$file.sep, result_fn, "_tidy_filtered.rds", sep="")
-#   saveRDS(dat.good, target)
-#   print(paste("saved data to:", target))
-#   
-#   tables.filtered = dat.good %>% 
-#     filter(startsWith(trial_name, "multiple_")) %>% 
-#     select(prolific_id, id, r_orig, question) %>% group_by(prolific_id, id) %>% 
-#     pivot_wider(names_from="question", values_from="r_orig")
-#   target.tables = paste(result_dir, .Platform$file.sep,
-#                         "experiment-wor(l)ds-of-toy-blocks_tables_filtered.csv", sep="") 
-#   write_csv(tables.filtered, target.tables)
-#   print(paste("saved filtered test tables to:", target.tables))
-#   
-#   return(dat.good)
-# }
-
+# df.filtered=filter_data(result_dir, result_fn, by_quality=TRUE, by_color_vision=TRUE)
 
 
