@@ -511,3 +511,9 @@ input[type=range].correct-slider::-moz-range-track {
 {
     width: 200px;
 }
+
+#chartdiv {
+  align: "center"; /*doesnt do anything*/
+  width: 50%;
+  height: 100px;
+}

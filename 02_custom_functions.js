@@ -86,22 +86,24 @@ addKeyToMoveSliders = function (button2Toggle) {
   });
 }
 
-// function drawChart(slider_ratings) {
-//   let responses =  [$("#response1").val(), $("#response2").val(),
-//                     $("#response3").val(), $("#response4").val()];
-//   var data = google.visualization.arrayToDataTable([
-//        ['Task', 'Hours per Day'],
-//        ['Blue + Green', responses[0]],
-//        ['Blue', responses[1]],
-//        ['Green', responses[2]],
-//        ['Nothing happens', responses[3]],
-//      ]);
-//      var options = {
-//        title: 'Ratios of events to take place'
-//      };
-//      var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-//      chart.draw(data, options);
-// }
+drawChart = function(slider_ratings){
+  var chart = am4core.create(
+    "chartdiv",
+    am4charts.PieChart
+  );
+  console.log(slider_ratings.length)
+  if(slider_ratings.length === 0){
+    slider_ratings = [parseInt($("#response1").val()), parseInt($("#response2").val()),
+                      parseInt($("#response3").val()), parseInt($("#response4").val())];
+                      // TODO: this doesnt work yet, isnt shown in chart
+  }
+  console.log(slider_ratings)
+  chart.data = slider_ratings;
+  var pieSeries = chart.series.push(new am4charts.PieSeries());
+  pieSeries.dataFields.value = "val";
+  pieSeries.dataFields.category = "category";
+  chart.openPopup("Preview of your current ratings");
+}
 
 _slidersAdjusted = function(){
   return(_.some([$("#response1").hasClass('adjusted'),
@@ -125,13 +127,19 @@ sumResponses = function(){
 _computeAdjustedCells = function() {
   var n_moved = nbReplied()
   let responses = [$("#response1"), $("#response2"),
-   $("#response3"), $("#response4")];
+                   $("#response3"), $("#response4")];
 
    let rvals = _.map(responses, function(r){return(r.val())});
    console.log(rvals.join("-"))
   //  go through sliders in the order that they were moved!
   let order = _.map(responses, function(elem, idx){
-    return({i_time: parseInt(elem.attr('iReplied')), id: "response" + (idx+1)})
+    let cat = "";
+    if(idx+1 == 1) { cat = "blue and green fall"}
+    else if(idx+1 == 2) { cat = "only blue falls"}
+    else if(idx+1 == 3) { cat = "only green falls"}
+    else { cat = "nothing happens"};
+    return({i_time: parseInt(elem.attr('iReplied')),
+            id: "response" + (idx+1), category: cat})
   });
   order = order.filter(function(obj){return(obj.i_time !== undefined)});
   order = _.sortBy(order, 'i_time')
@@ -150,18 +158,15 @@ _computeAdjustedCells = function() {
   // *100 as we output nbs from 0 to 100 not decimals
   let cell1_adj = 100 * (1/(1+total))
   let id1 = order[0].id
-  let obj1 = {val: cell1_adj, id: id1, idxSlider: _.last(id1)}
+  let obj1 = {val: cell1_adj, id: id1, idxSlider: _.last(id1), category: order[0].category}
   let adjusted = [obj1].concat(
     _.map(prods, function(fct, idx){
     let id = order[idx+1]["id"]
-    let new_val = {val: fct * cell1_adj, id: order[idx+1]["id"], idxSlider: _.last(id)}
+    let new_val = {val: fct * cell1_adj, id: order[idx+1]["id"],
+                   idxSlider: _.last(id), category: order[idx+1]["category"]}
     return(new_val)
   }));
   adjusted = _.sortBy(adjusted, 'idxSlider')
-  let x = _.map(adjusted, 'val')
-  let y = _.map(adjusted, 'idxSlider')
-  // console.log(y.join("-"))
-  // console.log(x.join("-"));
   return(adjusted)
 }
 
@@ -169,7 +174,6 @@ _adjustCells = function(button2Toggle){
   let normed_vals = _computeAdjustedCells()
   normed_vals.forEach(function(obj){
     $("#response" + obj.idxSlider).val(obj.val);
-    // $("#output" + obj.idxSlider).val(Math.round(obj.val));
     $("#response" + obj.idxSlider).addClass('adjusted');
   });
   toggleNextIfDone(button2Toggle, true);
@@ -188,14 +192,14 @@ _checkSliderResponse = function (id, button2Toggle) {
       if(s > 100 || nbReplied() == 4) {
         let adjusted_vals = _adjustCells(button2Toggle);
         // setTimeout(_adjustCells(button2Toggle), 1000);
-        alert("here comes pie chart");
+        drawChart(adjusted_vals);
         adjusted_vals.forEach(function(obj){
           $("#output" + obj.idxSlider).val(Math.round(obj.val));
         });
         toggleNextIfDone(button2Toggle, true);
         // console.log('normed sum: ' + sumResponses())
       } else if(sumResponses()==100) {
-        alert("here comes pie chart")
+        drawChart([]);
         toggleNextIfDone(button2Toggle, true);
       }
     });

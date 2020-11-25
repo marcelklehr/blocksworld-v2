@@ -73,11 +73,6 @@ _htmlSliderQuestion = function (idx_question) {
   };
 }
 
-_sliderResponseRange = function(val){
-  return val < 0.5 && val > 0 ? 'rather unlikely' : val < 1 ? 'rather likely' :
-  '';
-}
-
 _updateSliderOutput = function(id, val){
   let idx = _.last(id);
   $('#output' + idx).val(val);
@@ -97,7 +92,7 @@ _htmlSlider = function (idxSlider, utterance, options, value) {
   let html_question = qSlider.open + utterance + qSlider.close;
   let html_slider = start +
     `<span class='magpie-response-slider-option optionWide thick'>` + options.left + `</span>
-     <input type='range' id=` + responseID + ` name=` + answerID + 
+     <input type='range' id=` + responseID + ` name=` + answerID +
     ` class='magpie-response-slider slider-width' min='0' max='100' step='5' value='` + value +
     `' oninput="_updateSliderOutput(this.id, this.value)"'` + `>` +
     // `' oninput='` + outputID + `.value=` + responseID + `.value'>` +

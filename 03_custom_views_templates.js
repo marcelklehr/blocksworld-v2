@@ -58,7 +58,9 @@ const multi_slider_generator = {
         <div class='stimulus'>
           <img src=${config.data[CT].picture} class ='picture'>
         </div>
-      </div>`;
+        <div id="chartdiv"></div>
+      </div>
+      `;
   },
 
   answer_container_gen: function (config, CT) {
