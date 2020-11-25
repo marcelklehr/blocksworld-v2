@@ -81,20 +81,40 @@ addKeyToMoveSliders = function (button2Toggle) {
       automaticallySelectAnswer("response" + id_nb, button2Toggle);
       counter += 1;
     }
-    toggleNextIfDone(button2Toggle, repliedAll());
+    toggleNextIfDone(button2Toggle, nbReplied() === 4);
     return keyName;
   });
 }
 
-repliedAll = function () {
-  return(nbReplied() == 4)
+// function drawChart(slider_ratings) {
+//   let responses =  [$("#response1").val(), $("#response2").val(),
+//                     $("#response3").val(), $("#response4").val()];
+//   var data = google.visualization.arrayToDataTable([
+//        ['Task', 'Hours per Day'],
+//        ['Blue + Green', responses[0]],
+//        ['Blue', responses[1]],
+//        ['Green', responses[2]],
+//        ['Nothing happens', responses[3]],
+//      ]);
+//      var options = {
+//        title: 'Ratios of events to take place'
+//      };
+//      var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+//      chart.draw(data, options);
+// }
+
+_slidersAdjusted = function(){
+  return(_.some([$("#response1").hasClass('adjusted'),
+                 $("#response2").hasClass('adjusted'),
+                 $("#response3").hasClass('adjusted'),
+                 $("#response4").hasClass('adjusted')]))
 }
 
 nbReplied = function(){
   return(($("#response1").hasClass('replied')) +
-  ($("#response2").hasClass('replied')) +
-  ($("#response3").hasClass('replied')) +
-  ($("#response4").hasClass('replied')));
+         ($("#response2").hasClass('replied')) +
+         ($("#response3").hasClass('replied')) +
+         ($("#response4").hasClass('replied')));
 }
 
 sumResponses = function(){
@@ -102,50 +122,82 @@ sumResponses = function(){
          parseInt($("#response3").val()) + parseInt($("#response4").val()));
 }
 
-
 _computeAdjustedCells = function() {
   var n_moved = nbReplied()
-  let ratios = _.map(_.range(1, n_moved), function(cell_i){
-    var cell_next = cell_i + 1
-    var next_val = parseInt($("#response" + cell_next).val())
-    var this_val = parseInt($("#response" + cell_i).val())
+  let responses = [$("#response1"), $("#response2"),
+   $("#response3"), $("#response4")];
+
+   let rvals = _.map(responses, function(r){return(r.val())});
+   console.log(rvals.join("-"))
+  //  go through sliders in the order that they were moved!
+  let order = _.map(responses, function(elem, idx){
+    return({i_time: parseInt(elem.attr('iReplied')), id: "response" + (idx+1)})
+  });
+  order = order.filter(function(obj){return(obj.i_time !== undefined)});
+  order = _.sortBy(order, 'i_time')
+  // console.log(order);
+  let ratios = _.map(_.range(1, n_moved), function(i, idx){
+    let id_current = order[idx]["id"]
+    let id_next = order[idx+1]["id"]
+    var next_val = parseInt($("#" + id_next).val())
+    var this_val = parseInt($("#" + id_current).val())
     return(next_val/this_val)
   });
   let prods = _.map(ratios, function(val, idx){
     return(ratios.slice(0, idx+1).reduce(function(i, acc){return(i*acc)}, 1))
   });
   let total = prods.reduce(function(val, acc){return(acc+val)}, 0);
-  let cell1_adj = 1/(1+total)
-  cell1_adj = Math.round((cell1_adj + Number.EPSILON) * 100)/100;
   // *100 as we output nbs from 0 to 100 not decimals
-  let adjusted = [cell1_adj*100].concat(_.map(prods, function(fct){
-    let new_val = Math.round((fct * cell1_adj + Number.EPSILON) * 100) / 100;
-    return(new_val * 100)
+  let cell1_adj = 100 * (1/(1+total))
+  let id1 = order[0].id
+  let obj1 = {val: cell1_adj, id: id1, idxSlider: _.last(id1)}
+  let adjusted = [obj1].concat(
+    _.map(prods, function(fct, idx){
+    let id = order[idx+1]["id"]
+    let new_val = {val: fct * cell1_adj, id: order[idx+1]["id"], idxSlider: _.last(id)}
+    return(new_val)
   }));
+  adjusted = _.sortBy(adjusted, 'idxSlider')
+  let x = _.map(adjusted, 'val')
+  let y = _.map(adjusted, 'idxSlider')
+  // console.log(y.join("-"))
+  // console.log(x.join("-"));
   return(adjusted)
 }
 
-_adjustCells = function(){
+_adjustCells = function(button2Toggle){
   let normed_vals = _computeAdjustedCells()
-  _.range(1,5).forEach(function(i){
-    $("#response" + i).val(normed_vals[i-1]);
-    $("#output" + i).val(normed_vals[i-1]);
+  normed_vals.forEach(function(obj){
+    $("#response" + obj.idxSlider).val(obj.val);
+    // $("#output" + obj.idxSlider).val(Math.round(obj.val));
+    $("#response" + obj.idxSlider).addClass('adjusted');
   });
+  toggleNextIfDone(button2Toggle, true);
+  return(normed_vals)
 }
 
 _checkSliderResponse = function (id, button2Toggle) {
   $("#" + id)
     .on("change", function () {
-      $("#" + id)
-        .addClass('replied');
-        let s = sumResponses()
-        console.log(this.value)
-        if(s > 100) {
-          console.log('sum: ' + s)
-          // _adjustCells();
-          setTimeout(_adjustCells, 1000);
-        }
-      toggleNextIfDone(button2Toggle, repliedAll());
+      $("#" + id).addClass('replied');
+      total_moves = total_moves + 1;
+      // console.log('n moved:' + total_moves)
+      $("#" + id).attr('iReplied', total_moves);
+      let s = sumResponses()
+      // console.log('sum: ' + s)
+      if(s > 100 || nbReplied() == 4) {
+        let adjusted_vals = _adjustCells(button2Toggle);
+        // setTimeout(_adjustCells(button2Toggle), 1000);
+        alert("here comes pie chart");
+        adjusted_vals.forEach(function(obj){
+          $("#output" + obj.idxSlider).val(Math.round(obj.val));
+        });
+        toggleNextIfDone(button2Toggle, true);
+        // console.log('normed sum: ' + sumResponses())
+      } else if(sumResponses()==100) {
+        alert("here comes pie chart")
+        toggleNextIfDone(button2Toggle, true);
+      }
     });
 }
 

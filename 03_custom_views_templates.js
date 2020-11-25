@@ -76,6 +76,7 @@ const multi_slider_generator = {
     $(".magpie-view")
       .append(answer_container_generator(config, CT));
     let button = $("#smallMarginNextButton");
+    total_moves = 0 // globally defined
     // function for debugging - if "y" is pressed, the slider will change
     if (DEBUG) {
       addKeyToMoveSliders(button);
