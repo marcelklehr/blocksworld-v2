@@ -87,14 +87,50 @@ addKeyToMoveSliders = function (button2Toggle) {
 }
 
 repliedAll = function () {
-  return ($("#response1")
-    .hasClass('replied') &&
-    $("#response2")
-    .hasClass('replied') &&
-    $("#response3")
-    .hasClass('replied') &&
-    $("#response4")
-    .hasClass('replied'));
+  return(nbReplied() == 4)
+}
+
+nbReplied = function(){
+  return(($("#response1").hasClass('replied')) +
+  ($("#response2").hasClass('replied')) +
+  ($("#response3").hasClass('replied')) +
+  ($("#response4").hasClass('replied')));
+}
+
+sumResponses = function(){
+  return(parseInt($("#response1").val()) + parseInt($("#response2").val()) +
+         parseInt($("#response3").val()) + parseInt($("#response4").val()));
+}
+
+
+_computeAdjustedCells = function() {
+  var n_moved = nbReplied()
+  let ratios = _.map(_.range(1, n_moved), function(cell_i){
+    var cell_next = cell_i + 1
+    var next_val = parseInt($("#response" + cell_next).val())
+    var this_val = parseInt($("#response" + cell_i).val())
+    return(next_val/this_val)
+  });
+  let prods = _.map(ratios, function(val, idx){
+    return(ratios.slice(0, idx+1).reduce(function(i, acc){return(i*acc)}, 1))
+  });
+  let total = prods.reduce(function(val, acc){return(acc+val)}, 0);
+  let cell1_adj = 1/(1+total)
+  cell1_adj = Math.round((cell1_adj + Number.EPSILON) * 100)/100;
+  // *100 as we output nbs from 0 to 100 not decimals
+  let adjusted = [cell1_adj*100].concat(_.map(prods, function(fct){
+    let new_val = Math.round((fct * cell1_adj + Number.EPSILON) * 100) / 100;
+    return(new_val * 100)
+  }));
+  return(adjusted)
+}
+
+_adjustCells = function(){
+  let normed_vals = _computeAdjustedCells()
+  _.range(1,5).forEach(function(i){
+    $("#response" + i).val(normed_vals[i-1]);
+    $("#output" + i).val(normed_vals[i-1]);
+  });
 }
 
 _checkSliderResponse = function (id, button2Toggle) {
@@ -102,6 +138,13 @@ _checkSliderResponse = function (id, button2Toggle) {
     .on("change", function () {
       $("#" + id)
         .addClass('replied');
+        let s = sumResponses()
+        console.log(this.value)
+        if(s > 100) {
+          console.log('sum: ' + s)
+          // _adjustCells();
+          setTimeout(_adjustCells, 1000);
+        }
       toggleNextIfDone(button2Toggle, repliedAll());
     });
 }
